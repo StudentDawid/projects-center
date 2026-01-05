@@ -15,14 +15,14 @@
         <span class="logo-text">Projects Center</span>
       </div>
       <nav class="hub-nav">
-        <a href="https://github.com/dawidkozak" target="_blank" rel="noopener" class="nav-link">
+        <a href="https://github.com/StudentDawid" target="_blank" rel="noopener" class="nav-link">
           <v-icon icon="mdi-github" size="24" />
         </a>
       </nav>
     </header>
 
     <!-- Hero Section -->
-    <section class="hero-section">
+    <!-- <section class="hero-section">
       <div class="hero-content">
         <h1 class="hero-title">
           <span class="title-line">Moje</span>
@@ -43,7 +43,7 @@
           </div>
         </div>
       </div>
-    </section>
+    </section> -->
 
     <!-- Projects Grid -->
     <section class="projects-section">
