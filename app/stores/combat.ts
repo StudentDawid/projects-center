@@ -13,7 +13,18 @@ import { useEntityStore } from './entities';
 import { useNarrativeStore } from './narrative';
 import { useEventStore } from './events';
 import { useRelicStore } from './relics';
+import { usePrestigeStore } from './prestige';
 import Decimal from 'break_infinity.js';
+import type {
+  EnemyType,
+  EnemyTypeId,
+  LiturgyId,
+  BossEncounter,
+  BossChoice,
+  CombatCombo,
+  ActiveWave,
+  RelicRarity,
+} from '~/shared/types/game.types';
 
 // ============================================
 // Types
@@ -28,6 +39,92 @@ export interface WaveEvent {
   baseUnitLosses: number; // Base percentage of units that die (0-100)
   duration: number; // How long the attack lasts in seconds
 }
+
+// ============================================
+// Enemy Definitions
+// ============================================
+
+const ENEMY_TYPES: Record<EnemyTypeId, EnemyType> = {
+  cultist: {
+    id: 'cultist',
+    name: 'Kultyści Mięsa',
+    description: 'Podstawowi wyznawcy chaosu. Liczni, ale słabi.',
+    icon: '👹',
+    tier: 'basic',
+    damageMultiplier: 1,
+    unitLossMultiplier: 1,
+    durationMultiplier: 1,
+    weakness: 'blessing',
+    weaknessBonus: 0.3,
+    spawnCondition: { type: 'every_n_waves', value: 1 },
+  },
+  abomination_minion: {
+    id: 'abomination_minion',
+    name: 'Plugastwo',
+    description: 'Elitarne stwory z połączonych ciał. Silniejsze i bardziej wytrzymałe.',
+    icon: '👾',
+    tier: 'elite',
+    damageMultiplier: 2,
+    unitLossMultiplier: 2,
+    durationMultiplier: 1.5,
+    weakness: 'fortification',
+    weaknessBonus: 0.4,
+    spawnCondition: { type: 'every_n_waves', value: 5 },
+  },
+  apostate: {
+    id: 'apostate',
+    name: 'Apostata',
+    description: 'Zdrajca wiary. Kradnie waszą Wiarę zamiast zadawać obrażenia.',
+    icon: '🧙',
+    tier: 'special',
+    damageMultiplier: 0.5,
+    unitLossMultiplier: 0.3,
+    durationMultiplier: 1.2,
+    specialEffect: {
+      type: 'steal_faith',
+      value: 5, // Kradnie 5% aktualnej Wiary
+      description: 'Kradnie 5% waszej Wiary',
+    },
+    weakness: 'martyrdom',
+    weaknessBonus: 0.6,
+    spawnCondition: { type: 'every_n_waves', value: 7 },
+  },
+  abomination_boss: {
+    id: 'abomination_boss',
+    name: 'Abominacja',
+    description: 'Przerażająca hybryda z dziesiątek ciał. Gwarantowana nagroda za pokonanie.',
+    icon: '🐙',
+    tier: 'boss',
+    damageMultiplier: 5,
+    unitLossMultiplier: 3,
+    durationMultiplier: 3,
+    specialEffect: {
+      type: 'morale_drain',
+      value: 2, // Ciągły drain morale -2/s
+      description: 'Ciągły drain morale -2/s podczas walki',
+    },
+    weakness: 'martyrdom',
+    weaknessBonus: 0.35,
+    spawnCondition: { type: 'every_n_waves', value: 25 },
+  },
+  arch_heretic: {
+    id: 'arch_heretic',
+    name: 'Arcyheretyk',
+    description: 'Przywódca kultu. Wymaga aktywnej obrony i strategicznych wyborów.',
+    icon: '😈',
+    tier: 'megaboss',
+    damageMultiplier: 10,
+    unitLossMultiplier: 5,
+    durationMultiplier: 5,
+    specialEffect: {
+      type: 'disable_buildings',
+      value: 30, // Wyłącza 30% budynków
+      description: 'Wyłącza 30% losowych budynków podczas walki',
+    },
+    weaknessBonus: 0,
+    spawnCondition: { type: 'every_n_waves', value: 100 },
+  },
+};
 
 export interface DefenseBonus {
   id: string;
@@ -111,6 +208,33 @@ export const useCombatStore = defineStore(
     const relicMoraleDamageReduction = ref(0);
     const relicMoraleMinimum = ref(0);
     const relicWaveDelayBonus = ref(0);
+
+    // ============================================
+    // Extended Combat State
+    // ============================================
+
+    // Current enemy type for the active wave
+    const currentEnemyType = ref<EnemyTypeId>('cultist');
+
+    // Combat combo system
+    const combo = ref<CombatCombo>({
+      currentStreak: 0,
+      maxStreak: 0,
+      lastWaveTime: 0,
+      comboWindow: 30, // 30 seconds to maintain combo
+      bonusPerStreak: 0.05, // +5% bonus per streak
+    });
+
+    // Boss encounter state
+    const activeBossEncounter = ref<BossEncounter | null>(null);
+    const bossesDefeated = ref(0);
+    const megaBossesDefeated = ref(0);
+
+    // Active wave details
+    const activeWave = ref<ActiveWave | null>(null);
+
+    // Disabled buildings during megaboss
+    const disabledBuildingIds = ref<string[]>([]);
 
     // ============================================
     // Wave definitions
@@ -418,6 +542,57 @@ export const useCombatStore = defineStore(
       return waves.find(w => w.threatRequired > threatVal) || waves[waves.length - 1];
     });
 
+    // ============================================
+    // Extended Combat Computed
+    // ============================================
+
+    /**
+     * Current enemy type details
+     */
+    const currentEnemy = computed(() => ENEMY_TYPES[currentEnemyType.value]);
+
+    /**
+     * Combo multiplier based on current streak
+     */
+    const comboMultiplier = computed(() => {
+      return 1 + (combo.value.currentStreak * combo.value.bonusPerStreak);
+    });
+
+    /**
+     * Formatted combo display
+     */
+    const formattedCombo = computed(() => {
+      if (combo.value.currentStreak === 0) return null;
+      const bonus = Math.round((comboMultiplier.value - 1) * 100);
+      return `x${combo.value.currentStreak} (+${bonus}% bonusu)`;
+    });
+
+    /**
+     * Check if current wave is a boss wave
+     */
+    const isBossWave = computed(() => {
+      return currentWave.value > 0 && currentWave.value % 25 === 0;
+    });
+
+    /**
+     * Check if current wave is a mega boss wave
+     */
+    const isMegaBossWave = computed(() => {
+      return currentWave.value > 0 && currentWave.value % 100 === 0;
+    });
+
+    /**
+     * Determine which enemy type should spawn for current wave
+     */
+    const getEnemyTypeForWave = computed(() => (waveNum: number): EnemyTypeId => {
+      // Priority: megaboss > boss > elite > special > basic
+      if (waveNum % 100 === 0) return 'arch_heretic';
+      if (waveNum % 25 === 0) return 'abomination_boss';
+      if (waveNum % 7 === 0) return 'apostate';
+      if (waveNum % 5 === 0) return 'abomination_minion';
+      return 'cultist';
+    });
+
     /**
      * Get current scaled cost for a defense ability
      */
@@ -561,6 +736,24 @@ export const useCombatStore = defineStore(
       if (morale.value.lt(0)) {
         morale.value = bn(0);
       }
+
+      // Update combo timer
+      if (combo.value.currentStreak > 0) {
+        const timeSinceLastKill = Date.now() - combo.value.lastWaveTime;
+        if (timeSinceLastKill > combo.value.comboWindow * 1000) {
+          // Combo expired
+          combo.value.currentStreak = 0;
+        }
+      }
+
+      // Boss special effect: morale drain
+      if (isWaveActive.value && activeWave.value?.isBoss) {
+        const enemy = ENEMY_TYPES[currentEnemyType.value];
+        if (enemy.specialEffect?.type === 'morale_drain') {
+          const drain = bn(enemy.specialEffect.value).mul(deltaTime);
+          morale.value = Decimal.max(morale.value.sub(drain), bn(relicMoraleMinimum.value));
+        }
+      }
     }
 
     /**
@@ -611,18 +804,268 @@ export const useCombatStore = defineStore(
 
       currentWave.value++;
       isWaveActive.value = true;
-      waveTimeRemaining.value = wave.duration;
       timeSinceLastWave.value = 0;
 
-      // Calculate scaled damage for narrative
-      const scaledDmg = Math.round(scaledWaveDamage.value(wave.baseDamage) * (1 - defenseMultiplier.value));
+      // Determine enemy type for this wave
+      const enemyTypeId = getEnemyTypeForWave.value(currentWave.value);
+      currentEnemyType.value = enemyTypeId;
+      const enemy = ENEMY_TYPES[enemyTypeId];
+
+      // Calculate wave duration with enemy multiplier
+      const duration = wave.duration * enemy.durationMultiplier;
+      waveTimeRemaining.value = duration;
+
+      // Calculate scaled damage with enemy multiplier
+      const baseDamage = wave.baseDamage * enemy.damageMultiplier;
+      const baseUnitLosses = wave.baseUnitLosses * enemy.unitLossMultiplier;
+      const scaledDmg = Math.round(scaledWaveDamage.value(baseDamage) * (1 - defenseMultiplier.value));
+
+      // Create active wave record
+      activeWave.value = {
+        waveNumber: currentWave.value,
+        enemyType: enemy,
+        damage: baseDamage,
+        unitLosses: baseUnitLosses,
+        duration,
+        timeRemaining: duration,
+        isBoss: enemy.tier === 'boss' || enemy.tier === 'megaboss',
+        specialEffectActive: !!enemy.specialEffect,
+      };
+
+      // Handle megaboss special effect: disable buildings
+      if (enemy.tier === 'megaboss' && enemy.specialEffect?.type === 'disable_buildings') {
+        disableRandomBuildings(enemy.specialEffect.value);
+      }
+
+      // Narrative log
+      const tierEmoji: Record<string, string> = {
+        basic: '⚔️',
+        elite: '💀',
+        special: '🧙',
+        boss: '👑',
+        megaboss: '😈',
+      };
+
+      const emoji = tierEmoji[enemy.tier];
+      let message = `${emoji} ${enemy.name}: ${enemy.description}`;
+      if (enemy.specialEffect) {
+        message += ` (${enemy.specialEffect.description})`;
+      }
+      message += ` [Obrażenia: ~${scaledDmg}]`;
 
       narrativeStore.addLog({
-        message: `⚔️ ATAK! ${wave.name}: ${wave.description} (Obrażenia: ~${scaledDmg})`,
-        type: 'warning',
+        message,
+        type: enemy.tier === 'boss' || enemy.tier === 'megaboss' ? 'error' : 'warning',
       });
 
-      console.log(`[Combat] Wave ${currentWave.value} started: ${wave.name}`);
+      // Boss encounter setup
+      if (enemy.tier === 'boss' || enemy.tier === 'megaboss') {
+        setupBossEncounter(enemy);
+      }
+
+      console.log(`[Combat] Wave ${currentWave.value} started: ${enemy.name} (${enemy.tier})`);
+    }
+
+    /**
+     * Setup boss encounter with choices
+     */
+    function setupBossEncounter(enemy: EnemyType) {
+      const choices: BossChoice[] = [
+        {
+          id: 'attack',
+          name: 'Atak Frontalny',
+          description: 'Bezpośredni atak. Zadaje obrażenia, ale ryzykujesz straty.',
+          icon: '⚔️',
+          cost: { faith: 100 },
+          effect: { type: 'damage', value: 20 },
+        },
+        {
+          id: 'weaken',
+          name: 'Osłabienie',
+          description: 'Osłabia wroga, zmniejszając jego obrażenia.',
+          icon: '🔮',
+          cost: { faith: 150, ducats: 50 },
+          effect: { type: 'weaken', value: 30 },
+        },
+        {
+          id: 'sacrifice',
+          name: 'Poświęcenie',
+          description: 'Poświęć jednostki, aby zadać ogromne obrażenia.',
+          icon: '💀',
+          cost: {},
+          effect: { type: 'sacrifice', value: 50 },
+        },
+      ];
+
+      activeBossEncounter.value = {
+        id: `boss_${currentWave.value}`,
+        enemyType: enemy.id,
+        phase: 1,
+        maxPhases: enemy.tier === 'megaboss' ? 3 : 2,
+        healthPercent: 100,
+        choices,
+        activeChoice: null,
+        timeRemaining: waveTimeRemaining.value,
+        rewards: getBossRewards(enemy),
+      };
+    }
+
+    /**
+     * Get rewards for defeating a boss
+     */
+    function getBossRewards(enemy: EnemyType): { type: string; relicRarity?: RelicRarity; amount?: number }[] {
+      const rewards: { type: string; relicRarity?: RelicRarity; amount?: number }[] = [];
+
+      if (enemy.tier === 'megaboss') {
+        rewards.push({ type: 'relic', relicRarity: 'legendary' });
+        rewards.push({ type: 'ashes', amount: 10 });
+      } else if (enemy.tier === 'boss') {
+        // 50% chance for epic, 50% for rare
+        const rarity: RelicRarity = Math.random() > 0.5 ? 'epic' : 'rare';
+        rewards.push({ type: 'relic', relicRarity: rarity });
+        rewards.push({ type: 'ashes', amount: 3 });
+      }
+
+      return rewards;
+    }
+
+    /**
+     * Execute boss choice
+     */
+    function executeBossChoice(choiceId: string): boolean {
+      if (!activeBossEncounter.value) return false;
+
+      const choice = activeBossEncounter.value.choices.find(c => c.id === choiceId);
+      if (!choice) return false;
+
+      // Check if player can afford the cost
+      const resourceStore = useResourceStore();
+      for (const [resourceId, amount] of Object.entries(choice.cost)) {
+        if (!resourceStore.resources[resourceId as keyof typeof resourceStore.resources]?.amount.gte(amount || 0)) {
+          return false;
+        }
+      }
+
+      // Spend resources
+      for (const [resourceId, amount] of Object.entries(choice.cost)) {
+        resourceStore.spendResource(resourceId as any, amount || 0);
+      }
+
+      // Apply effect
+      switch (choice.effect.type) {
+        case 'damage':
+          activeBossEncounter.value.healthPercent -= choice.effect.value;
+          break;
+        case 'weaken':
+          // Reduce incoming damage for this wave
+          if (activeWave.value) {
+            activeWave.value.damage *= (1 - choice.effect.value / 100);
+            activeWave.value.unitLosses *= (1 - choice.effect.value / 100);
+          }
+          break;
+        case 'sacrifice':
+          // Kill some units but deal massive damage
+          killUnits(10); // Kill 10% of units
+          activeBossEncounter.value.healthPercent -= choice.effect.value;
+          break;
+      }
+
+      activeBossEncounter.value.activeChoice = choiceId;
+
+      // Check if boss is defeated
+      if (activeBossEncounter.value.healthPercent <= 0) {
+        defeatBoss();
+      } else if (activeBossEncounter.value.healthPercent <= 50 && activeBossEncounter.value.phase < activeBossEncounter.value.maxPhases) {
+        // Next phase
+        activeBossEncounter.value.phase++;
+        narrativeStore.addLog({
+          message: `⚠️ ${ENEMY_TYPES[activeBossEncounter.value.enemyType].name} wchodzi w fazę ${activeBossEncounter.value.phase}!`,
+        type: 'warning',
+      });
+      }
+
+      return true;
+    }
+
+    /**
+     * Defeat boss and grant rewards
+     */
+    function defeatBoss() {
+      if (!activeBossEncounter.value) return;
+
+      const enemy = ENEMY_TYPES[activeBossEncounter.value.enemyType];
+      const relicStore = useRelicStore();
+
+      // Grant rewards
+      for (const reward of activeBossEncounter.value.rewards) {
+        if (reward.type === 'relic' && reward.relicRarity) {
+          // Grant a relic of the specified rarity
+          const unowned = relicStore.relics.filter(r => !r.owned && r.rarity === reward.relicRarity);
+          if (unowned.length > 0) {
+            const relic = unowned[Math.floor(Math.random() * unowned.length)];
+            relicStore.grantRelic(relic.id);
+            narrativeStore.addLog({
+              message: `🏺 Zdobyto relikwię: ${relic.name}!`,
+              type: 'achievement',
+            });
+          }
+        } else if (reward.type === 'ashes' && reward.amount) {
+          // Add bonus ashes (will be applied at next prestige)
+          narrativeStore.addLog({
+            message: `🔥 Bonus +${reward.amount} Popiołów przy następnym prestiżu!`,
+            type: 'achievement',
+          });
+        }
+      }
+
+      // Update stats
+      if (enemy.tier === 'megaboss') {
+        megaBossesDefeated.value++;
+        narrativeStore.addLog({
+          message: `👑 ARCYHERETYK POKONANY! Chwała Solmarowi!`,
+          type: 'achievement',
+        });
+      } else {
+        bossesDefeated.value++;
+        narrativeStore.addLog({
+          message: `💀 BOSS POKONANY: ${enemy.name}!`,
+          type: 'achievement',
+        });
+      }
+
+      // Clear boss encounter
+      activeBossEncounter.value = null;
+    }
+
+    /**
+     * Disable random buildings (megaboss effect)
+     */
+    function disableRandomBuildings(percent: number) {
+      const allBuildings = Object.keys(entityStore.entities).filter(
+        id => entityStore.entities[id as any]?.count > 0
+      );
+
+      const numToDisable = Math.ceil(allBuildings.length * (percent / 100));
+      const shuffled = allBuildings.sort(() => Math.random() - 0.5);
+      disabledBuildingIds.value = shuffled.slice(0, numToDisable);
+
+      narrativeStore.addLog({
+        message: `⚡ ${numToDisable} budynków zostało wyłączonych przez moc Arcyheretyka!`,
+        type: 'error',
+      });
+    }
+
+    /**
+     * Re-enable buildings after megaboss
+     */
+    function enableAllBuildings() {
+      if (disabledBuildingIds.value.length > 0) {
+        narrativeStore.addLog({
+          message: `✨ Wszystkie budynki wracają do działania!`,
+          type: 'info',
+        });
+        disabledBuildingIds.value = [];
+      }
     }
 
     /**
@@ -654,6 +1097,7 @@ export const useCombatStore = defineStore(
       if (!wave) return;
 
       const entities = entityStore.entities;
+      const enemy = ENEMY_TYPES[currentEnemyType.value];
 
       // MAX LEVEL EFFECT: Mury Lv5 - Immunitet na pierwszą falę po prestiżu
       if (
@@ -663,15 +1107,11 @@ export const useCombatStore = defineStore(
         entities.walls.level >= 5
       ) {
         firstWaveImmunityUsed.value = true;
-        threat.value = bn(0);
-        isWaveActive.value = false;
-        wavesDefeated.value++;
-
+        finishWave(true, 0, enemy);
         narrativeStore.addLog({
           message: `🛡️ ŚWIĘTE MURY! Pierwsza fala została całkowicie odparta bez strat!`,
           type: 'achievement',
         });
-
         console.log('[Combat] First wave immunity used (Walls Lv5)');
         return;
       }
@@ -682,28 +1122,27 @@ export const useCombatStore = defineStore(
         entities.holy_warrior.count > 0 &&
         entities.holy_warrior.level >= 5
       ) {
-        // 5% szansy per wojownik, max 50%
         const repelChance = Math.min(entities.holy_warrior.count * 0.05, 0.5);
         if (Math.random() < repelChance) {
-          threat.value = bn(0);
-          isWaveActive.value = false;
-          wavesDefeated.value++;
-
+          finishWave(true, 0, enemy);
           narrativeStore.addLog({
             message: `⚔️ ŚWIĘCI WOJOWNICY! Elitarni rycerze Solmara całkowicie rozgromili wrogów!`,
             type: 'achievement',
           });
-
           console.log('[Combat] Holy Warriors repelled the wave completely');
           return;
         }
       }
 
-      // Calculate scaled damage
-      let moraleDamage = scaledWaveDamage.value(wave.baseDamage);
-      let unitLossPercent = scaledUnitLosses.value(wave.baseUnitLosses);
+      // Get base values from active wave or calculate
+      let baseDamage = activeWave.value?.damage || wave.baseDamage * enemy.damageMultiplier;
+      let baseUnitLoss = activeWave.value?.unitLosses || wave.baseUnitLosses * enemy.unitLossMultiplier;
 
-      // TIER 3: Święci Wojownicy - zmniejszają siłę fali (-5% per wojownik, max -50%)
+      // Calculate scaled damage
+      let moraleDamage = scaledWaveDamage.value(baseDamage);
+      let unitLossPercent = scaledUnitLosses.value(baseUnitLoss);
+
+      // TIER 3: Święci Wojownicy - zmniejszają siłę fali
       if (entities.holy_warrior?.unlocked && entities.holy_warrior.count > 0) {
         const levelBonus = entityStore.getLevelBonus('holy_warrior');
         const damageReduction = Math.min(entities.holy_warrior.count * 0.05 * levelBonus, 0.5);
@@ -713,24 +1152,56 @@ export const useCombatStore = defineStore(
 
       // Apply defense rating reduction (from buildings)
       moraleDamage *= (1 - defenseMultiplier.value);
-      unitLossPercent *= (1 - defenseMultiplier.value * 0.5); // Buildings protect units less
+      unitLossPercent *= (1 - defenseMultiplier.value * 0.5);
 
       // Apply active defense bonuses (from abilities)
+      let usedWeakness = false;
       if (isDefenseActive.value && activeDefenseId.value) {
         const defense = defenses.find(d => d.id === activeDefenseId.value);
         if (defense) {
           moraleDamage *= (1 - defense.moraleProtection);
           unitLossPercent *= (1 - defense.unitProtection);
 
+          // Check for weakness exploitation
+          if (enemy.weakness === activeDefenseId.value) {
+            moraleDamage *= (1 - enemy.weaknessBonus);
+            unitLossPercent *= (1 - enemy.weaknessBonus);
+            usedWeakness = true;
+            narrativeStore.addLog({
+              message: `⚡ SŁABOŚĆ WYKORZYSTANA! ${defense.name} jest super skuteczne przeciw ${enemy.name}!`,
+              type: 'achievement',
+            });
+          } else {
           narrativeStore.addLog({
             message: `🛡️ ${defense.name} zmniejszyło obrażenia!`,
             type: 'info',
           });
+          }
         }
       }
 
       // Apply relic morale damage reduction
       moraleDamage *= (1 - relicMoraleDamageReduction.value);
+
+      // Apply combo bonus (reduces damage)
+      if (combo.value.currentStreak > 0) {
+        const comboReduction = Math.min(combo.value.currentStreak * 0.02, 0.3); // Max 30% reduction
+        moraleDamage *= (1 - comboReduction);
+      }
+
+      // Handle special enemy effects
+      if (enemy.specialEffect) {
+        switch (enemy.specialEffect.type) {
+          case 'steal_faith':
+            const faithToSteal = resourceStore.resources.faith.amount.mul(enemy.specialEffect.value / 100);
+            resourceStore.spendResource('faith', faithToSteal);
+            narrativeStore.addLog({
+              message: `🧙 ${enemy.name} ukradł ${formatNumber(faithToSteal)} Wiary!`,
+              type: 'warning',
+            });
+            break;
+        }
+      }
 
       // Apply morale damage (respecting relic morale minimum)
       morale.value = Decimal.max(morale.value.sub(moraleDamage), bn(relicMoraleMinimum.value));
@@ -738,13 +1209,12 @@ export const useCombatStore = defineStore(
       // Kill units
       const unitsLost = killUnits(unitLossPercent);
 
-      // Reduce threat after wave (less reduction for stronger waves)
+      // Reduce threat after wave
       const threatReductionAmount = wave.threatRequired * (0.3 + defenseMultiplier.value * 0.2);
       threat.value = Decimal.max(threat.value.sub(threatReductionAmount), bn(0));
 
-      // End wave
-      isWaveActive.value = false;
-      wavesDefeated.value++;
+      // Finish wave and update combo
+      finishWave(false, unitsLost, enemy);
 
       // Update difficulty every 10 waves
       if (wavesDefeated.value % 10 === 0) {
@@ -905,6 +1375,109 @@ export const useCombatStore = defineStore(
     }
 
     /**
+     * Finish wave and update stats
+     */
+    function finishWave(wasImmune: boolean, unitsLost: number, enemy: EnemyType) {
+      // Update wave stats
+      wavesDefeated.value++;
+
+      // Update combo
+      const now = Date.now();
+      if (now - combo.value.lastWaveTime < combo.value.comboWindow * 1000) {
+        combo.value.currentStreak++;
+        if (combo.value.currentStreak > combo.value.maxStreak) {
+          combo.value.maxStreak = combo.value.currentStreak;
+        }
+
+        if (combo.value.currentStreak >= 3) {
+          narrativeStore.addLog({
+            message: `🔥 Seria x${combo.value.currentStreak}! Bonus do obrony +${Math.round(combo.value.currentStreak * combo.value.bonusPerStreak * 100)}%`,
+            type: 'achievement',
+          });
+        }
+      } else {
+        combo.value.currentStreak = 1;
+      }
+      combo.value.lastWaveTime = now;
+
+      // Handle boss rewards
+      if (enemy.tier === 'boss' && activeBossEncounter.value) {
+        const rewards = getBossRewards(enemy);
+        applyBossRewards(rewards);
+        bossesDefeated.value++;
+        activeBossEncounter.value = null;
+      } else if (enemy.tier === 'megaboss' && activeBossEncounter.value) {
+        const rewards = getBossRewards(enemy);
+        applyBossRewards(rewards);
+        megaBossesDefeated.value++;
+        activeBossEncounter.value = null;
+
+        // Re-enable disabled buildings
+        disabledBuildingIds.value = [];
+      }
+
+      // Clear active wave
+      activeWave.value = null;
+      isWaveActive.value = false;
+      waveTimeRemaining.value = 0;
+      timeSinceLastWave.value = 0;
+    }
+
+    /**
+     * Get rewards for defeating a boss
+     */
+    function getBossRewards(enemy: EnemyType): { relicRarity?: RelicRarity; ashes?: number; faith?: number } {
+      if (enemy.tier === 'boss') {
+        return {
+          relicRarity: Math.random() < 0.5 ? 'rare' : 'common',
+          ashes: 5,
+          faith: 500,
+        };
+      } else if (enemy.tier === 'megaboss') {
+        return {
+          relicRarity: Math.random() < 0.3 ? 'legendary' : 'epic',
+          ashes: 25,
+          faith: 2500,
+        };
+      }
+      return {};
+    }
+
+    /**
+     * Apply boss rewards
+     */
+    function applyBossRewards(rewards: { relicRarity?: RelicRarity; ashes?: number; faith?: number }) {
+      const prestigeStore = usePrestigeStore();
+      const relicStore = useRelicStore();
+
+      if (rewards.faith) {
+        resourceStore.addResource('faith', bn(rewards.faith));
+        narrativeStore.addLog({
+          message: `💰 Nagroda za bossa: +${rewards.faith} Wiary!`,
+          type: 'achievement',
+        });
+      }
+
+      if (rewards.ashes) {
+        prestigeStore.addAshesFromBoss(rewards.ashes);
+        narrativeStore.addLog({
+          message: `🔥 Nagroda za bossa: +${rewards.ashes} Popiołów Męczennika!`,
+          type: 'achievement',
+        });
+      }
+
+      if (rewards.relicRarity) {
+        const droppedRelic = relicStore.grantRelicByRarity(rewards.relicRarity);
+        if (droppedRelic) {
+          narrativeStore.addLog({
+            message: `🏺 Boss upuścił relikwię: ${droppedRelic.name}!`,
+            type: 'achievement',
+          });
+        }
+      }
+    }
+
+    /**
      * Decay defense usage counts over time
      * Called periodically to reduce spamming penalty
      */
@@ -968,6 +1541,20 @@ export const useCombatStore = defineStore(
       timeSinceLastCostDecay.value = 0;
       // Reset max level effect tracking
       firstWaveImmunityUsed.value = false;
+
+      // Reset extended combat state
+      currentEnemyType.value = 'cultist';
+      combo.value = {
+        currentStreak: 0,
+        maxStreak: combo.value.maxStreak, // Keep max streak as achievement
+        lastWaveTime: 0,
+        comboWindow: 30,
+        bonusPerStreak: 0.05,
+      };
+      activeBossEncounter.value = null;
+      activeWave.value = null;
+      disabledBuildingIds.value = [];
+      // Boss defeats are persistent - not reset
     }
 
     /**
@@ -1016,6 +1603,15 @@ export const useCombatStore = defineStore(
       cycleEnded,
       defenseUsageCounts,
 
+      // Extended combat state
+      currentEnemyType,
+      combo,
+      activeBossEncounter,
+      bossesDefeated,
+      megaBossesDefeated,
+      activeWave,
+      disabledBuildingIds,
+
       // Relic bonuses
       relicDefenseBonus,
       relicMoraleRegenBonus,
@@ -1026,6 +1622,7 @@ export const useCombatStore = defineStore(
       // Data
       waves,
       defenses,
+      ENEMY_TYPES,
 
       // Computed - Defense stats
       defenseRating,
@@ -1058,6 +1655,8 @@ export const useCombatStore = defineStore(
       startWave,
       activateDefense,
       resetCombat,
+      executeBossChoice,
+      defeatBoss,
 
       // Dev
       devSetThreat,
@@ -1081,6 +1680,9 @@ export const useCombatStore = defineStore(
         'wavesDefeated',
         'cycleEnded',
         'defenseUsageCounts',
+        'bossesDefeated',
+        'megaBossesDefeated',
+        'combo',
       ],
       serializer: {
         serialize: (state) => {

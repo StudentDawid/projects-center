@@ -19,6 +19,7 @@ Plan rozwoju gry "Sanktuarium Solmara" - Premium IDLE w klimacie Religious Grimd
 | **Budynki Tier 2** | v0.6 | Katedra, Arsenał, Biblioteka, Szpital Polowy |
 | **Budynki Tier 3** | v0.7 | Relikwiarz, Forteca Inkwizycji, Wieża Dzwonnicza + Inkwizytor, Święty Wojownik |
 | **System Relikwii** | v0.8 | 22 relikwie (4 rzadkości), system slotów, drop z fal, panel UI |
+|| **Rozszerzony System Walki** | v0.9 | 5 typów wrogów, system słabości, combo, boss encounters |
 
 ---
 
@@ -278,36 +279,46 @@ Limit aktywnych: 3 sloty (rozszerzalne przez prestiż do 5)
 ---
 
 ### 6. Rozszerzony System Walki
-**Status:** 🟢 Tier 2 ZREALIZOWANE
+**Status:** ✅ ZREALIZOWANE (v0.9)
+
+System walki rozszerzony o nowe typy wrogów, mechanikę combo i boss-fight.
 
 ```
 Nowe typy wrogów:
-├── "Kultyści Mięsa" (podstawowi)
-│   └── Standardowe obrażenia morale i strat
+├── "Kultyści Mięsa" (podstawowi) ✅
+│   └── Standardowe obrażenia, słabi na Błogosławieństwo (+30%)
 │
-├── "Plugastwa" (elitarni)
-│   ├── 2x obrażenia, 2x HP
-│   └── Pojawiają się co 5 fal
+├── "Plugastwa" (elitarni) ✅
+│   ├── 2x obrażenia, co 5 fal
+│   └── Słabi na Fortyfikację (+40%)
 │
-├── "Apostaci" (specjalni)
-│   ├── Niskie obrażenia
-│   └── Kradną 5% aktualnej Wiary
+├── "Apostaci" (specjalni) ✅
+│   ├── Kradną 5% aktualnej Wiary, co 7 fal
+│   └── Słabi na Męczeństwo (+60%)
 │
-├── "Abominacje" (boss)
-│   ├── Co 25 fal
-│   ├── 5x obrażenia, długi czas trwania
-│   └── Nagroda: Gwarantowana relikwia + bonus Popiołów
+├── "Abominacje" (boss) ✅
+│   ├── Co 25 fal, 5x DMG, drain morale
+│   └── Nagroda: Rzadka/Epicka relikwia + Popioły
 │
-└── "Arcyheretyk" (mega-boss)
-    ├── Co 100 fal
-    ├── Wymaga aktywnej obrony gracza
-    └── Nagroda: Legendarna relikwia
+└── "Arcyheretyk" (mega-boss) ✅
+    ├── Co 100 fal, wyłącza 30% budynków
+    └── Nagroda: Legendarna relikwia + duże Popioły
 
-Mechaniki:
-├── Słabości wrogów (np. Apostaci słabi na Męczeństwo)
-├── Combo za szybkie odpieranie fal
-└── Mini-gra podczas bossów (QTE lub strategiczne wybory)
+Nowe mechaniki:
+├── System słabości wrogów na liturgie ✅
+├── Combo za szybkie odpieranie fal (+5%/serii, max 30%) ✅
+├── Boss Encounters - strategiczne wybory ✅
+│   ├── Atak Frontalny: -20% HP bossa
+│   ├── Osłabienie: -30% DMG fali
+│   └── Poświęcenie: -50% HP za 10% jednostek
+└── Panel UI z typem wroga, combo i boss-fight ✅
 ```
+
+**Implementacja:**
+- Store `combat.ts` rozszerzony o typy wrogów i boss encounters
+- Komponenty: `CombatPanel.vue` z wyświetlaniem wroga i combo
+- System nagród za bossów (relikwie, Popioły, Wiara)
+- Persystencja: bossesDefeated, megaBossesDefeated, combo
 
 ---
 
@@ -363,8 +374,8 @@ Zgodnie z oryginalnym GDD - druga grywalana frakcja.
 | **v0.5** | Wydarzenia losowe | 3-4h | 🔥 Wysoki | ✅ |
 | **v0.6** | Budynki Tier 2 | 2-3h | 🟡 Średni | ✅ |
 | **v0.7** | Budynki Tier 3 + jednostki specjalne | 3-4h | 🟡 Średni | ✅ |
-| **v0.8** | System Relikwii | 4-5h | 🟡 Średni | 🔴 |
-| **v0.9** | Rozszerzony system walki | 4-5h | 🟡 Średni | 🔴 |
+| **v0.8** | System Relikwii | 4-5h | 🟡 Średni | ✅ |
+| **v0.9** | Rozszerzony system walki | 4-5h | 🟡 Średni | ✅ |
 | **v1.0+** | Story Mode, Fakcja Kultu, Multiplayer | Długoterminowe | 🔵 Niski | 🔴 |
 
 ---

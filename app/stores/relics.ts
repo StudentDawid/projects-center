@@ -577,6 +577,42 @@ export const useRelicStore = defineStore(
     }
 
     /**
+     * Grant a relic of specific rarity (for boss rewards)
+     */
+    function grantRelicByRarity(rarity: 'common' | 'rare' | 'epic' | 'legendary'): Relic | null {
+      // Find all unowned relics of this rarity
+      const availableRelics = relics.value.filter(
+        (r) => !r.owned && r.rarity === rarity
+      );
+
+      if (availableRelics.length === 0) {
+        // Fall back to lower rarity if none available
+        const fallbackOrder: Array<'common' | 'rare' | 'epic' | 'legendary'> = ['legendary', 'epic', 'rare', 'common'];
+        const currentIndex = fallbackOrder.indexOf(rarity);
+
+        for (let i = currentIndex + 1; i < fallbackOrder.length; i++) {
+          const fallbackRelics = relics.value.filter(
+            (r) => !r.owned && r.rarity === fallbackOrder[i]
+          );
+          if (fallbackRelics.length > 0) {
+            const relic = fallbackRelics[Math.floor(Math.random() * fallbackRelics.length)];
+            relic.owned = true;
+            pendingRelic.value = relic;
+            return relic;
+          }
+        }
+        return null;
+      }
+
+      // Pick random relic of this rarity
+      const relic = availableRelics[Math.floor(Math.random() * availableRelics.length)];
+      relic.owned = true;
+      pendingRelic.value = relic;
+
+      return relic;
+    }
+
+    /**
      * Reset for prestige (keep relics, reset equipped state based on slots)
      */
     function resetForPrestige(): void {
@@ -616,6 +652,7 @@ export const useRelicStore = defineStore(
       rollRarity,
       tryDropRelic,
       grantPrestigeRelics,
+      grantRelicByRarity,
       claimPendingRelic,
       dismissPendingRelic,
       equipRelic,

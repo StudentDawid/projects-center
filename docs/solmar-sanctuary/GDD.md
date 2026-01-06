@@ -398,6 +398,80 @@ Przykład: 50,000 Wiary + 15 fal + 40 budynków = 7 + 3 + 1 = **11 Popiołów**
 
 ---
 
+### 4.5 Rozszerzony System Walki
+
+System walki został rozszerzony o nowe typy wrogów, mechanikę combo i system boss-fight.
+
+#### 4.5.1 Typy Wrogów
+
+| Typ | Ikona | Tier | Mnożnik DMG | Słabość | Pojawia się |
+|-----|-------|------|-------------|---------|-------------|
+| **Kultyści Mięsa** | 👹 | Basic | 1x | Błogosławieństwo (+30%) | Co 1 falę |
+| **Plugastwo** | 👾 | Elite | 2x | Fortyfikacja (+40%) | Co 5 fal |
+| **Apostata** | 🧙 | Special | 0.5x + kradnie 5% Wiary | Męczeństwo (+60%) | Co 7 fal |
+| **Abominacja** | 🐙 | Boss | 5x + drain morale | Męczeństwo (+35%) | Co 25 fal |
+| **Arcyheretyk** | 😈 | Megaboss | 10x + wyłącza budynki | - | Co 100 fal |
+
+#### 4.5.2 System Słabości
+
+Wrogowie mają słabości na konkretne liturgie. Użycie odpowiedniej liturgii podczas fali z danym wrogiem daje dodatkową redukcję obrażeń:
+
+- **Błogosławieństwo** - Skuteczne przeciw Kultystom (+30% redukcji)
+- **Fortyfikacja** - Skuteczne przeciw Plugastwom (+40% redukcji)
+- **Męczeństwo** - Skuteczne przeciw Apostatom (+60%) i Abominacjom (+35%)
+
+#### 4.5.3 System Combo
+
+Szybkie odpieranie fal buduje serię (combo):
+- **Okno combo**: 30 sekund między falami
+- **Bonus za serię**: +5% redukcji obrażeń za każdą falę w serii (max 30%)
+- **Rekord serii**: Zapisywany między sesjami
+
+```
+Seria x1: +5% obrony
+Seria x3: +15% obrony (+ notyfikacja)
+Seria x5: +25% obrony (+ specjalny efekt)
+Seria x6+: +30% obrony (cap)
+```
+
+#### 4.5.4 System Boss Fight
+
+Podczas fal bossów (Abominacja, Arcyheretyk) gracz może wykonywać strategiczne akcje:
+
+**Dostępne Akcje:**
+| Akcja | Koszt | Efekt | Opis |
+|-------|-------|-------|------|
+| Atak Frontalny | 100 Wiary | -20% HP Bossa | Bezpośredni atak, ryzykujesz straty |
+| Osłabienie | 150 Wiary + 50 Dukatów | -30% DMG fali | Osłabia obrażenia wroga |
+| Poświęcenie | 10% jednostek | -50% HP Bossa | Poświęć jednostki za ogromne obrażenia |
+
+**Fazy Bossów:**
+- **Abominacja**: 2 fazy (przejście przy 50% HP)
+- **Arcyheretyk**: 3 fazy (przejście przy 66% i 33% HP)
+
+**Specjalne Efekty Bossów:**
+- **Abominacja**: Drain morale -2/s podczas walki
+- **Arcyheretyk**: Wyłącza 30% losowych budynków na czas walki
+
+**Nagrody za Bossów:**
+| Boss | Relikwia | Popioły | Wiara |
+|------|----------|---------|-------|
+| Abominacja | Rzadka (50%) / Epicka (50%) | +3 | +500 |
+| Arcyheretyk | Epicka (70%) / Legendarna (30%) | +10 | +2500 |
+
+#### 4.5.5 UI Walki
+
+Panel walki wyświetla:
+- **Aktualną serię combo** (z animacją ognia przy serii 3+)
+- **Typ wroga** podczas fali (ikona, nazwa, słabość, tier)
+- **Panel bossa** podczas boss-fight:
+  - Pasek HP bossa
+  - Aktualna faza
+  - Dostępne akcje z kosztami
+  - Lista nagród
+
+---
+
 ## 5. Implementacja w Cursorze (Instrukcje dla AI)
 
 Poniżej znajdują się gotowe fragmenty kodu i struktury do wykorzystania przy generowaniu projektu.

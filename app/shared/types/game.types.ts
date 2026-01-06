@@ -212,3 +212,94 @@ export interface RelicSlot {
   unlocked: boolean;
 }
 
+// ============================================
+// Combat System - Extended
+// ============================================
+
+export type EnemyTypeId =
+  | 'cultist' // Kultyści Mięsa (podstawowi)
+  | 'abomination_minion' // Plugastwa (elitarni)
+  | 'apostate' // Apostaci (specjalni)
+  | 'abomination_boss' // Abominacje (boss)
+  | 'arch_heretic'; // Arcyheretyk (mega-boss)
+
+export type LiturgyId = 'blessing' | 'martyrdom' | 'regeneration' | 'fortification';
+
+export interface EnemyType {
+  id: EnemyTypeId;
+  name: string;
+  description: string;
+  icon: string;
+  tier: 'basic' | 'elite' | 'special' | 'boss' | 'megaboss';
+  damageMultiplier: number;
+  unitLossMultiplier: number;
+  durationMultiplier: number;
+  specialEffect?: EnemySpecialEffect;
+  weakness?: LiturgyId; // Liturgy this enemy is weak to
+  weaknessBonus: number; // Extra damage reduction when weakness exploited (0-1)
+  spawnCondition: EnemySpawnCondition;
+}
+
+export interface EnemySpecialEffect {
+  type: 'steal_faith' | 'morale_drain' | 'disable_buildings' | 'summon_minions' | 'enrage';
+  value: number; // Percentage or amount based on type
+  description: string;
+}
+
+export interface EnemySpawnCondition {
+  type: 'every_n_waves' | 'threat_threshold' | 'random_chance';
+  value: number;
+}
+
+export interface BossEncounter {
+  id: string;
+  enemyType: EnemyTypeId;
+  phase: number; // Current phase (1-3)
+  maxPhases: number;
+  healthPercent: number; // Boss health (0-100)
+  choices: BossChoice[];
+  activeChoice: string | null;
+  timeRemaining: number;
+  rewards: BossReward[];
+}
+
+export interface BossChoice {
+  id: string;
+  name: string;
+  description: string;
+  icon: string;
+  cost: Partial<Record<ResourceId, number>>;
+  effect: BossChoiceEffect;
+}
+
+export interface BossChoiceEffect {
+  type: 'damage' | 'weaken' | 'heal' | 'sacrifice';
+  value: number;
+  targetPhase?: number;
+}
+
+export interface BossReward {
+  type: 'relic' | 'faith' | 'ashes' | 'achievement';
+  relicRarity?: RelicRarity;
+  amount?: number;
+}
+
+export interface CombatCombo {
+  currentStreak: number;
+  maxStreak: number;
+  lastWaveTime: number;
+  comboWindow: number; // Seconds to maintain combo
+  bonusPerStreak: number; // Multiplier bonus per streak
+}
+
+export interface ActiveWave {
+  waveNumber: number;
+  enemyType: EnemyType;
+  damage: number;
+  unitLosses: number;
+  duration: number;
+  timeRemaining: number;
+  isBoss: boolean;
+  specialEffectActive: boolean;
+}
+

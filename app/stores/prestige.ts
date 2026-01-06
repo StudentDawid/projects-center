@@ -438,6 +438,16 @@ export const usePrestigeStore = defineStore(
     }
 
     /**
+     * Add ashes from boss defeat (without prestige reset)
+     */
+    function addAshesFromBoss(amount: number): void {
+      martyrAshes.value = martyrAshes.value.add(amount);
+      stats.value.totalAshesEarned = stats.value.totalAshesEarned.add(amount);
+
+      console.log(`[Prestige] Boss ashes added: +${amount}, Total: ${formatNumber(martyrAshes.value)}`);
+    }
+
+    /**
      * Purchase a prestige upgrade
      */
     function purchaseUpgrade(upgradeId: string): boolean {
@@ -573,6 +583,7 @@ export const usePrestigeStore = defineStore(
       purchaseUpgrade,
       applyPrestigeBonuses,
       getUpgrade,
+      addAshesFromBoss,
 
       // Dev
       devAddAshes,
