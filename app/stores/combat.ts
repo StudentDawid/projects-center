@@ -16,6 +16,7 @@ import { useNarrativeStore } from './narrative';
 import { useEventStore } from './events';
 import { useRelicStore } from './relics';
 import { usePrestigeStore } from './prestige';
+import { useChallengeStore } from './challenges';
 import Decimal from 'break_infinity.js';
 import { logger } from '~/shared/lib/logger';
 import type {
@@ -1194,6 +1195,10 @@ export const useCombatStore = defineStore(
       // Increment usage count (increases future cost)
       defenseUsageCounts.value[defenseId] = (defenseUsageCounts.value[defenseId] || 0) + 1;
 
+      // Track for challenges
+      const challengeStore = useChallengeStore();
+      challengeStore.updateProgress('liturgiesUsed', 1);
+
       // Activate defense
       isDefenseActive.value = true;
       activeDefenseId.value = defenseId;
@@ -1234,6 +1239,21 @@ export const useCombatStore = defineStore(
       // Update wave stats
       wavesDefeated.value++;
 
+      // Track for challenges
+      const challengeStore = useChallengeStore();
+      challengeStore.updateProgress('wavesDefeated', 1);
+
+      // Track for statistics
+      import('./statistics').then(({ useStatisticsStore }) => {
+        const statisticsStore = useStatisticsStore();
+        statisticsStore.trackWaveCompleted(
+          wavesDefeated.value,
+          enemy.name,
+          currentWave.value?.damage || 0,
+          unitsLost
+        );
+      });
+
       // Update combo
       const now = Date.now();
       if (now - combo.value.lastWaveTime < combo.value.comboWindow * 1000) {
@@ -1241,6 +1261,9 @@ export const useCombatStore = defineStore(
         if (combo.value.currentStreak > combo.value.maxStreak) {
           combo.value.maxStreak = combo.value.currentStreak;
         }
+
+        // Track max combo for challenges
+        challengeStore.setProgress('maxCombo', combo.value.currentStreak);
 
         if (combo.value.currentStreak >= 3) {
           narrativeStore.addLog({

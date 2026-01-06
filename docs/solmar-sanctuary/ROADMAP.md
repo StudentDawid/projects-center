@@ -322,10 +322,214 @@ Nowe mechaniki:
 
 ---
 
+### 7. System Wyzwań Dziennych/Tygodniowych
+**Status:** ✅ ZREALIZOWANE
+
+Codzienny i tygodniowy cel dla graczy - dodatkowa motywacja do powrotów.
+
+```
+Wyzwania Dzienne (resetowane co 24h):
+├── "Obrońca Dnia" - Odpieraj 10 fal → +500 Wiary
+├── "Budowniczy" - Zbuduj 5 budynków → +100 Dukatów
+├── "Liturg" - Użyj 3 liturgii → +25 morale
+├── "Modlitewnik" - Kliknij 50 razy → +200 Wiary
+├── "Skarbnik" - Zbierz 1000 Dukatów → +10% produkcji (1h)
+└── Bonus za ukończenie wszystkich: Losowa Rzadka relikwia
+
+Wyzwania Tygodniowe (resetowane w poniedziałek):
+├── "Mistrz Combo" - Osiągnij 30 combo → Epicka relikwia
+├── "Niezłomny" - Odpieraj 100 fal → +1000 Popiołów
+├── "Imperium" - Posiadaj 50 budynków → +25% produkcji (24h)
+└── "Odrodzony" - Wykonaj 3 prestiże → Legendarna relikwia
+
+Mechanika:
+├── Streak bonus: +10% nagrody za każdy kolejny dzień
+├── Max streak: 7 dni = +70% nagrody
+├── Przerwanie streaka: reset do 0%
+└── Panel UI z postępem i czasem do resetu
+```
+
+**Implementacja:**
+- Store `challenges.ts`
+- Komponent `ChallengesPanel.vue`
+- Integracja z gameLoop (tracking postępu)
+- Persystencja: lastDailyReset, lastWeeklyReset, streak
+
+---
+
+### 8. System Statystyk i Analityki
+**Status:** 🔴 DO ZROBIENIA
+
+Panel statystyk z historią i wykresami dla entuzjastów liczb.
+
+```
+Statystyki Globalne:
+├── Łączna zebrana Wiara (wszystkie cykle)
+├── Łączne prestiże / Popioły
+├── Łączne odparte fale / straty
+├── Najwyższe combo ever
+└── Czas gry łącznie
+
+Statystyki Bieżącego Cyklu:
+├── Wiara/minutę, Wiara/godzinę
+├── Wykres produkcji (ostatnie 24h)
+├── Wydajność budynków (ranking)
+├── Historia fal (DMG received, losses)
+└── Użyte liturgie (skuteczność)
+
+Porównanie Cykli:
+├── Tabela z poprzednimi prestiżami
+├── Czas do X Wiary
+├── Najszybszy prestiż
+└── Trend postępu
+```
+
+**Implementacja:**
+- Store `statistics.ts`
+- Komponent `StatisticsPanel.vue`
+- Wykresy: Chart.js lub ApexCharts
+- Eksport/Share score
+
+---
+
+### 9. System Ascensji (Super-Prestiż)
+**Status:** 🔴 DO ZROBIENIA
+
+Meta-progression po 100 prestiżach - nowy endgame.
+
+```
+Wymagania:
+├── 100 prestiży wykonanych
+├── 10,000 Popiołów Męczenników zgromadzonych
+└── Wszystkie osiągnięcia z kategorii Prestiż
+
+Mechanika:
+├── Reset: Wszystko (w tym ulepszenia prestiżu!)
+├── Nowa waluta: "Esencja Świętości"
+│   └── 1 Esencja = +1% bazowej produkcji (permanentne)
+├── Odblokowania:
+│   ├── Tier 4 budynki
+│   ├── Nowe relikwie (Ascended rarity)
+│   ├── Hard Mode modyfikatory
+│   └── Możliwość gry jako Kult Mięsa
+└── Tytuł: "Wzniesiony" + specjalna ramka
+
+UI:
+├── Złota zakładka "Ascensja" (po 50 prestiżach)
+├── Progress bar do odblokowania
+├── Preview nagród
+└── Potwierdzenie z ostrzeżeniem
+```
+
+---
+
+### 10. System Sojuszy/Paktów z NPC
+**Status:** 🔴 DO ZROBIENIA
+
+Fakcje NPC do zaprzyjaźnienia z unikalnymi nagrodami.
+
+```
+Fakcje:
+├── "Zakon Płomienia"
+│   ├── Reputacja: misje, donacje Wiary
+│   ├── Bonusy: +% produkcji Wiary, unikalne liturgie
+│   └── Nagroda max: "Płomień Wieczny" (Legendarna relikwia)
+│
+├── "Gildia Kupców"
+│   ├── Reputacja: donacje Dukatów, handel
+│   ├── Bonusy: -% kosztów budynków, +% Dukatów
+│   └── Nagroda max: "Midas' Touch" (Legendarna relikwia)
+│
+└── "Bractwo Wojowników"
+    ├── Reputacja: odparte fale, bossowie
+    ├── Bonusy: +% obrony, -% strat
+    └── Nagroda max: "Tarcza Nieśmiertelnych" (Legendarna)
+
+Mechanika:
+├── Poziomy reputacji: Nieznany → Przyjazny → Szanowany → Egzaltowany
+├── Misje fakcyjne (dzienne/tygodniowe)
+├── Konflikty: wybór jednej fakcji może zrazić inną
+└── Eventy specjalne dla wysokiej reputacji
+```
+
+---
+
+### 11. Ekspedycje / Idle Adventures
+**Status:** 🔴 DO ZROBIENIA
+
+Wysyłanie jednostek na misje przynoszące nagrody.
+
+```
+Ekspedycje:
+├── "Pielgrzymka" (10 min)
+│   ├── Koszt: 2 Kapelanów
+│   ├── Nagroda: 500-2000 Wiary
+│   └── Ryzyko: 5% szansy na stratę jednostki
+│
+├── "Krucjata" (30 min)
+│   ├── Koszt: 5 jednostek wojskowych
+│   ├── Nagroda: Rzadka relikwia + 1000 Wiary
+│   └── Ryzyko: 15% szansy na straty
+│
+├── "Odkrycie Świętego Miejsca" (60 min)
+│   ├── Koszt: 10 jednostek + 5000 Wiary
+│   ├── Nagroda: Nowy budynek/ulepszenie
+│   └── Ryzyko: 25% szansy na straty
+│
+└── "Wielka Krucjata" (4h) - [Wymaga Ascensji]
+    ├── Koszt: 50 jednostek + 50000 Wiary
+    ├── Nagroda: Legendarna relikwia + Esencja
+    └── Ryzyko: 40% szansy na straty
+
+UI:
+├── Mapa z dostępnymi lokacjami
+├── Slot na aktywne ekspedycje (max 3)
+├── Timer i progress bar
+└── Log z wynikami
+```
+
+---
+
+### 12. Drzewko Talentów
+**Status:** 🔴 DO ZROBIENIA
+
+System specjalizacji z punktami za prestiż i osiągnięcia.
+
+```
+Gałęzie:
+├── "Wiara" (produkcja)
+│   ├── +5% produkcji Wiary per punkt
+│   ├── +10% efektywność Kapliczek
+│   └── Ultimate: Automatyczna modlitwa +10/s
+│
+├── "Wojna" (obrona)
+│   ├── +5% obrony per punkt
+│   ├── -5% obrażeń morale
+│   └── Ultimate: Immunitet na 1 falę/prestiż
+│
+├── "Handel" (ekonomia)
+│   ├── -5% kosztów budynków
+│   ├── +10% produkcji Dukatów
+│   └── Ultimate: Darmowe ulepszenie/prestiż
+│
+└── "Cuda" (eventy/liturgie)
+    ├── +10% efektywność liturgii
+    ├── +20% szansa na pozytywne eventy
+    └── Ultimate: 1 dodatkowa relikwia slot
+
+Punkty:
+├── +1 za prestiż
+├── +1 za każde 5 osiągnięć
+├── +3 za ascensję
+└── Reset: 1000 Popiołów
+```
+
+---
+
 ## 🔵 PRIORYTET NISKI (Long-term)
 
-### 7. System Fabularny (Story Mode)
-**Status:** 🟢 Tier 2 ZREALIZOWANE
+### 13. System Fabularny (Story Mode)
+**Status:** 🔴 DO ZROBIENIA
 
 - Rozdziały narracyjne odblokowywane przez postęp
 - Dialogi z NPC (Wielki Kapłan, Inkwizytorka, Heretyk)
@@ -334,8 +538,8 @@ Nowe mechaniki:
 
 ---
 
-### 8. Tryb Kultu Mięsa (Second Faction)
-**Status:** 🟢 Tier 2 ZREALIZOWANE
+### 14. Tryb Kultu Mięsa (Second Faction)
+**Status:** 🔴 DO ZROBIENIA
 
 Zgodnie z oryginalnym GDD - druga grywalana frakcja.
 
@@ -346,8 +550,8 @@ Zgodnie z oryginalnym GDD - druga grywalana frakcja.
 
 ---
 
-### 9. Multiplayer / Leaderboardy
-**Status:** 🟢 Tier 2 ZREALIZOWANE
+### 15. Multiplayer / Leaderboardy
+**Status:** 🔴 DO ZROBIENIA
 
 - Globalne rankingi (najwyższa fala, najwięcej prestiży)
 - Tygodniowe wyzwania
@@ -356,8 +560,8 @@ Zgodnie z oryginalnym GDD - druga grywalana frakcja.
 
 ---
 
-### 10. Offline Progress Enhancement
-**Status:** 🟢 Tier 2 ZREALIZOWANE
+### 16. Offline Progress Enhancement
+**Status:** 🔴 DO ZROBIENIA
 
 - Rozszerzone obliczenia offline (>24h)
 - "Kapłani nocni" - specjalne bonusy za nieobecność
@@ -376,7 +580,14 @@ Zgodnie z oryginalnym GDD - druga grywalana frakcja.
 | **v0.7** | Budynki Tier 3 + jednostki specjalne | 3-4h | 🟡 Średni | ✅ |
 | **v0.8** | System Relikwii | 4-5h | 🟡 Średni | ✅ |
 | **v0.9** | Rozszerzony system walki | 4-5h | 🟡 Średni | ✅ |
-| **v1.0+** | Story Mode, Fakcja Kultu, Multiplayer | Długoterminowe | 🔵 Niski | 🔴 |
+| **v0.10** | Budynki Click + Multi-buy | 2h | 🔥 Wysoki | ✅ |
+| **v1.0** | System Wyzwań Dziennych/Tygodniowych | 3-4h | 🔥 Wysoki | ✅ |
+| **v1.1** | System Statystyk | 3-4h | 🟡 Średni | 🔴 |
+| **v1.2** | System Ascensji | 4-5h | 🟡 Średni | 🔴 |
+| **v1.3** | Sojusze/Pakty NPC | 4-5h | 🟡 Średni | 🔴 |
+| **v1.4** | Ekspedycje | 4-5h | 🟡 Średni | 🔴 |
+| **v1.5** | Drzewko Talentów | 4-5h | 🟡 Średni | 🔴 |
+| **v2.0+** | Story Mode, Fakcja Kultu, Multiplayer | Długoterminowe | 🔵 Niski | 🔴 |
 
 ---
 
