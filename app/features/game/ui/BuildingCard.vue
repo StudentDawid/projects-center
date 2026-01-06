@@ -83,55 +83,89 @@
           <span class="text-info">Wymaga: {{ prerequisitesDisplay }}</span>
         </div>
 
-        <!-- Production Info -->
-        <div class="building-stats text-caption mb-3">
-          <div v-if="productionDisplay" class="building-production">
-            <v-icon icon="mdi-arrow-up" size="14" color="success" class="mr-1" />
-            <span class="text-success">{{ productionDisplay }}</span>
-            <span v-if="count > 0 && level > 1" class="text-success-darken-2 ml-1">
-              (×{{ (1 + (level - 1) * 0.5).toFixed(1) }})
-            </span>
-          </div>
-          <div v-if="consumptionDisplay" class="building-consumption">
-            <v-icon icon="mdi-arrow-down" size="14" color="error" class="mr-1" />
-            <span class="text-error">{{ consumptionDisplay }}</span>
-            <span v-if="count > 0 && level > 1" class="text-success ml-1">
-              (×{{ (1 - (level - 1) * 0.1).toFixed(1) }})
-            </span>
-          </div>
-        </div>
+        <!-- Production Info (with tooltip formula) -->
+        <v-tooltip location="top" :text="productionFormula">
+          <template #activator="{ props: tooltipProps }">
+            <div class="building-stats text-caption mb-3" v-bind="tooltipProps">
+              <div v-if="productionDisplay" class="building-production">
+                <v-icon icon="mdi-arrow-up" size="14" color="success" class="mr-1" />
+                <span class="text-success">{{ productionDisplay }}</span>
+                <span v-if="count > 0 && level > 1" class="text-success-darken-2 ml-1">
+                  (×{{ (1 + (level - 1) * 0.5).toFixed(1) }})
+                </span>
+              </div>
+              <div v-if="consumptionDisplay" class="building-consumption">
+                <v-icon icon="mdi-arrow-down" size="14" color="error" class="mr-1" />
+                <span class="text-error">{{ consumptionDisplay }}</span>
+                <span v-if="count > 0 && level > 1" class="text-success ml-1">
+                  (×{{ (1 - (level - 1) * 0.1).toFixed(1) }})
+                </span>
+              </div>
+            </div>
+          </template>
+        </v-tooltip>
 
         <!-- Actions Row -->
         <div class="building-actions">
           <!-- Buy Section with quantity buttons -->
           <div class="buy-section">
-            <div class="building-cost text-body-2 mb-1" :class="{ 'text-error': !canAfford }">
-              <v-icon icon="mdi-cash" size="16" class="mr-1" />
-              {{ displayedCost }}
-            </div>
+            <!-- Cost with formula tooltip -->
+            <v-tooltip location="top" :text="costFormula">
+              <template #activator="{ props: tooltipProps }">
+                <div
+                  class="building-cost text-body-2 mb-1"
+                  :class="{ 'text-error': !canAfford }"
+                  v-bind="tooltipProps"
+                >
+                  <v-icon icon="mdi-cash" size="16" class="mr-1" />
+                  {{ displayedCost }}
+                </div>
+              </template>
+            </v-tooltip>
 
-            <!-- Quantity Selector -->
-            <div class="quantity-buttons d-flex gap-1 mb-2">
-              <v-btn
-                v-for="qty in [1, 5, 25, 100]"
-                :key="qty"
-                :variant="selectedQuantity === qty ? 'flat' : 'outlined'"
-                :color="selectedQuantity === qty ? 'primary' : 'default'"
-                size="small"
-                class="quantity-btn"
-                @click="selectedQuantity = qty"
-              >
-                {{ qty }}
-              </v-btn>
-              <v-btn
-                :variant="selectedQuantity === -1 ? 'flat' : 'outlined'"
-                :color="selectedQuantity === -1 ? 'warning' : 'default'"
-                size="small"
-                class="quantity-btn max-btn"
-                @click="selectedQuantity = -1"
-              >
-                MAX
-              </v-btn>
+            <!-- Quantity Selector + Auto-buy -->
+            <div class="d-flex align-center gap-2 mb-2">
+              <div class="quantity-buttons d-flex gap-1">
+                <v-btn
+                  v-for="qty in [1, 5, 25, 100]"
+                  :key="qty"
+                  :variant="selectedQuantity === qty ? 'flat' : 'outlined'"
+                  :color="selectedQuantity === qty ? 'primary' : 'default'"
+                  size="small"
+                  class="quantity-btn"
+                  @click="selectedQuantity = qty"
+                >
+                  {{ qty }}
+                </v-btn>
+                <v-btn
+                  :variant="selectedQuantity === -1 ? 'flat' : 'outlined'"
+                  :color="selectedQuantity === -1 ? 'warning' : 'default'"
+                  size="small"
+                  class="quantity-btn max-btn"
+                  @click="selectedQuantity = -1"
+                >
+                  MAX
+                </v-btn>
+              </div>
+
+              <!-- Auto-buy checkbox -->
+              <v-tooltip location="top" text="Auto-kup gdy stać">
+                <template #activator="{ props: tooltipProps }">
+                  <v-checkbox
+                    v-bind="tooltipProps"
+                    :model-value="isAutoBuy"
+                    hide-details
+                    density="compact"
+                    color="success"
+                    class="auto-buy-checkbox"
+                    @update:model-value="handleToggleAutoBuy"
+                  >
+                    <template #label>
+                      <span class="auto-buy-label">Auto</span>
+                    </template>
+                  </v-checkbox>
+                </template>
+              </v-tooltip>
             </div>
 
             <v-btn
@@ -244,6 +278,13 @@ const displayedCost = computed(() => {
   return entityStore.getFormattedCostForMultiple(props.id as EntityId, qty);
 });
 
+// Auto-buy state
+const isAutoBuy = computed(() => entityStore.isAutoBuyEnabled(props.id as EntityId));
+
+// Formulas for tooltips
+const costFormula = computed(() => entityStore.getCostFormula(props.id as EntityId));
+const productionFormula = computed(() => entityStore.getProductionFormula(props.id as EntityId));
+
 function handleBuy() {
   if (canAffordSelected.value && effectiveQuantity.value > 0) {
     emit('buy', props.id, effectiveQuantity.value);
@@ -254,6 +295,10 @@ function handleUpgrade() {
   if (props.canAffordUpgrade && !props.isMaxLevel) {
     emit('upgrade', props.id);
   }
+}
+
+function handleToggleAutoBuy() {
+  entityStore.toggleAutoBuy(props.id as EntityId);
 }
 </script>
 
@@ -468,6 +513,25 @@ function handleUpgrade() {
   &.max-btn {
     min-width: 48px !important;
   }
+}
+
+.auto-buy-checkbox {
+  margin: 0;
+  flex-shrink: 0;
+
+  :deep(.v-selection-control) {
+    min-height: auto;
+  }
+
+  :deep(.v-label) {
+    opacity: 1;
+  }
+}
+
+.auto-buy-label {
+  font-size: 0.7rem;
+  font-weight: 500;
+  color: rgba(255, 255, 255, 0.7);
 }
 
 .building-buy-btn,

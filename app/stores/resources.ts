@@ -114,8 +114,13 @@ export const useResourceStore = defineStore(
     // ============================================
     // Computed
     // ============================================
+    // Hidden cult resources (to be shown later when cult faction is implemented)
+    const HIDDEN_CULT_RESOURCES = ['biomass', 'souls'];
+
     const unlockedResources = computed(() =>
-      Object.values(resources.value).filter((r) => r.unlocked)
+      Object.values(resources.value).filter(
+        (r) => r.unlocked && !HIDDEN_CULT_RESOURCES.includes(r.id)
+      )
     );
 
     const faithDisplay = computed(() =>
@@ -274,6 +279,15 @@ export const useResourceStore = defineStore(
           totalFaithEarned.value = totalFaithEarned.value.add(production);
         }
 
+        // Track ducats for challenges
+        if (resource.id === 'ducats' && production.gt(0)) {
+          // Using dynamic import to avoid circular dependency
+          import('./challenges').then(({ useChallengeStore }) => {
+            const challengeStore = useChallengeStore();
+            challengeStore.updateProgress('ducatsCollected', production.toNumber());
+          });
+        }
+
         // Cap at max if defined
         if (resource.maxAmount !== null && resource.amount.gt(resource.maxAmount)) {
           resource.amount = resource.maxAmount;
@@ -356,6 +370,20 @@ export const useResourceStore = defineStore(
       }
 
       addResource('faith', faithGain);
+
+      // Track for challenges (lazy import to avoid circular dependency)
+      import('./challenges').then(({ useChallengeStore }) => {
+        const challengeStore = useChallengeStore();
+        challengeStore.updateProgress('clicks', 1);
+      });
+
+      // Track for statistics
+      import('./statistics').then(({ useStatisticsStore }) => {
+        const statisticsStore = useStatisticsStore();
+        statisticsStore.trackClick();
+        statisticsStore.trackFaithEarned(faithGain);
+      });
+
       return faithGain;
     }
 

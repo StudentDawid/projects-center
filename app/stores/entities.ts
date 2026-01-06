@@ -10,6 +10,7 @@ import { useResourceStore } from './resources';
 import type { Entity, EntityId, ResourceId, EntityPrerequisite, SpecialUnlockCondition } from '~/shared/types/game.types';
 import { usePrestigeStore } from './prestige';
 import { useCombatStore } from './combat';
+import { useChallengeStore } from './challenges';
 import { logger } from '~/shared/lib/logger';
 
 export const useEntityStore = defineStore(
@@ -30,6 +31,9 @@ export const useEntityStore = defineStore(
 
     // Cost multiplier from prestige (set externally to avoid circular deps)
     const buildingCostMultiplier = ref(1); // Lower = cheaper (e.g., 0.9 = 10% discount)
+
+    // Auto-buy settings per entity
+    const autoBuyEnabled = ref<Record<string, boolean>>({});
 
     const entities = ref<Record<EntityId, Entity>>({
       // ---- Solmar Entities ----
@@ -667,8 +671,14 @@ export const useEntityStore = defineStore(
     // ============================================
     // Computed
     // ============================================
+
+    // Hidden cult entities (to be shown later when cult faction is implemented)
+    const HIDDEN_CULT_ENTITIES = ['flesh_puppet', 'infected_stormtrooper'];
+
     const unlockedEntities = computed(() =>
-      Object.values(entities.value).filter((e) => e.unlocked)
+      Object.values(entities.value).filter(
+        (e) => e.unlocked && !HIDDEN_CULT_ENTITIES.includes(e.id)
+      )
     );
 
     const solmarEntities = computed(() =>
@@ -788,10 +798,11 @@ export const useEntityStore = defineStore(
       if (!entity || !entity.unlocked) return false;
 
       const resourceStore = useResourceStore();
+      let purchasedCount = 0;
 
       // Purchase one at a time (for accurate cost calculation)
       for (let i = 0; i < count; i++) {
-        if (!canAfford(id)) return i > 0; // Return true if we bought at least one
+        if (!canAfford(id)) break;
 
         const costs = getCurrentCost(id);
 
@@ -804,12 +815,25 @@ export const useEntityStore = defineStore(
 
         // Add entity
         entity.count++;
+        purchasedCount++;
 
         // Update production rates
         updateProductionRates();
       }
 
-      return true;
+      // Track for challenges
+      if (purchasedCount > 0) {
+        const challengeStore = useChallengeStore();
+        challengeStore.updateProgress('buildingsBought', purchasedCount);
+
+        // Track for statistics
+        import('./statistics').then(({ useStatisticsStore }) => {
+          const statisticsStore = useStatisticsStore();
+          statisticsStore.trackBuildingPurchase(purchasedCount);
+        });
+      }
+
+      return purchasedCount > 0;
     }
 
     /**
@@ -1418,10 +1442,95 @@ export const useEntityStore = defineStore(
       return parts.join(', ');
     }
 
+    // ============================================
+    // Auto-Buy Functions
+    // ============================================
+
+    /**
+     * Toggle auto-buy for an entity
+     */
+    function toggleAutoBuy(id: EntityId): void {
+      autoBuyEnabled.value[id] = !autoBuyEnabled.value[id];
+      logger.log(`[Entities] Auto-buy ${autoBuyEnabled.value[id] ? 'enabled' : 'disabled'} for ${id}`);
+    }
+
+    /**
+     * Set auto-buy for an entity
+     */
+    function setAutoBuy(id: EntityId, enabled: boolean): void {
+      autoBuyEnabled.value[id] = enabled;
+    }
+
+    /**
+     * Check if auto-buy is enabled for an entity
+     */
+    function isAutoBuyEnabled(id: EntityId): boolean {
+      return autoBuyEnabled.value[id] ?? false;
+    }
+
+    /**
+     * Process auto-buy for all enabled entities
+     * Called from game loop
+     */
+    function processAutoBuy(): void {
+      for (const entity of Object.values(entities.value)) {
+        if (!entity.unlocked) continue;
+        if (!autoBuyEnabled.value[entity.id]) continue;
+
+        // Try to buy one if we can afford it
+        if (canAfford(entity.id)) {
+          purchase(entity.id, 1);
+        }
+      }
+    }
+
+    /**
+     * Get cost formula display for tooltips
+     */
+    function getCostFormula(id: EntityId): string {
+      const entity = entities.value[id];
+      if (!entity) return '';
+
+      const parts: string[] = [];
+      for (const [resourceId, baseCost] of Object.entries(entity.baseCost)) {
+        if (baseCost.gt(0)) {
+          const resourceStore = useResourceStore();
+          const resource = resourceStore.resources[resourceId as ResourceId];
+          const name = resource?.name || resourceId;
+          parts.push(`${formatNumber(baseCost)} × ${entity.costMultiplier}^n ${name}`);
+        }
+      }
+      return `Koszt = ${parts.join(' + ')} (n = liczba posiadanych)`;
+    }
+
+    /**
+     * Get production formula display for tooltips
+     */
+    function getProductionFormula(id: EntityId): string {
+      const entity = entities.value[id];
+      if (!entity) return '';
+
+      const parts: string[] = [];
+      for (const [resourceId, amount] of Object.entries(entity.production)) {
+        if (amount && amount.gt(0)) {
+          const resourceStore = useResourceStore();
+          const resource = resourceStore.resources[resourceId as ResourceId];
+          const name = resource?.name || resourceId;
+          parts.push(`+${formatNumber(amount)}/s ${name}`);
+        }
+      }
+
+      if (parts.length === 0) return 'Brak produkcji';
+
+      const levelBonus = entity.level > 1 ? ` × ${1 + (entity.level - 1) * 0.5} (bonus Lv.${entity.level})` : '';
+      return `Produkcja: ${parts.join(', ')}${levelBonus}`;
+    }
+
     return {
       // State
       entities,
       buildingCostMultiplier,
+      autoBuyEnabled,
 
       // Constants
       MAX_BUILDING_LEVEL,
@@ -1457,6 +1566,16 @@ export const useEntityStore = defineStore(
       getFormattedPrerequisites,
       getFormattedSpecialConditions,
       canUnlock,
+
+      // Auto-buy
+      toggleAutoBuy,
+      setAutoBuy,
+      isAutoBuyEnabled,
+      processAutoBuy,
+
+      // Formulas (for tooltips)
+      getCostFormula,
+      getProductionFormula,
 
       // Upgrade actions
       getLevelBonus,
