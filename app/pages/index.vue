@@ -140,6 +140,18 @@ const projects: Project[] = [
     status: 'active',
     featured: true,
   },
+  {
+    id: 'rpg-map-generator',
+    title: 'Generator Map RPG',
+    description: 'Narzędzie do generowania proceduralnych map światów fantasy. Twórz kontynenty, góry, rzeki i miasta dla swoich kampanii.',
+    category: 'Narzędzie RPG',
+    icon: 'mdi-map-legend',
+    color: '#4caf50',
+    link: '/rpg/map-generator',
+    tags: ['Vue.js', 'Canvas', 'Procedural Generation'],
+    status: 'development',
+    featured: false,
+  },
 ];
 
 const activeProjects = computed(() =>

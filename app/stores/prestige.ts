@@ -16,6 +16,8 @@ import { useCombatStore } from './combat';
 import { useNarrativeStore } from './narrative';
 import { useGameLoopStore } from './gameLoop';
 import { useEventStore } from './events';
+import { useChallengeStore } from './challenges';
+import { useStatisticsStore } from './statistics';
 import { logger } from '~/shared/lib/logger';
 
 // ============================================
@@ -420,6 +422,14 @@ export const usePrestigeStore = defineStore(
 
       // Add ashes
       martyrAshes.value = martyrAshes.value.add(ashesGained);
+
+      // Track for challenges
+      const challengeStore = useChallengeStore();
+      challengeStore.onPrestige();
+
+      // Track for statistics
+      const statisticsStore = useStatisticsStore();
+      statisticsStore.onPrestige(ashesGained.toNumber());
 
       // Narrative
       narrativeStore.addLog({

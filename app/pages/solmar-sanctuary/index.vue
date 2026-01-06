@@ -72,6 +72,20 @@
                 </span>
               </button>
               <button
+                class="main-tab challenge-tab"
+                :class="{ active: activeTab === 'challenges' }"
+                @click="activeTab = 'challenges'"
+              >
+                <v-icon icon="mdi-trophy-outline" size="20" />
+                Wyzwania
+                <span
+                  class="challenge-badge"
+                  v-if="challengeStore.completedDailyCount < challengeStore.dailyChallenges.length"
+                >
+                  {{ challengeStore.dailyChallenges.length - challengeStore.completedDailyCount }}
+                </span>
+              </button>
+              <button
                 class="main-tab relic-tab"
                 :class="{ active: activeTab === 'relics' }"
                 @click="activeTab = 'relics'"
@@ -92,6 +106,14 @@
                 <span class="ashes-badge" v-if="prestigeStore.martyrAshes.gt(0)">
                   {{ prestigeStore.formattedAshes }}
                 </span>
+              </button>
+              <button
+                class="main-tab statistics-tab"
+                :class="{ active: activeTab === 'statistics' }"
+                @click="activeTab = 'statistics'"
+              >
+                <v-icon icon="mdi-chart-line" size="20" />
+                Statystyki
               </button>
             </div>
 
@@ -165,10 +187,34 @@
               </Suspense>
             </div>
 
+            <!-- Challenges Tab Content - LAZY LOADED -->
+            <div v-if="activeTab === 'challenges'" class="tab-content challenges-content">
+              <Suspense>
+                <ChallengesPanel />
+                <template #fallback>
+                  <div class="d-flex justify-center align-center pa-8">
+                    <v-progress-circular indeterminate color="primary" />
+                  </div>
+                </template>
+              </Suspense>
+            </div>
+
             <!-- Prestige Tab Content - LAZY LOADED -->
             <div v-if="activeTab === 'prestige'" class="tab-content prestige-content">
               <Suspense>
                 <PrestigePanel />
+                <template #fallback>
+                  <div class="d-flex justify-center align-center pa-8">
+                    <v-progress-circular indeterminate color="primary" />
+                  </div>
+                </template>
+              </Suspense>
+            </div>
+
+            <!-- Statistics Tab Content -->
+            <div v-if="activeTab === 'statistics'" class="tab-content statistics-content">
+              <Suspense>
+                <StatisticsPanel />
                 <template #fallback>
                   <div class="d-flex justify-center align-center pa-8">
                     <v-progress-circular indeterminate color="primary" />
@@ -251,14 +297,17 @@ const DevPanel = defineAsyncComponent(() => import('~/features/game/ui/DevPanel.
 const PrestigePanel = defineAsyncComponent(() => import('~/features/game/ui/PrestigePanel.vue'));
 const AchievementPanel = defineAsyncComponent(() => import('~/features/game/ui/AchievementPanel.vue'));
 const RelicPanel = defineAsyncComponent(() => import('~/features/game/ui/RelicPanel.vue'));
+const ChallengesPanel = defineAsyncComponent(() => import('~/features/game/ui/ChallengesPanelInline.vue'));
 const EventModal = defineAsyncComponent(() => import('~/features/game/ui/EventModal.vue'));
 const RelicDropModal = defineAsyncComponent(() => import('~/features/game/ui/RelicDropModal.vue'));
+const StatisticsPanel = defineAsyncComponent(() => import('~/features/game/ui/StatisticsPanel.vue'));
 
 import { useNarrativeStore } from '~/stores/narrative';
 import { usePrestigeStore } from '~/stores/prestige';
 import { useAchievementStore } from '~/stores/achievements';
 import { useEventStore } from '~/stores/events';
 import { useRelicStore } from '~/stores/relics';
+import { useChallengeStore } from '~/stores/challenges';
 
 // Stores
 const gameLoopStore = useGameLoopStore();
@@ -269,9 +318,10 @@ const prestigeStore = usePrestigeStore();
 const achievementStore = useAchievementStore();
 const eventStore = useEventStore();
 const relicStore = useRelicStore();
+const challengeStore = useChallengeStore();
 
 // Tab state
-const activeTab = ref<'game' | 'achievements' | 'relics' | 'prestige'>('game');
+const activeTab = ref<'game' | 'achievements' | 'relics' | 'challenges' | 'prestige'>('game');
 
 // Refs
 const { unlockedResources } = storeToRefs(resourceStore);
@@ -320,6 +370,45 @@ function handleUpgradeEntity(id: string) {
 // Check unlocks periodically
 let unlockCheckInterval: ReturnType<typeof setInterval>;
 
+// Hotkey handler
+function handleKeydown(event: KeyboardEvent) {
+  // Ignore if typing in input field
+  if (event.target instanceof HTMLInputElement || event.target instanceof HTMLTextAreaElement) {
+    return;
+  }
+
+  switch (event.key) {
+    case '1':
+      activeTab.value = 'game';
+      break;
+    case '2':
+      activeTab.value = 'achievements';
+      break;
+    case '3':
+      activeTab.value = 'challenges';
+      break;
+    case '4':
+      activeTab.value = 'relics';
+      break;
+    case '5':
+      activeTab.value = 'prestige';
+      break;
+    case '6':
+      activeTab.value = 'statistics';
+      break;
+    case ' ': // Space
+      event.preventDefault(); // Prevent page scroll
+      handleHotkeyPray();
+      break;
+  }
+}
+
+// Hotkey prayer (without animation)
+function handleHotkeyPray() {
+  resourceStore.pray();
+  achievementStore.registerClick();
+}
+
 onMounted(() => {
   // Start game loop
   gameLoopStore.start();
@@ -330,8 +419,14 @@ onMounted(() => {
   // Apply prestige bonuses from previous runs
   prestigeStore.applyPrestigeBonuses();
 
+  // Initialize challenges
+  challengeStore.initialize();
+
   // Add welcome message
   addNarrativeEntry('Witaj w Sanktuarium Solmara. Wiara jest Twoją bronią.', 'lore');
+
+  // Register hotkeys
+  window.addEventListener('keydown', handleKeydown);
 
   // Check unlocks and achievements every second
   unlockCheckInterval = setInterval(() => {
@@ -343,6 +438,7 @@ onMounted(() => {
 onUnmounted(() => {
   gameLoopStore.stop();
   clearInterval(unlockCheckInterval);
+  window.removeEventListener('keydown', handleKeydown);
 });
 
 // Watch for milestone achievements
@@ -398,16 +494,16 @@ useHead({
 
 .main-tabs {
   display: flex;
-  gap: 0.5rem;
+  flex-wrap: wrap;
+  gap: 0.375rem;
   margin-bottom: 1rem;
 
   .main-tab {
-    flex: 1;
     display: flex;
     align-items: center;
     justify-content: center;
-    gap: 0.5rem;
-    padding: 0.75rem 1rem;
+    gap: 0.375rem;
+    padding: 0.5rem 0.75rem;
     background: rgba(0, 0, 0, 0.3);
     border: 1px solid rgba(var(--v-theme-primary), 0.2);
     border-radius: 8px;
@@ -415,6 +511,8 @@ useHead({
     cursor: pointer;
     transition: all 0.2s;
     font-weight: 500;
+    font-size: 0.875rem;
+    white-space: nowrap;
 
     &:hover {
       background: rgba(0, 0, 0, 0.4);
@@ -442,6 +540,23 @@ useHead({
         color: #ffc107;
         font-weight: bold;
         animation: badge-pulse 1s ease-in-out infinite;
+      }
+    }
+
+    &.challenge-tab {
+      &.active {
+        background: rgba(76, 175, 80, 0.15);
+        border-color: rgba(76, 175, 80, 0.5);
+        color: #4caf50;
+      }
+
+      .challenge-badge {
+        padding: 0.125rem 0.5rem;
+        background: rgba(76, 175, 80, 0.3);
+        border-radius: 10px;
+        font-size: 0.75rem;
+        color: #4caf50;
+        font-weight: bold;
       }
     }
 

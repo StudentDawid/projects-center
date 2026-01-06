@@ -11,6 +11,8 @@ import { useResourceStore } from './resources';
 import { useEntityStore } from './entities';
 import { useCombatStore } from './combat';
 import { useEventStore } from './events';
+import { useChallengeStore } from './challenges';
+import { useStatisticsStore } from './statistics';
 import { logger } from '~/shared/lib/logger';
 
 // ============================================
@@ -20,6 +22,8 @@ let _resourceStore: ReturnType<typeof useResourceStore> | null = null;
 let _entityStore: ReturnType<typeof useEntityStore> | null = null;
 let _combatStore: ReturnType<typeof useCombatStore> | null = null;
 let _eventStore: ReturnType<typeof useEventStore> | null = null;
+let _challengeStore: ReturnType<typeof useChallengeStore> | null = null;
+let _statisticsStore: ReturnType<typeof useStatisticsStore> | null = null;
 
 function getResourceStore() {
   if (!_resourceStore) _resourceStore = useResourceStore();
@@ -39,6 +43,16 @@ function getCombatStore() {
 function getEventStore() {
   if (!_eventStore) _eventStore = useEventStore();
   return _eventStore;
+}
+
+function getChallengeStore() {
+  if (!_challengeStore) _challengeStore = useChallengeStore();
+  return _challengeStore;
+}
+
+function getStatisticsStore() {
+  if (!_statisticsStore) _statisticsStore = useStatisticsStore();
+  return _statisticsStore;
 }
 
 export const useGameLoopStore = defineStore('gameLoop', () => {
@@ -118,9 +132,14 @@ export const useGameLoopStore = defineStore('gameLoop', () => {
     const entityStore = getEntityStore();
     const combatStore = getCombatStore();
     const eventStore = getEventStore();
+    const challengeStore = getChallengeStore();
+    const statisticsStore = getStatisticsStore();
 
     // Update resources based on production
     resourceStore.tick(deltaTime);
+
+    // Process auto-buy for enabled buildings
+    entityStore.processAutoBuy();
 
     // Check for entity unlocks (throttled internally)
     entityStore.checkUnlocks();
@@ -130,6 +149,14 @@ export const useGameLoopStore = defineStore('gameLoop', () => {
 
     // Update random events
     eventStore.tick(deltaTime);
+
+    // Update challenges (check for expired buffs, daily/weekly resets)
+    challengeStore.tick();
+    challengeStore.checkDailyReset();
+    challengeStore.checkWeeklyReset();
+
+    // Update statistics (production tracking, session time)
+    statisticsStore.tick(deltaTime);
   }
 
   /**
