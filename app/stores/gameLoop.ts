@@ -7,6 +7,7 @@ import { ref, computed } from 'vue';
 import { useResourceStore } from './resources';
 import { useEntityStore } from './entities';
 import { useCombatStore } from './combat';
+import { useEventStore } from './events';
 
 export const useGameLoopStore = defineStore('gameLoop', () => {
   // State
@@ -68,6 +69,7 @@ export const useGameLoopStore = defineStore('gameLoop', () => {
     const resourceStore = useResourceStore();
     const entityStore = useEntityStore();
     const combatStore = useCombatStore();
+    const eventStore = useEventStore();
 
     // Update resources based on production
     resourceStore.tick(deltaTime);
@@ -77,6 +79,9 @@ export const useGameLoopStore = defineStore('gameLoop', () => {
 
     // Update combat (threat, waves, morale)
     combatStore.tick(deltaTime);
+
+    // Update random events
+    eventStore.tick(deltaTime);
   }
 
   /**

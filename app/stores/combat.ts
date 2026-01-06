@@ -11,6 +11,8 @@ import { bn, formatNumber } from '~/shared/lib/big-number';
 import { useResourceStore } from './resources';
 import { useEntityStore } from './entities';
 import { useNarrativeStore } from './narrative';
+import { useEventStore } from './events';
+import { useRelicStore } from './relics';
 import Decimal from 'break_infinity.js';
 
 // ============================================
@@ -61,7 +63,7 @@ export const useCombatStore = defineStore(
     const baseThreatPerSecond = ref(bn(0.5)); // Base threat increase per second
     const threatMultiplier = ref(bn(1));
 
-    // Morale system - if it reaches 0, the cycle ends
+    // Morale system - affects production multiplier (does NOT end game at 0)
     const morale = ref(bn(100));
     const maxMorale = ref(bn(100));
     const baseMoraleRegen = ref(bn(0.1)); // Very slow natural regen
@@ -99,6 +101,16 @@ export const useCombatStore = defineStore(
     const totalUnitsLost = ref(0);
     const wavesDefeated = ref(0);
     const cycleEnded = ref(false);
+
+    // Max level effect tracking
+    const firstWaveImmunityUsed = ref(false); // For Walls Lv5
+
+    // Relic bonuses
+    const relicDefenseBonus = ref(0);
+    const relicMoraleRegenBonus = ref(0);
+    const relicMoraleDamageReduction = ref(0);
+    const relicMoraleMinimum = ref(0);
+    const relicWaveDelayBonus = ref(0);
 
     // ============================================
     // Wave definitions
@@ -200,27 +212,51 @@ export const useCombatStore = defineStore(
     // ============================================
 
     /**
-     * Total defense rating from buildings/units
+     * Total defense rating from buildings/units (scaled by level)
      * Reduces damage taken during waves
      */
     const defenseRating = computed(() => {
       let defense = 0;
       const entities = entityStore.entities;
 
-      // Walls provide flat defense
+      // Walls provide flat defense (scaled by level)
       if (entities.walls?.unlocked && entities.walls.count > 0) {
-        defense += entities.walls.count * 2; // +2 defense per wall section
+        const levelBonus = entityStore.getLevelBonus('walls');
+        defense += entities.walls.count * 2 * levelBonus; // +2 defense per wall section
       }
 
-      // Guard towers provide defense
+      // Guard towers provide defense (scaled by level)
       if (entities.guard_tower?.unlocked && entities.guard_tower.count > 0) {
-        defense += entities.guard_tower.count * 5; // +5 defense per tower
+        const levelBonus = entityStore.getLevelBonus('guard_tower');
+        defense += entities.guard_tower.count * 5 * levelBonus; // +5 defense per tower
       }
 
-      // Chaplains provide small defense bonus
+      // Chaplains provide small defense bonus (scaled by level)
       if (entities.chaplain?.unlocked && entities.chaplain.count > 0) {
-        defense += entities.chaplain.count * 1; // +1 defense per chaplain
+        const levelBonus = entityStore.getLevelBonus('chaplain');
+        defense += entities.chaplain.count * 1 * levelBonus; // +1 defense per chaplain
       }
+
+      // MAX LEVEL EFFECT: Czołg-Ołtarz Lv5 - +50% obrony globalna
+      if (entities.altar_tank?.unlocked && entities.altar_tank.count > 0 && entities.altar_tank.level >= 5) {
+        defense *= 1.5;
+      }
+
+      // TIER 3: Forteca Inkwizycji - +20% efektywność obrony
+      if (entities.inquisition_fortress?.unlocked && entities.inquisition_fortress.count > 0) {
+        const levelBonus = entityStore.getLevelBonus('inquisition_fortress');
+        defense *= 1 + (0.2 * entities.inquisition_fortress.count * levelBonus);
+      }
+
+      // TIER 3: Święci Wojownicy - zmniejszają siłę fal (efekt na obronę)
+      if (entities.holy_warrior?.unlocked && entities.holy_warrior.count > 0) {
+        const levelBonus = entityStore.getLevelBonus('holy_warrior');
+        const warriorBonus = Math.min(entities.holy_warrior.count * 5 * levelBonus, 50); // Max +50% defense
+        defense *= 1 + (warriorBonus / 100);
+      }
+
+      // Relic defense bonus
+      defense += relicDefenseBonus.value;
 
       return defense;
     });
@@ -231,8 +267,13 @@ export const useCombatStore = defineStore(
      */
     const defenseMultiplier = computed(() => {
       // Each point of defense reduces damage by 1%, capped at 80%
-      const reduction = Math.min(defenseRating.value * 0.01, 0.8);
-      return reduction;
+      let reduction = Math.min(defenseRating.value * 0.01, 0.8);
+
+      // Add bonus from active events
+      const eventStore = useEventStore();
+      reduction += eventStore.defenseBonus;
+
+      return Math.min(reduction, 0.9); // Cap at 90% total reduction
     });
 
     /**
@@ -247,13 +288,39 @@ export const useCombatStore = defineStore(
       // Add bonus from Chaplains
       const entities = entityStore.entities;
       if (entities.chaplain?.unlocked && entities.chaplain.count > 0) {
-        regen += entities.chaplain.count * 0.5; // +0.5/s per chaplain
+        const levelBonus = entityStore.getLevelBonus('chaplain');
+        regen += entities.chaplain.count * 0.5 * levelBonus; // +0.5/s per chaplain (scaled by level)
+
+        // MAX LEVEL EFFECT: Kapelan Lv5 - +2/s global morale regen
+        if (entities.chaplain.level >= 5) {
+          regen += 2;
+        }
       }
 
       // Add bonus from Monastery
       if (entities.monastery?.unlocked && entities.monastery.count > 0) {
-        regen += entities.monastery.count * 1; // +1/s per monastery
+        let monasteryRegen = entities.monastery.count * 1; // +1/s per monastery
+
+        // MAX LEVEL EFFECT: Klasztor Lv5 - Podwójna regeneracja morale
+        if (entities.monastery.level >= 5) {
+          monasteryRegen *= 2;
+        }
+
+        regen += monasteryRegen * entityStore.getLevelBonus('monastery');
       }
+
+      // TIER 3: Wieża Dzwonnicza - +10% regeneracji morale
+      if (entities.bell_tower?.unlocked && entities.bell_tower.count > 0) {
+        const levelBonus = entityStore.getLevelBonus('bell_tower');
+        regen *= 1 + (0.1 * entities.bell_tower.count * levelBonus);
+      }
+
+      // Add bonus from active events
+      const eventStore = useEventStore();
+      regen += eventStore.moraleRegenBonus;
+
+      // Add relic bonus
+      regen *= (1 + relicMoraleRegenBonus.value);
 
       return bn(regen);
     });
@@ -290,9 +357,23 @@ export const useCombatStore = defineStore(
       const entities = entityStore.entities;
       if (entities.guard_tower?.unlocked && entities.guard_tower.count > 0) {
         interval += entities.guard_tower.count * 2; // +2s per tower
+
+        // MAX LEVEL EFFECT: Wieża Strażnicza Lv5 - +30s ostrzegania
+        if (entities.guard_tower.level >= 5) {
+          interval += 30;
+        }
       }
 
-      return Math.min(interval, 120); // Cap at 2 minutes
+      // TIER 3: Wieża Dzwonnicza - +30s ostrzegania o fali
+      if (entities.bell_tower?.unlocked && entities.bell_tower.count > 0) {
+        const levelBonus = entityStore.getLevelBonus('bell_tower');
+        interval += entities.bell_tower.count * 30 * levelBonus;
+      }
+
+      // Add relic wave delay bonus
+      interval += relicWaveDelayBonus.value;
+
+      return Math.min(interval, 300); // Cap at 5 minutes
     });
 
     // ============================================
@@ -340,13 +421,42 @@ export const useCombatStore = defineStore(
     /**
      * Get current scaled cost for a defense ability
      */
+    /**
+     * Calculate liturgy cost discount from Tier 3 buildings
+     */
+    const liturgyCostDiscount = computed(() => {
+      let discount = 0;
+      const entities = entityStore.entities;
+
+      // TIER 3: Forteca Inkwizycji - -30% koszt liturgii
+      if (entities.inquisition_fortress?.unlocked && entities.inquisition_fortress.count > 0) {
+        const levelBonus = entityStore.getLevelBonus('inquisition_fortress');
+        discount += 0.3 * entities.inquisition_fortress.count * levelBonus;
+      }
+
+      // TIER 3: Inkwizytorzy - -3% koszt liturgii each (stackuje)
+      if (entities.inquisitor?.unlocked && entities.inquisitor.count > 0) {
+        const levelBonus = entityStore.getLevelBonus('inquisitor');
+        discount += 0.03 * entities.inquisitor.count * levelBonus;
+
+        // MAX LEVEL EFFECT: Wielki Inkwizytor - -20% koszt liturgii globalnie
+        if (entities.inquisitor.level >= 5) {
+          discount += 0.2;
+        }
+      }
+
+      return Math.min(discount, 0.8); // Cap at 80% discount
+    });
+
     const getDefenseCost = computed(() => (defenseId: string): Decimal => {
       const defense = defenses.find(d => d.id === defenseId);
       if (!defense) return bn(Infinity);
 
       const usageCount = defenseUsageCounts.value[defenseId] || 0;
-      // Cost = baseCost * (multiplier ^ usageCount)
-      const scaledCost = defense.faithCost.mul(Math.pow(DEFENSE_COST_MULTIPLIER, usageCount));
+      // Cost = baseCost * (multiplier ^ usageCount) * (1 - discount)
+      const scaledCost = defense.faithCost
+        .mul(Math.pow(DEFENSE_COST_MULTIPLIER, usageCount))
+        .mul(1 - liturgyCostDiscount.value);
       return scaledCost;
     });
 
@@ -543,9 +653,63 @@ export const useCombatStore = defineStore(
       const wave = getWaveForThreat(threat.value.toNumber());
       if (!wave) return;
 
+      const entities = entityStore.entities;
+
+      // MAX LEVEL EFFECT: Mury Lv5 - Immunitet na pierwszą falę po prestiżu
+      if (
+        !firstWaveImmunityUsed.value &&
+        entities.walls?.unlocked &&
+        entities.walls.count > 0 &&
+        entities.walls.level >= 5
+      ) {
+        firstWaveImmunityUsed.value = true;
+        threat.value = bn(0);
+        isWaveActive.value = false;
+        wavesDefeated.value++;
+
+        narrativeStore.addLog({
+          message: `🛡️ ŚWIĘTE MURY! Pierwsza fala została całkowicie odparta bez strat!`,
+          type: 'achievement',
+        });
+
+        console.log('[Combat] First wave immunity used (Walls Lv5)');
+        return;
+      }
+
+      // TIER 3 MAX LEVEL: Święci Wojownicy Lv5 - Szansa na całkowite odparcie fali
+      if (
+        entities.holy_warrior?.unlocked &&
+        entities.holy_warrior.count > 0 &&
+        entities.holy_warrior.level >= 5
+      ) {
+        // 5% szansy per wojownik, max 50%
+        const repelChance = Math.min(entities.holy_warrior.count * 0.05, 0.5);
+        if (Math.random() < repelChance) {
+          threat.value = bn(0);
+          isWaveActive.value = false;
+          wavesDefeated.value++;
+
+          narrativeStore.addLog({
+            message: `⚔️ ŚWIĘCI WOJOWNICY! Elitarni rycerze Solmara całkowicie rozgromili wrogów!`,
+            type: 'achievement',
+          });
+
+          console.log('[Combat] Holy Warriors repelled the wave completely');
+          return;
+        }
+      }
+
       // Calculate scaled damage
       let moraleDamage = scaledWaveDamage.value(wave.baseDamage);
       let unitLossPercent = scaledUnitLosses.value(wave.baseUnitLosses);
+
+      // TIER 3: Święci Wojownicy - zmniejszają siłę fali (-5% per wojownik, max -50%)
+      if (entities.holy_warrior?.unlocked && entities.holy_warrior.count > 0) {
+        const levelBonus = entityStore.getLevelBonus('holy_warrior');
+        const damageReduction = Math.min(entities.holy_warrior.count * 0.05 * levelBonus, 0.5);
+        moraleDamage *= (1 - damageReduction);
+        unitLossPercent *= (1 - damageReduction);
+      }
 
       // Apply defense rating reduction (from buildings)
       moraleDamage *= (1 - defenseMultiplier.value);
@@ -565,8 +729,11 @@ export const useCombatStore = defineStore(
         }
       }
 
-      // Apply morale damage
-      morale.value = Decimal.max(morale.value.sub(moraleDamage), bn(0));
+      // Apply relic morale damage reduction
+      moraleDamage *= (1 - relicMoraleDamageReduction.value);
+
+      // Apply morale damage (respecting relic morale minimum)
+      morale.value = Decimal.max(morale.value.sub(moraleDamage), bn(relicMoraleMinimum.value));
 
       // Kill units
       const unitsLost = killUnits(unitLossPercent);
@@ -588,6 +755,29 @@ export const useCombatStore = defineStore(
         });
       }
 
+      // TIER 2 EFFECT: Arsenal - gain Rage after wave
+      if (entities.arsenal?.unlocked && entities.arsenal.count > 0) {
+        const ragePerArsenal = entities.arsenal.level >= 5 ? 10 : 5;
+        const totalRage = entities.arsenal.count * ragePerArsenal;
+        resourceStore.addResource('rage', bn(totalRage));
+
+        narrativeStore.addLog({
+          message: `⚔️ Arsenał generuje +${totalRage} Gniewu!`,
+          type: 'info',
+        });
+      }
+
+      // TIER 3 MAX LEVEL: Wieża Dzwonnicza Lv5 - +5 morale per dzwon po fali
+      if (entities.bell_tower?.unlocked && entities.bell_tower.count > 0 && entities.bell_tower.level >= 5) {
+        const moraleBonus = entities.bell_tower.count * 5;
+        morale.value = Decimal.min(morale.value.add(moraleBonus), maxMorale.value);
+
+        narrativeStore.addLog({
+          message: `🔔 Boży Głos! Dzwony regenerują +${moraleBonus} morale!`,
+          type: 'info',
+        });
+      }
+
       // Narrative
       const moraleLeft = Math.round(morale.value.toNumber());
       if (unitsLost > 0) {
@@ -602,6 +792,16 @@ export const useCombatStore = defineStore(
         });
       }
 
+      // Try to drop a relic
+      const relicStore = useRelicStore();
+      const droppedRelic = relicStore.tryDropRelic(wavesDefeated.value);
+      if (droppedRelic) {
+        narrativeStore.addLog({
+          message: `🏺 Znaleziono relikwię: ${droppedRelic.name}!`,
+          type: 'achievement',
+        });
+      }
+
       console.log(`[Combat] Wave resolved. Morale: ${moraleLeft}, Units lost: ${unitsLost}, Difficulty: ${difficultyLevel.value}`);
     }
 
@@ -610,7 +810,25 @@ export const useCombatStore = defineStore(
      */
     function killUnits(percent: number): number {
       let totalLost = 0;
-      const lossRate = percent / 100;
+      let lossRate = percent / 100;
+
+      // TIER 2 EFFECT: Field Hospital - reduces unit losses
+      const entities = entityStore.entities;
+      if (entities.field_hospital?.unlocked && entities.field_hospital.count > 0) {
+        const reductionPerHospital = entities.field_hospital.level >= 5 ? 0.5 : 0.25;
+        const totalReduction = Math.min(entities.field_hospital.count * reductionPerHospital, 0.9);
+        lossRate *= (1 - totalReduction);
+
+        // MAX LEVEL EFFECT: Cudowne Uzdrowienie - szansa na 0 strat
+        if (entities.field_hospital.level >= 5 && Math.random() < 0.25) {
+          // 25% chance for zero losses
+          narrativeStore.addLog({
+            message: `✨ Cudowne Uzdrowienie! Szpital Polowy uratował wszystkie jednostki!`,
+            type: 'achievement',
+          });
+          return 0;
+        }
+      }
 
       for (const entity of Object.values(entityStore.entities)) {
         if (entity.count <= 0) continue;
@@ -748,6 +966,8 @@ export const useCombatStore = defineStore(
         fortification: 0,
       };
       timeSinceLastCostDecay.value = 0;
+      // Reset max level effect tracking
+      firstWaveImmunityUsed.value = false;
     }
 
     /**
@@ -796,6 +1016,13 @@ export const useCombatStore = defineStore(
       cycleEnded,
       defenseUsageCounts,
 
+      // Relic bonuses
+      relicDefenseBonus,
+      relicMoraleRegenBonus,
+      relicMoraleDamageReduction,
+      relicMoraleMinimum,
+      relicWaveDelayBonus,
+
       // Data
       waves,
       defenses,
@@ -806,6 +1033,7 @@ export const useCombatStore = defineStore(
       totalMoraleRegen,
       threatReduction,
       effectiveWaveInterval,
+      liturgyCostDiscount,
 
       // Computed - UI
       threatPercent,

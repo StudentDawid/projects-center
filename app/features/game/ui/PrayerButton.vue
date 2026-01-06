@@ -32,6 +32,7 @@
 <script setup lang="ts">
 import { ref, computed } from 'vue';
 import { useResourceStore } from '~/stores/resources';
+import { useAchievementStore } from '~/stores/achievements';
 import { formatNumber } from '~/shared/lib/big-number';
 
 interface FaithPopup {
@@ -42,6 +43,7 @@ interface FaithPopup {
 }
 
 const resourceStore = useResourceStore();
+const achievementStore = useAchievementStore();
 
 const popups = ref<FaithPopup[]>([]);
 let popupId = 0;
@@ -52,6 +54,9 @@ const faithGainDisplay = computed(() =>
 
 function handlePray(event: MouseEvent) {
   const gain = resourceStore.pray();
+
+  // Register click for achievements
+  achievementStore.registerClick();
 
   // Create popup animation
   const rect = (event.target as HTMLElement).getBoundingClientRect();

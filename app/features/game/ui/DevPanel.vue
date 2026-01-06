@@ -7,11 +7,15 @@ import { ref, computed } from 'vue';
 import { useResourceStore } from '~/stores/resources';
 import { useEntityStore } from '~/stores/entities';
 import { useCombatStore } from '~/stores/combat';
-import type { ResourceId, EntityId } from '~/shared/types/game.types';
+import { useEventStore } from '~/stores/events';
+import { useRelicStore, RARITY_NAMES } from '~/stores/relics';
+import type { ResourceId, EntityId, RelicRarity } from '~/shared/types/game.types';
 
 const resourceStore = useResourceStore();
 const entityStore = useEntityStore();
 const combatStore = useCombatStore();
+const eventStore = useEventStore();
+const relicStore = useRelicStore();
 
 const isOpen = ref(false);
 
@@ -82,6 +86,57 @@ function setMorale(value: number) {
 
 function triggerWave() {
   combatStore.devTriggerWave();
+}
+
+// Event controls
+const eventIds = eventStore.getEventIds();
+const selectedEventId = ref('');
+
+function triggerRandomEvent() {
+  eventStore.triggerRandomEvent();
+}
+
+function triggerSpecificEvent() {
+  if (selectedEventId.value) {
+    eventStore.devTriggerEvent(selectedEventId.value);
+  }
+}
+
+function toggleEvents() {
+  eventStore.toggleEvents();
+}
+
+// Relic controls
+const relicRarities: RelicRarity[] = ['common', 'rare', 'epic', 'legendary'];
+const selectedRelicId = ref('');
+
+function grantRandomRelic(rarity: RelicRarity) {
+  const unownedOfRarity = relicStore.relics.filter(r => !r.owned && r.rarity === rarity);
+  if (unownedOfRarity.length > 0) {
+    const randomRelic = unownedOfRarity[Math.floor(Math.random() * unownedOfRarity.length)];
+    relicStore.grantRelic(randomRelic.id);
+  }
+}
+
+function grantSpecificRelic() {
+  if (selectedRelicId.value) {
+    relicStore.grantRelic(selectedRelicId.value);
+  }
+}
+
+function unlockAllRelics() {
+  for (const relic of relicStore.relics) {
+    if (!relic.owned) {
+      relicStore.grantRelic(relic.id);
+    }
+  }
+}
+
+function unlockExtraSlot() {
+  const lockedSlot = relicStore.slots.find(s => !s.unlocked);
+  if (lockedSlot) {
+    relicStore.unlockSlot(lockedSlot.index);
+  }
 }
 
 // Keyboard shortcut - backtick key
@@ -218,6 +273,99 @@ if (import.meta.client) {
             <VBtn size="x-small" variant="outlined" @click="setMorale(25)">25</VBtn>
             <VBtn size="x-small" variant="outlined" @click="setMorale(10)">10</VBtn>
             <VBtn size="x-small" color="error" variant="outlined" @click="setMorale(0)">0 (Koniec)</VBtn>
+          </div>
+        </div>
+
+        <VDivider class="my-4" />
+
+        <!-- Events -->
+        <div class="section mb-4">
+          <h3 class="section-title mb-2">
+            <VIcon size="small" class="mr-1">mdi-calendar-star</VIcon>
+            Wydarzenia Losowe
+            <VChip size="x-small" :color="eventStore.eventsEnabled ? 'success' : 'error'" class="ml-2">
+              {{ eventStore.eventsEnabled ? 'ON' : 'OFF' }}
+            </VChip>
+          </h3>
+          <div class="d-flex flex-wrap gap-2 mb-2">
+            <VBtn size="small" color="warning" variant="tonal" @click="triggerRandomEvent">
+              <VIcon size="small" class="mr-1">mdi-dice-5</VIcon>
+              Losowe Wydarzenie
+            </VBtn>
+            <VBtn size="small" :color="eventStore.eventsEnabled ? 'error' : 'success'" variant="tonal" @click="toggleEvents">
+              <VIcon size="small" class="mr-1">{{ eventStore.eventsEnabled ? 'mdi-pause' : 'mdi-play' }}</VIcon>
+              {{ eventStore.eventsEnabled ? 'Wyłącz' : 'Włącz' }}
+            </VBtn>
+          </div>
+          <div class="d-flex align-center gap-2">
+            <VSelect
+              v-model="selectedEventId"
+              :items="eventIds"
+              label="Wybierz wydarzenie"
+              density="compact"
+              hide-details
+              class="flex-grow-1"
+            />
+            <VBtn size="small" color="info" variant="tonal" @click="triggerSpecificEvent" :disabled="!selectedEventId">
+              <VIcon size="small">mdi-play</VIcon>
+            </VBtn>
+          </div>
+          <div class="text-caption text-medium-emphasis mt-2">
+            Aktywne efekty: {{ eventStore.activeEffects.length }} |
+            Następne wydarzenie: {{ Math.round(eventStore.nextEventTime - eventStore.timeSinceLastEvent) }}s
+          </div>
+        </div>
+
+        <VDivider class="my-4" />
+
+        <!-- Relics -->
+        <div class="section mb-4">
+          <h3 class="section-title mb-2">
+            <VIcon size="small" class="mr-1">mdi-treasure-chest</VIcon>
+            Relikwie
+            <VChip size="x-small" color="purple" class="ml-2">
+              {{ relicStore.ownedRelics.length }}/{{ relicStore.relics.length }}
+            </VChip>
+          </h3>
+          <div class="d-flex flex-wrap gap-2 mb-2">
+            <VBtn
+              v-for="rarity in relicRarities"
+              :key="rarity"
+              size="small"
+              :color="rarity === 'legendary' ? 'amber' : rarity === 'epic' ? 'purple' : rarity === 'rare' ? 'blue' : 'grey'"
+              variant="tonal"
+              @click="grantRandomRelic(rarity)"
+            >
+              <VIcon size="small" class="mr-1">mdi-gift</VIcon>
+              {{ RARITY_NAMES[rarity] }}
+            </VBtn>
+          </div>
+          <div class="d-flex align-center gap-2 mb-2">
+            <VSelect
+              v-model="selectedRelicId"
+              :items="relicStore.relics.filter(r => !r.owned).map(r => ({ title: `${r.icon} ${r.name}`, value: r.id }))"
+              label="Wybierz relikwię"
+              density="compact"
+              hide-details
+              class="flex-grow-1"
+            />
+            <VBtn size="small" color="purple" variant="tonal" @click="grantSpecificRelic" :disabled="!selectedRelicId">
+              <VIcon size="small">mdi-plus</VIcon>
+            </VBtn>
+          </div>
+          <div class="d-flex flex-wrap gap-2">
+            <VBtn size="small" color="warning" variant="tonal" @click="unlockAllRelics">
+              <VIcon size="small" class="mr-1">mdi-star</VIcon>
+              Wszystkie Relikwie
+            </VBtn>
+            <VBtn size="small" color="info" variant="tonal" @click="unlockExtraSlot" :disabled="relicStore.unlockedSlots.length >= 5">
+              <VIcon size="small" class="mr-1">mdi-lock-open</VIcon>
+              Dodatkowy Slot
+            </VBtn>
+          </div>
+          <div class="text-caption text-medium-emphasis mt-2">
+            Wyposażone: {{ relicStore.equippedRelics.length }}/{{ relicStore.unlockedSlots.length }} |
+            Bonusy: {{ relicStore.totalBonuses.allProductionMultiplier > 0 ? `+${relicStore.totalBonuses.allProductionMultiplier}% prod` : '-' }}
           </div>
         </div>
 

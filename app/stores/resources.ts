@@ -8,6 +8,8 @@ import Decimal from 'break_infinity.js';
 import { bn, formatNumber, formatWithCommas } from '~/shared/lib/big-number';
 import type { Resource, ResourceId } from '~/shared/types/game.types';
 import { useCombatStore } from './combat';
+import { useEntityStore } from './entities';
+import { useEventStore } from './events';
 
 export const useResourceStore = defineStore(
   'resources',
@@ -73,6 +75,18 @@ export const useResourceStore = defineStore(
     const clickMultiplier = ref(1);
     const baseClickValue = ref(bn(1)); // Base faith per click
 
+    // Prestige tracking - total faith earned this cycle
+    const totalFaithEarned = ref(bn(0));
+
+    // Tier 2 building bonuses
+    const libraryProductionBonus = ref(0); // +5% per Library (10% at Lv5)
+
+    // Relic bonuses
+    const relicProductionMultipliers = ref<Partial<Record<ResourceId, number>>>({});
+    const relicAllProductionMultiplier = ref(1);
+    const relicClickMultiplier = ref(1);
+    const relicDoubleClickChance = ref(0);
+
     // ============================================
     // Computed
     // ============================================
@@ -100,17 +114,54 @@ export const useResourceStore = defineStore(
       const combatStore = useCombatStore();
       const moraleMultiplier = combatStore.moraleProductionMultiplier;
 
+      // Import entity store for max level effects
+      const entityStore = useEntityStore();
+
+      // Get event multipliers
+      const eventStore = useEventStore();
+      const eventProductionMultiplier = eventStore.productionMultiplier;
+
+      // Calculate Library bonus
+      let libraryBonus = 1;
+      if (entityStore.entities.library?.unlocked && entityStore.entities.library.count > 0) {
+        const bonusPerLibrary = entityStore.entities.library.level >= 5 ? 0.1 : 0.05;
+        libraryBonus = 1 + (entityStore.entities.library.count * bonusPerLibrary);
+        libraryProductionBonus.value = (libraryBonus - 1) * 100; // For UI display
+      } else {
+        libraryProductionBonus.value = 0;
+      }
+
       for (const resource of Object.values(resources.value)) {
         if (!resource.unlocked) continue;
 
-        // Calculate production for this tick (including morale bonus)
-        const production = resource.perSecond
+        // Calculate production for this tick (including morale bonus, event effects, Library bonus, and relic bonuses)
+        let production = resource.perSecond
           .mul(deltaTime)
           .mul(globalProductionMultiplier.value)
-          .mul(moraleMultiplier);
+          .mul(moraleMultiplier)
+          .mul(eventProductionMultiplier)
+          .mul(libraryBonus)
+          .mul(relicAllProductionMultiplier.value);
+
+        // Apply relic production multiplier for specific resource
+        const relicResourceMultiplier = relicProductionMultipliers.value[resource.id] || 0;
+        if (relicResourceMultiplier > 0) {
+          production = production.mul(1 + relicResourceMultiplier / 100);
+        }
+
+        // MAX LEVEL EFFECT: Kapliczka Lv5 - Automatyczna modlitwa +1/s
+        if (resource.id === 'faith' && entityStore.entities.chapel?.level >= 5) {
+          const autoFaith = bn(1).mul(deltaTime).mul(moraleMultiplier);
+          production = production.add(autoFaith);
+        }
 
         // Add production
         resource.amount = resource.amount.add(production);
+
+        // Track total faith earned for prestige calculation
+        if (resource.id === 'faith' && production.gt(0)) {
+          totalFaithEarned.value = totalFaithEarned.value.add(production);
+        }
 
         // Cap at max if defined
         if (resource.maxAmount !== null && resource.amount.gt(resource.maxAmount)) {
@@ -128,6 +179,11 @@ export const useResourceStore = defineStore(
 
       const toAdd = amount instanceof Decimal ? amount : bn(amount);
       resource.amount = resource.amount.add(toAdd);
+
+      // Track total faith earned for prestige calculation
+      if (id === 'faith') {
+        totalFaithEarned.value = totalFaithEarned.value.add(toAdd);
+      }
 
       // Cap at max if defined
       if (resource.maxAmount !== null && resource.amount.gt(resource.maxAmount)) {
@@ -172,7 +228,18 @@ export const useResourceStore = defineStore(
      * Handle prayer click - generates Faith
      */
     function pray() {
-      const faithGain = baseClickValue.value.mul(clickMultiplier.value);
+      // Include event click multiplier and relic click multiplier
+      const eventStore = useEventStore();
+      let faithGain = baseClickValue.value
+        .mul(clickMultiplier.value)
+        .mul(eventStore.clickMultiplier)
+        .mul(relicClickMultiplier.value);
+
+      // Relic double click chance
+      if (relicDoubleClickChance.value > 0 && Math.random() < relicDoubleClickChance.value) {
+        faithGain = faithGain.mul(2);
+      }
+
       addResource('faith', faithGain);
       return faithGain;
     }
@@ -211,15 +278,17 @@ export const useResourceStore = defineStore(
     /**
      * Reset for prestige (keep unlocks based on prestige upgrades)
      */
-    function resetForPrestige(keepUnlocks: ResourceId[] = []) {
+    function resetForPrestige(keepUnlocks: ResourceId[] = [], startingFaith: Decimal = bn(0)) {
       for (const resource of Object.values(resources.value)) {
-        resource.amount = bn(0);
+        resource.amount = resource.id === 'faith' ? startingFaith : bn(0);
         resource.perSecond = bn(0);
 
         if (!keepUnlocks.includes(resource.id)) {
           resource.unlocked = resource.id === 'faith'; // Faith always unlocked
         }
       }
+      // Reset total faith earned for new cycle
+      totalFaithEarned.value = bn(0);
     }
 
     /**
@@ -289,6 +358,12 @@ export const useResourceStore = defineStore(
       globalProductionMultiplier,
       clickMultiplier,
       baseClickValue,
+      totalFaithEarned,
+      libraryProductionBonus,
+      relicProductionMultipliers,
+      relicAllProductionMultiplier,
+      relicClickMultiplier,
+      relicDoubleClickChance,
 
       // Computed
       unlockedResources,
@@ -342,7 +417,7 @@ export const useResourceStore = defineStore(
             }
 
             // Handle plain string/number for known Decimal fields
-            const decimalFields = ['amount', 'perSecond', 'maxAmount', 'baseClickValue'];
+            const decimalFields = ['amount', 'perSecond', 'maxAmount', 'baseClickValue', 'totalFaithEarned'];
             if ((typeof obj === 'string' || typeof obj === 'number') && key && decimalFields.includes(key)) {
               return bn(obj);
             }
