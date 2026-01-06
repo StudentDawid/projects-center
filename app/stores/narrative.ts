@@ -4,6 +4,7 @@
  */
 import { defineStore } from 'pinia';
 import { ref, computed } from 'vue';
+import { logger } from '~/shared/lib/logger';
 
 // ============================================
 // Types
@@ -67,7 +68,7 @@ export const useNarrativeStore = defineStore(
         entries.value = entries.value.slice(0, maxEntries.value);
       }
 
-      console.log(`[Narrative] ${entry.type}: ${entry.message}`);
+      logger.log(`[Narrative] ${entry.type}: ${entry.message}`);
     }
 
     /**
