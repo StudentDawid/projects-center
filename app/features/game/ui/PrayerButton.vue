@@ -48,9 +48,8 @@ const achievementStore = useAchievementStore();
 const popups = ref<FaithPopup[]>([]);
 let popupId = 0;
 
-const faithGainDisplay = computed(() =>
-  formatNumber(resourceStore.baseClickValue.mul(resourceStore.clickMultiplier))
-);
+// Use totalClickValue which includes all bonuses (buildings, prestige, relics, events)
+const faithGainDisplay = computed(() => resourceStore.formattedClickValue);
 
 function handlePray(event: MouseEvent) {
   const gain = resourceStore.pray();

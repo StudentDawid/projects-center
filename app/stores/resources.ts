@@ -1,6 +1,8 @@
 /**
  * Resource Store
  * Manages all game resources (Faith, Biomass, Souls, Ducats, Rage)
+ *
+ * OPTIMIZATION: Store references cached to avoid repeated useStore() in tick()
  */
 import { defineStore } from 'pinia';
 import { ref, computed } from 'vue';
@@ -10,6 +12,28 @@ import type { Resource, ResourceId } from '~/shared/types/game.types';
 import { useCombatStore } from './combat';
 import { useEntityStore } from './entities';
 import { useEventStore } from './events';
+
+// ============================================
+// Store Cache - Avoid repeated useStore() calls in tick()
+// ============================================
+let _combatStore: ReturnType<typeof useCombatStore> | null = null;
+let _entityStore: ReturnType<typeof useEntityStore> | null = null;
+let _eventStore: ReturnType<typeof useEventStore> | null = null;
+
+function getCombatStore() {
+  if (!_combatStore) _combatStore = useCombatStore();
+  return _combatStore;
+}
+
+function getEntityStore() {
+  if (!_entityStore) _entityStore = useEntityStore();
+  return _entityStore;
+}
+
+function getEventStore() {
+  if (!_eventStore) _eventStore = useEventStore();
+  return _eventStore;
+}
 
 export const useResourceStore = defineStore(
   'resources',
@@ -102,23 +126,110 @@ export const useResourceStore = defineStore(
       formatNumber(resources.value.faith.perSecond)
     );
 
+    /**
+     * Total base click value from buildings
+     * Includes: prayer_beads (+0.5 each), blessed_altar (+1 each)
+     */
+    const buildingClickBonus = computed(() => {
+      const entityStore = getEntityStore();
+      let bonus = bn(0);
+
+      // Różaniec: +0.5 per building (Lv5: +5)
+      if (entityStore.entities.prayer_beads?.unlocked) {
+        const count = entityStore.entities.prayer_beads.count;
+        const levelBonus = entityStore.getLevelBonus('prayer_beads');
+        const baseBonus = 0.5;
+        bonus = bonus.add(bn(count * baseBonus * levelBonus));
+        // Max level effect
+        if (entityStore.entities.prayer_beads.level >= 5) {
+          bonus = bonus.add(bn(5));
+        }
+      }
+
+      // Błogosławiony Ołtarz: +1 per building (Lv5: +10)
+      if (entityStore.entities.blessed_altar?.unlocked) {
+        const count = entityStore.entities.blessed_altar.count;
+        const levelBonus = entityStore.getLevelBonus('blessed_altar');
+        const baseBonus = 1;
+        bonus = bonus.add(bn(count * baseBonus * levelBonus));
+        // Max level effect
+        if (entityStore.entities.blessed_altar.level >= 5) {
+          bonus = bonus.add(bn(10));
+        }
+      }
+
+      return bonus;
+    });
+
+    /**
+     * Total click multiplier from buildings
+     * Includes: holy_relic (+10% each), choir (+25% each)
+     */
+    const buildingClickMultiplier = computed(() => {
+      const entityStore = getEntityStore();
+      let multiplier = 1;
+
+      // Relikwia: +10% per building (Lv5: +50%)
+      if (entityStore.entities.holy_relic?.unlocked) {
+        const count = entityStore.entities.holy_relic.count;
+        const levelBonus = entityStore.getLevelBonus('holy_relic');
+        multiplier += count * 0.1 * levelBonus;
+        // Max level effect
+        if (entityStore.entities.holy_relic.level >= 5) {
+          multiplier += 0.5;
+        }
+      }
+
+      // Chór: +25% per building (Lv5: +100%)
+      if (entityStore.entities.choir?.unlocked) {
+        const count = entityStore.entities.choir.count;
+        const levelBonus = entityStore.getLevelBonus('choir');
+        multiplier += count * 0.25 * levelBonus;
+        // Max level effect
+        if (entityStore.entities.choir.level >= 5) {
+          multiplier += 1;
+        }
+      }
+
+      return multiplier;
+    });
+
+    /**
+     * Total effective click value (for display)
+     */
+    const totalClickValue = computed(() => {
+      const eventStore = getEventStore();
+      return baseClickValue.value
+        .add(buildingClickBonus.value)
+        .mul(clickMultiplier.value)
+        .mul(buildingClickMultiplier.value)
+        .mul(eventStore.clickMultiplier)
+        .mul(relicClickMultiplier.value);
+    });
+
+    /**
+     * Formatted click value for UI
+     */
+    const formattedClickValue = computed(() => formatNumber(totalClickValue.value));
+
     // ============================================
     // Actions
     // ============================================
 
     /**
      * Process one game tick - update all resources
+     * OPTIMIZATION: Uses cached store references
      */
     function tick(deltaTime: number) {
-      // Get morale multiplier from combat store
-      const combatStore = useCombatStore();
+      // Get morale multiplier from combat store (cached)
+      const combatStore = getCombatStore();
       const moraleMultiplier = combatStore.moraleProductionMultiplier;
 
-      // Import entity store for max level effects
-      const entityStore = useEntityStore();
+      // Import entity store for max level effects (cached)
+      const entityStore = getEntityStore();
 
-      // Get event multipliers
-      const eventStore = useEventStore();
+      // Get event multipliers (cached)
+      const eventStore = getEventStore();
       const eventProductionMultiplier = eventStore.productionMultiplier;
 
       // Calculate Library bonus
@@ -226,14 +337,18 @@ export const useResourceStore = defineStore(
 
     /**
      * Handle prayer click - generates Faith
+     * Includes bonuses from: prestige, events, relics, and click-boosting buildings
      */
     function pray() {
-      // Include event click multiplier and relic click multiplier
-      const eventStore = useEventStore();
+      const eventStore = getEventStore();
+
+      // Calculate total click value with all bonuses
       let faithGain = baseClickValue.value
-        .mul(clickMultiplier.value)
-        .mul(eventStore.clickMultiplier)
-        .mul(relicClickMultiplier.value);
+        .add(buildingClickBonus.value) // Różaniec, Ołtarz
+        .mul(clickMultiplier.value) // Prestige bonus
+        .mul(buildingClickMultiplier.value) // Relikwia, Chór
+        .mul(eventStore.clickMultiplier) // Event bonus
+        .mul(relicClickMultiplier.value); // Relic bonus
 
       // Relic double click chance
       if (relicDoubleClickChance.value > 0 && Math.random() < relicDoubleClickChance.value) {
@@ -369,6 +484,10 @@ export const useResourceStore = defineStore(
       unlockedResources,
       faithDisplay,
       faithPerSecondDisplay,
+      buildingClickBonus,
+      buildingClickMultiplier,
+      totalClickValue,
+      formattedClickValue,
 
       // Actions
       tick,

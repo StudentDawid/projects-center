@@ -34,6 +34,11 @@ export type EntityId =
   | 'guard_tower' // Wieża Strażnicza
   | 'chaplain' // Kapelan
   | 'monastery' // Klasztor
+  // Click Boosters - Solmar
+  | 'prayer_beads' // Różaniec - +0.5 base click
+  | 'holy_relic' // Święta Relikwia - +10% click multiplier
+  | 'blessed_altar' // Błogosławiony Ołtarz - +1 base click
+  | 'choir' // Chór Świątynny - +25% click multiplier
   // Tier 2 - Solmar
   | 'cathedral' // Katedra
   | 'arsenal' // Arsenał

@@ -1,6 +1,9 @@
 /**
  * Game Loop Store
  * Handles the main game loop, time tracking, auto-save, and offline progress
+ *
+ * OPTIMIZATION: Store references are cached to avoid repeated useStore() calls
+ * in the hot path (tick function called 20x per second)
  */
 import { defineStore } from 'pinia';
 import { ref, computed } from 'vue';
@@ -8,6 +11,35 @@ import { useResourceStore } from './resources';
 import { useEntityStore } from './entities';
 import { useCombatStore } from './combat';
 import { useEventStore } from './events';
+import { logger } from '~/shared/lib/logger';
+
+// ============================================
+// Store Cache - Avoid repeated useStore() calls in tick()
+// ============================================
+let _resourceStore: ReturnType<typeof useResourceStore> | null = null;
+let _entityStore: ReturnType<typeof useEntityStore> | null = null;
+let _combatStore: ReturnType<typeof useCombatStore> | null = null;
+let _eventStore: ReturnType<typeof useEventStore> | null = null;
+
+function getResourceStore() {
+  if (!_resourceStore) _resourceStore = useResourceStore();
+  return _resourceStore;
+}
+
+function getEntityStore() {
+  if (!_entityStore) _entityStore = useEntityStore();
+  return _entityStore;
+}
+
+function getCombatStore() {
+  if (!_combatStore) _combatStore = useCombatStore();
+  return _combatStore;
+}
+
+function getEventStore() {
+  if (!_eventStore) _eventStore = useEventStore();
+  return _eventStore;
+}
 
 export const useGameLoopStore = defineStore('gameLoop', () => {
   // State
@@ -25,10 +57,11 @@ export const useGameLoopStore = defineStore('gameLoop', () => {
   let autoSaveIntervalId: ReturnType<typeof setInterval> | null = null;
 
   // Constants
-  const TICK_RATE = 1000 / 60; // 60 FPS target
+  const TICK_RATE = 1000 / 20; // 20 FPS - sufficient for IDLE game, saves CPU
   const MAX_DELTA = 1; // Max 1 second per tick (prevents huge jumps)
   const OFFLINE_MAX_HOURS = 24; // Max offline progress
   const AUTO_SAVE_INTERVAL = 30000; // Auto-save every 30 seconds
+  const MIN_TICK_INTERVAL = 1000 / 30; // Max 30 FPS cap
 
   // Computed
   const formattedPlayTime = computed(() => {
@@ -38,11 +71,23 @@ export const useGameLoopStore = defineStore('gameLoop', () => {
     return `${hours.toString().padStart(2, '0')}:${minutes.toString().padStart(2, '0')}:${seconds.toString().padStart(2, '0')}`;
   });
 
+  // Track last tick for frame limiting
+  let lastTickTimestamp = 0;
+
   /**
    * Main game loop - called every frame
+   * OPTIMIZATION: Throttled to ~20 FPS instead of 60 FPS
+   * IDLE games don't need high frame rates, saves significant CPU
    */
   function gameLoop(currentTime: number) {
     if (!isRunning.value || isPaused.value) {
+      animationFrameId = requestAnimationFrame(gameLoop);
+      return;
+    }
+
+    // Frame rate limiting - skip frames if too fast
+    const timeSinceLastTick = currentTime - lastTickTimestamp;
+    if (timeSinceLastTick < MIN_TICK_INTERVAL) {
       animationFrameId = requestAnimationFrame(gameLoop);
       return;
     }
@@ -52,6 +97,7 @@ export const useGameLoopStore = defineStore('gameLoop', () => {
     const deltaTime = Math.min(rawDelta, MAX_DELTA);
 
     lastTickTime.value = currentTime;
+    lastTickTimestamp = currentTime;
     totalPlayTime.value += deltaTime;
     tickCount.value++;
 
@@ -64,17 +110,19 @@ export const useGameLoopStore = defineStore('gameLoop', () => {
 
   /**
    * Process one game tick
+   * OPTIMIZATION: Uses cached store references instead of useStore() each frame
    */
   function tick(deltaTime: number) {
-    const resourceStore = useResourceStore();
-    const entityStore = useEntityStore();
-    const combatStore = useCombatStore();
-    const eventStore = useEventStore();
+    // Use cached store references (initialized once, reused every tick)
+    const resourceStore = getResourceStore();
+    const entityStore = getEntityStore();
+    const combatStore = getCombatStore();
+    const eventStore = getEventStore();
 
     // Update resources based on production
     resourceStore.tick(deltaTime);
 
-    // Check for entity unlocks
+    // Check for entity unlocks (throttled internally)
     entityStore.checkUnlocks();
 
     // Update combat (threat, waves, morale)
@@ -96,7 +144,7 @@ export const useGameLoopStore = defineStore('gameLoop', () => {
       minute: '2-digit',
       second: '2-digit',
     });
-    console.log('[GameLoop] Game saved at', lastAutoSaveDisplay.value);
+    logger.log('[GameLoop] Game saved at', lastAutoSaveDisplay.value);
   }
 
   /**
@@ -114,7 +162,7 @@ export const useGameLoopStore = defineStore('gameLoop', () => {
     // Initial save
     saveGame();
 
-    console.log('[GameLoop] Auto-save started (every 30s)');
+    logger.log('[GameLoop] Auto-save started (every 30s)');
   }
 
   /**
@@ -142,7 +190,7 @@ export const useGameLoopStore = defineStore('gameLoop', () => {
     // Start auto-save
     startAutoSave();
 
-    console.log('[GameLoop] Started');
+    logger.log('[GameLoop] Started');
   }
 
   /**
@@ -162,7 +210,7 @@ export const useGameLoopStore = defineStore('gameLoop', () => {
     // Stop auto-save
     stopAutoSave();
 
-    console.log('[GameLoop] Stopped');
+    logger.log('[GameLoop] Stopped');
   }
 
   /**
@@ -176,7 +224,7 @@ export const useGameLoopStore = defineStore('gameLoop', () => {
       lastTickTime.value = performance.now();
     }
 
-    console.log(`[GameLoop] ${isPaused.value ? 'Paused' : 'Resumed'}`);
+    logger.log(`[GameLoop] ${isPaused.value ? 'Paused' : 'Resumed'}`);
   }
 
   /**
@@ -191,7 +239,7 @@ export const useGameLoopStore = defineStore('gameLoop', () => {
 
     if (offlineSeconds > 60) {
       // Only process if offline for more than 1 minute
-      console.log(`[GameLoop] Processing ${offlineSeconds.toFixed(0)}s of offline progress`);
+      logger.log(`[GameLoop] Processing ${offlineSeconds.toFixed(0)}s of offline progress`);
 
       const resourceStore = useResourceStore();
 

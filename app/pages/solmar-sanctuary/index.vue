@@ -25,6 +25,7 @@
               Zasoby
             </h2>
 
+            <!-- OPTIMIZATION: Resources update frequently, but individual cards only need to re-render when their values change -->
             <div class="resources-list d-flex flex-column gap-3 mb-6">
               <ResourceDisplay
                 v-for="resource in unlockedResources"
@@ -140,19 +141,40 @@
               </div>
             </div>
 
-            <!-- Achievements Tab Content -->
-            <div v-show="activeTab === 'achievements'" class="tab-content achievement-content">
-              <AchievementPanel />
+            <!-- Achievements Tab Content - LAZY LOADED -->
+            <div v-if="activeTab === 'achievements'" class="tab-content achievement-content">
+              <Suspense>
+                <AchievementPanel />
+                <template #fallback>
+                  <div class="d-flex justify-center align-center pa-8">
+                    <v-progress-circular indeterminate color="primary" />
+                  </div>
+                </template>
+              </Suspense>
             </div>
 
-            <!-- Relics Tab Content -->
-            <div v-show="activeTab === 'relics'" class="tab-content relic-content">
-              <RelicPanel />
+            <!-- Relics Tab Content - LAZY LOADED -->
+            <div v-if="activeTab === 'relics'" class="tab-content relic-content">
+              <Suspense>
+                <RelicPanel />
+                <template #fallback>
+                  <div class="d-flex justify-center align-center pa-8">
+                    <v-progress-circular indeterminate color="primary" />
+                  </div>
+                </template>
+              </Suspense>
             </div>
 
-            <!-- Prestige Tab Content -->
-            <div v-show="activeTab === 'prestige'" class="tab-content prestige-content">
-              <PrestigePanel />
+            <!-- Prestige Tab Content - LAZY LOADED -->
+            <div v-if="activeTab === 'prestige'" class="tab-content prestige-content">
+              <Suspense>
+                <PrestigePanel />
+                <template #fallback>
+                  <div class="d-flex justify-center align-center pa-8">
+                    <v-progress-circular indeterminate color="primary" />
+                  </div>
+                </template>
+              </Suspense>
             </div>
           </div>
         </v-col>
@@ -165,10 +187,12 @@
               Budynki
             </h2>
 
+            <!-- OPTIMIZATION: v-memo prevents re-renders when only unrelated state changes -->
             <div class="buildings-list d-flex flex-column gap-3">
               <BuildingCard
                 v-for="entity in unlockedEntities"
                 :key="entity.id"
+                v-memo="[entity.count, entity.level, entityStore.canAfford(entity.id), entityStore.canAffordUpgrade(entity.id)]"
                 :id="entity.id"
                 :name="entity.name"
                 :description="entity.description"
@@ -206,27 +230,29 @@
 </template>
 
 <script setup lang="ts">
-import { ref, computed, onMounted, onUnmounted, watch } from 'vue';
+import { ref, computed, onMounted, onUnmounted, watch, defineAsyncComponent } from 'vue';
 import { storeToRefs } from 'pinia';
 import { useGameLoopStore } from '~/stores/gameLoop';
 import { useResourceStore } from '~/stores/resources';
 import { useEntityStore } from '~/stores/entities';
 import type { EntityId } from '~/shared/types/game.types';
 
-// Components
+// Core Components (loaded immediately)
 import GameHeader from '~/features/game/ui/GameHeader.vue';
 import ResourceDisplay from '~/features/game/ui/ResourceDisplay.vue';
 import BuildingCard from '~/features/game/ui/BuildingCard.vue';
 import PrayerButton from '~/features/game/ui/PrayerButton.vue';
-import DevPanel from '~/features/game/ui/DevPanel.vue';
 import CombatPanel from '~/features/game/ui/CombatPanel.vue';
-import PrestigePanel from '~/features/game/ui/PrestigePanel.vue';
-import AchievementPanel from '~/features/game/ui/AchievementPanel.vue';
 import AchievementToast from '~/features/game/ui/AchievementToast.vue';
-import EventModal from '~/features/game/ui/EventModal.vue';
 import ActiveEffects from '~/features/game/ui/ActiveEffects.vue';
-import RelicPanel from '~/features/game/ui/RelicPanel.vue';
-import RelicDropModal from '~/features/game/ui/RelicDropModal.vue';
+
+// OPTIMIZATION: Lazy-loaded components (loaded only when tab is opened)
+const DevPanel = defineAsyncComponent(() => import('~/features/game/ui/DevPanel.vue'));
+const PrestigePanel = defineAsyncComponent(() => import('~/features/game/ui/PrestigePanel.vue'));
+const AchievementPanel = defineAsyncComponent(() => import('~/features/game/ui/AchievementPanel.vue'));
+const RelicPanel = defineAsyncComponent(() => import('~/features/game/ui/RelicPanel.vue'));
+const EventModal = defineAsyncComponent(() => import('~/features/game/ui/EventModal.vue'));
+const RelicDropModal = defineAsyncComponent(() => import('~/features/game/ui/RelicDropModal.vue'));
 
 import { useNarrativeStore } from '~/stores/narrative';
 import { usePrestigeStore } from '~/stores/prestige';
@@ -261,14 +287,18 @@ function formatLogTime(timestamp: number): string {
   return date.toLocaleTimeString('pl-PL', { hour: '2-digit', minute: '2-digit' });
 }
 
-// Entity purchase handler
-function handleBuyEntity(id: string) {
+// Entity purchase handler (supports multi-buy)
+function handleBuyEntity(id: string, quantity: number = 1) {
   const entity = entityStore.entities[id as EntityId];
   if (!entity) return;
 
-  const success = entityStore.purchase(id as EntityId);
+  const success = entityStore.purchase(id as EntityId, quantity);
   if (success) {
-    addNarrativeEntry(`Wzniesiono: ${entity.name}`, 'info');
+    if (quantity === 1) {
+      addNarrativeEntry(`Wzniesiono: ${entity.name}`, 'info');
+    } else {
+      addNarrativeEntry(`Wzniesiono ${quantity}x ${entity.name}`, 'info');
+    }
   }
 }
 

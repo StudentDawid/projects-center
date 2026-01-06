@@ -10,6 +10,7 @@ import { useResourceStore } from './resources';
 import type { Entity, EntityId, ResourceId, EntityPrerequisite, SpecialUnlockCondition } from '~/shared/types/game.types';
 import { usePrestigeStore } from './prestige';
 import { useCombatStore } from './combat';
+import { logger } from '~/shared/lib/logger';
 
 export const useEntityStore = defineStore(
   'entities',
@@ -260,6 +261,118 @@ export const useEntityStore = defineStore(
           threshold: 2,
         },
         maxLevelEffect: 'Sanktuarium: Podwójna regeneracja morale',
+      },
+
+      // ---- Click Boosters ----
+      prayer_beads: {
+        id: 'prayer_beads',
+        name: 'Różaniec Świętego',
+        description:
+          'Błogosławiony różaniec wzmacniający modlitwy. Każdy dodaje +0.5 Wiary za kliknięcie.',
+        icon: 'mdi-egg-easter',
+        count: 0,
+        level: 1,
+        tier: 1,
+        baseCost: {
+          faith: bn(25),
+          biomass: bn(0),
+          souls: bn(0),
+          ducats: bn(0),
+          rage: bn(0),
+        },
+        costMultiplier: 1.12,
+        production: {},
+        consumption: {},
+        unlocked: false,
+        unlockCondition: {
+          type: 'resource',
+          targetId: 'faith',
+          threshold: 20,
+        },
+        specialEffect: '+0.5 Wiary za kliknięcie',
+        maxLevelEffect: 'Różaniec Arcybiskupa: +5 Wiary za kliknięcie',
+      },
+      holy_relic: {
+        id: 'holy_relic',
+        name: 'Relikwia Męczennika',
+        description:
+          'Fragmenty kości świętych, wzmacniające moc modlitwy. +10% mocy kliknięcia za każdą.',
+        icon: 'mdi-bone',
+        count: 0,
+        level: 1,
+        tier: 1,
+        baseCost: {
+          faith: bn(100),
+          biomass: bn(0),
+          souls: bn(0),
+          ducats: bn(25),
+          rage: bn(0),
+        },
+        costMultiplier: 1.2,
+        production: {},
+        consumption: {},
+        unlocked: false,
+        unlockCondition: {
+          type: 'entity',
+          targetId: 'prayer_beads',
+          threshold: 5,
+        },
+        specialEffect: '+10% mocy kliknięcia',
+        maxLevelEffect: 'Relikwia Świętego: +50% mocy kliknięcia',
+      },
+      blessed_altar: {
+        id: 'blessed_altar',
+        name: 'Błogosławiony Ołtarz',
+        description:
+          'Święty ołtarz namaszczony olejami. Każdy dodaje +1 Wiary za kliknięcie.',
+        icon: 'mdi-table-furniture',
+        count: 0,
+        level: 1,
+        tier: 1,
+        baseCost: {
+          faith: bn(200),
+          biomass: bn(0),
+          souls: bn(0),
+          ducats: bn(50),
+          rage: bn(0),
+        },
+        costMultiplier: 1.25,
+        production: {},
+        consumption: {},
+        unlocked: false,
+        unlockCondition: {
+          type: 'entity',
+          targetId: 'holy_relic',
+          threshold: 3,
+        },
+        specialEffect: '+1 Wiary za kliknięcie',
+        maxLevelEffect: 'Ołtarz Wielkiego Inkwizytora: +10 Wiary za kliknięcie',
+      },
+      choir: {
+        id: 'choir',
+        name: 'Chór Świątynny',
+        description:
+          'Chór śpiewający hymny na chwałę Solmara. Każdy wzmacnia moc modlitw o 25%.',
+        icon: 'mdi-account-group',
+        count: 0,
+        level: 1,
+        tier: 2,
+        baseCost: {
+          faith: bn(1000),
+          biomass: bn(0),
+          souls: bn(0),
+          ducats: bn(200),
+          rage: bn(0),
+        },
+        costMultiplier: 1.35,
+        production: {
+          faith: bn(1), // Mała pasywna produkcja
+        },
+        consumption: {},
+        unlocked: false,
+        prerequisites: [{ entityId: 'blessed_altar', count: 3 }],
+        specialEffect: '+25% mocy kliknięcia',
+        maxLevelEffect: 'Chór Anielski: +100% mocy kliknięcia, automatyczna modlitwa co 5s',
       },
 
       // ---- Tier 2 Entities ----
@@ -560,7 +673,7 @@ export const useEntityStore = defineStore(
 
     const solmarEntities = computed(() =>
       Object.values(entities.value).filter(
-        (e) => e.unlocked && ['chapel', 'tithe_collector', 'flagellant', 'altar_tank', 'walls', 'guard_tower', 'chaplain', 'monastery', 'cathedral', 'arsenal', 'library', 'field_hospital', 'reliquary', 'inquisition_fortress', 'bell_tower', 'inquisitor', 'holy_warrior'].includes(e.id)
+        (e) => e.unlocked && ['chapel', 'tithe_collector', 'flagellant', 'altar_tank', 'walls', 'guard_tower', 'chaplain', 'monastery', 'prayer_beads', 'holy_relic', 'blessed_altar', 'choir', 'cathedral', 'arsenal', 'library', 'field_hospital', 'reliquary', 'inquisition_fortress', 'bell_tower', 'inquisitor', 'holy_warrior'].includes(e.id)
       )
     );
 
@@ -700,6 +813,141 @@ export const useEntityStore = defineStore(
     }
 
     /**
+     * Calculate maximum number of entities player can afford
+     * Uses iterative approach to handle scaling costs correctly
+     */
+    function calculateMaxAffordable(id: EntityId): number {
+      const entity = entities.value[id];
+      if (!entity || !entity.unlocked) return 0;
+
+      const resourceStore = useResourceStore();
+      let affordable = 0;
+      const maxIterations = 1000; // Safety limit
+
+      // Simulate purchases to calculate max affordable
+      const originalCount = entity.count;
+      const resourceSnapshots: Record<ResourceId, Decimal> = {
+        faith: resourceStore.resources.faith.amount,
+        biomass: resourceStore.resources.biomass.amount,
+        souls: resourceStore.resources.souls.amount,
+        ducats: resourceStore.resources.ducats.amount,
+        rage: resourceStore.resources.rage.amount,
+      };
+
+      for (let i = 0; i < maxIterations; i++) {
+        // Calculate cost at current count + i
+        const simulatedCount = originalCount + i;
+        const costs: Record<ResourceId, Decimal> = {
+          faith: bn(0),
+          biomass: bn(0),
+          souls: bn(0),
+          ducats: bn(0),
+          rage: bn(0),
+        };
+
+        for (const [resourceId, baseCost] of Object.entries(entity.baseCost)) {
+          if (baseCost.gt(0)) {
+            const discountedBaseCost = baseCost.mul(buildingCostMultiplier.value);
+            costs[resourceId as ResourceId] = calculateCost(
+              discountedBaseCost,
+              entity.costMultiplier,
+              simulatedCount
+            );
+          }
+        }
+
+        // Check if can afford
+        let canAffordThis = true;
+        for (const [resourceId, amount] of Object.entries(costs)) {
+          if (amount.gt(0) && resourceSnapshots[resourceId as ResourceId].lt(amount)) {
+            canAffordThis = false;
+            break;
+          }
+        }
+
+        if (!canAffordThis) break;
+
+        // Deduct from snapshot
+        for (const [resourceId, amount] of Object.entries(costs)) {
+          if (amount.gt(0)) {
+            resourceSnapshots[resourceId as ResourceId] = resourceSnapshots[resourceId as ResourceId].sub(amount);
+          }
+        }
+
+        affordable++;
+      }
+
+      return affordable;
+    }
+
+    /**
+     * Get total cost for buying multiple entities
+     * Used for UI display
+     */
+    function getTotalCostForMultiple(id: EntityId, count: number): Record<ResourceId, Decimal> {
+      const entity = entities.value[id];
+      const totalCosts: Record<ResourceId, Decimal> = {
+        faith: bn(0),
+        biomass: bn(0),
+        souls: bn(0),
+        ducats: bn(0),
+        rage: bn(0),
+      };
+
+      if (!entity || !entity.unlocked || count <= 0) return totalCosts;
+
+      for (let i = 0; i < count; i++) {
+        const simulatedCount = entity.count + i;
+        for (const [resourceId, baseCost] of Object.entries(entity.baseCost)) {
+          if (baseCost.gt(0)) {
+            const discountedBaseCost = baseCost.mul(buildingCostMultiplier.value);
+            const cost = calculateCost(discountedBaseCost, entity.costMultiplier, simulatedCount);
+            totalCosts[resourceId as ResourceId] = totalCosts[resourceId as ResourceId].add(cost);
+          }
+        }
+      }
+
+      return totalCosts;
+    }
+
+    /**
+     * Get formatted total cost for multiple purchases
+     */
+    function getFormattedCostForMultiple(id: EntityId, count: number): string {
+      const costs = getTotalCostForMultiple(id, count);
+      const parts: string[] = [];
+      const resourceStore = useResourceStore();
+
+      for (const [resourceId, amount] of Object.entries(costs)) {
+        if (amount.gt(0)) {
+          const resource = resourceStore.resources[resourceId as ResourceId];
+          parts.push(`${formatNumber(amount)} ${resource?.name || resourceId}`);
+        }
+      }
+
+      return parts.length > 0 ? parts.join(', ') : 'Brak kosztu';
+    }
+
+    /**
+     * Check if player can afford multiple entities
+     */
+    function canAffordMultiple(id: EntityId, count: number): boolean {
+      const costs = getTotalCostForMultiple(id, count);
+      const resourceStore = useResourceStore();
+
+      for (const [resourceId, amount] of Object.entries(costs)) {
+        if (amount.gt(0)) {
+          const resource = resourceStore.resources[resourceId as ResourceId];
+          if (!resource || resource.amount.lt(amount)) {
+            return false;
+          }
+        }
+      }
+
+      return true;
+    }
+
+    /**
      * Get the production bonus multiplier for an entity based on level
      * Level 1 = 1x (base), Level 2 = 1.5x, Level 3 = 2x, Level 4 = 2.5x, Level 5 = 3x
      */
@@ -827,7 +1075,7 @@ export const useEntityStore = defineStore(
       // Update production rates with new level bonus
       updateProductionRates();
 
-      console.log(`[Entities] Upgraded ${entity.name} to level ${entity.level}`);
+      logger.log(`[Entities] Upgraded ${entity.name} to level ${entity.level}`);
 
       return true;
     }
@@ -1029,12 +1277,12 @@ export const useEntityStore = defineStore(
 
           if (prerequisitesMet && specialConditionsMet) {
             entity.unlocked = true;
-            console.log(`[Entities] Unlocked Tier ${entity.tier}: ${entity.name}`);
+            logger.log(`[Entities] Unlocked Tier ${entity.tier}: ${entity.name}`);
 
             // Auto-unlock rage for Arsenal
             if (entity.id === 'arsenal') {
               resourceStore.unlockResource('rage');
-              console.log(`[Resources] Unlocked: Gniew`);
+              logger.log(`[Resources] Unlocked: Gniew`);
             }
           }
           continue;
@@ -1050,7 +1298,7 @@ export const useEntityStore = defineStore(
             const resource = resourceStore.resources[condition.targetId as ResourceId];
             if (resource && resource.amount.gte(condition.threshold)) {
               entity.unlocked = true;
-              console.log(`[Entities] Unlocked: ${entity.name}`);
+              logger.log(`[Entities] Unlocked: ${entity.name}`);
             }
             break;
           }
@@ -1058,12 +1306,12 @@ export const useEntityStore = defineStore(
             const targetEntity = entities.value[condition.targetId as EntityId];
             if (targetEntity && targetEntity.count >= condition.threshold) {
               entity.unlocked = true;
-              console.log(`[Entities] Unlocked: ${entity.name}`);
+              logger.log(`[Entities] Unlocked: ${entity.name}`);
 
               // Auto-unlock related resources
               if (entity.id === 'tithe_collector') {
                 resourceStore.unlockResource('ducats');
-                console.log(`[Resources] Unlocked: Dukaty`);
+                logger.log(`[Resources] Unlocked: Dukaty`);
               }
             }
             break;
@@ -1191,6 +1439,10 @@ export const useEntityStore = defineStore(
       getFormattedCost,
       canAfford,
       purchase,
+      calculateMaxAffordable,
+      getTotalCostForMultiple,
+      getFormattedCostForMultiple,
+      canAffordMultiple,
       updateProductionRates,
       checkUnlocks,
       unlockEntity,

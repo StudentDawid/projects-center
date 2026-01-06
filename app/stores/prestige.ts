@@ -16,6 +16,7 @@ import { useCombatStore } from './combat';
 import { useNarrativeStore } from './narrative';
 import { useGameLoopStore } from './gameLoop';
 import { useEventStore } from './events';
+import { logger } from '~/shared/lib/logger';
 
 // ============================================
 // Types
@@ -432,7 +433,7 @@ export const usePrestigeStore = defineStore(
       // Reset cycle timer
       cycleStartTime.value = Date.now();
 
-      console.log(`[Prestige] Reset performed. Ashes gained: ${formatNumber(ashesGained)}, Total: ${formatNumber(martyrAshes.value)}`);
+      logger.log(`[Prestige] Reset performed. Ashes gained: ${formatNumber(ashesGained)}, Total: ${formatNumber(martyrAshes.value)}`);
 
       return true;
     }
@@ -444,7 +445,7 @@ export const usePrestigeStore = defineStore(
       martyrAshes.value = martyrAshes.value.add(amount);
       stats.value.totalAshesEarned = stats.value.totalAshesEarned.add(amount);
 
-      console.log(`[Prestige] Boss ashes added: +${amount}, Total: ${formatNumber(martyrAshes.value)}`);
+      logger.log(`[Prestige] Boss ashes added: +${amount}, Total: ${formatNumber(martyrAshes.value)}`);
     }
 
     /**
@@ -471,7 +472,7 @@ export const usePrestigeStore = defineStore(
         type: 'info',
       });
 
-      console.log(`[Prestige] Purchased ${upgradeId} level ${currentLevel + 1}`);
+      logger.log(`[Prestige] Purchased ${upgradeId} level ${currentLevel + 1}`);
 
       return true;
     }
@@ -524,7 +525,7 @@ export const usePrestigeStore = defineStore(
       resourceStore.clickMultiplier = bonuses.clickMultiplier;
       entityStore.setBuildingCostMultiplier(1 - bonuses.buildingCostReduction);
 
-      console.log('[Prestige] Applied prestige bonuses:', bonuses);
+      logger.log('[Prestige] Applied prestige bonuses:', bonuses);
     }
 
     /**

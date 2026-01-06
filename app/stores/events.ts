@@ -11,6 +11,7 @@ import { useEntityStore } from './entities';
 import { useCombatStore } from './combat';
 import { useNarrativeStore } from './narrative';
 import type { ResourceId, EntityId } from '~/shared/types/game.types';
+import { logger } from '~/shared/lib/logger';
 
 // ============================================
 // Types
@@ -725,7 +726,7 @@ export const useEventStore = defineStore(
       timeSinceLastEvent.value = 0;
       nextEventTime.value = getRandomEventInterval();
 
-      console.log(`[Events] Triggered: ${selectedEvent.name} (${selectedEvent.rarity})`);
+      logger.log(`[Events] Triggered: ${selectedEvent.name} (${selectedEvent.rarity})`);
     }
 
     /**

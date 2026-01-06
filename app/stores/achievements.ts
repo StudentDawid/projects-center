@@ -10,6 +10,7 @@ import { useResourceStore } from './resources';
 import { useEntityStore } from './entities';
 import { useCombatStore } from './combat';
 import { usePrestigeStore } from './prestige';
+import { logger } from '~/shared/lib/logger';
 
 // ============================================
 // Types
@@ -569,7 +570,7 @@ export const useAchievementStore = defineStore(
       // Add to toast queue
       toastQueue.value.push(achievement);
 
-      console.log(`[Achievements] Unlocked: ${achievement.name}`);
+      logger.log(`[Achievements] Unlocked: ${achievement.name}`);
     }
 
     /**

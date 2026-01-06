@@ -102,22 +102,47 @@
         </div>
 
         <!-- Actions Row -->
-        <div class="d-flex align-center gap-2">
-          <!-- Buy Section -->
-          <div class="flex-grow-1">
+        <div class="building-actions">
+          <!-- Buy Section with quantity buttons -->
+          <div class="buy-section">
             <div class="building-cost text-body-2 mb-1" :class="{ 'text-error': !canAfford }">
               <v-icon icon="mdi-cash" size="16" class="mr-1" />
-              {{ costDisplay }}
+              {{ displayedCost }}
             </div>
+
+            <!-- Quantity Selector -->
+            <div class="quantity-buttons d-flex gap-1 mb-2">
+              <v-btn
+                v-for="qty in [1, 5, 25, 100]"
+                :key="qty"
+                :variant="selectedQuantity === qty ? 'flat' : 'outlined'"
+                :color="selectedQuantity === qty ? 'primary' : 'default'"
+                size="small"
+                class="quantity-btn"
+                @click="selectedQuantity = qty"
+              >
+                {{ qty }}
+              </v-btn>
+              <v-btn
+                :variant="selectedQuantity === -1 ? 'flat' : 'outlined'"
+                :color="selectedQuantity === -1 ? 'warning' : 'default'"
+                size="small"
+                class="quantity-btn max-btn"
+                @click="selectedQuantity = -1"
+              >
+                MAX
+              </v-btn>
+            </div>
+
             <v-btn
-              :disabled="!canAfford"
-              :color="canAfford ? 'primary' : 'grey'"
+              :disabled="!canAffordSelected"
+              :color="canAffordSelected ? 'primary' : 'grey'"
               size="small"
               class="building-buy-btn"
               @click="handleBuy"
             >
               <v-icon icon="mdi-plus" size="18" class="mr-1" />
-              Kup
+              Kup {{ effectiveQuantity > 1 ? `(${effectiveQuantity})` : '' }}
             </v-btn>
           </div>
 
@@ -156,7 +181,9 @@
 </template>
 
 <script setup lang="ts">
-import type { EntityTier } from '~/shared/types/game.types';
+import { ref, computed } from 'vue';
+import type { EntityId, EntityTier } from '~/shared/types/game.types';
+import { useEntityStore } from '~/stores/entities';
 
 interface Props {
   id: string;
@@ -180,15 +207,46 @@ interface Props {
 }
 
 const props = defineProps<Props>();
+const entityStore = useEntityStore();
 
 const emit = defineEmits<{
-  buy: [id: string];
+  buy: [id: string, quantity: number];
   upgrade: [id: string];
 }>();
 
+// -1 means MAX
+const selectedQuantity = ref(1);
+
+// Calculate max affordable
+const maxAffordable = computed(() => {
+  return entityStore.calculateMaxAffordable(props.id as EntityId);
+});
+
+// Effective quantity (actual number to buy)
+const effectiveQuantity = computed(() => {
+  if (selectedQuantity.value === -1) {
+    return maxAffordable.value;
+  }
+  return Math.min(selectedQuantity.value, maxAffordable.value);
+});
+
+// Can afford selected quantity
+const canAffordSelected = computed(() => {
+  if (effectiveQuantity.value <= 0) return false;
+  return entityStore.canAffordMultiple(props.id as EntityId, effectiveQuantity.value);
+});
+
+// Display cost for selected quantity
+const displayedCost = computed(() => {
+  const qty = effectiveQuantity.value;
+  if (qty <= 0) return props.costDisplay;
+  if (qty === 1) return props.costDisplay;
+  return entityStore.getFormattedCostForMultiple(props.id as EntityId, qty);
+});
+
 function handleBuy() {
-  if (props.canAfford) {
-    emit('buy', props.id);
+  if (canAffordSelected.value && effectiveQuantity.value > 0) {
+    emit('buy', props.id, effectiveQuantity.value);
   }
 }
 
@@ -383,13 +441,43 @@ function handleUpgrade() {
   font-size: 0.75rem;
 }
 
+.building-actions {
+  display: flex;
+  align-items: flex-end;
+  gap: 12px;
+  flex-wrap: wrap;
+}
+
+.buy-section {
+  flex: 1;
+  min-width: 200px;
+}
+
+.quantity-buttons {
+  flex-wrap: wrap;
+  align-items: stretch;
+}
+
+.quantity-btn {
+  min-width: 36px !important;
+  height: 28px !important;
+  font-weight: 600;
+  font-size: 0.75rem !important;
+  padding: 0 8px !important;
+
+  &.max-btn {
+    min-width: 48px !important;
+  }
+}
+
 .building-buy-btn,
 .building-upgrade-btn {
-  min-width: 80px;
+  min-width: 100px;
 }
 
 .upgrade-section {
   text-align: right;
+  min-width: 120px;
 }
 
 .max-level-badge {

@@ -4,6 +4,8 @@
  *
  * Core mechanic: "Narrative Attrition" - resources don't grow in a vacuum.
  * The player must constantly "feed" the war machine.
+ *
+ * OPTIMIZATION: Store references cached to avoid repeated useStore() in tick()
  */
 import { defineStore } from 'pinia';
 import { ref, computed } from 'vue';
@@ -15,6 +17,7 @@ import { useEventStore } from './events';
 import { useRelicStore } from './relics';
 import { usePrestigeStore } from './prestige';
 import Decimal from 'break_infinity.js';
+import { logger } from '~/shared/lib/logger';
 import type {
   EnemyType,
   EnemyTypeId,
@@ -26,122 +29,61 @@ import type {
   RelicRarity,
 } from '~/shared/types/game.types';
 
-// ============================================
-// Types
-// ============================================
+// Import extracted modules for better code organization
+import { ENEMY_TYPES, getEnemyType } from './combat/enemy-types';
+import { DEFENSES, DEFENSE_COST_MULTIPLIER } from './combat/defenses';
+import type { DefenseBonus } from './combat/defenses';
+import { WAVES } from './combat/waves';
+import type { WaveEvent } from './combat/waves';
 
-export interface WaveEvent {
-  id: string;
-  name: string;
-  description: string;
-  threatRequired: number;
-  baseDamage: number; // Base morale damage
-  baseUnitLosses: number; // Base percentage of units that die (0-100)
-  duration: number; // How long the attack lasts in seconds
+// Re-export for backwards compatibility
+export type { DefenseBonus, WaveEvent };
+export { ENEMY_TYPES };
+
+// ============================================
+// Store Cache - Avoid repeated useStore() calls in tick()
+// ============================================
+let _resourceStore: ReturnType<typeof useResourceStore> | null = null;
+let _entityStore: ReturnType<typeof useEntityStore> | null = null;
+let _narrativeStore: ReturnType<typeof useNarrativeStore> | null = null;
+let _eventStore: ReturnType<typeof useEventStore> | null = null;
+let _relicStore: ReturnType<typeof useRelicStore> | null = null;
+let _prestigeStore: ReturnType<typeof usePrestigeStore> | null = null;
+
+function getResourceStore() {
+  if (!_resourceStore) _resourceStore = useResourceStore();
+  return _resourceStore;
 }
 
-// ============================================
-// Enemy Definitions
-// ============================================
+function getEntityStore() {
+  if (!_entityStore) _entityStore = useEntityStore();
+  return _entityStore;
+}
 
-const ENEMY_TYPES: Record<EnemyTypeId, EnemyType> = {
-  cultist: {
-    id: 'cultist',
-    name: 'Kultyści Mięsa',
-    description: 'Podstawowi wyznawcy chaosu. Liczni, ale słabi.',
-    icon: '👹',
-    tier: 'basic',
-    damageMultiplier: 1,
-    unitLossMultiplier: 1,
-    durationMultiplier: 1,
-    weakness: 'blessing',
-    weaknessBonus: 0.3,
-    spawnCondition: { type: 'every_n_waves', value: 1 },
-  },
-  abomination_minion: {
-    id: 'abomination_minion',
-    name: 'Plugastwo',
-    description: 'Elitarne stwory z połączonych ciał. Silniejsze i bardziej wytrzymałe.',
-    icon: '👾',
-    tier: 'elite',
-    damageMultiplier: 2,
-    unitLossMultiplier: 2,
-    durationMultiplier: 1.5,
-    weakness: 'fortification',
-    weaknessBonus: 0.4,
-    spawnCondition: { type: 'every_n_waves', value: 5 },
-  },
-  apostate: {
-    id: 'apostate',
-    name: 'Apostata',
-    description: 'Zdrajca wiary. Kradnie waszą Wiarę zamiast zadawać obrażenia.',
-    icon: '🧙',
-    tier: 'special',
-    damageMultiplier: 0.5,
-    unitLossMultiplier: 0.3,
-    durationMultiplier: 1.2,
-    specialEffect: {
-      type: 'steal_faith',
-      value: 5, // Kradnie 5% aktualnej Wiary
-      description: 'Kradnie 5% waszej Wiary',
-    },
-    weakness: 'martyrdom',
-    weaknessBonus: 0.6,
-    spawnCondition: { type: 'every_n_waves', value: 7 },
-  },
-  abomination_boss: {
-    id: 'abomination_boss',
-    name: 'Abominacja',
-    description: 'Przerażająca hybryda z dziesiątek ciał. Gwarantowana nagroda za pokonanie.',
-    icon: '🐙',
-    tier: 'boss',
-    damageMultiplier: 5,
-    unitLossMultiplier: 3,
-    durationMultiplier: 3,
-    specialEffect: {
-      type: 'morale_drain',
-      value: 2, // Ciągły drain morale -2/s
-      description: 'Ciągły drain morale -2/s podczas walki',
-    },
-    weakness: 'martyrdom',
-    weaknessBonus: 0.35,
-    spawnCondition: { type: 'every_n_waves', value: 25 },
-  },
-  arch_heretic: {
-    id: 'arch_heretic',
-    name: 'Arcyheretyk',
-    description: 'Przywódca kultu. Wymaga aktywnej obrony i strategicznych wyborów.',
-    icon: '😈',
-    tier: 'megaboss',
-    damageMultiplier: 10,
-    unitLossMultiplier: 5,
-    durationMultiplier: 5,
-    specialEffect: {
-      type: 'disable_buildings',
-      value: 30, // Wyłącza 30% budynków
-      description: 'Wyłącza 30% losowych budynków podczas walki',
-    },
-    weaknessBonus: 0,
-    spawnCondition: { type: 'every_n_waves', value: 100 },
-  },
-};
+function getNarrativeStore() {
+  if (!_narrativeStore) _narrativeStore = useNarrativeStore();
+  return _narrativeStore;
+}
 
-export interface DefenseBonus {
-  id: string;
-  name: string;
-  icon: string;
-  description: string;
-  moraleProtection: number; // Reduces morale damage (0-1)
-  unitProtection: number; // Reduces unit losses (0-1)
-  moraleRegenBonus?: number; // Temporary morale regen bonus
-  faithCost: Decimal;
-  cooldown: number; // Seconds
-  duration: number; // How long the defense lasts
+function getEventStore() {
+  if (!_eventStore) _eventStore = useEventStore();
+  return _eventStore;
+}
+
+function getRelicStore() {
+  if (!_relicStore) _relicStore = useRelicStore();
+  return _relicStore;
+}
+
+function getPrestigeStore() {
+  if (!_prestigeStore) _prestigeStore = usePrestigeStore();
+  return _prestigeStore;
 }
 
 // ============================================
 // Store
 // ============================================
+// NOTE: Types WaveEvent, DefenseBonus and ENEMY_TYPES are imported from ./combat/ modules
 
 export const useCombatStore = defineStore(
   'combat',
@@ -186,7 +128,7 @@ export const useCombatStore = defineStore(
       regeneration: 0,
       fortification: 0,
     });
-    const DEFENSE_COST_MULTIPLIER = 1.5; // Cost increases by 50% per use
+    // DEFENSE_COST_MULTIPLIER is imported from ./combat/defenses.ts
     const DEFENSE_COST_DECAY_INTERVAL = 120; // Seconds between cost decay
     const timeSinceLastCostDecay = ref(0);
 
@@ -236,100 +178,11 @@ export const useCombatStore = defineStore(
     // Disabled buildings during megaboss
     const disabledBuildingIds = ref<string[]>([]);
 
-    // ============================================
-    // Wave definitions
-    // ============================================
+    // Wave definitions imported from ./combat/waves.ts
+    const waves = WAVES;
 
-    const waves: WaveEvent[] = [
-      {
-        id: 'skirmish',
-        name: 'Potyczka',
-        description: 'Mała grupa heretyków testuje wasze obrony.',
-        threatRequired: 25,
-        baseDamage: 5,
-        baseUnitLosses: 5,
-        duration: 5,
-      },
-      {
-        id: 'raid',
-        name: 'Najazd',
-        description: 'Kultyści Mięsa atakują z zaskoczenia!',
-        threatRequired: 50,
-        baseDamage: 12,
-        baseUnitLosses: 8,
-        duration: 8,
-      },
-      {
-        id: 'assault',
-        name: 'Szturm',
-        description: 'Zmasowany atak na wasze fortyfikacje.',
-        threatRequired: 75,
-        baseDamage: 20,
-        baseUnitLosses: 12,
-        duration: 10,
-      },
-      {
-        id: 'siege',
-        name: 'Oblężenie',
-        description: 'Hordy plugastwa oblegają Sanktuarium!',
-        threatRequired: 100,
-        baseDamage: 30,
-        baseUnitLosses: 18,
-        duration: 15,
-      },
-    ];
-
-    // ============================================
-    // Defense definitions (blessings/abilities)
-    // ============================================
-
-    const defenses: DefenseBonus[] = [
-      {
-        id: 'blessing',
-        name: 'Błogosławieństwo Solmara',
-        icon: 'mdi-shield-cross',
-        description: 'Przywołaj ochronę Solmara. Zmniejsza obrażenia o 50%.',
-        moraleProtection: 0.5,
-        unitProtection: 0.5,
-        faithCost: bn(20),
-        cooldown: 30,
-        duration: 15,
-      },
-      {
-        id: 'martyrdom',
-        name: 'Męczeństwo',
-        icon: 'mdi-fire',
-        description: 'Poświęcenie. Blokuje 90% obrażeń morale.',
-        moraleProtection: 0.9,
-        unitProtection: 0.7,
-        faithCost: bn(50),
-        cooldown: 60,
-        duration: 10,
-      },
-      {
-        id: 'regeneration',
-        name: 'Odnowa Ducha',
-        icon: 'mdi-heart-plus',
-        description: 'Przyspiesza regenerację morale o +5/s przez 20s.',
-        moraleProtection: 0,
-        unitProtection: 0,
-        moraleRegenBonus: 5,
-        faithCost: bn(30),
-        cooldown: 45,
-        duration: 20,
-      },
-      {
-        id: 'fortification',
-        name: 'Święta Fortyfikacja',
-        icon: 'mdi-castle',
-        description: 'Wzmacnia mury. Całkowita ochrona jednostek.',
-        moraleProtection: 0.3,
-        unitProtection: 1.0,
-        faithCost: bn(40),
-        cooldown: 90,
-        duration: 12,
-      },
-    ];
+    // Defense definitions imported from ./combat/defenses.ts
+    const defenses = DEFENSES;
 
     // ============================================
     // Computed - Defense Stats from Buildings
@@ -393,8 +246,8 @@ export const useCombatStore = defineStore(
       // Each point of defense reduces damage by 1%, capped at 80%
       let reduction = Math.min(defenseRating.value * 0.01, 0.8);
 
-      // Add bonus from active events
-      const eventStore = useEventStore();
+      // Add bonus from active events (cached store)
+      const eventStore = getEventStore();
       reduction += eventStore.defenseBonus;
 
       return Math.min(reduction, 0.9); // Cap at 90% total reduction
@@ -439,8 +292,8 @@ export const useCombatStore = defineStore(
         regen *= 1 + (0.1 * entities.bell_tower.count * levelBonus);
       }
 
-      // Add bonus from active events
-      const eventStore = useEventStore();
+      // Add bonus from active events (cached store)
+      const eventStore = getEventStore();
       regen += eventStore.moraleRegenBonus;
 
       // Add relic bonus
@@ -863,7 +716,7 @@ export const useCombatStore = defineStore(
         setupBossEncounter(enemy);
       }
 
-      console.log(`[Combat] Wave ${currentWave.value} started: ${enemy.name} (${enemy.tier})`);
+      logger.log(`[Combat] Wave ${currentWave.value} started: ${enemy.name} (${enemy.tier})`);
     }
 
     /**
@@ -938,17 +791,17 @@ export const useCombatStore = defineStore(
       const choice = activeBossEncounter.value.choices.find(c => c.id === choiceId);
       if (!choice) return false;
 
-      // Check if player can afford the cost
-      const resourceStore = useResourceStore();
+      // Check if player can afford the cost (cached store)
+      const localResourceStore = getResourceStore();
       for (const [resourceId, amount] of Object.entries(choice.cost)) {
-        if (!resourceStore.resources[resourceId as keyof typeof resourceStore.resources]?.amount.gte(amount || 0)) {
+        if (!localResourceStore.resources[resourceId as keyof typeof localResourceStore.resources]?.amount.gte(amount || 0)) {
           return false;
         }
       }
 
       // Spend resources
       for (const [resourceId, amount] of Object.entries(choice.cost)) {
-        resourceStore.spendResource(resourceId as any, amount || 0);
+        localResourceStore.spendResource(resourceId as any, amount || 0);
       }
 
       // Apply effect
@@ -994,7 +847,7 @@ export const useCombatStore = defineStore(
       if (!activeBossEncounter.value) return;
 
       const enemy = ENEMY_TYPES[activeBossEncounter.value.enemyType];
-      const relicStore = useRelicStore();
+      const relicStore = getRelicStore();
 
       // Grant rewards
       for (const reward of activeBossEncounter.value.rewards) {
@@ -1112,7 +965,7 @@ export const useCombatStore = defineStore(
           message: `🛡️ ŚWIĘTE MURY! Pierwsza fala została całkowicie odparta bez strat!`,
           type: 'achievement',
         });
-        console.log('[Combat] First wave immunity used (Walls Lv5)');
+        logger.log('[Combat] First wave immunity used (Walls Lv5)');
         return;
       }
 
@@ -1129,7 +982,7 @@ export const useCombatStore = defineStore(
             message: `⚔️ ŚWIĘCI WOJOWNICY! Elitarni rycerze Solmara całkowicie rozgromili wrogów!`,
             type: 'achievement',
           });
-          console.log('[Combat] Holy Warriors repelled the wave completely');
+          logger.log('[Combat] Holy Warriors repelled the wave completely');
           return;
         }
       }
@@ -1262,8 +1115,8 @@ export const useCombatStore = defineStore(
         });
       }
 
-      // Try to drop a relic
-      const relicStore = useRelicStore();
+      // Try to drop a relic (cached store)
+      const relicStore = getRelicStore();
       const droppedRelic = relicStore.tryDropRelic(wavesDefeated.value);
       if (droppedRelic) {
         narrativeStore.addLog({
@@ -1272,7 +1125,7 @@ export const useCombatStore = defineStore(
         });
       }
 
-      console.log(`[Combat] Wave resolved. Morale: ${moraleLeft}, Units lost: ${unitsLost}, Difficulty: ${difficultyLevel.value}`);
+      logger.log(`[Combat] Wave resolved. Morale: ${moraleLeft}, Units lost: ${unitsLost}, Difficulty: ${difficultyLevel.value}`);
     }
 
     /**
@@ -1358,7 +1211,7 @@ export const useCombatStore = defineStore(
         type: 'info',
       });
 
-      console.log(`[Combat] Defense activated: ${defense.name}, usage: ${usageCount}`);
+      logger.log(`[Combat] Defense activated: ${defense.name}, usage: ${usageCount}`);
       return true;
     }
 
@@ -1445,10 +1298,11 @@ export const useCombatStore = defineStore(
 
     /**
      * Apply boss rewards
+     * OPTIMIZATION: Uses cached store references
      */
     function applyBossRewards(rewards: { relicRarity?: RelicRarity; ashes?: number; faith?: number }) {
-      const prestigeStore = usePrestigeStore();
-      const relicStore = useRelicStore();
+      const prestigeStore = getPrestigeStore();
+      const relicStore = getRelicStore();
 
       if (rewards.faith) {
         resourceStore.addResource('faith', bn(rewards.faith));
@@ -1492,7 +1346,7 @@ export const useCombatStore = defineStore(
       }
 
       if (decayed) {
-        console.log('[Combat] Defense costs decayed');
+        logger.log('[Combat] Defense costs decayed');
       }
     }
 
@@ -1508,7 +1362,7 @@ export const useCombatStore = defineStore(
         type: 'error',
       });
 
-      console.log('[Combat] Cycle ended - morale reached 0');
+      logger.log('[Combat] Cycle ended - morale reached 0');
     }
 
     /**
