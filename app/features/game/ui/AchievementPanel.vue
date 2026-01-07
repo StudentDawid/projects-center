@@ -114,7 +114,7 @@
 
 <script setup lang="ts">
 import { ref, computed } from 'vue';
-import { useAchievementStore, type AchievementCategory } from '~/stores/achievements';
+import { useAchievementStore, type AchievementCategory } from '~/stores/solmar-sanctuary/achievements';
 
 const achievementStore = useAchievementStore();
 

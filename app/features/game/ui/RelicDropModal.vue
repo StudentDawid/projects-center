@@ -1,6 +1,6 @@
 <script setup lang="ts">
 import { computed } from 'vue';
-import { useRelicStore, RARITY_COLORS, RARITY_NAMES } from '~/stores/relics';
+import { useRelicStore, RARITY_COLORS, RARITY_NAMES } from '~/stores/solmar-sanctuary/relics';
 
 const relicStore = useRelicStore();
 

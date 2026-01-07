@@ -278,9 +278,9 @@
 <script setup lang="ts">
 import { ref, computed, onMounted, onUnmounted, watch, defineAsyncComponent } from 'vue';
 import { storeToRefs } from 'pinia';
-import { useGameLoopStore } from '~/stores/gameLoop';
-import { useResourceStore } from '~/stores/resources';
-import { useEntityStore } from '~/stores/entities';
+import { useGameLoopStore } from '~/stores/solmar-sanctuary/gameLoop';
+import { useResourceStore } from '~/stores/solmar-sanctuary/resources';
+import { useEntityStore } from '~/stores/solmar-sanctuary/entities';
 import type { EntityId } from '~/shared/types/game.types';
 
 // Core Components (loaded immediately)
@@ -302,12 +302,12 @@ const EventModal = defineAsyncComponent(() => import('~/features/game/ui/EventMo
 const RelicDropModal = defineAsyncComponent(() => import('~/features/game/ui/RelicDropModal.vue'));
 const StatisticsPanel = defineAsyncComponent(() => import('~/features/game/ui/StatisticsPanel.vue'));
 
-import { useNarrativeStore } from '~/stores/narrative';
-import { usePrestigeStore } from '~/stores/prestige';
-import { useAchievementStore } from '~/stores/achievements';
-import { useEventStore } from '~/stores/events';
-import { useRelicStore } from '~/stores/relics';
-import { useChallengeStore } from '~/stores/challenges';
+import { useNarrativeStore } from '~/stores/solmar-sanctuary/narrative';
+import { usePrestigeStore } from '~/stores/solmar-sanctuary/prestige';
+import { useAchievementStore } from '~/stores/solmar-sanctuary/achievements';
+import { useEventStore } from '~/stores/solmar-sanctuary/events';
+import { useRelicStore } from '~/stores/solmar-sanctuary/relics';
+import { useChallengeStore } from '~/stores/solmar-sanctuary/challenges';
 
 // Stores
 const gameLoopStore = useGameLoopStore();

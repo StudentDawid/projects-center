@@ -38,7 +38,7 @@
 
 <script setup lang="ts">
 import { computed } from 'vue';
-import { useEventStore } from '~/stores/events';
+import { useEventStore } from '~/stores/solmar-sanctuary/events';
 
 const eventStore = useEventStore();
 

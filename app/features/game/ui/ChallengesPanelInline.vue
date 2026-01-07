@@ -85,7 +85,7 @@
 </template>
 
 <script setup lang="ts">
-import { useChallengeStore } from '~/stores/challenges';
+import { useChallengeStore } from '~/stores/solmar-sanctuary/challenges';
 import ChallengeCard from './ChallengeCard.vue';
 
 const challengeStore = useChallengeStore();

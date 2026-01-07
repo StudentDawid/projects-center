@@ -331,8 +331,8 @@
 <script setup lang="ts">
 import { computed } from 'vue';
 import { storeToRefs } from 'pinia';
-import { useCombatStore } from '~/stores/combat';
-import { useResourceStore } from '~/stores/resources';
+import { useCombatStore } from '~/stores/solmar-sanctuary/combat';
+import { useResourceStore } from '~/stores/solmar-sanctuary/resources';
 import { formatNumber } from '~/shared/lib/big-number';
 import type { BossChoice } from '~/shared/types/game.types';
 

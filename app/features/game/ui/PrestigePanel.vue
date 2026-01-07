@@ -202,7 +202,7 @@
 
 <script setup lang="ts">
 import { ref, computed } from 'vue';
-import { usePrestigeStore } from '~/stores/prestige';
+import { usePrestigeStore } from '~/stores/solmar-sanctuary/prestige';
 import { formatNumber } from '~/shared/lib/big-number';
 
 const prestigeStore = usePrestigeStore();

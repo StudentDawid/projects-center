@@ -60,7 +60,7 @@
 
 <script setup lang="ts">
 import { computed } from 'vue';
-import type { ChallengeDefinition, ChallengeProgress } from '~/stores/challenges';
+import type { ChallengeDefinition, ChallengeProgress } from '~/stores/solmar-sanctuary/challenges';
 
 interface Props {
   challenge: ChallengeDefinition;

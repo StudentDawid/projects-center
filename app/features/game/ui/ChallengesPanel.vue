@@ -102,7 +102,7 @@
 
 <script setup lang="ts">
 import { computed } from 'vue';
-import { useChallengeStore } from '~/stores/challenges';
+import { useChallengeStore } from '~/stores/solmar-sanctuary/challenges';
 import ChallengeCard from './ChallengeCard.vue';
 
 interface Props {

@@ -7,6 +7,11 @@ import { ref, computed } from 'vue';
 import Decimal from 'break_infinity.js';
 import { bn, formatNumber } from '~/shared/lib/big-number';
 import { logger } from '~/shared/lib/logger';
+import { useResourceStore } from './resources';
+import { useCombatStore } from './combat';
+import { useEntityStore } from './entities';
+import { usePrestigeStore } from './prestige';
+import { useAchievementStore } from './achievements';
 
 // Types
 interface ProductionSample {
@@ -75,16 +80,15 @@ interface CycleStats {
   highestCombo: number;
 }
 
-// Store cache to avoid circular dependencies
-let _resourceStore: ReturnType<typeof import('./resources').useResourceStore> | null = null;
-let _combatStore: ReturnType<typeof import('./combat').useCombatStore> | null = null;
-let _entityStore: ReturnType<typeof import('./entities').useEntityStore> | null = null;
-let _prestigeStore: ReturnType<typeof import('./prestige').usePrestigeStore> | null = null;
-let _achievementStore: ReturnType<typeof import('./achievements').useAchievementStore> | null = null;
+// Store cache to avoid repeated useStore() calls
+let _resourceStore: ReturnType<typeof useResourceStore> | null = null;
+let _combatStore: ReturnType<typeof useCombatStore> | null = null;
+let _entityStore: ReturnType<typeof useEntityStore> | null = null;
+let _prestigeStore: ReturnType<typeof usePrestigeStore> | null = null;
+let _achievementStore: ReturnType<typeof useAchievementStore> | null = null;
 
 function getResourceStore() {
   if (!_resourceStore) {
-    const { useResourceStore } = require('./resources');
     _resourceStore = useResourceStore();
   }
   return _resourceStore!;
@@ -92,7 +96,6 @@ function getResourceStore() {
 
 function getCombatStore() {
   if (!_combatStore) {
-    const { useCombatStore } = require('./combat');
     _combatStore = useCombatStore();
   }
   return _combatStore!;
@@ -100,7 +103,6 @@ function getCombatStore() {
 
 function getEntityStore() {
   if (!_entityStore) {
-    const { useEntityStore } = require('./entities');
     _entityStore = useEntityStore();
   }
   return _entityStore!;
@@ -108,7 +110,6 @@ function getEntityStore() {
 
 function getPrestigeStore() {
   if (!_prestigeStore) {
-    const { usePrestigeStore } = require('./prestige');
     _prestigeStore = usePrestigeStore();
   }
   return _prestigeStore!;
@@ -116,7 +117,6 @@ function getPrestigeStore() {
 
 function getAchievementStore() {
   if (!_achievementStore) {
-    const { useAchievementStore } = require('./achievements');
     _achievementStore = useAchievementStore();
   }
   return _achievementStore!;

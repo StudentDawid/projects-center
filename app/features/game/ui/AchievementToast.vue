@@ -26,7 +26,7 @@
 
 <script setup lang="ts">
 import { ref, onMounted, onUnmounted, watch } from 'vue';
-import { useAchievementStore, type Achievement } from '~/stores/achievements';
+import { useAchievementStore, type Achievement } from '~/stores/solmar-sanctuary/achievements';
 
 const achievementStore = useAchievementStore();
 

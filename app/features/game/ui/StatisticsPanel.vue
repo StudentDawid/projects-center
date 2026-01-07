@@ -381,7 +381,7 @@
 
 <script setup lang="ts">
 import { ref, computed } from 'vue';
-import { useStatisticsStore } from '~/stores/statistics';
+import { useStatisticsStore } from '~/stores/solmar-sanctuary/statistics';
 import { formatNumber, bn } from '~/shared/lib/big-number';
 
 // Sub-component for stat cards

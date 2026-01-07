@@ -31,8 +31,8 @@
 
 <script setup lang="ts">
 import { ref, computed } from 'vue';
-import { useResourceStore } from '~/stores/resources';
-import { useAchievementStore } from '~/stores/achievements';
+import { useResourceStore } from '~/stores/solmar-sanctuary/resources';
+import { useAchievementStore } from '~/stores/solmar-sanctuary/achievements';
 import { formatNumber } from '~/shared/lib/big-number';
 
 interface FaithPopup {

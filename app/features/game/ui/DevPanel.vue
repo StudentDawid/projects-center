@@ -4,11 +4,11 @@
  * Toggle with ` (backtick) key or click the DEV button
  */
 import { ref, computed } from 'vue';
-import { useResourceStore } from '~/stores/resources';
-import { useEntityStore } from '~/stores/entities';
-import { useCombatStore } from '~/stores/combat';
-import { useEventStore } from '~/stores/events';
-import { useRelicStore, RARITY_NAMES } from '~/stores/relics';
+import { useResourceStore } from '~/stores/solmar-sanctuary/resources';
+import { useEntityStore } from '~/stores/solmar-sanctuary/entities';
+import { useCombatStore } from '~/stores/solmar-sanctuary/combat';
+import { useEventStore } from '~/stores/solmar-sanctuary/events';
+import { useRelicStore, RARITY_NAMES } from '~/stores/solmar-sanctuary/relics';
 import type { ResourceId, EntityId, RelicRarity } from '~/shared/types/game.types';
 
 const resourceStore = useResourceStore();

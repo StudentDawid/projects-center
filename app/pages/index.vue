@@ -15,7 +15,12 @@
         <span class="logo-text">Projects Center</span>
       </div>
       <nav class="hub-nav">
-        <a href="https://github.com/StudentDawid" target="_blank" rel="noopener" class="nav-link">
+        <a
+          href="https://github.com/StudentDawid"
+          target="_blank"
+          rel="noopener"
+          class="nav-link"
+        >
           <v-icon icon="mdi-github" size="24" />
         </a>
       </nav>
@@ -55,12 +60,16 @@
       </div>
 
       <div class="projects-grid">
-        <NuxtLink
+        <div
           v-for="project in projects"
           :key="project.id"
-          :to="project.link"
           class="project-card"
           :class="{ 'project-card--featured': project.featured }"
+          @click="handleProjectClick(project.link, $event)"
+          role="button"
+          tabindex="0"
+          @keydown.enter="handleProjectClick(project.link, $event)"
+          @keydown.space.prevent="handleProjectClick(project.link, $event)"
         >
           <div class="card-glow"></div>
           <div class="card-content">
@@ -85,7 +94,7 @@
               <v-icon icon="mdi-arrow-right" class="card-arrow" />
             </div>
           </div>
-        </NuxtLink>
+        </div>
 
         <!-- Coming Soon Card -->
         <div class="project-card project-card--placeholder">
@@ -106,13 +115,18 @@
 
     <!-- Footer -->
     <footer class="hub-footer">
-      <p>© {{ new Date().getFullYear() }} Projects Center • Zbudowane z ❤️ używając Nuxt.js</p>
+      <p>
+        © {{ new Date().getFullYear() }} Projects Center • Zbudowane z ❤️
+        używając Nuxt.js
+      </p>
     </footer>
   </div>
 </template>
 
 <script setup lang="ts">
 import { computed } from 'vue';
+
+const router = useRouter();
 
 interface Project {
   id: string;
@@ -127,11 +141,24 @@ interface Project {
   featured?: boolean;
 }
 
+function handleProjectClick(link: string, event: MouseEvent | KeyboardEvent) {
+  // Use router navigation directly
+  event.preventDefault();
+  event.stopPropagation();
+  router.push(link).catch((err) => {
+    // Ignore navigation errors (like duplicate navigation)
+    if (err.name !== 'NavigationDuplicated') {
+      console.error('Navigation error:', err);
+    }
+  });
+}
+
 const projects: Project[] = [
   {
     id: 'solmar-sanctuary',
     title: 'Sanktuarium Solmara',
-    description: 'Gra typu Premium Idle w mrocznym klimacie Religious Grimdark. Buduj sanktuarium, zbieraj wiarę i walcz z demonami.',
+    description:
+      'Gra typu Premium Idle w mrocznym klimacie Religious Grimdark. Buduj sanktuarium, zbieraj wiarę i walcz z demonami.',
     category: 'Gra IDLE',
     icon: 'mdi-church',
     color: '#c5a059',
@@ -143,7 +170,8 @@ const projects: Project[] = [
   {
     id: 'rpg-map-generator',
     title: 'Generator Map RPG',
-    description: 'Narzędzie do generowania proceduralnych map światów fantasy. Twórz kontynenty, góry, rzeki i miasta dla swoich kampanii.',
+    description:
+      'Narzędzie do generowania proceduralnych map światów fantasy. Twórz kontynenty, góry, rzeki i miasta dla swoich kampanii.',
     category: 'Narzędzie RPG',
     icon: 'mdi-map-legend',
     color: '#4caf50',
@@ -154,8 +182,8 @@ const projects: Project[] = [
   },
 ];
 
-const activeProjects = computed(() =>
-  projects.filter(p => p.status === 'active').length
+const activeProjects = computed(
+  () => projects.filter((p) => p.status === 'active').length
 );
 
 function getStatusLabel(status: Project['status']): string {
@@ -171,7 +199,10 @@ function getStatusLabel(status: Project['status']): string {
 useHead({
   title: 'Projects Center - Moje Projekty',
   meta: [
-    { name: 'description', content: 'Centrum projektów - kolekcja gier, eksperymentów i pomysłów' },
+    {
+      name: 'description',
+      content: 'Centrum projektów - kolekcja gier, eksperymentów i pomysłów',
+    },
   ],
 });
 </script>
@@ -197,7 +228,11 @@ $text-secondary: #9090a0;
   color: $text-primary;
   position: relative;
   overflow-x: hidden;
-  font-family: 'Segoe UI', system-ui, -apple-system, sans-serif;
+  font-family:
+    'Segoe UI',
+    system-ui,
+    -apple-system,
+    sans-serif;
 }
 
 // ============================================
@@ -258,7 +293,8 @@ $text-secondary: #9090a0;
 }
 
 @keyframes float {
-  0%, 100% {
+  0%,
+  100% {
     transform: translate(0, 0) scale(1);
   }
   33% {
@@ -362,7 +398,12 @@ $text-secondary: #9090a0;
 }
 
 .title-accent {
-  background: linear-gradient(135deg, $primary-accent 0%, $secondary-accent 50%, $gold-accent 100%);
+  background: linear-gradient(
+    135deg,
+    $primary-accent 0%,
+    $secondary-accent 50%,
+    $gold-accent 100%
+  );
   -webkit-background-clip: text;
   -webkit-text-fill-color: transparent;
   background-clip: text;
@@ -464,7 +505,9 @@ $text-secondary: #9090a0;
   overflow: hidden;
   text-decoration: none;
   color: inherit;
+  cursor: pointer;
   transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+  display: block;
 
   &:hover {
     transform: translateY(-8px);
@@ -633,7 +676,8 @@ $text-secondary: #9090a0;
 }
 
 @keyframes pulse-dot {
-  0%, 100% {
+  0%,
+  100% {
     opacity: 1;
     transform: scale(1);
   }

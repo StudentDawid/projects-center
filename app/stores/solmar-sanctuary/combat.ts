@@ -31,15 +31,19 @@ import type {
 } from '~/shared/types/game.types';
 
 // Import extracted modules for better code organization
-import { ENEMY_TYPES, getEnemyType } from './combat/enemy-types';
-import { DEFENSES, DEFENSE_COST_MULTIPLIER } from './combat/defenses';
+import {
+  ENEMY_TYPES,
+  getEnemyType,
+  getAllEnemyTypes,
+} from './combat/enemy-types';
+import {
+  DEFENSES,
+  getDefense,
+  DEFENSE_COST_MULTIPLIER,
+} from './combat/defenses';
 import type { DefenseBonus } from './combat/defenses';
-import { WAVES } from './combat/waves';
+import { WAVES, getWave, getWaveForThreat } from './combat/waves';
 import type { WaveEvent } from './combat/waves';
-
-// Re-export for backwards compatibility
-export type { DefenseBonus, WaveEvent };
-export { ENEMY_TYPES };
 
 // ============================================
 // Store Cache - Avoid repeated useStore() calls in tick()
@@ -216,21 +220,31 @@ export const useCombatStore = defineStore(
       }
 
       // MAX LEVEL EFFECT: Czołg-Ołtarz Lv5 - +50% obrony globalna
-      if (entities.altar_tank?.unlocked && entities.altar_tank.count > 0 && entities.altar_tank.level >= 5) {
+      if (
+        entities.altar_tank?.unlocked &&
+        entities.altar_tank.count > 0 &&
+        entities.altar_tank.level >= 5
+      ) {
         defense *= 1.5;
       }
 
       // TIER 3: Forteca Inkwizycji - +20% efektywność obrony
-      if (entities.inquisition_fortress?.unlocked && entities.inquisition_fortress.count > 0) {
+      if (
+        entities.inquisition_fortress?.unlocked &&
+        entities.inquisition_fortress.count > 0
+      ) {
         const levelBonus = entityStore.getLevelBonus('inquisition_fortress');
-        defense *= 1 + (0.2 * entities.inquisition_fortress.count * levelBonus);
+        defense *= 1 + 0.2 * entities.inquisition_fortress.count * levelBonus;
       }
 
       // TIER 3: Święci Wojownicy - zmniejszają siłę fal (efekt na obronę)
       if (entities.holy_warrior?.unlocked && entities.holy_warrior.count > 0) {
         const levelBonus = entityStore.getLevelBonus('holy_warrior');
-        const warriorBonus = Math.min(entities.holy_warrior.count * 5 * levelBonus, 50); // Max +50% defense
-        defense *= 1 + (warriorBonus / 100);
+        const warriorBonus = Math.min(
+          entities.holy_warrior.count * 5 * levelBonus,
+          50
+        ); // Max +50% defense
+        defense *= 1 + warriorBonus / 100;
       }
 
       // Relic defense bonus
@@ -290,7 +304,7 @@ export const useCombatStore = defineStore(
       // TIER 3: Wieża Dzwonnicza - +10% regeneracji morale
       if (entities.bell_tower?.unlocked && entities.bell_tower.count > 0) {
         const levelBonus = entityStore.getLevelBonus('bell_tower');
-        regen *= 1 + (0.1 * entities.bell_tower.count * levelBonus);
+        regen *= 1 + 0.1 * entities.bell_tower.count * levelBonus;
       }
 
       // Add bonus from active events (cached store)
@@ -298,7 +312,7 @@ export const useCombatStore = defineStore(
       regen += eventStore.moraleRegenBonus;
 
       // Add relic bonus
-      regen *= (1 + relicMoraleRegenBonus.value);
+      regen *= 1 + relicMoraleRegenBonus.value;
 
       return bn(regen);
     });
@@ -370,8 +384,13 @@ export const useCombatStore = defineStore(
 
     const formattedThreat = computed(() => formatNumber(threat.value));
     const formattedMorale = computed(() => formatNumber(morale.value));
-    const formattedMoraleRegen = computed(() => `+${formatNumber(totalMoraleRegen.value)}/s`);
-    const formattedDefenseRating = computed(() => `${defenseRating.value} (${Math.round(defenseMultiplier.value * 100)}% redukcji)`);
+    const formattedMoraleRegen = computed(
+      () => `+${formatNumber(totalMoraleRegen.value)}/s`
+    );
+    const formattedDefenseRating = computed(
+      () =>
+        `${defenseRating.value} (${Math.round(defenseMultiplier.value * 100)}% redukcji)`
+    );
 
     /**
      * Morale-based production multiplier
@@ -380,7 +399,7 @@ export const useCombatStore = defineStore(
     const moraleProductionMultiplier = computed(() => {
       const moraleValue = morale.value.toNumber();
       // 1 + (morale / 100), so at 100 morale = 2x, at 50 = 1.5x, at 0 = 1x
-      return 1 + (moraleValue / 100);
+      return 1 + moraleValue / 100;
     });
 
     const formattedMoraleBonus = computed(() => {
@@ -393,7 +412,10 @@ export const useCombatStore = defineStore(
 
     const nextWave = computed(() => {
       const threatVal = threat.value.toNumber();
-      return waves.find(w => w.threatRequired > threatVal) || waves[waves.length - 1];
+      return (
+        waves.find((w) => w.threatRequired > threatVal) ||
+        waves[waves.length - 1]
+      );
     });
 
     // ============================================
@@ -409,7 +431,7 @@ export const useCombatStore = defineStore(
      * Combo multiplier based on current streak
      */
     const comboMultiplier = computed(() => {
-      return 1 + (combo.value.currentStreak * combo.value.bonusPerStreak);
+      return 1 + combo.value.currentStreak * combo.value.bonusPerStreak;
     });
 
     /**
@@ -438,14 +460,17 @@ export const useCombatStore = defineStore(
     /**
      * Determine which enemy type should spawn for current wave
      */
-    const getEnemyTypeForWave = computed(() => (waveNum: number): EnemyTypeId => {
-      // Priority: megaboss > boss > elite > special > basic
-      if (waveNum % 100 === 0) return 'arch_heretic';
-      if (waveNum % 25 === 0) return 'abomination_boss';
-      if (waveNum % 7 === 0) return 'apostate';
-      if (waveNum % 5 === 0) return 'abomination_minion';
-      return 'cultist';
-    });
+    const getEnemyTypeForWave = computed(
+      () =>
+        (waveNum: number): EnemyTypeId => {
+          // Priority: megaboss > boss > elite > special > basic
+          if (waveNum % 100 === 0) return 'arch_heretic';
+          if (waveNum % 25 === 0) return 'abomination_boss';
+          if (waveNum % 7 === 0) return 'apostate';
+          if (waveNum % 5 === 0) return 'abomination_minion';
+          return 'cultist';
+        }
+    );
 
     /**
      * Get current scaled cost for a defense ability
@@ -458,7 +483,10 @@ export const useCombatStore = defineStore(
       const entities = entityStore.entities;
 
       // TIER 3: Forteca Inkwizycji - -30% koszt liturgii
-      if (entities.inquisition_fortress?.unlocked && entities.inquisition_fortress.count > 0) {
+      if (
+        entities.inquisition_fortress?.unlocked &&
+        entities.inquisition_fortress.count > 0
+      ) {
         const levelBonus = entityStore.getLevelBonus('inquisition_fortress');
         discount += 0.3 * entities.inquisition_fortress.count * levelBonus;
       }
@@ -478,7 +506,7 @@ export const useCombatStore = defineStore(
     });
 
     const getDefenseCost = computed(() => (defenseId: string): Decimal => {
-      const defense = defenses.find(d => d.id === defenseId);
+      const defense = defenses.find((d) => d.id === defenseId);
       if (!defense) return bn(Infinity);
 
       const usageCount = defenseUsageCounts.value[defenseId] || 0;
@@ -492,17 +520,20 @@ export const useCombatStore = defineStore(
     /**
      * Get formatted cost for display
      */
-    const getFormattedDefenseCost = computed(() => (defenseId: string): string => {
-      const cost = getDefenseCost.value(defenseId);
-      const usageCount = defenseUsageCounts.value[defenseId] || 0;
-      if (usageCount > 0) {
-        return `${formatNumber(cost)} (x${usageCount + 1})`;
-      }
-      return formatNumber(cost);
-    });
+    const getFormattedDefenseCost = computed(
+      () =>
+        (defenseId: string): string => {
+          const cost = getDefenseCost.value(defenseId);
+          const usageCount = defenseUsageCounts.value[defenseId] || 0;
+          if (usageCount > 0) {
+            return `${formatNumber(cost)} (x${usageCount + 1})`;
+          }
+          return formatNumber(cost);
+        }
+    );
 
     const canActivateDefense = computed(() => (defenseId: string) => {
-      const defense = defenses.find(d => d.id === defenseId);
+      const defense = defenses.find((d) => d.id === defenseId);
       if (!defense) return false;
       if (defenseCooldown.value > 0) return false;
       if (isDefenseActive.value) return false;
@@ -526,7 +557,12 @@ export const useCombatStore = defineStore(
       const waveScaling = 1 + Math.floor(wavesDefeated.value / 5) * 0.1;
       // Difficulty level adds more scaling
       const difficultyScaling = 1 + (difficultyLevel.value - 1) * 0.2;
-      return baseDamage * waveScaling * difficultyScaling * waveStrengthMultiplier.value;
+      return (
+        baseDamage *
+        waveScaling *
+        difficultyScaling *
+        waveStrengthMultiplier.value
+      );
     });
 
     /**
@@ -566,7 +602,10 @@ export const useCombatStore = defineStore(
 
       // Update active defense
       if (isDefenseActive.value && defenseTimeRemaining.value > 0) {
-        defenseTimeRemaining.value = Math.max(0, defenseTimeRemaining.value - deltaTime);
+        defenseTimeRemaining.value = Math.max(
+          0,
+          defenseTimeRemaining.value - deltaTime
+        );
         if (defenseTimeRemaining.value === 0) {
           deactivateDefense();
         }
@@ -575,7 +614,9 @@ export const useCombatStore = defineStore(
       // Morale regeneration (always active, faster when not under attack)
       if (morale.value.lt(maxMorale.value)) {
         const regenMultiplier = isWaveActive.value ? 0.2 : 1; // 80% slower during attack
-        const regen = totalMoraleRegen.value.mul(deltaTime).mul(regenMultiplier);
+        const regen = totalMoraleRegen.value
+          .mul(deltaTime)
+          .mul(regenMultiplier);
         morale.value = Decimal.min(morale.value.add(regen), maxMorale.value);
       }
 
@@ -605,7 +646,10 @@ export const useCombatStore = defineStore(
         const enemy = ENEMY_TYPES[currentEnemyType.value];
         if (enemy.specialEffect?.type === 'morale_drain') {
           const drain = bn(enemy.specialEffect.value).mul(deltaTime);
-          morale.value = Decimal.max(morale.value.sub(drain), bn(relicMoraleMinimum.value));
+          morale.value = Decimal.max(
+            morale.value.sub(drain),
+            bn(relicMoraleMinimum.value)
+          );
         }
       }
     }
@@ -615,22 +659,29 @@ export const useCombatStore = defineStore(
      */
     function updateThreat(deltaTime: number) {
       // Base threat increase
-      let threatIncrease = baseThreatPerSecond.value.mul(deltaTime).mul(threatMultiplier.value);
+      let threatIncrease = baseThreatPerSecond.value
+        .mul(deltaTime)
+        .mul(threatMultiplier.value);
 
       // More buildings = more threat (enemies notice your growth)
-      const totalBuildings = Object.values(entityStore.entities)
-        .reduce((sum, e) => sum + e.count, 0);
-      const buildingThreatBonus = 1 + (totalBuildings * 0.03); // 3% per building
+      const totalBuildings = Object.values(entityStore.entities).reduce(
+        (sum, e) => sum + e.count,
+        0
+      );
+      const buildingThreatBonus = 1 + totalBuildings * 0.03; // 3% per building
       threatIncrease = threatIncrease.mul(buildingThreatBonus);
 
       // Wave counter increases threat generation
-      const waveBonus = 1 + (wavesDefeated.value * 0.05); // 5% per wave
+      const waveBonus = 1 + wavesDefeated.value * 0.05; // 5% per wave
       threatIncrease = threatIncrease.mul(waveBonus);
 
       // Apply threat reduction from defensive buildings
       threatIncrease = threatIncrease.mul(1 - threatReduction.value);
 
-      threat.value = Decimal.min(threat.value.add(threatIncrease), maxThreat.value);
+      threat.value = Decimal.min(
+        threat.value.add(threatIncrease),
+        maxThreat.value
+      );
     }
 
     /**
@@ -672,7 +723,9 @@ export const useCombatStore = defineStore(
       // Calculate scaled damage with enemy multiplier
       const baseDamage = wave.baseDamage * enemy.damageMultiplier;
       const baseUnitLosses = wave.baseUnitLosses * enemy.unitLossMultiplier;
-      const scaledDmg = Math.round(scaledWaveDamage.value(baseDamage) * (1 - defenseMultiplier.value));
+      const scaledDmg = Math.round(
+        scaledWaveDamage.value(baseDamage) * (1 - defenseMultiplier.value)
+      );
 
       // Create active wave record
       activeWave.value = {
@@ -687,7 +740,10 @@ export const useCombatStore = defineStore(
       };
 
       // Handle megaboss special effect: disable buildings
-      if (enemy.tier === 'megaboss' && enemy.specialEffect?.type === 'disable_buildings') {
+      if (
+        enemy.tier === 'megaboss' &&
+        enemy.specialEffect?.type === 'disable_buildings'
+      ) {
         disableRandomBuildings(enemy.specialEffect.value);
       }
 
@@ -709,7 +765,10 @@ export const useCombatStore = defineStore(
 
       narrativeStore.addLog({
         message,
-        type: enemy.tier === 'boss' || enemy.tier === 'megaboss' ? 'error' : 'warning',
+        type:
+          enemy.tier === 'boss' || enemy.tier === 'megaboss'
+            ? 'error'
+            : 'warning',
       });
 
       // Boss encounter setup
@@ -717,7 +776,9 @@ export const useCombatStore = defineStore(
         setupBossEncounter(enemy);
       }
 
-      logger.log(`[Combat] Wave ${currentWave.value} started: ${enemy.name} (${enemy.tier})`);
+      logger.log(
+        `[Combat] Wave ${currentWave.value} started: ${enemy.name} (${enemy.tier})`
+      );
     }
 
     /**
@@ -728,7 +789,8 @@ export const useCombatStore = defineStore(
         {
           id: 'attack',
           name: 'Atak Frontalny',
-          description: 'Bezpośredni atak. Zadaje obrażenia, ale ryzykujesz straty.',
+          description:
+            'Bezpośredni atak. Zadaje obrażenia, ale ryzykujesz straty.',
           icon: '⚔️',
           cost: { faith: 100 },
           effect: { type: 'damage', value: 20 },
@@ -767,8 +829,14 @@ export const useCombatStore = defineStore(
     /**
      * Get rewards for defeating a boss
      */
-    function getBossRewards(enemy: EnemyType): { type: string; relicRarity?: RelicRarity; amount?: number }[] {
-      const rewards: { type: string; relicRarity?: RelicRarity; amount?: number }[] = [];
+    function getBossRewards(
+      enemy: EnemyType
+    ): { type: string; relicRarity?: RelicRarity; amount?: number }[] {
+      const rewards: {
+        type: string;
+        relicRarity?: RelicRarity;
+        amount?: number;
+      }[] = [];
 
       if (enemy.tier === 'megaboss') {
         rewards.push({ type: 'relic', relicRarity: 'legendary' });
@@ -789,13 +857,19 @@ export const useCombatStore = defineStore(
     function executeBossChoice(choiceId: string): boolean {
       if (!activeBossEncounter.value) return false;
 
-      const choice = activeBossEncounter.value.choices.find(c => c.id === choiceId);
+      const choice = activeBossEncounter.value.choices.find(
+        (c) => c.id === choiceId
+      );
       if (!choice) return false;
 
       // Check if player can afford the cost (cached store)
       const localResourceStore = getResourceStore();
       for (const [resourceId, amount] of Object.entries(choice.cost)) {
-        if (!localResourceStore.resources[resourceId as keyof typeof localResourceStore.resources]?.amount.gte(amount || 0)) {
+        if (
+          !localResourceStore.resources[
+            resourceId as keyof typeof localResourceStore.resources
+          ]?.amount.gte(amount || 0)
+        ) {
           return false;
         }
       }
@@ -813,8 +887,8 @@ export const useCombatStore = defineStore(
         case 'weaken':
           // Reduce incoming damage for this wave
           if (activeWave.value) {
-            activeWave.value.damage *= (1 - choice.effect.value / 100);
-            activeWave.value.unitLosses *= (1 - choice.effect.value / 100);
+            activeWave.value.damage *= 1 - choice.effect.value / 100;
+            activeWave.value.unitLosses *= 1 - choice.effect.value / 100;
           }
           break;
         case 'sacrifice':
@@ -829,13 +903,16 @@ export const useCombatStore = defineStore(
       // Check if boss is defeated
       if (activeBossEncounter.value.healthPercent <= 0) {
         defeatBoss();
-      } else if (activeBossEncounter.value.healthPercent <= 50 && activeBossEncounter.value.phase < activeBossEncounter.value.maxPhases) {
+      } else if (
+        activeBossEncounter.value.healthPercent <= 50 &&
+        activeBossEncounter.value.phase < activeBossEncounter.value.maxPhases
+      ) {
         // Next phase
         activeBossEncounter.value.phase++;
         narrativeStore.addLog({
           message: `⚠️ ${ENEMY_TYPES[activeBossEncounter.value.enemyType].name} wchodzi w fazę ${activeBossEncounter.value.phase}!`,
-        type: 'warning',
-      });
+          type: 'warning',
+        });
       }
 
       return true;
@@ -854,7 +931,9 @@ export const useCombatStore = defineStore(
       for (const reward of activeBossEncounter.value.rewards) {
         if (reward.type === 'relic' && reward.relicRarity) {
           // Grant a relic of the specified rarity
-          const unowned = relicStore.relics.filter(r => !r.owned && r.rarity === reward.relicRarity);
+          const unowned = relicStore.relics.filter(
+            (r) => !r.owned && r.rarity === reward.relicRarity
+          );
           if (unowned.length > 0) {
             const relic = unowned[Math.floor(Math.random() * unowned.length)];
             relicStore.grantRelic(relic.id);
@@ -896,7 +975,7 @@ export const useCombatStore = defineStore(
      */
     function disableRandomBuildings(percent: number) {
       const allBuildings = Object.keys(entityStore.entities).filter(
-        id => entityStore.entities[id as any]?.count > 0
+        (id) => entityStore.entities[id as any]?.count > 0
       );
 
       const numToDisable = Math.ceil(allBuildings.length * (percent / 100));
@@ -927,7 +1006,7 @@ export const useCombatStore = defineStore(
      */
     function getWaveForThreat(threatLevel: number): WaveEvent | null {
       // Find the highest tier wave we qualify for
-      const qualifying = waves.filter(w => threatLevel >= w.threatRequired);
+      const qualifying = waves.filter((w) => threatLevel >= w.threatRequired);
       if (qualifying.length === 0) return waves[0]; // Default to skirmish
       return qualifying[qualifying.length - 1];
     }
@@ -936,7 +1015,10 @@ export const useCombatStore = defineStore(
      * Update active wave (deal damage over time)
      */
     function updateActiveWave(deltaTime: number) {
-      waveTimeRemaining.value = Math.max(0, waveTimeRemaining.value - deltaTime);
+      waveTimeRemaining.value = Math.max(
+        0,
+        waveTimeRemaining.value - deltaTime
+      );
 
       if (waveTimeRemaining.value === 0) {
         resolveWave();
@@ -989,8 +1071,11 @@ export const useCombatStore = defineStore(
       }
 
       // Get base values from active wave or calculate
-      let baseDamage = activeWave.value?.damage || wave.baseDamage * enemy.damageMultiplier;
-      let baseUnitLoss = activeWave.value?.unitLosses || wave.baseUnitLosses * enemy.unitLossMultiplier;
+      let baseDamage =
+        activeWave.value?.damage || wave.baseDamage * enemy.damageMultiplier;
+      let baseUnitLoss =
+        activeWave.value?.unitLosses ||
+        wave.baseUnitLosses * enemy.unitLossMultiplier;
 
       // Calculate scaled damage
       let moraleDamage = scaledWaveDamage.value(baseDamage);
@@ -999,55 +1084,60 @@ export const useCombatStore = defineStore(
       // TIER 3: Święci Wojownicy - zmniejszają siłę fali
       if (entities.holy_warrior?.unlocked && entities.holy_warrior.count > 0) {
         const levelBonus = entityStore.getLevelBonus('holy_warrior');
-        const damageReduction = Math.min(entities.holy_warrior.count * 0.05 * levelBonus, 0.5);
-        moraleDamage *= (1 - damageReduction);
-        unitLossPercent *= (1 - damageReduction);
+        const damageReduction = Math.min(
+          entities.holy_warrior.count * 0.05 * levelBonus,
+          0.5
+        );
+        moraleDamage *= 1 - damageReduction;
+        unitLossPercent *= 1 - damageReduction;
       }
 
       // Apply defense rating reduction (from buildings)
-      moraleDamage *= (1 - defenseMultiplier.value);
-      unitLossPercent *= (1 - defenseMultiplier.value * 0.5);
+      moraleDamage *= 1 - defenseMultiplier.value;
+      unitLossPercent *= 1 - defenseMultiplier.value * 0.5;
 
       // Apply active defense bonuses (from abilities)
       let usedWeakness = false;
       if (isDefenseActive.value && activeDefenseId.value) {
-        const defense = defenses.find(d => d.id === activeDefenseId.value);
+        const defense = defenses.find((d) => d.id === activeDefenseId.value);
         if (defense) {
-          moraleDamage *= (1 - defense.moraleProtection);
-          unitLossPercent *= (1 - defense.unitProtection);
+          moraleDamage *= 1 - defense.moraleProtection;
+          unitLossPercent *= 1 - defense.unitProtection;
 
           // Check for weakness exploitation
           if (enemy.weakness === activeDefenseId.value) {
-            moraleDamage *= (1 - enemy.weaknessBonus);
-            unitLossPercent *= (1 - enemy.weaknessBonus);
+            moraleDamage *= 1 - enemy.weaknessBonus;
+            unitLossPercent *= 1 - enemy.weaknessBonus;
             usedWeakness = true;
             narrativeStore.addLog({
               message: `⚡ SŁABOŚĆ WYKORZYSTANA! ${defense.name} jest super skuteczne przeciw ${enemy.name}!`,
               type: 'achievement',
             });
           } else {
-          narrativeStore.addLog({
-            message: `🛡️ ${defense.name} zmniejszyło obrażenia!`,
-            type: 'info',
-          });
+            narrativeStore.addLog({
+              message: `🛡️ ${defense.name} zmniejszyło obrażenia!`,
+              type: 'info',
+            });
           }
         }
       }
 
       // Apply relic morale damage reduction
-      moraleDamage *= (1 - relicMoraleDamageReduction.value);
+      moraleDamage *= 1 - relicMoraleDamageReduction.value;
 
       // Apply combo bonus (reduces damage)
       if (combo.value.currentStreak > 0) {
         const comboReduction = Math.min(combo.value.currentStreak * 0.02, 0.3); // Max 30% reduction
-        moraleDamage *= (1 - comboReduction);
+        moraleDamage *= 1 - comboReduction;
       }
 
       // Handle special enemy effects
       if (enemy.specialEffect) {
         switch (enemy.specialEffect.type) {
           case 'steal_faith':
-            const faithToSteal = resourceStore.resources.faith.amount.mul(enemy.specialEffect.value / 100);
+            const faithToSteal = resourceStore.resources.faith.amount.mul(
+              enemy.specialEffect.value / 100
+            );
             resourceStore.spendResource('faith', faithToSteal);
             narrativeStore.addLog({
               message: `🧙 ${enemy.name} ukradł ${formatNumber(faithToSteal)} Wiary!`,
@@ -1058,14 +1148,21 @@ export const useCombatStore = defineStore(
       }
 
       // Apply morale damage (respecting relic morale minimum)
-      morale.value = Decimal.max(morale.value.sub(moraleDamage), bn(relicMoraleMinimum.value));
+      morale.value = Decimal.max(
+        morale.value.sub(moraleDamage),
+        bn(relicMoraleMinimum.value)
+      );
 
       // Kill units
       const unitsLost = killUnits(unitLossPercent);
 
       // Reduce threat after wave
-      const threatReductionAmount = wave.threatRequired * (0.3 + defenseMultiplier.value * 0.2);
-      threat.value = Decimal.max(threat.value.sub(threatReductionAmount), bn(0));
+      const threatReductionAmount =
+        wave.threatRequired * (0.3 + defenseMultiplier.value * 0.2);
+      threat.value = Decimal.max(
+        threat.value.sub(threatReductionAmount),
+        bn(0)
+      );
 
       // Finish wave and update combo
       finishWave(false, unitsLost, enemy);
@@ -1092,9 +1189,16 @@ export const useCombatStore = defineStore(
       }
 
       // TIER 3 MAX LEVEL: Wieża Dzwonnicza Lv5 - +5 morale per dzwon po fali
-      if (entities.bell_tower?.unlocked && entities.bell_tower.count > 0 && entities.bell_tower.level >= 5) {
+      if (
+        entities.bell_tower?.unlocked &&
+        entities.bell_tower.count > 0 &&
+        entities.bell_tower.level >= 5
+      ) {
         const moraleBonus = entities.bell_tower.count * 5;
-        morale.value = Decimal.min(morale.value.add(moraleBonus), maxMorale.value);
+        morale.value = Decimal.min(
+          morale.value.add(moraleBonus),
+          maxMorale.value
+        );
 
         narrativeStore.addLog({
           message: `🔔 Boży Głos! Dzwony regenerują +${moraleBonus} morale!`,
@@ -1126,7 +1230,9 @@ export const useCombatStore = defineStore(
         });
       }
 
-      logger.log(`[Combat] Wave resolved. Morale: ${moraleLeft}, Units lost: ${unitsLost}, Difficulty: ${difficultyLevel.value}`);
+      logger.log(
+        `[Combat] Wave resolved. Morale: ${moraleLeft}, Units lost: ${unitsLost}, Difficulty: ${difficultyLevel.value}`
+      );
     }
 
     /**
@@ -1138,10 +1244,17 @@ export const useCombatStore = defineStore(
 
       // TIER 2 EFFECT: Field Hospital - reduces unit losses
       const entities = entityStore.entities;
-      if (entities.field_hospital?.unlocked && entities.field_hospital.count > 0) {
-        const reductionPerHospital = entities.field_hospital.level >= 5 ? 0.5 : 0.25;
-        const totalReduction = Math.min(entities.field_hospital.count * reductionPerHospital, 0.9);
-        lossRate *= (1 - totalReduction);
+      if (
+        entities.field_hospital?.unlocked &&
+        entities.field_hospital.count > 0
+      ) {
+        const reductionPerHospital =
+          entities.field_hospital.level >= 5 ? 0.5 : 0.25;
+        const totalReduction = Math.min(
+          entities.field_hospital.count * reductionPerHospital,
+          0.9
+        );
+        lossRate *= 1 - totalReduction;
 
         // MAX LEVEL EFFECT: Cudowne Uzdrowienie - szansa na 0 strat
         if (entities.field_hospital.level >= 5 && Math.random() < 0.25) {
@@ -1183,7 +1296,7 @@ export const useCombatStore = defineStore(
      * Activate a defensive ability
      */
     function activateDefense(defenseId: string): boolean {
-      const defense = defenses.find(d => d.id === defenseId);
+      const defense = defenses.find((d) => d.id === defenseId);
       if (!defense) return false;
 
       if (!canActivateDefense.value(defenseId)) return false;
@@ -1193,7 +1306,8 @@ export const useCombatStore = defineStore(
       resourceStore.spendResource('faith', currentCost);
 
       // Increment usage count (increases future cost)
-      defenseUsageCounts.value[defenseId] = (defenseUsageCounts.value[defenseId] || 0) + 1;
+      defenseUsageCounts.value[defenseId] =
+        (defenseUsageCounts.value[defenseId] || 0) + 1;
 
       // Track for challenges
       const challengeStore = useChallengeStore();
@@ -1216,7 +1330,9 @@ export const useCombatStore = defineStore(
         type: 'info',
       });
 
-      logger.log(`[Combat] Defense activated: ${defense.name}, usage: ${usageCount}`);
+      logger.log(
+        `[Combat] Defense activated: ${defense.name}, usage: ${usageCount}`
+      );
       return true;
     }
 
@@ -1235,7 +1351,11 @@ export const useCombatStore = defineStore(
     /**
      * Finish wave and update stats
      */
-    function finishWave(wasImmune: boolean, unitsLost: number, enemy: EnemyType) {
+    function finishWave(
+      wasImmune: boolean,
+      unitsLost: number,
+      enemy: EnemyType
+    ) {
       // Update wave stats
       wavesDefeated.value++;
 
@@ -1302,7 +1422,11 @@ export const useCombatStore = defineStore(
     /**
      * Get rewards for defeating a boss
      */
-    function getBossRewards(enemy: EnemyType): { relicRarity?: RelicRarity; ashes?: number; faith?: number } {
+    function getBossRewards(enemy: EnemyType): {
+      relicRarity?: RelicRarity;
+      ashes?: number;
+      faith?: number;
+    } {
       if (enemy.tier === 'boss') {
         return {
           relicRarity: Math.random() < 0.5 ? 'rare' : 'common',
@@ -1323,7 +1447,11 @@ export const useCombatStore = defineStore(
      * Apply boss rewards
      * OPTIMIZATION: Uses cached store references
      */
-    function applyBossRewards(rewards: { relicRarity?: RelicRarity; ashes?: number; faith?: number }) {
+    function applyBossRewards(rewards: {
+      relicRarity?: RelicRarity;
+      ashes?: number;
+      faith?: number;
+    }) {
       const prestigeStore = getPrestigeStore();
       const relicStore = getRelicStore();
 
@@ -1564,7 +1692,12 @@ export const useCombatStore = defineStore(
       serializer: {
         serialize: (state) => {
           return JSON.stringify(state, (key, value) => {
-            if (value && typeof value === 'object' && typeof value.toNumber === 'function' && typeof value.add === 'function') {
+            if (
+              value &&
+              typeof value === 'object' &&
+              typeof value.toNumber === 'function' &&
+              typeof value.add === 'function'
+            ) {
               return { __decimal: value.toString() };
             }
             return value;
@@ -1574,11 +1707,24 @@ export const useCombatStore = defineStore(
           const parsed = JSON.parse(str);
           function convertDecimals(obj: unknown, key?: string): unknown {
             if (obj === null || obj === undefined) return obj;
-            if (typeof obj === 'object' && '__decimal' in (obj as Record<string, unknown>)) {
+            if (
+              typeof obj === 'object' &&
+              '__decimal' in (obj as Record<string, unknown>)
+            ) {
               return bn((obj as { __decimal: string }).__decimal);
             }
-            const decimalFields = ['threat', 'morale', 'maxThreat', 'maxMorale', 'moraleRegenBonus'];
-            if ((typeof obj === 'string' || typeof obj === 'number') && key && decimalFields.includes(key)) {
+            const decimalFields = [
+              'threat',
+              'morale',
+              'maxThreat',
+              'maxMorale',
+              'moraleRegenBonus',
+            ];
+            if (
+              (typeof obj === 'string' || typeof obj === 'number') &&
+              key &&
+              decimalFields.includes(key)
+            ) {
               return bn(obj);
             }
             if (typeof obj !== 'object') return obj;
@@ -1586,7 +1732,9 @@ export const useCombatStore = defineStore(
               return obj.map((v, i) => convertDecimals(v, String(i)));
             }
             const result: Record<string, unknown> = {};
-            for (const [k, v] of Object.entries(obj as Record<string, unknown>)) {
+            for (const [k, v] of Object.entries(
+              obj as Record<string, unknown>
+            )) {
               result[k] = convertDecimals(v, k);
             }
             return result;

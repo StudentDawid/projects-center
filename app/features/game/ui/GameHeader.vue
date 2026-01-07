@@ -107,7 +107,7 @@
 <script setup lang="ts">
 import { ref, watch } from 'vue';
 import { useTheme } from 'vuetify';
-import { useGameLoopStore } from '~/stores/gameLoop';
+import { useGameLoopStore } from '~/stores/solmar-sanctuary/gameLoop';
 import { storeToRefs } from 'pinia';
 
 const theme = useTheme();

@@ -217,7 +217,7 @@
 <script setup lang="ts">
 import { ref, computed } from 'vue';
 import type { EntityId, EntityTier } from '~/shared/types/game.types';
-import { useEntityStore } from '~/stores/entities';
+import { useEntityStore } from '~/stores/solmar-sanctuary/entities';
 
 interface Props {
   id: string;
