@@ -27,6 +27,23 @@ export default defineNuxtConfig({
     ssr: {
       noExternal: ['vuetify'],
     },
+    plugins: [
+      {
+        name: 'app-manifest-stub',
+        resolveId(id) {
+          if (id === '#app-manifest') {
+            return id;
+          }
+          return null;
+        },
+        load(id) {
+          if (id === '#app-manifest') {
+            return 'export default {};';
+          }
+          return null;
+        },
+      },
+    ],
   },
   imports: {
     autoImport: true,

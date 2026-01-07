@@ -6,6 +6,8 @@ export interface MapSettings {
   forestLevel: number;
   cityCount: number;
   villageCount: number;
+  useVoronoi: boolean;
+  voronoiCellCount: number;
 }
 
 export interface Settlement {

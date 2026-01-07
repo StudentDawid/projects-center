@@ -73,24 +73,62 @@
         />
       </div>
 
-      <div class="setting-group">
-        <label class="setting-label"
-          >Zalesionie: {{ mapSettings.forestLevel }}%</label
-        >
-        <input
-          :value="mapSettings.forestLevel"
-          type="range"
-          min="0"
-          max="100"
-          class="range-slider"
-          @input="
-            store.setSettings({
-              forestLevel: Number(($event.target as HTMLInputElement).value),
-            })
-          "
-        />
-      </div>
-    </div>
+          <div class="setting-group">
+            <label class="setting-label"
+              >Zalesionie: {{ mapSettings.forestLevel }}%</label
+            >
+            <input
+              :value="mapSettings.forestLevel"
+              type="range"
+              min="0"
+              max="100"
+              class="range-slider"
+              @input="
+                store.setSettings({
+                  forestLevel: Number(($event.target as HTMLInputElement).value),
+                })
+              "
+            />
+          </div>
+
+          <div class="setting-group">
+            <label class="setting-label">
+              <input
+                type="checkbox"
+                :checked="mapSettings.useVoronoi"
+                @change="
+                  store.setSettings({
+                    useVoronoi: ($event.target as HTMLInputElement).checked,
+                  })
+                "
+                class="checkbox-input"
+              />
+              <span>Używaj komórek Voronoi</span>
+            </label>
+          </div>
+
+          <div
+            v-if="mapSettings.useVoronoi"
+            class="setting-group"
+          >
+            <label class="setting-label"
+              >Liczba komórek: {{ mapSettings.voronoiCellCount }}</label
+            >
+            <input
+              :value="mapSettings.voronoiCellCount"
+              type="range"
+              min="50"
+              max="500"
+              step="50"
+              class="range-slider"
+              @input="
+                store.setSettings({
+                  voronoiCellCount: Number(($event.target as HTMLInputElement).value),
+                })
+              "
+            />
+          </div>
+        </div>
 
     <div class="sidebar-section">
       <h2 class="section-title">
@@ -199,10 +237,18 @@ const sizeOptions = MAP_SIZE_OPTIONS;
 }
 
 .setting-label {
-  display: block;
+  display: flex;
+  align-items: center;
   font-size: 0.875rem;
   color: rgba(255, 255, 255, 0.7);
   margin-bottom: 8px;
+}
+
+.checkbox-input {
+  margin-right: 8px;
+  cursor: pointer;
+  width: 16px;
+  height: 16px;
 }
 
 .size-options {

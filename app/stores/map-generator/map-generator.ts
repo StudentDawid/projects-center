@@ -18,6 +18,8 @@ export const useMapGeneratorStore = defineStore(
       forestLevel: 50,
       cityCount: 5,
       villageCount: 15,
+      useVoronoi: true,
+      voronoiCellCount: 200,
     });
 
     // Getters

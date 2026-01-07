@@ -38,11 +38,17 @@
 </template>
 
 <script setup lang="ts">
-import { ref, onMounted } from 'vue';
+import { ref, onMounted, type ComponentPublicInstance } from 'vue';
 import { useMapGeneratorStore } from '~/stores/map-generator/map-generator';
 import MapCanvas from '~/features/rpg-map-generator/ui/MapCanvas.vue';
 import MapSettingsPanel from '~/features/rpg-map-generator/ui/MapSettingsPanel.vue';
 import MapLegend from '~/features/rpg-map-generator/ui/MapLegend.vue';
+
+// Define interface for exposed methods from MapCanvas
+interface MapCanvasInstance {
+  generateMap: () => Promise<void>;
+  exportMap: () => Promise<string | null>;
+}
 
 // Page meta
 useHead({
@@ -50,17 +56,19 @@ useHead({
 });
 
 const store = useMapGeneratorStore();
-const mapCanvasRef = ref<InstanceType<typeof MapCanvas> | null>(null);
+const mapCanvasRef = ref<(ComponentPublicInstance & MapCanvasInstance) | null>(
+  null
+);
 
 async function handleGenerate() {
   if (!mapCanvasRef.value) return;
   await mapCanvasRef.value.generateMap();
 }
 
-function handleExport() {
+async function handleExport() {
   if (!mapCanvasRef.value) return;
 
-  const dataUrl = mapCanvasRef.value.exportMap();
+  const dataUrl = await mapCanvasRef.value.exportMap();
   if (!dataUrl) return;
 
   const link = document.createElement('a');

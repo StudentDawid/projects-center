@@ -24,7 +24,9 @@ import { logger } from '~/shared/lib/logger';
 // Types
 // ============================================
 
-export interface PrestigeUpgrade {
+// Local interface for prestige upgrade definitions
+// Note: This is different from PrestigeUpgrade in game.types.ts
+export interface PrestigeUpgradeDefinition {
   id: string;
   name: string;
   description: string;
@@ -86,7 +88,7 @@ export const usePrestigeStore = defineStore(
     // Prestige Upgrades Definitions
     // ============================================
 
-    const upgrades: PrestigeUpgrade[] = [
+    const upgrades: PrestigeUpgradeDefinition[] = [
       // === PRODUCTION UPGRADES ===
       {
         id: 'devout_start',
@@ -541,7 +543,7 @@ export const usePrestigeStore = defineStore(
     /**
      * Get upgrade by ID
      */
-    function getUpgrade(upgradeId: string): PrestigeUpgrade | undefined {
+    function getUpgrade(upgradeId: string): PrestigeUpgradeDefinition | undefined {
       return upgrades.find(u => u.id === upgradeId);
     }
 
