@@ -11,64 +11,65 @@
       :viewBox="`0 0 ${viewBoxWidth} ${viewBoxHeight}`"
       preserveAspectRatio="xMidYMid meet"
       @mousemove="handleMouseMove"
+      @mousedown="handleMouseDown"
+      @mouseup="handleMouseUp"
+      @mouseleave="handleMouseLeave"
+      @wheel.prevent="handleWheel"
     >
-      <!-- Voronoi cells -->
-      <g class="voronoi-cells">
-        <path
-          v-for="(cell, index) in voronoiCells"
-          :key="`cell-${index}`"
-          :d="cell.path"
-          :fill="`rgb(${cell.color.r}, ${cell.color.g}, ${cell.color.b})`"
-          :stroke="cell.stroke"
-          :stroke-width="cell.strokeWidth"
-          class="voronoi-cell"
-          @mouseenter="hoveredCell = cell"
-          @mouseleave="
-            () => {
-              hoveredCell = null;
-              tooltipPosition = null;
-            }
-          "
-          @click="selectedCell = cell"
-        />
-      </g>
+      <!-- Transform group for zoom and pan -->
+      <g
+        ref="transformGroupRef"
+        class="transform-group"
+        :transform="`translate(${panX}, ${panY}) scale(${zoom})`"
+      >
+        <!-- Voronoi cells -->
+        <g class="voronoi-cells">
+          <path
+            v-for="(cell, index) in voronoiCells"
+            :key="`cell-${index}`"
+            :d="cell.path"
+            :fill="`rgb(${cell.color.r}, ${cell.color.g}, ${cell.color.b})`"
+            :stroke="cell.stroke"
+            :stroke-width="cell.strokeWidth"
+            class="voronoi-cell"
+            @mouseenter="hoveredCell = cell"
+            @mouseleave="handleCellMouseLeave"
+            @click="selectedCell = cell"
+          />
+        </g>
 
-      <!-- Settlements layer -->
-      <g class="settlements-layer">
-        <g
-          v-for="(settlement, index) in settlements"
-          :key="index"
-          class="settlement"
-          @mouseenter="hoveredSettlement = settlement"
-          @mouseleave="
-            () => {
-              hoveredSettlement = null;
-              tooltipPosition = null;
-            }
-          "
-        >
-          <text
-            :x="settlement.x"
-            :y="settlement.y"
-            :font-size="settlement.type === 'city' ? 16 : 12"
-            text-anchor="middle"
-            dominant-baseline="middle"
-            class="settlement-icon"
+        <!-- Settlements layer -->
+        <g class="settlements-layer">
+          <g
+            v-for="(settlement, index) in settlements"
+            :key="index"
+            class="settlement"
+            @mouseenter="hoveredSettlement = settlement"
+            @mouseleave="handleSettlementMouseLeave"
           >
-            {{ settlement.type === 'city' ? '🏰' : '🏠' }}
-          </text>
-          <!-- Settlement name label -->
-          <text
-            :x="settlement.x"
-            :y="settlement.y + (settlement.type === 'city' ? 20 : 16)"
-            :font-size="settlement.type === 'city' ? 10 : 8"
-            text-anchor="middle"
-            dominant-baseline="middle"
-            class="settlement-label"
-            fill="rgba(255, 255, 255, 0.9)"
-          >
-            {{ settlement.name }}
-          </text>
+            <text
+              :x="settlement.x"
+              :y="settlement.y"
+              :font-size="settlement.type === 'city' ? 16 : 12"
+              text-anchor="middle"
+              dominant-baseline="middle"
+              class="settlement-icon"
+            >
+              {{ settlement.type === 'city' ? '🏰' : '🏠' }}
+            </text>
+            <!-- Settlement name label -->
+            <text
+              :x="settlement.x"
+              :y="settlement.y + (settlement.type === 'city' ? 20 : 16)"
+              :font-size="settlement.type === 'city' ? 10 : 8"
+              text-anchor="middle"
+              dominant-baseline="middle"
+              class="settlement-label"
+              fill="rgba(255, 255, 255, 0.9)"
+            >
+              {{ settlement.name }}
+            </text>
+          </g>
         </g>
       </g>
     </svg>
@@ -94,7 +95,7 @@
 </template>
 
 <script setup lang="ts">
-import { ref, computed, onMounted, watch, nextTick } from 'vue';
+import { ref, computed, onMounted, onUnmounted, watch, nextTick } from 'vue';
 import { useMapGeneratorStore } from '~/stores/map-generator/map-generator';
 import { useMapGenerator, type VoronoiCell } from '../hooks/useMapGenerator';
 import { useWindowSize } from '~/shared/lib/useWindowSize';
@@ -105,10 +106,25 @@ const { generateMap, voronoiCells, settlements } = useMapGenerator();
 const { width, height } = useWindowSize();
 
 const svgRef = ref<SVGSVGElement | null>(null);
+const transformGroupRef = ref<SVGGElement | null>(null);
 const hoveredCell = ref<VoronoiCell | null>(null);
 const hoveredSettlement = ref<Settlement | null>(null);
 const selectedCell = ref<VoronoiCell | null>(null);
 const tooltipPosition = ref<{ x: number; y: number } | null>(null);
+const showTooltip = ref(false);
+let tooltipDelayTimer: number | null = null;
+
+// Pan and zoom state
+const panX = ref(0);
+const panY = ref(0);
+const zoom = ref(1);
+const minZoom = 1; // Cannot zoom out below initial view
+const maxZoom = 4; // Can zoom in up to 4x
+
+// Pan state
+const isPanning = ref(false);
+const panStart = ref({ x: 0, y: 0 });
+const panStartTranslate = ref({ x: 0, y: 0 });
 
 const hasMap = computed(() => store.hasMap);
 // Use screen size for viewBox
@@ -160,13 +176,10 @@ async function handleGenerateMap() {
 }
 
 /**
- * Handle mouse move for tooltip positioning
+ * Handle mouse move for tooltip positioning, panning, and edge pan
  */
 function handleMouseMove(event: MouseEvent) {
-  if (!svgRef.value || (!hoveredCell.value && !hoveredSettlement.value)) {
-    tooltipPosition.value = null;
-    return;
-  }
+  if (!svgRef.value) return;
 
   const wrapperRect = (
     svgRef.value.parentElement as HTMLElement
@@ -176,7 +189,28 @@ function handleMouseMove(event: MouseEvent) {
   const x = event.clientX - wrapperRect.left;
   const y = event.clientY - wrapperRect.top;
 
-  // Position tooltip to avoid going off screen
+  // Handle panning
+  if (isPanning.value) {
+    const deltaX = x - panStart.value.x;
+    const deltaY = y - panStart.value.y;
+    panX.value = panStartTranslate.value.x + deltaX;
+    panY.value = panStartTranslate.value.y + deltaY;
+    return;
+  }
+
+  // Handle tooltip positioning with delay
+  if (!hoveredCell.value && !hoveredSettlement.value) {
+    // Clear tooltip immediately when not hovering
+    if (tooltipDelayTimer) {
+      window.clearTimeout(tooltipDelayTimer);
+      tooltipDelayTimer = null;
+    }
+    showTooltip.value = false;
+    tooltipPosition.value = null;
+    return;
+  }
+
+  // Update tooltip position immediately
   const tooltipWidth = 200;
   const tooltipHeight = 80;
   let tooltipX = x + 15;
@@ -196,6 +230,118 @@ function handleMouseMove(event: MouseEvent) {
     x: tooltipX,
     y: tooltipY,
   };
+
+  // Show tooltip after delay (only if still hovering)
+  if (!showTooltip.value) {
+    if (tooltipDelayTimer) {
+      window.clearTimeout(tooltipDelayTimer);
+    }
+    tooltipDelayTimer = window.setTimeout(() => {
+      if (hoveredCell.value || hoveredSettlement.value) {
+        showTooltip.value = true;
+      }
+    }, 500); // 500ms delay before showing tooltip
+  }
+}
+
+/**
+ * Handle mouse down - start panning
+ */
+function handleMouseDown(event: MouseEvent) {
+  // Only pan with middle mouse button
+  if (event.button === 1) {
+    event.preventDefault();
+    isPanning.value = true;
+    panStart.value = { x: event.clientX, y: event.clientY };
+    panStartTranslate.value = { x: panX.value, y: panY.value };
+  }
+}
+
+/**
+ * Handle mouse up - stop panning
+ */
+function handleMouseUp(event: MouseEvent) {
+  if (event.button === 1 || event.button === 0) {
+    isPanning.value = false;
+  }
+}
+
+/**
+ * Handle cell mouse leave
+ */
+function handleCellMouseLeave() {
+  hoveredCell.value = null;
+  if (tooltipDelayTimer) {
+    window.clearTimeout(tooltipDelayTimer);
+    tooltipDelayTimer = null;
+  }
+  showTooltip.value = false;
+  tooltipPosition.value = null;
+}
+
+/**
+ * Handle settlement mouse leave
+ */
+function handleSettlementMouseLeave() {
+  hoveredSettlement.value = null;
+  if (tooltipDelayTimer) {
+    window.clearTimeout(tooltipDelayTimer);
+    tooltipDelayTimer = null;
+  }
+  showTooltip.value = false;
+  tooltipPosition.value = null;
+}
+
+/**
+ * Handle mouse leave - stop panning and hide tooltip
+ */
+function handleMouseLeave() {
+  isPanning.value = false;
+  if (tooltipDelayTimer) {
+    window.clearTimeout(tooltipDelayTimer);
+    tooltipDelayTimer = null;
+  }
+  showTooltip.value = false;
+  tooltipPosition.value = null;
+}
+
+/**
+ * Handle wheel event - zoom in/out
+ */
+function handleWheel(event: WheelEvent) {
+  if (!svgRef.value) return;
+
+  event.preventDefault();
+
+  const wrapperRect = (
+    svgRef.value.parentElement as HTMLElement
+  )?.getBoundingClientRect();
+  if (!wrapperRect) return;
+
+  // Get mouse position relative to SVG
+  const x = event.clientX - wrapperRect.left;
+  const y = event.clientY - wrapperRect.top;
+
+  // Zoom factor
+  const zoomFactor = event.deltaY > 0 ? 0.9 : 1.1;
+  const newZoom = Math.max(minZoom, Math.min(maxZoom, zoom.value * zoomFactor));
+
+  if (newZoom === zoom.value) return; // Already at limit
+
+  // Get point in SVG coordinates before zoom
+  const svgPoint = svgRef.value.createSVGPoint();
+  svgPoint.x = (x - panX.value) / zoom.value;
+  svgPoint.y = (y - panY.value) / zoom.value;
+
+  // Apply zoom
+  zoom.value = newZoom;
+
+  // Adjust pan to zoom toward mouse position
+  const newX = x - svgPoint.x * newZoom;
+  const newY = y - svgPoint.y * newZoom;
+
+  panX.value = newX;
+  panY.value = newY;
 }
 
 /**
@@ -237,8 +383,7 @@ async function handleExportMap(): Promise<string | null> {
       };
       img.src = url;
     });
-  } catch (error) {
-    console.error('Export error:', error);
+  } catch {
     return null;
   }
 }
@@ -246,12 +391,28 @@ async function handleExportMap(): Promise<string | null> {
 // Track if we've tried to auto-generate (prevent multiple attempts)
 const hasAttemptedAutoGenerate = ref(false);
 
+// Cleanup on unmount
+onUnmounted(() => {
+  if (tooltipDelayTimer) {
+    window.clearTimeout(tooltipDelayTimer);
+    tooltipDelayTimer = null;
+  }
+});
+
+// Reset zoom and pan when map is generated
+watch(hasMap, (newValue) => {
+  if (newValue) {
+    // Center and reset zoom
+    panX.value = 0;
+    panY.value = 0;
+    zoom.value = 1;
+  }
+});
+
 // Auto-generate map on mount
 onMounted(async () => {
   if (hasAttemptedAutoGenerate.value) return;
   hasAttemptedAutoGenerate.value = true;
-
-  console.log('[MapCanvas] onMounted - Starting auto-generation...');
 
   // Wait for SVG to be ready - use multiple ticks
   await nextTick();
@@ -264,13 +425,6 @@ onMounted(async () => {
   const mapHeight =
     height.value || (typeof window !== 'undefined' ? window.innerHeight : 1080);
 
-  console.log('[MapCanvas] Window size:', {
-    mapWidth,
-    mapHeight,
-    width: width.value,
-    height: height.value,
-  });
-
   // Wait a bit for everything to stabilize
   await new Promise((resolve) => setTimeout(resolve, 300));
 
@@ -281,36 +435,20 @@ onMounted(async () => {
     attempts++;
   }
 
-  console.log('[MapCanvas] SVG ref available:', !!svgRef.value);
-  console.log('[MapCanvas] Has map (store):', hasMap.value);
-  console.log('[MapCanvas] Voronoi cells count:', voronoiCells.value.length);
-
   // Reset mapGenerated flag if we don't have cells (persisted state can be out of sync)
   if (hasMap.value && voronoiCells.value.length === 0) {
-    console.log('[MapCanvas] Resetting mapGenerated flag - cells are empty');
     store.setMapGenerated(false);
   }
 
   // ALWAYS generate map on mount - voronoiCells are not persisted
   // The store's mapGenerated flag can be true from localStorage, but cells are always empty on refresh
   if (svgRef.value && mapWidth > 0 && mapHeight > 0) {
-    console.log('[MapCanvas] Auto-generating map...', { mapWidth, mapHeight });
     try {
       await handleGenerateMap();
-      console.log(
-        '[MapCanvas] Map generated successfully! Cells:',
-        voronoiCells.value.length
-      );
-    } catch (error) {
-      console.error('[MapCanvas] Error generating map:', error);
+    } catch {
       hasAttemptedAutoGenerate.value = false; // Allow retry on error
     }
   } else {
-    console.warn('[MapCanvas] Cannot generate map:', {
-      svgRef: !!svgRef.value,
-      mapWidth,
-      mapHeight,
-    });
     hasAttemptedAutoGenerate.value = false; // Allow retry if conditions not met
   }
 });
@@ -368,11 +506,21 @@ defineExpose({
   background: #1a1a2e;
   opacity: 1;
   transition: opacity 0.3s;
+  cursor: grab;
+  user-select: none;
+
+  &:active {
+    cursor: grabbing;
+  }
 }
 
 .map-svg-hidden {
   opacity: 0;
   pointer-events: none;
+}
+
+.transform-group {
+  transform-origin: 0 0;
 }
 
 .voronoi-cells {
