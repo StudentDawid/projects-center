@@ -5,12 +5,10 @@
       <p>Kliknij "Generuj mapę" aby stworzyć nowy świat</p>
     </div>
     <svg
-      v-show="hasMap"
       ref="svgRef"
       class="map-svg"
-      :width="canvasSize"
-      :height="canvasSize"
-      :viewBox="`0 0 ${canvasSize} ${canvasSize}`"
+      :class="{ 'map-svg-hidden': !hasMap }"
+      :viewBox="`0 0 ${viewBoxWidth} ${viewBoxHeight}`"
       preserveAspectRatio="xMidYMid meet"
       @mousemove="handleMouseMove"
     >
@@ -25,7 +23,12 @@
           :stroke-width="cell.strokeWidth"
           class="voronoi-cell"
           @mouseenter="hoveredCell = cell"
-          @mouseleave="() => { hoveredCell = null; tooltipPosition = null; }"
+          @mouseleave="
+            () => {
+              hoveredCell = null;
+              tooltipPosition = null;
+            }
+          "
           @click="selectedCell = cell"
         />
       </g>
@@ -37,7 +40,12 @@
           :key="index"
           class="settlement"
           @mouseenter="hoveredSettlement = settlement"
-          @mouseleave="() => { hoveredSettlement = null; tooltipPosition = null; }"
+          @mouseleave="
+            () => {
+              hoveredSettlement = null;
+              tooltipPosition = null;
+            }
+          "
         >
           <text
             :x="settlement.x"
@@ -86,13 +94,15 @@
 </template>
 
 <script setup lang="ts">
-import { ref, computed } from 'vue';
+import { ref, computed, onMounted, watch, nextTick } from 'vue';
 import { useMapGeneratorStore } from '~/stores/map-generator/map-generator';
 import { useMapGenerator, type VoronoiCell } from '../hooks/useMapGenerator';
+import { useWindowSize } from '~/shared/lib/useWindowSize';
 import type { Settlement } from '~/shared/types/map-generator.types';
 
 const store = useMapGeneratorStore();
-const { generateMap, isGenerating, voronoiCells, settlements } = useMapGenerator();
+const { generateMap, voronoiCells, settlements } = useMapGenerator();
+const { width, height } = useWindowSize();
 
 const svgRef = ref<SVGSVGElement | null>(null);
 const hoveredCell = ref<VoronoiCell | null>(null);
@@ -101,7 +111,9 @@ const selectedCell = ref<VoronoiCell | null>(null);
 const tooltipPosition = ref<{ x: number; y: number } | null>(null);
 
 const hasMap = computed(() => store.hasMap);
-const canvasSize = computed(() => store.canvasSize);
+// Use screen size for viewBox
+const viewBoxWidth = computed(() => width.value || 1920);
+const viewBoxHeight = computed(() => height.value || 1080);
 
 const tooltipContent = computed(() => {
   if (hoveredSettlement.value) {
@@ -121,7 +133,10 @@ const tooltipContent = computed(() => {
     else if (height < waterThreshold + 0.05) terrainType = 'Plaża';
     else if (height > mountainThreshold + 0.1) terrainType = 'Szczyt śnieżny';
     else if (height > mountainThreshold) terrainType = 'Góry';
-    else if (hoveredCell.value.site.data.color.r === 39 && hoveredCell.value.site.data.color.g === 174) {
+    else if (
+      hoveredCell.value.site.data.color.r === 39 &&
+      hoveredCell.value.site.data.color.g === 174
+    ) {
       terrainType = 'Las';
     }
 
@@ -139,7 +154,9 @@ const tooltipContent = computed(() => {
  */
 async function handleGenerateMap() {
   if (!svgRef.value) return;
-  await generateMap(svgRef.value);
+  const mapWidth = width.value || window.innerWidth || 1920;
+  const mapHeight = height.value || window.innerHeight || 1080;
+  await generateMap(svgRef.value, mapWidth, mapHeight);
 }
 
 /**
@@ -151,8 +168,9 @@ function handleMouseMove(event: MouseEvent) {
     return;
   }
 
-  const rect = svgRef.value.getBoundingClientRect();
-  const wrapperRect = (svgRef.value.parentElement as HTMLElement)?.getBoundingClientRect();
+  const wrapperRect = (
+    svgRef.value.parentElement as HTMLElement
+  )?.getBoundingClientRect();
   if (!wrapperRect) return;
 
   const x = event.clientX - wrapperRect.left;
@@ -189,15 +207,17 @@ async function handleExportMap(): Promise<string | null> {
   try {
     // Convert SVG to PNG
     const svgData = new XMLSerializer().serializeToString(svgRef.value);
-    const svgBlob = new Blob([svgData], { type: 'image/svg+xml;charset=utf-8' });
+    const svgBlob = new Blob([svgData], {
+      type: 'image/svg+xml;charset=utf-8',
+    });
     const url = URL.createObjectURL(svgBlob);
 
     return new Promise<string>((resolve, reject) => {
       const img = new Image();
       img.onload = () => {
         const canvas = document.createElement('canvas');
-        canvas.width = canvasSize.value;
-        canvas.height = canvasSize.value;
+        canvas.width = viewBoxWidth.value;
+        canvas.height = viewBoxHeight.value;
         const ctx = canvas.getContext('2d');
         if (ctx) {
           ctx.fillStyle = '#1a1a2e'; // Background color
@@ -223,6 +243,93 @@ async function handleExportMap(): Promise<string | null> {
   }
 }
 
+// Track if we've tried to auto-generate (prevent multiple attempts)
+const hasAttemptedAutoGenerate = ref(false);
+
+// Auto-generate map on mount
+onMounted(async () => {
+  if (hasAttemptedAutoGenerate.value) return;
+  hasAttemptedAutoGenerate.value = true;
+
+  console.log('[MapCanvas] onMounted - Starting auto-generation...');
+
+  // Wait for SVG to be ready - use multiple ticks
+  await nextTick();
+  await nextTick();
+  await nextTick();
+
+  // Ensure window size is available
+  const mapWidth =
+    width.value || (typeof window !== 'undefined' ? window.innerWidth : 1920);
+  const mapHeight =
+    height.value || (typeof window !== 'undefined' ? window.innerHeight : 1080);
+
+  console.log('[MapCanvas] Window size:', {
+    mapWidth,
+    mapHeight,
+    width: width.value,
+    height: height.value,
+  });
+
+  // Wait a bit for everything to stabilize
+  await new Promise((resolve) => setTimeout(resolve, 300));
+
+  // Ensure SVG ref is available - keep trying
+  let attempts = 0;
+  while (!svgRef.value && attempts < 10) {
+    await nextTick();
+    attempts++;
+  }
+
+  console.log('[MapCanvas] SVG ref available:', !!svgRef.value);
+  console.log('[MapCanvas] Has map (store):', hasMap.value);
+  console.log('[MapCanvas] Voronoi cells count:', voronoiCells.value.length);
+
+  // Reset mapGenerated flag if we don't have cells (persisted state can be out of sync)
+  if (hasMap.value && voronoiCells.value.length === 0) {
+    console.log('[MapCanvas] Resetting mapGenerated flag - cells are empty');
+    store.setMapGenerated(false);
+  }
+
+  // ALWAYS generate map on mount - voronoiCells are not persisted
+  // The store's mapGenerated flag can be true from localStorage, but cells are always empty on refresh
+  if (svgRef.value && mapWidth > 0 && mapHeight > 0) {
+    console.log('[MapCanvas] Auto-generating map...', { mapWidth, mapHeight });
+    try {
+      await handleGenerateMap();
+      console.log(
+        '[MapCanvas] Map generated successfully! Cells:',
+        voronoiCells.value.length
+      );
+    } catch (error) {
+      console.error('[MapCanvas] Error generating map:', error);
+      hasAttemptedAutoGenerate.value = false; // Allow retry on error
+    }
+  } else {
+    console.warn('[MapCanvas] Cannot generate map:', {
+      svgRef: !!svgRef.value,
+      mapWidth,
+      mapHeight,
+    });
+    hasAttemptedAutoGenerate.value = false; // Allow retry if conditions not met
+  }
+});
+
+// Watch for window size changes and regenerate if needed (optional)
+watch([width, height], async (newSize, oldSize) => {
+  // Only regenerate if size changed significantly and we have a map
+  if (
+    hasMap.value &&
+    svgRef.value &&
+    oldSize[0] > 0 &&
+    oldSize[1] > 0 &&
+    (Math.abs(newSize[0] - oldSize[0]) > 50 ||
+      Math.abs(newSize[1] - oldSize[1]) > 50)
+  ) {
+    await handleGenerateMap();
+  }
+});
+
 // Expose methods for parent component
 defineExpose({
   svg: svgRef,
@@ -233,16 +340,16 @@ defineExpose({
 
 <style scoped lang="scss">
 .map-canvas-wrapper {
-  flex: 1;
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
   display: flex;
   flex-direction: column;
   align-items: center;
   justify-content: center;
   background: rgba(0, 0, 0, 0.2);
-  border-radius: 12px;
-  border: 1px solid rgba(255, 255, 255, 0.1);
-  padding: 24px;
-  position: relative;
 }
 
 .map-placeholder {
@@ -255,11 +362,17 @@ defineExpose({
 }
 
 .map-svg {
-  border-radius: 8px;
+  width: 100%;
+  height: 100%;
   box-shadow: 0 8px 32px rgba(0, 0, 0, 0.3);
-  max-width: 100%;
-  height: auto;
   background: #1a1a2e;
+  opacity: 1;
+  transition: opacity 0.3s;
+}
+
+.map-svg-hidden {
+  opacity: 0;
+  pointer-events: none;
 }
 
 .voronoi-cells {
@@ -267,7 +380,9 @@ defineExpose({
 }
 
 .voronoi-cell {
-  transition: opacity 0.2s, stroke-width 0.2s;
+  transition:
+    opacity 0.2s,
+    stroke-width 0.2s;
   cursor: pointer;
 
   &:hover {
@@ -339,4 +454,3 @@ defineExpose({
   border-top: 1px solid rgba(255, 255, 255, 0.1);
 }
 </style>
-

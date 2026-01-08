@@ -1,45 +1,47 @@
 <template>
   <div class="map-generator-page">
-    <!-- Header -->
-    <header class="generator-header">
-      <div class="header-content">
-        <NuxtLink to="/" class="back-link">
-          <v-icon icon="mdi-arrow-left" size="20" />
-          <span>Projects Center</span>
-        </NuxtLink>
-        <div class="title-section">
-          <v-icon icon="mdi-map-legend" size="32" class="title-icon" />
-          <h1 class="page-title">Generator Map RPG</h1>
-        </div>
-      </div>
-    </header>
+    <!-- Toggle Menu Button -->
+    <button
+      :aria-label="isMenuOpen ? 'Ukryj menu' : 'Pokaż menu'"
+      class="menu-toggle-btn"
+      @click="toggleMenu"
+    >
+      <v-icon :icon="isMenuOpen ? 'mdi-close' : 'mdi-menu'" size="24" />
+    </button>
 
-    <!-- Main Content -->
-    <main class="generator-main">
-      <!-- Sidebar - Settings -->
-      <MapSettingsPanel @generate="handleGenerate" @export="handleExport" />
+    <!-- Sidebar - Settings (Overlay) -->
+    <Transition name="sidebar">
+      <MapSettingsPanel
+        v-if="isMenuOpen"
+        class="settings-sidebar"
+        @generate="handleGenerate"
+        @export="handleExport"
+        @close="closeMenu"
+      />
+    </Transition>
 
-      <!-- Map Canvas -->
-      <div class="map-content-wrapper">
-        <MapCanvas ref="mapCanvasRef" />
-        <MapLegend />
-      </div>
-    </main>
+    <!-- Map Canvas - Full Screen -->
+    <div class="map-content-wrapper">
+      <MapCanvas ref="mapCanvasRef" />
+      <MapLegend />
+    </div>
 
-    <!-- Status bar -->
-    <footer class="generator-footer">
-      <span v-if="store.hasMap">
-        Mapa wygenerowana • Seed: {{ store.mapSettings.seed }} • Rozmiar:
-        {{ store.mapSettings.size }}×{{ store.mapSettings.size }}
+    <!-- Status bar - Floating -->
+    <div v-if="store.hasMap" class="status-bar">
+      <span>
+        Seed: {{ store.mapSettings.seed }} • Rozmiar: {{ screenWidth }}×{{
+          screenHeight
+        }}
+        • Gęstość: {{ densityLabel }}
       </span>
-      <span v-else>Gotowy do generowania</span>
-    </footer>
+    </div>
   </div>
 </template>
 
 <script setup lang="ts">
-import { ref, onMounted, type ComponentPublicInstance } from 'vue';
+import { ref, computed, onMounted, type ComponentPublicInstance } from 'vue';
 import { useMapGeneratorStore } from '~/stores/map-generator/map-generator';
+import { useWindowSize } from '~/shared/lib/useWindowSize';
 import MapCanvas from '~/features/rpg-map-generator/ui/MapCanvas.vue';
 import MapSettingsPanel from '~/features/rpg-map-generator/ui/MapSettingsPanel.vue';
 import MapLegend from '~/features/rpg-map-generator/ui/MapLegend.vue';
@@ -56,9 +58,29 @@ useHead({
 });
 
 const store = useMapGeneratorStore();
+const { width, height } = useWindowSize();
 const mapCanvasRef = ref<(ComponentPublicInstance & MapCanvasInstance) | null>(
   null
 );
+const isMenuOpen = ref(false);
+
+const screenWidth = computed(() => width.value || 0);
+const screenHeight = computed(() => height.value || 0);
+const densityLabel = computed(() => {
+  const size = store.mapSettings.size;
+  if (size <= 256) return 'Niska';
+  if (size <= 512) return 'Średnia';
+  if (size <= 768) return 'Wysoka';
+  return 'Bardzo wysoka';
+});
+
+function toggleMenu() {
+  isMenuOpen.value = !isMenuOpen.value;
+}
+
+function closeMenu() {
+  isMenuOpen.value = false;
+}
 
 async function handleGenerate() {
   if (!mapCanvasRef.value) return;
@@ -88,89 +110,123 @@ onMounted(() => {
 
 <style scoped lang="scss">
 .map-generator-page {
-  min-height: 100vh;
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100vw;
+  height: 100vh;
   display: flex;
   flex-direction: column;
   background: linear-gradient(135deg, #1a1a2e 0%, #16213e 50%, #0f3460 100%);
   color: #e0e0e0;
+  overflow: hidden;
 }
 
-// Header
-.generator-header {
-  background: rgba(0, 0, 0, 0.3);
-  border-bottom: 1px solid rgba(255, 255, 255, 0.1);
-  padding: 16px 24px;
-}
-
-.header-content {
-  max-width: 1600px;
-  margin: 0 auto;
+// Toggle Menu Button
+.menu-toggle-btn {
+  position: fixed;
+  top: 16px;
+  left: 16px;
+  z-index: 1001;
+  width: 48px;
+  height: 48px;
   display: flex;
   align-items: center;
-  gap: 24px;
-}
-
-.back-link {
-  display: flex;
-  align-items: center;
-  gap: 8px;
-  color: rgba(255, 255, 255, 0.6);
-  text-decoration: none;
-  font-size: 0.875rem;
-  transition: color 0.2s;
+  justify-content: center;
+  background: rgba(0, 0, 0, 0.7);
+  border: 1px solid rgba(255, 255, 255, 0.2);
+  border-radius: 8px;
+  color: #fff;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  backdrop-filter: blur(10px);
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.3);
 
   &:hover {
-    color: #4caf50;
+    background: rgba(0, 0, 0, 0.9);
+    border-color: #4caf50;
+    transform: scale(1.05);
+    box-shadow: 0 6px 16px rgba(76, 175, 80, 0.3);
+  }
+
+  &:active {
+    transform: scale(0.95);
   }
 }
 
-.title-section {
-  display: flex;
-  align-items: center;
-  gap: 12px;
+// Settings Sidebar
+.settings-sidebar {
+  position: fixed;
+  top: 0;
+  left: 0;
+  height: 100vh;
+  z-index: 1000;
+  overflow-y: auto;
+  overflow-x: hidden;
 }
 
-.title-icon {
-  color: #4caf50;
+// Sidebar Animation
+.sidebar-enter-active,
+.sidebar-leave-active {
+  transition: transform 0.3s ease-in-out;
 }
 
-.page-title {
-  font-family: 'Cinzel', serif;
-  font-size: 1.5rem;
-  color: #fff;
-  margin: 0;
+.sidebar-enter-from {
+  transform: translateX(-100%);
 }
 
-// Main Content
-.generator-main {
-  flex: 1;
-  display: flex;
-  gap: 24px;
-  padding: 24px;
-  max-width: 1600px;
-  margin: 0 auto;
-  width: 100%;
+.sidebar-leave-to {
+  transform: translateX(-100%);
 }
 
+.sidebar-enter-to,
+.sidebar-leave-from {
+  transform: translateX(0);
+}
+
+// Map Content Wrapper - Full Screen
 .map-content-wrapper {
-  flex: 1;
-  position: relative;
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
 }
 
-// Footer
-.generator-footer {
-  background: rgba(0, 0, 0, 0.3);
-  border-top: 1px solid rgba(255, 255, 255, 0.1);
-  padding: 12px 24px;
+// Status Bar - Floating
+.status-bar {
+  position: fixed;
+  bottom: 16px;
+  left: 50%;
+  transform: translateX(-50%);
+  z-index: 999;
+  background: rgba(0, 0, 0, 0.7);
+  border: 1px solid rgba(255, 255, 255, 0.2);
+  border-radius: 8px;
+  padding: 8px 16px;
   font-size: 0.75rem;
-  color: rgba(255, 255, 255, 0.5);
-  text-align: center;
+  color: rgba(255, 255, 255, 0.7);
+  backdrop-filter: blur(10px);
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.3);
 }
 
 // Responsive
-@media (max-width: 1024px) {
-  .generator-main {
-    flex-direction: column;
+@media (max-width: 768px) {
+  .menu-toggle-btn {
+    width: 44px;
+    height: 44px;
+    top: 12px;
+    left: 12px;
+  }
+
+  .map-content-wrapper {
+    padding: 72px 16px 52px 16px;
+  }
+
+  .status-bar {
+    bottom: 12px;
+    padding: 6px 12px;
+    font-size: 0.7rem;
   }
 }
 </style>

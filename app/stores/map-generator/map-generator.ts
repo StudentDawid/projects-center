@@ -19,7 +19,7 @@ export const useMapGeneratorStore = defineStore(
       cityCount: 5,
       villageCount: 15,
       useVoronoi: true,
-      voronoiCellCount: 200,
+      voronoiCellCount: 1000,
     });
 
     // Getters
