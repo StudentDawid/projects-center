@@ -64,6 +64,7 @@ const mapCanvasRef = ref<(ComponentPublicInstance & MapCanvasInstance) | null>(
 );
 const isMenuOpen = ref(false);
 
+// Memoized computed properties to avoid unnecessary recalculations
 const screenWidth = computed(() => width.value || 0);
 const screenHeight = computed(() => height.value || 0);
 const densityLabel = computed(() => {

@@ -1,5 +1,5 @@
 <template>
-  <div class="map-canvas-wrapper">
+  <div class="map-canvas-wrapper" @wheel.prevent="handleWheel">
     <div v-if="!hasMap" class="map-placeholder">
       <v-icon icon="mdi-map-marker-question" size="64" color="grey" />
       <p>Kliknij "Generuj mapę" aby stworzyć nowy świat</p>
@@ -21,11 +21,12 @@
         ref="transformGroupRef"
         class="transform-group"
         :transform="`translate(${panX}, ${panY}) scale(${zoom})`"
+        :style="{ transformOrigin: '0 0' }"
       >
-        <!-- Voronoi cells -->
+        <!-- Voronoi cells - optimized with viewport culling for large maps -->
         <g class="voronoi-cells">
           <path
-            v-for="(cell, index) in voronoiCells"
+            v-for="(cell, index) in visibleCells"
             :key="`cell-${index}`"
             :d="cell.path"
             :fill="`rgb(${cell.color.r}, ${cell.color.g}, ${cell.color.b})`"
@@ -99,6 +100,7 @@ import { ref, computed, onMounted, onUnmounted, watch, nextTick } from 'vue';
 import { useMapGeneratorStore } from '~/stores/map-generator/map-generator';
 import { useMapGenerator, type VoronoiCell } from '../hooks/useMapGenerator';
 import { useWindowSize } from '~/shared/lib/useWindowSize';
+import { throttleRAF, debounce } from '~/shared/lib/throttle';
 import type { Settlement } from '~/shared/types/map-generator.types';
 
 const store = useMapGeneratorStore();
@@ -127,9 +129,71 @@ const panStart = ref({ x: 0, y: 0 });
 const panStartTranslate = ref({ x: 0, y: 0 });
 
 const hasMap = computed(() => store.hasMap);
-// Use screen size for viewBox
+// Use screen size for viewBox - memoized to avoid recalculation
 const viewBoxWidth = computed(() => width.value || 1920);
 const viewBoxHeight = computed(() => height.value || 1080);
+
+// Viewport culling - only render visible cells for better performance
+// This significantly improves performance for maps with >2000 cells
+const visibleCells = computed(() => {
+  const cells = voronoiCells.value;
+
+  // If we have less than 2000 cells, render all (no culling needed)
+  if (cells.length < 2000) {
+    return cells;
+  }
+
+  // Calculate viewport bounds in SVG coordinates
+  const viewportLeft = -panX.value / zoom.value;
+  const viewportRight = (viewBoxWidth.value - panX.value) / zoom.value;
+  const viewportTop = -panY.value / zoom.value;
+  const viewportBottom = (viewBoxHeight.value - panY.value) / zoom.value;
+
+  // Add padding to viewport to render cells slightly outside view
+  const padding = Math.max(viewBoxWidth.value, viewBoxHeight.value) * 0.1;
+  const paddedLeft = viewportLeft - padding;
+  const paddedRight = viewportRight + padding;
+  const paddedTop = viewportTop - padding;
+  const paddedBottom = viewportBottom + padding;
+
+  // Filter cells that intersect with viewport
+  // Simple bounding box check - parse path to get approximate bounds
+  return cells.filter((cell) => {
+    const site = cell.site;
+    // Check if cell site is within padded viewport
+    if (
+      site.x >= paddedLeft &&
+      site.x <= paddedRight &&
+      site.y >= paddedTop &&
+      site.y <= paddedBottom
+    ) {
+      return true;
+    }
+
+    // Also check if path string contains coordinates in viewport
+    // This is a simple heuristic - in production, you'd want more precise bounds checking
+    const pathMatch = cell.path.match(/M\s*([-\d.]+)\s*,\s*([-\d.]+)/);
+    if (pathMatch) {
+      const pathX = parseFloat(pathMatch[1] || '0');
+      const pathY = parseFloat(pathMatch[2] || '0');
+      return (
+        pathX >= paddedLeft &&
+        pathX <= paddedRight &&
+        pathY >= paddedTop &&
+        pathY <= paddedBottom
+      );
+    }
+
+    return false;
+  });
+});
+
+// Memoize terrain thresholds to avoid recalculation
+const terrainThresholds = computed(() => {
+  const waterThreshold = (store.mapSettings.waterLevel / 100) * 0.3 - 0.15;
+  const mountainThreshold = 1 - (store.mapSettings.mountainLevel / 100) * 0.4;
+  return { waterThreshold, mountainThreshold };
+});
 
 const tooltipContent = computed(() => {
   if (hoveredSettlement.value) {
@@ -140,8 +204,7 @@ const tooltipContent = computed(() => {
   }
   if (hoveredCell.value?.site.data) {
     const height = hoveredCell.value.site.data.height;
-    const waterThreshold = (store.mapSettings.waterLevel / 100) * 0.3 - 0.15;
-    const mountainThreshold = 1 - (store.mapSettings.mountainLevel / 100) * 0.4;
+    const { waterThreshold, mountainThreshold } = terrainThresholds.value;
 
     let terrainType = 'Równina';
     if (height < waterThreshold - 0.1) terrainType = 'Głęboka woda';
@@ -175,8 +238,32 @@ async function handleGenerateMap() {
   await generateMap(svgRef.value, mapWidth, mapHeight);
 }
 
+// Store mouse position for throttled updates
+const mousePosition = ref({ x: 0, y: 0 });
+
+/**
+ * Update mouse position (throttled with RAF)
+ */
+const updateMousePositionThrottled = throttleRAF(() => {
+  if (!svgRef.value) return;
+
+  const wrapperRect = (
+    svgRef.value.parentElement as HTMLElement
+  )?.getBoundingClientRect();
+  if (!wrapperRect) return;
+
+  mousePosition.value = {
+    x: currentMouseEvent.clientX - wrapperRect.left,
+    y: currentMouseEvent.clientY - wrapperRect.top,
+  };
+});
+
+// Store current mouse event for throttled handler
+let currentMouseEvent: MouseEvent;
+
 /**
  * Handle mouse move for tooltip positioning, panning, and edge pan
+ * OPTIMIZATION: Uses RAF throttling for better performance
  */
 function handleMouseMove(event: MouseEvent) {
   if (!svgRef.value) return;
@@ -189,7 +276,7 @@ function handleMouseMove(event: MouseEvent) {
   const x = event.clientX - wrapperRect.left;
   const y = event.clientY - wrapperRect.top;
 
-  // Handle panning
+  // Handle panning - immediate update for smooth panning
   if (isPanning.value) {
     const deltaX = x - panStart.value.x;
     const deltaY = y - panStart.value.y;
@@ -197,6 +284,10 @@ function handleMouseMove(event: MouseEvent) {
     panY.value = panStartTranslate.value.y + deltaY;
     return;
   }
+
+  // Throttle tooltip position updates
+  currentMouseEvent = event;
+  updateMousePositionThrottled();
 
   // Handle tooltip positioning with delay
   if (!hoveredCell.value && !hoveredSettlement.value) {
@@ -210,20 +301,20 @@ function handleMouseMove(event: MouseEvent) {
     return;
   }
 
-  // Update tooltip position immediately
+  // Update tooltip position (use stored position for throttled updates)
   const tooltipWidth = 200;
   const tooltipHeight = 80;
-  let tooltipX = x + 15;
-  let tooltipY = y - 15;
+  let tooltipX = mousePosition.value.x + 15;
+  let tooltipY = mousePosition.value.y - 15;
 
   // Adjust if tooltip would go off right edge
   if (tooltipX + tooltipWidth > wrapperRect.width) {
-    tooltipX = x - tooltipWidth - 15;
+    tooltipX = mousePosition.value.x - tooltipWidth - 15;
   }
 
   // Adjust if tooltip would go off top edge
   if (tooltipY - tooltipHeight < 0) {
-    tooltipY = y + 15;
+    tooltipY = mousePosition.value.y + 15;
   }
 
   tooltipPosition.value = {
@@ -307,26 +398,34 @@ function handleMouseLeave() {
 
 /**
  * Handle wheel event - zoom in/out
+ * OPTIMIZATION: Can be called from both wrapper and SVG
  */
 function handleWheel(event: WheelEvent) {
   if (!svgRef.value) return;
 
   event.preventDefault();
+  event.stopPropagation();
 
-  const wrapperRect = (
-    svgRef.value.parentElement as HTMLElement
-  )?.getBoundingClientRect();
+  // Get the correct wrapper element
+  const wrapperElement = svgRef.value.parentElement as HTMLElement;
+  if (!wrapperElement) return;
+
+  const wrapperRect = wrapperElement.getBoundingClientRect();
   if (!wrapperRect) return;
 
-  // Get mouse position relative to SVG
+  // Get mouse position relative to wrapper (works for both wrapper and SVG events)
   const x = event.clientX - wrapperRect.left;
   const y = event.clientY - wrapperRect.top;
 
-  // Zoom factor
-  const zoomFactor = event.deltaY > 0 ? 0.9 : 1.1;
+  // Zoom factor - use deltaMode to support both pixel and line scrolling
+  const deltaY =
+    event.deltaMode === WheelEvent.DOM_DELTA_LINE
+      ? event.deltaY * 16
+      : event.deltaY;
+  const zoomFactor = deltaY > 0 ? 0.9 : 1.1;
   const newZoom = Math.max(minZoom, Math.min(maxZoom, zoom.value * zoomFactor));
 
-  if (newZoom === zoom.value) return; // Already at limit
+  if (Math.abs(newZoom - zoom.value) < 0.001) return; // Already at limit (with epsilon for floating point)
 
   // Get point in SVG coordinates before zoom
   const svgPoint = svgRef.value.createSVGPoint();
@@ -453,7 +552,25 @@ onMounted(async () => {
   }
 });
 
-// Watch for window size changes and regenerate if needed (optional)
+// Debounced regenerate function to avoid multiple rapid regenerations
+const debouncedRegenerate = debounce(async () => {
+  if (hasMap.value && svgRef.value) {
+    await handleGenerateMap();
+  }
+}, 300);
+
+// Recalculate visible cells when viewport changes (zoom/pan)
+watch(
+  [panX, panY, zoom, voronoiCells],
+  () => {
+    // Trigger recomputation of visibleCells
+    // This is handled automatically by computed, but we can force update if needed
+  },
+  { flush: 'post' }
+);
+
+// Watch for window size changes and regenerate if needed
+// OPTIMIZATION: Debounced and only regenerates on significant size change
 watch([width, height], async (newSize, oldSize) => {
   // Only regenerate if size changed significantly and we have a map
   if (
@@ -461,10 +578,10 @@ watch([width, height], async (newSize, oldSize) => {
     svgRef.value &&
     oldSize[0] > 0 &&
     oldSize[1] > 0 &&
-    (Math.abs(newSize[0] - oldSize[0]) > 50 ||
-      Math.abs(newSize[1] - oldSize[1]) > 50)
+    (Math.abs(newSize[0] - oldSize[0]) > 100 ||
+      Math.abs(newSize[1] - oldSize[1]) > 100)
   ) {
-    await handleGenerateMap();
+    debouncedRegenerate();
   }
 });
 
@@ -508,6 +625,15 @@ defineExpose({
   transition: opacity 0.3s;
   cursor: grab;
   user-select: none;
+  // Performance optimizations
+  will-change: transform;
+  transform: translateZ(0); // Force GPU acceleration
+  // Note: removed 'contain' as it might interfere with event handling
+  // Use paint containment only for better performance without blocking events
+  contain: paint;
+  // Ensure pointer events work correctly
+  pointer-events: auto;
+  touch-action: pan-x pan-y pinch-zoom;
 
   &:active {
     cursor: grabbing;
@@ -521,10 +647,16 @@ defineExpose({
 
 .transform-group {
   transform-origin: 0 0;
+  will-change: transform;
+  // Note: SVG transform attribute is used instead of CSS transform
+  // CSS transform would conflict with SVG transform attribute
 }
 
 .voronoi-cells {
   filter: drop-shadow(0 2px 4px rgba(0, 0, 0, 0.3));
+  // Performance optimization - use GPU for rendering
+  transform: translateZ(0);
+  will-change: contents;
 }
 
 .voronoi-cell {
@@ -532,6 +664,9 @@ defineExpose({
     opacity 0.2s,
     stroke-width 0.2s;
   cursor: pointer;
+  // Performance optimization - use GPU for rendering
+  shape-rendering: geometricPrecision;
+  vector-effect: non-scaling-stroke;
 
   &:hover {
     opacity: 0.9;

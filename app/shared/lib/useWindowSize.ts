@@ -1,4 +1,5 @@
 import { ref, computed, onMounted, onUnmounted } from 'vue';
+import { throttle } from './throttle';
 
 export interface WindowSize {
   width: number;
@@ -7,6 +8,7 @@ export interface WindowSize {
 
 /**
  * Composable for tracking window size
+ * OPTIMIZATION: Uses throttled resize handler to improve performance
  */
 export function useWindowSize() {
   const width = ref(typeof window !== 'undefined' ? window.innerWidth : 0);
@@ -19,6 +21,9 @@ export function useWindowSize() {
     }
   }
 
+  // Throttle resize handler to run max once per 150ms
+  const throttledUpdateSize = throttle(updateSize, 150);
+
   // Initialize immediately (don't wait for onMounted)
   if (typeof window !== 'undefined') {
     updateSize();
@@ -28,13 +33,13 @@ export function useWindowSize() {
     if (typeof window !== 'undefined') {
       // Update again on mount to ensure correct values
       updateSize();
-      window.addEventListener('resize', updateSize);
+      window.addEventListener('resize', throttledUpdateSize);
     }
   });
 
   onUnmounted(() => {
     if (typeof window !== 'undefined') {
-      window.removeEventListener('resize', updateSize);
+      window.removeEventListener('resize', throttledUpdateSize);
     }
   });
 

@@ -265,6 +265,7 @@ export function useMapGenerator() {
    * @param svg SVG element to render to
    * @param width Screen width
    * @param height Screen height
+   * OPTIMIZATION: Uses requestAnimationFrame to yield control and prevent UI blocking
    */
   async function generateMap(
     svg: SVGSVGElement | null,
@@ -291,11 +292,22 @@ export function useMapGenerator() {
       // Wait for SVG to be ready
       await new Promise(resolve => requestAnimationFrame(resolve));
 
+      // Yield to allow UI to update
+      await new Promise(resolve => requestAnimationFrame(resolve));
+
       // Generate Voronoi cells with screen dimensions
+      // For very large maps, we could chunk this, but for now we do it in one go
+      // The viewport culling in MapCanvas will handle rendering performance
       voronoiCells.value = generateTerrainVoronoiSVG(settings, width, height);
+
+      // Yield again after generating cells
+      await new Promise(resolve => requestAnimationFrame(resolve));
 
       // Generate settlements (we'll do this separately)
       generateSettlementsData(settings, width, height);
+
+      // Final yield before marking as complete
+      await new Promise(resolve => requestAnimationFrame(resolve));
 
       store.setMapGenerated(true);
     } finally {
