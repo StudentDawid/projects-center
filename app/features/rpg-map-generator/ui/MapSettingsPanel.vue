@@ -148,6 +148,25 @@
               Więcej komórek = równomierniejszy rozkład, wolniejsze generowanie
             </div>
           </div>
+
+          <div class="setting-group">
+            <label class="setting-label">
+              <input
+                type="checkbox"
+                :checked="mapSettings.showCellBorders"
+                @change="
+                  store.setSettings({
+                    showCellBorders: ($event.target as HTMLInputElement).checked,
+                  })
+                "
+                class="checkbox-input"
+              />
+              <span>Pokaż obramowania komórek</span>
+            </label>
+            <div class="setting-hint">
+              Wyświetla lub ukrywa czarne linie między komórkami Voronoi
+            </div>
+          </div>
       </div>
 
       <div class="sidebar-section">
@@ -188,6 +207,167 @@
               })
             "
           />
+        </div>
+      </div>
+
+      <div class="sidebar-section">
+        <h2 class="section-title">
+          <v-icon icon="mdi-water" size="20" class="mr-2" />
+          Rzeki
+        </h2>
+
+        <div class="setting-group">
+          <label class="setting-label">
+            <input
+              type="checkbox"
+              :checked="mapSettings.enableRivers"
+              @change="
+                store.setSettings({
+                  enableRivers: ($event.target as HTMLInputElement).checked,
+                })
+              "
+              class="checkbox-input"
+            />
+            <span>Włącz rzeki</span>
+          </label>
+        </div>
+
+        <div v-if="mapSettings.enableRivers" class="setting-group">
+          <label class="setting-label"
+            >Liczba rzek: {{ mapSettings.riverCount }}</label
+          >
+          <input
+            :value="mapSettings.riverCount"
+            type="range"
+            min="0"
+            max="20"
+            class="range-slider"
+            @input="
+              store.setSettings({
+                riverCount: Number(($event.target as HTMLInputElement).value),
+              })
+            "
+          />
+          <div class="setting-hint">
+            Rzeki płyną z gór do morza
+          </div>
+        </div>
+
+        <div
+          v-if="mapSettings.enableRivers"
+          class="setting-group"
+        >
+          <label class="setting-label"
+            >Grubość rzek: {{ mapSettings.riverWidth }}</label
+          >
+          <input
+            :value="mapSettings.riverWidth"
+            type="range"
+            min="1"
+            max="5"
+            step="0.5"
+            class="range-slider"
+            @input="
+              store.setSettings({
+                riverWidth: Number(($event.target as HTMLInputElement).value),
+              })
+            "
+          />
+        </div>
+      </div>
+
+      <div class="sidebar-section">
+        <h2 class="section-title">
+          <v-icon icon="mdi-road" size="20" class="mr-2" />
+          Drogi
+        </h2>
+
+        <div class="setting-group">
+          <label class="setting-label">
+            <input
+              type="checkbox"
+              :checked="mapSettings.enableRoads"
+              @change="
+                store.setSettings({
+                  enableRoads: ($event.target as HTMLInputElement).checked,
+                })
+              "
+              class="checkbox-input"
+            />
+            <span>Włącz drogi</span>
+          </label>
+        </div>
+
+        <div v-if="mapSettings.enableRoads" class="setting-group">
+          <label class="setting-label">Typ dróg</label>
+          <div class="size-options">
+            <button
+              class="size-btn"
+              :class="{ active: mapSettings.roadType === 'minimal' }"
+              @click="store.setSettings({ roadType: 'minimal' })"
+            >
+              Minimalna sieć
+            </button>
+            <button
+              class="size-btn"
+              :class="{ active: mapSettings.roadType === 'full' }"
+              @click="store.setSettings({ roadType: 'full' })"
+            >
+              Pełna sieć
+            </button>
+          </div>
+          <div class="setting-hint">
+            <span v-if="mapSettings.roadType === 'minimal'"
+              >Minimalna liczba dróg łącząca wszystkie osady (MST)</span
+            >
+            <span v-else
+              >Dodatkowe połączenia między większymi osadami</span
+            >
+          </div>
+        </div>
+      </div>
+
+      <div class="sidebar-section">
+        <h2 class="section-title">
+          <v-icon icon="mdi-map-marker" size="20" class="mr-2" />
+          Punkty zainteresowania
+        </h2>
+
+        <div class="setting-group">
+          <label class="setting-label">
+            <input
+              type="checkbox"
+              :checked="mapSettings.enablePOI"
+              @change="
+                store.setSettings({
+                  enablePOI: ($event.target as HTMLInputElement).checked,
+                })
+              "
+              class="checkbox-input"
+            />
+            <span>Włącz POI</span>
+          </label>
+        </div>
+
+        <div v-if="mapSettings.enablePOI" class="setting-group">
+          <label class="setting-label"
+            >Liczba POI: {{ mapSettings.poiCount }}</label
+          >
+          <input
+            :value="mapSettings.poiCount"
+            type="range"
+            min="0"
+            max="50"
+            class="range-slider"
+            @input="
+              store.setSettings({
+                poiCount: Number(($event.target as HTMLInputElement).value),
+              })
+            "
+          />
+          <div class="setting-hint">
+            Punkty zainteresowania (ruiny, jaskinie, wieże, etc.)
+          </div>
         </div>
       </div>
 

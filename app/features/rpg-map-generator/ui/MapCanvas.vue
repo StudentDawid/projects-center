@@ -30,13 +30,82 @@
             :key="`cell-${index}`"
             :d="cell.path"
             :fill="`rgb(${cell.color.r}, ${cell.color.g}, ${cell.color.b})`"
-            :stroke="cell.stroke"
-            :stroke-width="cell.strokeWidth"
+            :stroke="store.mapSettings.showCellBorders ? cell.stroke : 'none'"
+            :stroke-width="
+              store.mapSettings.showCellBorders ? cell.strokeWidth : 0
+            "
             class="voronoi-cell"
             @mouseenter="hoveredCell = cell"
             @mouseleave="handleCellMouseLeave"
             @click="selectedCell = cell"
           />
+        </g>
+
+        <!-- Rivers layer -->
+        <g v-if="rivers.length > 0" class="rivers-layer">
+          <path
+            v-for="(river, index) in rivers"
+            :key="`river-${index}`"
+            :d="getRiverPath(river)"
+            :stroke="`rgb(${getRiverColor(river)})`"
+            :stroke-width="Math.max(3, river.width)"
+            fill="none"
+            class="river-path"
+            stroke-linecap="round"
+            stroke-linejoin="round"
+            :opacity="0.9"
+          />
+        </g>
+
+        <!-- Roads layer -->
+        <g v-if="roads.length > 0" class="roads-layer">
+          <path
+            v-for="(road, index) in roads"
+            :key="`road-${index}`"
+            :d="getRoadPath(road)"
+            :stroke="`rgb(${getRoadColor(road)})`"
+            :stroke-width="road.width"
+            fill="none"
+            class="road-path"
+            stroke-linecap="round"
+            stroke-linejoin="round"
+            :opacity="0.8"
+            stroke-dasharray="none"
+          />
+        </g>
+
+        <!-- POI layer -->
+        <g v-if="poi.length > 0" class="poi-layer">
+          <g
+            v-for="(point, index) in poi"
+            :key="`poi-${index}`"
+            class="poi-marker"
+            @mouseenter="hoveredPOI = point"
+            @mouseleave="handlePOIMouseLeave"
+          >
+            <text
+              :x="point.x"
+              :y="point.y"
+              font-size="18"
+              text-anchor="middle"
+              dominant-baseline="middle"
+              class="poi-icon"
+            >
+              {{ getPOIEmoji(point.type) }}
+            </text>
+            <!-- POI name label -->
+            <text
+              :x="point.x"
+              :y="point.y + 20"
+              font-size="8"
+              text-anchor="middle"
+              dominant-baseline="middle"
+              class="poi-label"
+              fill="rgba(255, 255, 255, 0.9)"
+            >
+              {{ point.name }}
+            </text>
+          </g>
         </g>
 
         <!-- Settlements layer -->
@@ -101,16 +170,45 @@ import { useMapGeneratorStore } from '~/stores/map-generator/map-generator';
 import { useMapGenerator, type VoronoiCell } from '../hooks/useMapGenerator';
 import { useWindowSize } from '~/shared/lib/useWindowSize';
 import { throttleRAF, debounce } from '~/shared/lib/throttle';
-import type { Settlement } from '~/shared/types/map-generator.types';
+import type {
+  Settlement,
+  River,
+  Road,
+  PointOfInterest,
+} from '~/shared/types/map-generator.types';
+import { POI_TYPES } from '~/shared/types/map-generator.types';
 
 const store = useMapGeneratorStore();
-const { generateMap, voronoiCells, settlements } = useMapGenerator();
+const {
+  generateMap,
+  voronoiCells,
+  settlements,
+  rivers: riversFromHook,
+  roads: roadsFromHook,
+  poi: poiFromHook,
+} = useMapGenerator();
 const { width, height } = useWindowSize();
+
+// Use rivers from store for reactivity, fallback to hook
+const rivers = computed(() =>
+  store.rivers.length > 0 ? store.rivers : riversFromHook.value
+);
+
+// Use roads from store for reactivity, fallback to hook
+const roads = computed(() =>
+  store.roads.length > 0 ? store.roads : roadsFromHook.value
+);
+
+// Use POI from store for reactivity, fallback to hook
+const poi = computed(() =>
+  store.poi.length > 0 ? store.poi : poiFromHook.value
+);
 
 const svgRef = ref<SVGSVGElement | null>(null);
 const transformGroupRef = ref<SVGGElement | null>(null);
 const hoveredCell = ref<VoronoiCell | null>(null);
 const hoveredSettlement = ref<Settlement | null>(null);
+const hoveredPOI = ref<PointOfInterest | null>(null);
 const selectedCell = ref<VoronoiCell | null>(null);
 const tooltipPosition = ref<{ x: number; y: number } | null>(null);
 const showTooltip = ref(false);
@@ -132,6 +230,98 @@ const hasMap = computed(() => store.hasMap);
 // Use screen size for viewBox - memoized to avoid recalculation
 const viewBoxWidth = computed(() => width.value || 1920);
 const viewBoxHeight = computed(() => height.value || 1080);
+
+/**
+ * Convert river segments to SVG path string
+ */
+function getRiverPath(river: River): string {
+  if (river.segments.length === 0) return '';
+
+  let path = `M ${river.segments[0]?.x ?? 0} ${river.segments[0]?.y ?? 0}`;
+
+  for (let i = 1; i < river.segments.length; i++) {
+    const segment = river.segments[i];
+    if (segment) {
+      path += ` L ${segment.x} ${segment.y}`;
+    }
+  }
+
+  return path;
+}
+
+/**
+ * Get river color based on flow/size
+ * Larger rivers (higher flow) are darker blue
+ * Using a more visible blue color
+ */
+function getRiverColor(river: River): string {
+  // Use bright, visible blue color for maximum contrast against terrain
+  // Base color: brighter blue (#5dade2 or similar) for better visibility
+  const baseR = 93;
+  const baseG = 173;
+  const baseB = 226;
+
+  // Adjust based on flow (min 1, can grow)
+  // For darker rivers when merged (but still visible)
+  const flowFactor = Math.min(river.flow / 3, 1);
+  const r = Math.max(70, Math.floor(baseR * (1 - flowFactor * 0.15)));
+  const g = Math.max(140, Math.floor(baseG * (1 - flowFactor * 0.1)));
+  const b = Math.max(200, Math.floor(baseB * (1 - flowFactor * 0.05)));
+
+  return `${r}, ${g}, ${b}`;
+}
+
+/**
+ * Convert road segments to SVG path string
+ */
+function getRoadPath(road: Road): string {
+  if (road.segments.length === 0) return '';
+
+  let path = `M ${road.segments[0]?.x ?? 0} ${road.segments[0]?.y ?? 0}`;
+
+  for (let i = 1; i < road.segments.length; i++) {
+    const segment = road.segments[i];
+    if (segment) {
+      path += ` L ${segment.x} ${segment.y}`;
+    }
+  }
+
+  return path;
+}
+
+/**
+ * Get road color based on type
+ */
+function getRoadColor(road: Road): string {
+  // Brown/dirt color for roads
+  // Highway (city-to-city) is slightly darker
+  if (road.type === 'highway') {
+    return '139, 90, 43'; // Darker brown for highways
+  } else {
+    return '160, 120, 70'; // Lighter brown for local roads
+  }
+}
+
+/**
+ * Get emoji for POI type
+ */
+function getPOIEmoji(type: string): string {
+  const poiType = POI_TYPES.find((p) => p.type === type);
+  return poiType?.emoji ?? '📍';
+}
+
+/**
+ * Handle POI mouse leave
+ */
+function handlePOIMouseLeave() {
+  hoveredPOI.value = null;
+  if (tooltipDelayTimer) {
+    window.clearTimeout(tooltipDelayTimer);
+    tooltipDelayTimer = null;
+  }
+  showTooltip.value = false;
+  tooltipPosition.value = null;
+}
 
 // Viewport culling - only render visible cells for better performance
 // This significantly improves performance for maps with >2000 cells
@@ -196,6 +386,13 @@ const terrainThresholds = computed(() => {
 });
 
 const tooltipContent = computed(() => {
+  if (hoveredPOI.value) {
+    const poiType = POI_TYPES.find((p) => p.type === hoveredPOI.value?.type);
+    return {
+      title: hoveredPOI.value.name,
+      subtitle: poiType?.description ?? '',
+    };
+  }
   if (hoveredSettlement.value) {
     return {
       title: hoveredSettlement.value.name,
@@ -290,7 +487,7 @@ function handleMouseMove(event: MouseEvent) {
   updateMousePositionThrottled();
 
   // Handle tooltip positioning with delay
-  if (!hoveredCell.value && !hoveredSettlement.value) {
+  if (!hoveredCell.value && !hoveredSettlement.value && !hoveredPOI.value) {
     // Clear tooltip immediately when not hovering
     if (tooltipDelayTimer) {
       window.clearTimeout(tooltipDelayTimer);
@@ -328,7 +525,7 @@ function handleMouseMove(event: MouseEvent) {
       window.clearTimeout(tooltipDelayTimer);
     }
     tooltipDelayTimer = window.setTimeout(() => {
-      if (hoveredCell.value || hoveredSettlement.value) {
+      if (hoveredCell.value || hoveredSettlement.value || hoveredPOI.value) {
         showTooltip.value = true;
       }
     }, 500); // 500ms delay before showing tooltip
@@ -672,6 +869,52 @@ defineExpose({
     opacity: 0.9;
     stroke-width: 1.5;
   }
+}
+
+.rivers-layer {
+  pointer-events: none;
+}
+
+.river-path {
+  filter: drop-shadow(0 2px 4px rgba(0, 0, 0, 0.5));
+  opacity: 0.95;
+  vector-effect: non-scaling-stroke;
+}
+
+.roads-layer {
+  pointer-events: none;
+}
+
+.road-path {
+  filter: drop-shadow(0 1px 2px rgba(0, 0, 0, 0.4));
+  vector-effect: non-scaling-stroke;
+}
+
+.poi-layer {
+  pointer-events: none;
+}
+
+.poi-marker {
+  pointer-events: auto;
+  cursor: pointer;
+  transition: transform 0.2s;
+}
+
+.poi-marker:hover {
+  transform: translateY(-2px);
+}
+
+.poi-icon {
+  filter: drop-shadow(0 2px 4px rgba(0, 0, 0, 0.8));
+  pointer-events: auto;
+  cursor: pointer;
+}
+
+.poi-label {
+  filter: drop-shadow(0 1px 2px rgba(0, 0, 0, 0.9));
+  pointer-events: none;
+  font-weight: 600;
+  font-family: 'Cinzel', serif;
 }
 
 .settlements-layer {

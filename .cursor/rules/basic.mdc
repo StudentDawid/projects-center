@@ -1,6 +1,4 @@
 ---
-description:
-globs:
 alwaysApply: true
 ---
 
@@ -17,8 +15,6 @@ ALWAYS:
 Rules:
 
 1. Task List and Approval
-
-
-    - Present the task list to the user for review. Ask the user to confirm or adjust the plan as needed.
-    - Wait for the user's approval before starting any coding or implementation. Do not begin writing code or performing tasks until the user has confirmed the "LIST TASKS TO DO".
-    - Important: Do not implement any code or output until you have thoroughly read and understood the instructions from the file(s) and you have approval from the user/developer.
+   - Present the task list to the user for review. Ask the user to confirm or adjust the plan as needed.
+   - Wait for the user's approval before starting any coding or implementation. Do not begin writing code or performing tasks until the user has confirmed the "LIST TASKS TO DO".
+   - Important: Do not implement any code or output until you have thoroughly read and understood the instructions from the file(s) and you have approval from the user/developer.

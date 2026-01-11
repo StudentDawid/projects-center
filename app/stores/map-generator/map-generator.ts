@@ -1,6 +1,6 @@
 import { defineStore } from 'pinia';
 import { ref, computed } from 'vue';
-import type { MapSettings, Settlement } from '~/shared/types/map-generator.types';
+import type { MapSettings, Settlement, River, Road, PointOfInterest } from '~/shared/types/map-generator.types';
 
 export const useMapGeneratorStore = defineStore(
   'map-generator',
@@ -8,6 +8,9 @@ export const useMapGeneratorStore = defineStore(
     // State
     const mapGenerated = ref(false);
     const settlements = ref<Settlement[]>([]);
+    const rivers = ref<River[]>([]);
+    const roads = ref<Road[]>([]);
+    const poi = ref<PointOfInterest[]>([]);
     const canvasSize = ref(512);
 
     const mapSettings = ref<MapSettings>({
@@ -20,6 +23,14 @@ export const useMapGeneratorStore = defineStore(
       villageCount: 15,
       useVoronoi: true,
       voronoiCellCount: 1000,
+      enableRivers: true,
+      riverCount: 8,
+      riverWidth: 2,
+      showCellBorders: false,
+      enableRoads: true,
+      roadType: 'minimal',
+      enablePOI: true,
+      poiCount: 15,
     });
 
     // Getters
@@ -38,6 +49,18 @@ export const useMapGeneratorStore = defineStore(
       settlements.value = newSettlements;
     }
 
+    function setRivers(newRivers: River[]): void {
+      rivers.value = newRivers;
+    }
+
+    function setRoads(newRoads: Road[]): void {
+      roads.value = newRoads;
+    }
+
+    function setPOI(newPOI: PointOfInterest[]): void {
+      poi.value = newPOI;
+    }
+
     function setMapGenerated(value: boolean): void {
       mapGenerated.value = value;
     }
@@ -49,6 +72,9 @@ export const useMapGeneratorStore = defineStore(
     function resetMap(): void {
       mapGenerated.value = false;
       settlements.value = [];
+      rivers.value = [];
+      roads.value = [];
+      poi.value = [];
     }
 
     return {
@@ -56,6 +82,9 @@ export const useMapGeneratorStore = defineStore(
       mapSettings,
       mapGenerated,
       settlements,
+      rivers,
+      roads,
+      poi,
       canvasSize,
       // Getters
       hasMap,
@@ -63,6 +92,9 @@ export const useMapGeneratorStore = defineStore(
       setSettings,
       randomizeSeed,
       setSettlements,
+      setRivers,
+      setRoads,
+      setPOI,
       setMapGenerated,
       setCanvasSize,
       resetMap,

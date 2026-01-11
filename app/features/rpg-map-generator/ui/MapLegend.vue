@@ -8,12 +8,39 @@
         class="legend-item"
       >
         <span
-          v-if="!terrain.emoji"
+          v-if="!terrain.emoji && terrain.name !== 'Rzeka' && terrain.name !== 'Droga'"
           class="legend-color"
           :style="{ background: terrain.color }"
         ></span>
+        <span
+          v-else-if="terrain.name === 'Rzeka'"
+          class="legend-river"
+          :style="{ borderBottomColor: terrain.color }"
+        ></span>
+        <span
+          v-else-if="terrain.name === 'Droga'"
+          class="legend-road"
+          :style="{ borderBottomColor: terrain.color }"
+        ></span>
         <span v-else class="legend-marker">{{ terrain.emoji }}</span>
         <span>{{ terrain.name }}</span>
+      </div>
+
+      <!-- POI section separator -->
+      <div v-if="samplePOI.length > 0" class="legend-separator"></div>
+
+      <!-- Sample POI -->
+      <div
+        v-for="poiType in samplePOI"
+        :key="poiType.type"
+        class="legend-item"
+      >
+        <span class="legend-marker">{{ poiType.emoji }}</span>
+        <span>{{ poiType.name }}</span>
+      </div>
+
+      <div v-if="samplePOI.length > 0" class="legend-hint">
+        + {{ POI_TYPES.length - samplePOI.length }} więcej POI
       </div>
     </div>
   </div>
@@ -22,7 +49,7 @@
 <script setup lang="ts">
 import { computed } from 'vue';
 import { useMapGeneratorStore } from '~/stores/map-generator/map-generator';
-import { TERRAIN_TYPES } from '~/shared/types/map-generator.types';
+import { TERRAIN_TYPES, POI_TYPES } from '~/shared/types/map-generator.types';
 
 const store = useMapGeneratorStore();
 const hasMap = computed(() => store.hasMap);
@@ -32,6 +59,9 @@ const terrainTypes = [
   { name: 'Miasto', emoji: '🏰' },
   { name: 'Wioska', emoji: '🏠' },
 ];
+
+// Show sample POI in legend (first 6 types)
+const samplePOI = POI_TYPES.slice(0, 6);
 </script>
 
 <style scoped lang="scss">
@@ -80,6 +110,33 @@ const terrainTypes = [
   width: 16px;
   text-align: center;
   flex-shrink: 0;
+}
+
+.legend-river {
+  width: 16px;
+  height: 3px;
+  border-bottom: 2px solid;
+  flex-shrink: 0;
+}
+
+.legend-road {
+  width: 16px;
+  height: 3px;
+  border-bottom: 2px solid;
+  flex-shrink: 0;
+}
+
+.legend-separator {
+  height: 1px;
+  background: rgba(255, 255, 255, 0.1);
+  margin: 8px 0;
+}
+
+.legend-hint {
+  font-size: 0.65rem;
+  color: rgba(255, 255, 255, 0.5);
+  font-style: italic;
+  margin-top: 4px;
 }
 </style>
 
