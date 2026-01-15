@@ -184,6 +184,7 @@ import { useMapGenerator } from '../hooks/useMapGenerator';
 import { useWindowSize } from '~/shared/lib/useWindowSize';
 import type { Grid } from '~/shared/map-generator/types/grid.types';
 import { BiomeType } from '~/shared/map-generator/utils/biomes-generator';
+import { getColorFromBiome as getColorFromBiomeUtil, getColorFromHeightValue as getColorFromHeightValueUtil } from '~/shared/map-generator/utils/color-utils';
 import { smoothPolygonPath } from '~/shared/map-generator/utils/polygon-smoother';
 import { generateCoastlinePaths, type CoastlineFeature } from '~/shared/map-generator/utils/coastline-renderer';
 import { getRiverPolygonPath } from '~/shared/map-generator/utils/rivers-generator';
@@ -229,6 +230,8 @@ const {
   grid,
   pack,
   cellPolygons,
+  cellColorsBiomes,
+  cellColorsHeight,
   isGenerating,
   error,
   generateMap,
@@ -379,40 +382,23 @@ function polygonToPath(polygon: Array<[number, number]>): string {
 }
 
 /**
- * Pobiera kolor dla komórki - używa trybu wyświetlania (biomes/height) do określenia źródła koloru
+ * Pobiera kolor dla komórki - używa cache'owanych kolorów z memoizacji
+ * Optymalizacja: używa pre-wygenerowanych tablic kolorów zamiast obliczać przy każdym renderze
  */
 function getCellColor(cellId: number): string {
   const displayMode = props.displayMode || 'biomes';
 
-  // Jeśli tryb to "biomes", spróbuj użyć biomes
+  // Jeśli tryb to "biomes", użyj cache'owanych kolorów biomes
   if (displayMode === 'biomes') {
-    const polygonCount = cellPolygons.value.length;
-    const packData = pack.value?.cells;
-    const packBiome = packData?.biome;
-    const packCellCount = packBiome?.length || 0;
-    const isUsingPack =
-      pack.value &&
-      packData &&
-      packBiome &&
-      packCellCount > 0 &&
-      polygonCount === packCellCount;
-
-    // Używaj pack do renderowania biomes
-    if (isUsingPack && packBiome && cellId < packBiome.length) {
-      return getColorFromBiome(cellId);
+    if (cellColorsBiomes.value.length > 0 && cellId < cellColorsBiomes.value.length) {
+      return cellColorsBiomes.value[cellId] || '#ccc';
     }
   }
 
-  // Tryb "height" lub fallback - używaj wysokości
-  if (!grid.value || !grid.value.cells.h) {
-    // Fallback: prosty kolor oparty na indeksie komórki
-    const hue = (cellId * 137.508) % 360;
-    return `hsl(${hue}, 70%, 50%)`;
-  }
-
-  // Mapowanie komórki pack na komórkę grid dla wysokości
-  const packData = pack.value?.cells;
+  // Tryb "height" - użyj cache'owanych kolorów wysokości
+  // Sprawdź czy używamy pack (cellId jest indeksem pack) czy grid (cellId jest indeksem grid)
   const polygonCount = cellPolygons.value.length;
+  const packData = pack.value?.cells;
   const packBiome = packData?.biome;
   const packCellCount = packBiome?.length || 0;
   const isUsingPack =
@@ -423,20 +409,25 @@ function getCellColor(cellId: number): string {
     polygonCount === packCellCount;
 
   if (isUsingPack && packData && packData.g && cellId < packData.g.length) {
+    // Używamy pack - zmapuj cellId (pack) na gridCellId (grid)
     const gridCellId = packData.g[cellId];
     if (
       gridCellId !== undefined &&
       gridCellId !== null &&
-      gridCellId < grid.value.cells.h.length
+      gridCellId < cellColorsHeight.value.length
     ) {
-      const height = grid.value.cells.h[gridCellId];
-      if (height !== undefined) {
-        return getColorFromHeightValue(height);
-      }
+      return cellColorsHeight.value[gridCellId] || '#ccc';
+    }
+  } else {
+    // Używamy grid - cellId jest już indeksem grid
+    if (cellId < cellColorsHeight.value.length) {
+      return cellColorsHeight.value[cellId] || '#ccc';
     }
   }
 
-  return getColorFromHeight(cellId);
+  // Fallback: prosty kolor oparty na indeksie komórki
+  const hue = (cellId * 137.508) % 360;
+  return `hsl(${hue}, 70%, 50%)`;
 }
 
 /**
@@ -457,30 +448,8 @@ function getColorFromBiome(cellId: number): string {
     return '#ccc';
   }
 
-  // Kolory biomes (standardowa paleta kolorów dla biomes)
-  const biomeColors: Record<BiomeType, string> = {
-    [BiomeType.Marine]: '#466eab', // Ocean blue
-    [BiomeType.HotDesert]: '#fbe79f', // Desert yellow
-    [BiomeType.ColdDesert]: '#b5b887', // Cold desert gray-green
-    [BiomeType.Savanna]: '#d2d082', // Savanna yellow-green
-    [BiomeType.Grassland]: '#c8d68f', // Grassland green
-    [BiomeType.TropicalSeasonalForest]: '#b6d95d', // Tropical forest light green
-    [BiomeType.TemperateDeciduousForest]: '#29bc56', // Deciduous forest green
-    [BiomeType.TropicalRainforest]: '#7dcb35', // Rainforest bright green
-    [BiomeType.TemperateRainforest]: '#409c43', // Temperate rainforest dark green
-    [BiomeType.Taiga]: '#4b6b32', // Taiga dark green
-    [BiomeType.Tundra]: '#96784b', // Tundra brown
-    [BiomeType.Glacier]: '#d5e7eb', // Glacier light blue-white
-    [BiomeType.Wetland]: '#0b9131', // Wetland dark green
-  };
-
-  const color = biomeColors[biomeId as BiomeType];
-  if (!color) {
-    // Nieznany biome ID - użyj szarego jako fallback
-    return '#ccc';
-  }
-
-  return color;
+  // Użyj funkcji z color-utils
+  return getColorFromBiomeUtil(biomeId);
 }
 
 /**
@@ -544,33 +513,15 @@ function convertHeightToMeters(height: number, exponent: number = 2.0): number {
  * Używa interpolacji kolorów podobnej do Azgaar
  * Teraz używa rzeczywistych metrów do interpolacji
  */
+/**
+ * Pobiera kolor na podstawie wartości wysokości (0-100)
+ * @deprecated Użyj cache'owanych kolorów z cellColorsHeight zamiast tej funkcji
+ * Pozostawiona dla kompatybilności wstecznej (np. w legendzie)
+ * Teraz deleguje do funkcji z color-utils
+ */
 function getColorFromHeightValue(height: number): string {
-  // Woda/Ocean: < 20
-  // W trybie heightmap woda ma jednolity kolor (jak w Azgaar, gdzie renderOceanCells domyślnie jest wyłączone)
-  if (height < 20) {
-    // Jednolity kolor dla wszystkich wartości wody
-    return '#466eab';
-  }
-
-  // Ląd: >= 20
-  // Używamy wzoru z Azgaar: scheme(1 - value / 100)
-  // Dla value=20: 1 - 20/100 = 0.8 (niski ląd)
-  // Dla value=100: 1 - 100/100 = 0.0 (wysoki szczyt)
-  const t = 1 - height / 100;
-
-  // Poprawiona paleta kolorów - bardziej kontrastowa i widoczna
-  // Od wysokich (t=0, biały) do niskich (t=1, ciemny zielony)
-  const landStops: Array<[number, number, number]> = [
-    hexToRgb('#ffffff'), // Wysokie szczyty (t=0.0-0.2) - biały
-    hexToRgb('#f5f5dc'), // Wysokie góry (t=0.2-0.4) - beżowy (beige)
-    hexToRgb('#deb887'), // Średnie góry (t=0.4-0.5) - brązowy (burlywood)
-    hexToRgb('#8b7355'), // Niskie góry (t=0.5-0.6) - ciemny brązowy
-    hexToRgb('#6b8e23'), // Wzgórza (t=0.6-0.75) - oliwkowy zielony
-    hexToRgb('#2d5016'), // Niziny (t=0.75-1.0) - ciemny zielony
-  ];
-
-  const [r, g, b] = interpolateColors(landStops, Math.max(0, Math.min(1, t)));
-  return `rgb(${r}, ${g}, ${b})`;
+  // Użyj funkcji z color-utils
+  return getColorFromHeightValueUtil(height);
 }
 
 /**
@@ -582,7 +533,7 @@ function getColorFromHeight(cellId: number): string {
   }
 
   const height = grid.value.cells.h[cellId] || 0;
-  return getColorFromHeightValue(height);
+  return getColorFromHeightValueUtil(height);
 }
 
 /**

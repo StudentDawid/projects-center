@@ -2,7 +2,9 @@
  * Hook for map generation functionality
  */
 
-import { ref, computed, type Ref } from 'vue';
+import { ref, computed, shallowRef, type Ref } from 'vue';
+import { getColorFromBiome, getColorFromHeightValue } from '~/shared/map-generator/utils/color-utils';
+import { BiomeType } from '~/shared/map-generator/utils/biomes-generator';
 import { generateVoronoiGrid, getGridPolygon } from '~/shared/map-generator/utils/voronoi-grid-generator';
 import { createHeightmapGenerator } from '~/shared/map-generator/utils/heightmap-generator';
 import { markupGrid } from '~/shared/map-generator/utils/features-generator';
@@ -95,9 +97,13 @@ export function useMapGenerator() {
   const grid: Ref<Grid | null> = ref(null);
   const pack: Ref<Pack | null> = ref(null);
   const ruler: Ref<Ruler | null> = ref(null);
-  const cellPolygons: Ref<Array<Array<[number, number]>>> = ref([]);
+  const cellPolygons: Ref<Array<Array<[number, number]>>> = shallowRef([]);
   const isGenerating: Ref<boolean> = ref(false);
   const error: Ref<string | null> = ref(null);
+
+  // Cache kolorów komórek - memoizacja dla wydajności
+  const cellColorsBiomes: Ref<string[]> = shallowRef([]);
+  const cellColorsHeight: Ref<string[]> = shallowRef([]);
 
   /**
    * Generuje mapę Voronoi
@@ -239,6 +245,35 @@ export function useMapGenerator() {
       // Krok 16: Definiuj grupy features (klasyfikuj features)
       defineFeatureGroups(generatedPack, generatedGrid);
 
+      // Generuj cache kolorów komórek - memoizacja dla wydajności
+      // Kolory biomes (dla komórek pack)
+      if (generatedPack && generatedPack.cells.biome) {
+        const biomeColors: string[] = [];
+        for (let i = 0; i < generatedPack.cells.biome.length; i++) {
+          const biomeId = generatedPack.cells.biome[i];
+          biomeColors[i] = getColorFromBiome(biomeId);
+        }
+        cellColorsBiomes.value = biomeColors;
+      } else {
+        cellColorsBiomes.value = [];
+      }
+
+      // Kolory wysokości (dla komórek grid)
+      if (generatedGrid && generatedGrid.cells.h) {
+        const heightColors: string[] = [];
+        for (let i = 0; i < generatedGrid.cells.h.length; i++) {
+          const height = generatedGrid.cells.h[i];
+          if (height !== undefined) {
+            heightColors[i] = getColorFromHeightValue(height);
+          } else {
+            heightColors[i] = '#ccc';
+          }
+        }
+        cellColorsHeight.value = heightColors;
+      } else {
+        cellColorsHeight.value = [];
+      }
+
       // Generuj polygony dla komórek pack (bardziej szczegółowe niż grid)
       const packPolygons: Array<Array<[number, number]>> = [];
       if (generatedPack && generatedPack.cells.i && generatedPack.cells.i.length > 0) {
@@ -309,6 +344,8 @@ export function useMapGenerator() {
     pack.value = null;
     ruler.value = null;
     cellPolygons.value = [];
+    cellColorsBiomes.value = [];
+    cellColorsHeight.value = [];
     error.value = null;
   };
 
@@ -331,6 +368,8 @@ export function useMapGenerator() {
     pack,
     ruler,
     cellPolygons,
+    cellColorsBiomes,
+    cellColorsHeight,
     isGenerating,
     error,
     hasMap,
