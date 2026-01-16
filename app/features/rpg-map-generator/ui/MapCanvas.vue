@@ -39,9 +39,9 @@
           <!-- Ląd biały (pokazuje) - tylko komórki lądu -->
           <g class="land-mask-cells">
             <path
-              v-for="(polygon, index) in landCellPolygons"
-              :key="`land-mask-${index}`"
-              :d="polygonToPath(polygon)"
+              v-for="(landCell, index) in landCellPolygons"
+              :key="`land-mask-${landCell.originalIndex}`"
+              :d="getCellPathForPolygon(landCell.polygon, landCell.originalIndex)"
               fill="white"
             />
           </g>
@@ -76,9 +76,9 @@
           <!-- Cells are rendered as raw polygons (no smoothing) - colors come from biomes -->
           <g class="voronoi-cells">
             <path
-              v-for="(polygon, index) in cellPolygons"
+              v-for="index in visibleCellIndices"
               :key="`cell-${index}`"
-              :d="polygonToPath(polygon)"
+              :d="getCellPath(index)"
               :fill="getCellColor(index)"
               :stroke="showCellBorders ? '#808080' : 'none'"
               :stroke-width="0.1"
@@ -177,7 +177,7 @@
 </template>
 
 <script setup lang="ts">
-import { ref, computed, onMounted, watch, onUnmounted } from 'vue';
+import { ref, computed, onMounted, watch, onUnmounted, nextTick } from 'vue';
 import { zoom as d3Zoom, zoomIdentity } from 'd3-zoom';
 import { select } from 'd3-selection';
 import { useMapGenerator } from '../hooks/useMapGenerator';
@@ -216,6 +216,11 @@ const svgRef = ref<SVGElement | null>(null);
 const viewboxRef = ref<SVGGElement | null>(null);
 const { width: windowWidth, height: windowHeight } = useWindowSize();
 
+// Cache referencji do elementów DOM dla optymalizacji zoomowania
+const cellsRefs = ref<SVGPathElement[]>([]);
+const riversRefs = ref<SVGPathElement[]>([]);
+let rafId: number | null = null; // ID dla requestAnimationFrame throttling
+
 // Stan zoomowania
 const zoomScale = ref(1);
 const zoomX = ref(0);
@@ -232,6 +237,7 @@ const {
   cellPolygons,
   cellColorsBiomes,
   cellColorsHeight,
+  cellPaths,
   isGenerating,
   error,
   generateMap,
@@ -314,12 +320,18 @@ const heightLegendItems = computed(() => {
 });
 
 // Komórki lądu - używane w masce SVG do ukrycia fragmentów rzek nad morzem
-const landCellPolygons = computed(() => {
+// Przechowuje zarówno polygon jak i oryginalny indeks dla poprawnego mapowania cache'owanych ścieżek
+interface LandCellPolygon {
+  polygon: Array<[number, number]>;
+  originalIndex: number;
+}
+
+const landCellPolygons = computed<LandCellPolygon[]>(() => {
   if (!grid.value || !grid.value.cells.h || !cellPolygons.value.length) {
     return [];
   }
 
-  const landPolygons: Array<Array<[number, number]>> = [];
+  const landPolygons: LandCellPolygon[] = [];
   const heights = grid.value.cells.h;
 
   // Sprawdź czy używamy pack czy grid
@@ -338,14 +350,20 @@ const landCellPolygons = computed(() => {
     // Używamy pack - sprawdź wysokości z pack
     for (let i = 0; i < cellPolygons.value.length; i++) {
       if (i < packData.h.length && packData.h[i]! >= 20) {
-        landPolygons.push(cellPolygons.value[i]!);
+        landPolygons.push({
+          polygon: cellPolygons.value[i]!,
+          originalIndex: i,
+        });
       }
     }
   } else {
     // Używamy grid - sprawdź wysokości z grid
     for (let i = 0; i < cellPolygons.value.length; i++) {
       if (i < heights.length && heights[i]! >= 20) {
-        landPolygons.push(cellPolygons.value[i]!);
+        landPolygons.push({
+          polygon: cellPolygons.value[i]!,
+          originalIndex: i,
+        });
       }
     }
   }
@@ -365,9 +383,152 @@ const defaultSettings = {
 const svgWidth = computed(() => props.width || windowWidth.value || 1000);
 const svgHeight = computed(() => props.height || windowHeight.value || 600);
 
+// Cache bounding boxów dla polygonów (dla viewport culling)
+const polygonBoundsCache = ref<Map<number, { minX: number; minY: number; maxX: number; maxY: number }>>(new Map());
+
+/**
+ * Oblicza bounding box dla polygonu
+ */
+function getPolygonBounds(polygon: Array<[number, number]>): {
+  minX: number;
+  minY: number;
+  maxX: number;
+  maxY: number;
+} {
+  let minX = Infinity;
+  let minY = Infinity;
+  let maxX = -Infinity;
+  let maxY = -Infinity;
+
+  for (const [x, y] of polygon) {
+    minX = Math.min(minX, x);
+    minY = Math.min(minY, y);
+    maxX = Math.max(maxX, x);
+    maxY = Math.max(maxY, y);
+  }
+
+  return { minX, minY, maxX, maxY };
+}
+
+/**
+ * Sprawdza czy polygon jest widoczny w viewport
+ */
+function isPolygonVisible(
+  bounds: { minX: number; minY: number; maxX: number; maxY: number },
+  viewBox: { x: number; y: number; width: number; height: number },
+  transform: { x: number; y: number; scale: number }
+): boolean {
+  // Przekształć bounds przez transform (scale + translate)
+  const transformedMinX = bounds.minX * transform.scale + transform.x;
+  const transformedMinY = bounds.minY * transform.scale + transform.y;
+  const transformedMaxX = bounds.maxX * transform.scale + transform.x;
+  const transformedMaxY = bounds.maxY * transform.scale + transform.y;
+
+  // Sprawdź przecięcie z viewport
+  // Polygon jest widoczny jeśli przecina się z viewport
+  return !(
+    transformedMaxX < 0 ||
+    transformedMinX > viewBox.width ||
+    transformedMaxY < 0 ||
+    transformedMinY > viewBox.height
+  );
+}
+
+/**
+ * Oblicza widoczne komórki na podstawie viewport i transformacji
+ * Optymalizacja: renderuje tylko widoczne komórki zamiast wszystkich
+ */
+const visibleCellIndices = computed(() => {
+  if (!cellPolygons.value.length) return [];
+
+  const viewBox = {
+    x: 0,
+    y: 0,
+    width: svgWidth.value,
+    height: svgHeight.value,
+  };
+
+  const transform = {
+    x: zoomX.value,
+    y: zoomY.value,
+    scale: zoomScale.value,
+  };
+
+  const visible: number[] = [];
+
+  // Zbuduj cache bounding boxów jeśli potrzeba
+  if (polygonBoundsCache.value.size !== cellPolygons.value.length) {
+    polygonBoundsCache.value.clear();
+    for (let i = 0; i < cellPolygons.value.length; i++) {
+      const polygon = cellPolygons.value[i];
+      if (polygon && polygon.length > 0) {
+        polygonBoundsCache.value.set(i, getPolygonBounds(polygon));
+      }
+    }
+  }
+
+  // Sprawdź widoczność każdej komórki
+  for (let i = 0; i < cellPolygons.value.length; i++) {
+    const bounds = polygonBoundsCache.value.get(i);
+    if (bounds && isPolygonVisible(bounds, viewBox, transform)) {
+      visible.push(i);
+    }
+  }
+
+  return visible;
+});
+
+/**
+ * Pobiera cache'owaną ścieżkę SVG dla komórki
+ * Optymalizacja: używa pre-wygenerowanych paths zamiast obliczać przy każdym renderze
+ */
+function getCellPath(cellId: number): string {
+  if (cellPaths.value.length > 0 && cellId < cellPaths.value.length) {
+    return cellPaths.value[cellId] || '';
+  }
+
+  // Fallback: generuj path na żądanie (dla kompatybilności wstecznej)
+  const polygon = cellPolygons.value[cellId];
+  if (!polygon || polygon.length === 0) return '';
+
+  let path = `M ${polygon[0]![0]} ${polygon[0]![1]}`;
+  for (let i = 1; i < polygon.length; i++) {
+    path += ` L ${polygon[i]![0]} ${polygon[i]![1]}`;
+  }
+  path += ' Z';
+  return path;
+}
+
+/**
+ * Pobiera ścieżkę SVG dla polygonu (używane w land mask)
+ * Próbuje użyć cache'owanej ścieżki, jeśli polygon odpowiada komórce
+ */
+function getCellPathForPolygon(polygon: Array<[number, number]>, index: number): string {
+  // Spróbuj użyć cache'owanej ścieżki
+  if (cellPaths.value.length > 0 && index < cellPaths.value.length) {
+    // Sprawdź czy polygon odpowiada cache'owanej komórce
+    const cachedPolygon = cellPolygons.value[index];
+    if (cachedPolygon && cachedPolygon.length === polygon.length) {
+      // Użyj cache'owanej ścieżki
+      return cellPaths.value[index] || '';
+    }
+  }
+
+  // Fallback: generuj path na żądanie
+  if (polygon.length === 0) return '';
+
+  let path = `M ${polygon[0]![0]} ${polygon[0]![1]}`;
+  for (let i = 1; i < polygon.length; i++) {
+    path += ` L ${polygon[i]![0]} ${polygon[i]![1]}`;
+  }
+  path += ' Z';
+  return path;
+}
+
 /**
  * Konwertuje współrzędne polygonu na ciąg ścieżki SVG (surowe polygony)
- * Pojedyncze komórki Voronoi nie są wygładzane - tylko coastline i obszary biomów
+ * @deprecated Użyj getCellPath() lub getCellPathForPolygon() zamiast tej funkcji
+ * Pozostawiona dla kompatybilności wstecznej
  */
 function polygonToPath(polygon: Array<[number, number]>): string {
   if (polygon.length === 0) return '';
@@ -644,33 +805,63 @@ function setupZoom(): void {
 /**
  * Wywołuje dostosowania aktywnego zoomowania
  * Dostosowuje elementy wizualne na podstawie poziomu zoomu dla lepszego renderowania w różnych skalach
+ * Optymalizacja: używa throttling z requestAnimationFrame i cache'owanych referencji do elementów DOM
  */
 function invokeActiveZooming(scale: number): void {
   if (!viewboxRef.value) return;
 
-  // Dostosuj grubość obramowań komórek na podstawie zoomu (cieńsze przy większym zoom, grubsze przy mniejszym)
+  // Throttling: jeśli już zaplanowano aktualizację, pomiń to wywołanie
+  if (rafId !== null) {
+    return;
+  }
+
+  // Zaplanuj aktualizację na następną klatkę animacji
+  rafId = requestAnimationFrame(() => {
+    // Użyj cache'owanych referencji zamiast querySelectorAll (znacznie szybsze)
+    // Jeśli cache jest pusty, zbuduj go (tylko raz)
+    if (cellsRefs.value.length === 0 || riversRefs.value.length === 0) {
+      buildElementRefsCache();
+    }
+
+    // Dostosuj grubość obramowań komórek na podstawie zoomu (cieńsze przy większym zoom, grubsze przy mniejszym)
+    cellsRefs.value.forEach((cell) => {
+      if (cell) {
+        const baseStrokeWidth = 0.5;
+        const adjustedWidth = Math.max(baseStrokeWidth / scale, 0.05);
+        cell.setAttribute('stroke-width', String(adjustedWidth));
+      }
+    });
+
+    // Dostosuj grubość linii rzek na podstawie zoomu
+    riversRefs.value.forEach((river) => {
+      if (river) {
+        const currentWidth = parseFloat(river.getAttribute('stroke-width') || '1');
+        const baseWidth = Math.max(currentWidth, 0.5);
+        // Rzeki powinny być bardziej widoczne, więc nie zmniejszamy tak bardzo
+        const adjustedWidth = Math.max(baseWidth / Math.sqrt(scale), 0.3);
+        river.setAttribute('stroke-width', String(adjustedWidth));
+      }
+    });
+
+    // Wyczyść ID - pozwól na kolejne wywołania
+    rafId = null;
+  });
+}
+
+/**
+ * Buduje cache referencji do elementów DOM
+ * Wywoływane tylko raz, gdy cache jest pusty
+ */
+function buildElementRefsCache(): void {
+  if (!viewboxRef.value) return;
+
+  // Zbuduj cache referencji do komórek
   const cells = viewboxRef.value.querySelectorAll('.voronoi-cell');
-  cells.forEach((cell) => {
-    const baseStrokeWidth = 0.5;
-    const adjustedWidth = Math.max(baseStrokeWidth / scale, 0.05);
-    (cell as SVGPathElement).setAttribute('stroke-width', String(adjustedWidth));
-  });
+  cellsRefs.value = Array.from(cells) as SVGPathElement[];
 
-  // Dostosuj grubość linii rzek na podstawie zoomu
+  // Zbuduj cache referencji do rzek
   const rivers = viewboxRef.value.querySelectorAll('.river-path');
-  rivers.forEach((river) => {
-    const currentWidth = parseFloat((river as SVGPathElement).getAttribute('stroke-width') || '1');
-    const baseWidth = Math.max(currentWidth, 0.5);
-    // Rzeki powinny być bardziej widoczne, więc nie zmniejszamy tak bardzo
-    const adjustedWidth = Math.max(baseWidth / Math.sqrt(scale), 0.3);
-    (river as SVGPathElement).setAttribute('stroke-width', String(adjustedWidth));
-  });
-
-  // TODO: Przyszłe ulepszenia mogą obejmować:
-  // - Dostosowanie rozmiaru etykiet
-  // - Pokazywanie/ukrywanie elementów na podstawie poziomu zoomu
-  // - Dostosowanie rozmiaru markerów
-  // - Zmianę efektów filtrów (rozmycie/cień) dla linii brzegowej
+  riversRefs.value = Array.from(rivers) as SVGPathElement[];
 }
 
 /**
@@ -718,13 +909,26 @@ function zoomTo(
     .call(zoomBehavior.transform, transform);
 }
 
-onMounted(() => {
-  initializeMap();
+onMounted(async () => {
+  await initializeMap();
   // Skonfiguruj zoom po renderowaniu SVG
+  await nextTick();
   setTimeout(() => {
     setupZoom();
+    // Zbuduj cache referencji po renderowaniu elementów
+    nextTick(() => {
+      buildElementRefsCache();
+    });
   }, 100);
 });
+
+// Re-buduj cache referencji gdy zmienia się liczba komórek lub rzek
+watch([cellPolygons, () => pack.value?.rivers], async () => {
+  await nextTick();
+  buildElementRefsCache();
+  // Wyczyść cache bounding boxów - zostanie odbudowany przy następnym obliczeniu visibleCellIndices
+  polygonBoundsCache.value.clear();
+}, { deep: true });
 
 onUnmounted(() => {
   // Wyczyść zachowanie zoomowania jeśli potrzeba
@@ -733,6 +937,14 @@ onUnmounted(() => {
     svg.on('.zoom', null);
     delete (svgRef.value as any).__zoomBehavior;
   }
+
+  // Wyczyść cache referencji i anuluj pending requestAnimationFrame
+  if (rafId !== null) {
+    cancelAnimationFrame(rafId);
+    rafId = null;
+  }
+  cellsRefs.value = [];
+  riversRefs.value = [];
 });
 </script>
 

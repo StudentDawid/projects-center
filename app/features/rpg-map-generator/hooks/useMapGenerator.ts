@@ -105,6 +105,9 @@ export function useMapGenerator() {
   const cellColorsBiomes: Ref<string[]> = shallowRef([]);
   const cellColorsHeight: Ref<string[]> = shallowRef([]);
 
+  // Cache ścieżek polygonów - memoizacja dla wydajności
+  const cellPaths: Ref<string[]> = shallowRef([]);
+
   /**
    * Generuje mapę Voronoi
    */
@@ -301,11 +304,31 @@ export function useMapGenerator() {
       ruler.value = generatedRuler;
 
       // Użyj polygonów pack, jeśli dostępne i mamy biomy, w przeciwnym razie polygony grid
-      if (packPolygons.length > 0 && generatedPack.cells.biome && packPolygons.length === generatedPack.cells.biome.length) {
-        cellPolygons.value = packPolygons;
-      } else {
-        cellPolygons.value = gridPolygons;
+      const finalPolygons = packPolygons.length > 0 && generatedPack.cells.biome && packPolygons.length === generatedPack.cells.biome.length
+        ? packPolygons
+        : gridPolygons;
+
+      cellPolygons.value = finalPolygons;
+
+      // Generuj cache ścieżek polygonów - memoizacja dla wydajności
+      // Konwertuj polygony na SVG path strings
+      const paths: string[] = [];
+      for (let i = 0; i < finalPolygons.length; i++) {
+        const polygon = finalPolygons[i];
+        if (!polygon || polygon.length === 0) {
+          paths[i] = '';
+          continue;
+        }
+
+        // Surowe polygony - nie wygładzamy pojedynczych komórek
+        let path = `M ${polygon[0]![0]} ${polygon[0]![1]}`;
+        for (let j = 1; j < polygon.length; j++) {
+          path += ` L ${polygon[j]![0]} ${polygon[j]![1]}`;
+        }
+        path += ' Z';
+        paths[i] = path;
       }
+      cellPaths.value = paths;
 
       return {
         grid: generatedGrid,
@@ -346,6 +369,7 @@ export function useMapGenerator() {
     cellPolygons.value = [];
     cellColorsBiomes.value = [];
     cellColorsHeight.value = [];
+    cellPaths.value = [];
     error.value = null;
   };
 
@@ -370,6 +394,7 @@ export function useMapGenerator() {
     cellPolygons,
     cellColorsBiomes,
     cellColorsHeight,
+    cellPaths,
     isGenerating,
     error,
     hasMap,
