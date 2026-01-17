@@ -283,6 +283,14 @@ export interface SkillCard extends BaseCard {
   effects: SpellEffect[];
   /** Wymagania */
   requirements?: Requirements;
+  /** Maksymalny poziom (1-10) */
+  maxLevel?: number;
+  /** Cel umiejętności */
+  target?: 'self' | 'single' | 'three' | 'all' | 'special';
+  /** Czas trwania */
+  duration?: 'instant' | 'scene' | 'turn';
+  /** Kategoria/szkoła umiejętności */
+  category?: string;
   /** Kategoria umiejętności */
   category?: string;
 }
@@ -293,17 +301,23 @@ export interface SkillCard extends BaseCard {
 export interface QuestCard extends BaseCard {
   type: CardType.QUEST;
   /** Poziom zadania */
-  level: number;
+  level?: number;
   /** Warunki do ukończenia */
-  conditions: QuestCondition[];
-  /** Nagrody */
-  rewards: QuestReward;
+  conditions?: QuestCondition[];
+  /** Nagrody (lista stringów) */
+  rewards?: string[];
   /** Czas na ukończenie (opcjonalnie) */
   timeLimit?: number;
   /** Zadanie główne czy poboczne */
-  isMainQuest: boolean;
+  isMainQuest?: boolean;
   /** Poprzednie zadania wymagane */
   prerequisites?: string[];
+  /** Miejsce zadania */
+  location?: string;
+  /** Ranga zadania */
+  rank?: '-' | 'D' | 'C' | 'B' | 'A' | 'S';
+  /** Klient zlecający zadanie */
+  client?: string;
 }
 
 /**
@@ -323,6 +337,14 @@ export interface ItemCard extends BaseCard {
   buyValue?: number;
   /** Maksymalna ilość w ekwipunku */
   stackSize?: number;
+  /** Liczba użyć (0-5) */
+  uses?: number;
+  /** Cel przedmiotu */
+  target?: 'self' | 'single' | 'three' | 'special';
+  /** Typ wykorzystania */
+  usageType?: 'single_use' | 'permanent' | 'see_below';
+  /** Koszt w PE (Fabula Points) */
+  fpCost?: number;
 }
 
 /**

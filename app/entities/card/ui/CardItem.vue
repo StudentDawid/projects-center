@@ -21,6 +21,14 @@
           card.slot === 'accessory',
         'card-spell':
           card.type === CardTypeEnum.SPELL,
+        'card-item':
+          card.type === CardTypeEnum.ITEM,
+        'card-skill':
+          card.type === CardTypeEnum.SKILL,
+        'card-quest':
+          card.type === CardTypeEnum.QUEST,
+        'card-location':
+          card.type === CardTypeEnum.LOCATION,
       }"
     >
       <!-- Weapon Card Design - Based on code.html -->
@@ -480,6 +488,297 @@
                 ELEMENT: {{ getSpellElement(card) }}
               </span>
             </div>
+          </div>
+        </div>
+      </template>
+
+      <!-- Item Card Design -->
+      <template
+        v-else-if="card.type === CardTypeEnum.ITEM"
+      >
+        <!-- Header with diagonal stripes -->
+        <div v-if="card.name && card.name.trim()" class="card-header">
+          <div class="card-header-diagonal" />
+          <div class="card-header-content">
+            <div class="card-header-text">
+              <h2 class="card-name">{{ card.name.toUpperCase() }}</h2>
+            </div>
+            <div class="card-header-icon">
+              <span class="material-symbols-outlined">inventory_2</span>
+            </div>
+          </div>
+        </div>
+
+        <!-- Illustration Area -->
+        <div class="card-illustration">
+          <div v-if="card.image" class="card-image">
+            <img :src="card.image" :alt="card.name" />
+            <div class="card-image-gradient" />
+          </div>
+          <div v-else class="card-image-placeholder">
+            <span class="material-symbols-outlined">inventory_2</span>
+          </div>
+        </div>
+
+        <!-- Stats Bar -->
+        <div v-if="getItemTarget(card) || getItemUsage(card)" class="card-stats-bar">
+          <div v-if="getItemTarget(card)" class="card-stat-item">
+            <span class="card-stat-icon material-symbols-outlined">target</span>
+            <span class="card-stat-text">{{ getItemTarget(card) }}</span>
+          </div>
+          <div
+            v-if="getItemTarget(card) && getItemUsage(card)"
+            class="card-stat-separator"
+          />
+          <div v-if="getItemUsage(card)" class="card-stat-item">
+            <span class="card-stat-icon material-symbols-outlined">schedule</span>
+            <span class="card-stat-text">{{ getItemUsage(card) }}</span>
+          </div>
+        </div>
+
+        <!-- Properties Section -->
+        <div class="card-body">
+          <div class="card-body-bg-icon">
+            <span class="material-symbols-outlined">inventory_2</span>
+          </div>
+          <div class="card-body-content">
+            <!-- Description -->
+            <div v-if="card.description && card.description.trim()" class="card-description">
+              <p v-html="formatDescription(card.description)" />
+            </div>
+
+            <!-- Uses section -->
+            <div v-if="getItemUses(card) > 0" class="item-uses-section">
+              <span class="item-uses-label">UŻYCIA:</span>
+              <div class="item-uses-circles">
+                <span
+                  v-for="i in getItemUses(card)"
+                  :key="i"
+                  class="item-use-circle"
+                ></span>
+              </div>
+            </div>
+          </div>
+
+          <!-- Footer Section -->
+          <div
+            class="card-footer"
+            :class="{ 'no-content-above': !card.description || (card.description && card.description.trim() === '') }"
+          >
+            <p v-if="getCardFlavor(card)" class="card-flavor">
+              {{ getCardFlavor(card) }}
+            </p>
+            <div class="card-footer-info">
+              <!-- Cost in footer -->
+              <span
+                v-if="getItemFpCost(card)"
+                class="card-footer-cost"
+                >Koszt: {{ getItemFpCost(card) }} PE</span
+              >
+              <span
+                v-else-if="'buyValue' in card && card.buyValue"
+                class="card-footer-cost"
+                >Koszt: {{ card.buyValue }} ZNT</span
+              >
+              <span
+                v-else-if="'sellValue' in card && card.sellValue"
+                class="card-footer-cost"
+                >Koszt: {{ card.sellValue }} ZNT</span
+              >
+              <span class="card-footer-rarity">{{
+                getRarityLabel(card.rarity).toUpperCase()
+              }}</span>
+            </div>
+          </div>
+        </div>
+      </template>
+
+      <!-- Skill Card Design -->
+      <template
+        v-else-if="card.type === CardTypeEnum.SKILL"
+      >
+        <!-- Header with diagonal stripes -->
+        <div v-if="card.name && card.name.trim()" class="card-header">
+          <div class="card-header-diagonal" />
+          <div class="card-header-content">
+            <div class="card-header-text">
+              <h2 class="card-name">{{ card.name.toUpperCase() }}</h2>
+              <p v-if="getSkillCategory(card)" class="card-category">{{ getSkillCategory(card).toUpperCase() }}</p>
+            </div>
+            <div class="card-header-icon">
+              <span class="material-symbols-outlined">star</span>
+            </div>
+          </div>
+        </div>
+
+        <!-- Illustration Area -->
+        <div class="card-illustration">
+          <div v-if="card.image" class="card-image">
+            <img :src="card.image" :alt="card.name" />
+            <div class="card-image-gradient" />
+          </div>
+          <div v-else class="card-image-placeholder">
+            <span class="material-symbols-outlined">star</span>
+          </div>
+        </div>
+
+        <!-- Properties Section -->
+        <div class="card-body">
+          <div class="card-body-bg-icon">
+            <span class="material-symbols-outlined">star</span>
+          </div>
+          <div class="card-body-content">
+            <!-- Description -->
+            <div v-if="card.description && card.description.trim()" class="card-description">
+              <p v-html="formatDescription(card.description)" />
+            </div>
+
+            <!-- Tags -->
+            <div v-if="card.tags && card.tags.length > 0" class="skill-tags">
+              <span
+                v-for="tag in card.tags"
+                :key="tag"
+                class="skill-tag"
+              >{{ tag.toUpperCase() }}</span>
+            </div>
+          </div>
+
+          <!-- Footer Section -->
+          <div
+            class="card-footer"
+            :class="{ 'no-content-above': !card.description || (card.description && card.description.trim() === '') }"
+          >
+            <p v-if="getCardFlavor(card)" class="card-flavor">
+              {{ getCardFlavor(card) }}
+            </p>
+            <div class="card-footer-info">
+              <span v-if="getSkillMaxLevel(card)" class="card-footer-max-level">
+                Maksymalny poziom: {{ getSkillMaxLevel(card) }}
+              </span>
+            </div>
+          </div>
+        </div>
+      </template>
+
+      <!-- Quest Card Design -->
+      <template
+        v-else-if="card.type === CardTypeEnum.QUEST"
+      >
+        <!-- Header with diagonal stripes -->
+        <div v-if="card.name && card.name.trim()" class="card-header">
+          <div class="card-header-diagonal" />
+          <div class="card-header-content">
+            <div class="card-header-text">
+              <h2 class="card-name">{{ card.name.toUpperCase() }}</h2>
+            </div>
+            <div class="card-header-icon">
+              <span class="material-symbols-outlined">task_alt</span>
+            </div>
+          </div>
+        </div>
+
+        <!-- Illustration Area -->
+        <div class="card-illustration">
+          <div v-if="card.image" class="card-image">
+            <img :src="card.image" :alt="card.name" />
+            <div class="card-image-gradient" />
+          </div>
+          <div v-else class="card-image-placeholder">
+            <span class="material-symbols-outlined">task_alt</span>
+          </div>
+        </div>
+
+        <!-- Location and Time Section -->
+        <div v-if="getQuestLocation(card) || getQuestTimeLimit(card)" class="quest-location-time">
+          <div v-if="getQuestLocation(card)" class="quest-location">
+            <span class="material-symbols-outlined">place</span>
+            <span>{{ getQuestLocation(card) }}</span>
+          </div>
+          <div
+            v-if="getQuestLocation(card) && getQuestTimeLimit(card)"
+            class="quest-separator"
+          ></div>
+          <div v-if="getQuestTimeLimit(card)" class="quest-time">
+            <span class="material-symbols-outlined">schedule</span>
+            <span>{{ getQuestTimeLimit(card) }}</span>
+          </div>
+        </div>
+
+        <!-- Properties Section -->
+        <div class="card-body">
+          <div class="card-body-bg-icon">
+            <span class="material-symbols-outlined">task_alt</span>
+          </div>
+          <div class="card-body-content">
+            <!-- Objectives Section -->
+            <div v-if="card.description && card.description.trim()" class="quest-objectives">
+              <div class="quest-description">
+                <p v-html="formatDescription(card.description)" />
+              </div>
+            </div>
+
+            <!-- Rewards Section -->
+            <div v-if="getQuestRewards(card) && getQuestRewards(card)!.length > 0" class="quest-rewards">
+              <span class="quest-section-label">NAGRODY:</span>
+              <div class="quest-rewards-list">
+                <div
+                  v-for="reward in getQuestRewards(card)"
+                  :key="reward"
+                  class="quest-reward-badge"
+                >
+                  <span class="quest-reward-icon material-symbols-outlined">
+                    {{ getRewardIcon(reward) }}
+                  </span>
+                  <span class="quest-reward-text">{{ reward.toUpperCase() }}</span>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <!-- Footer Section -->
+          <div
+            class="card-footer"
+            :class="{ 'no-content-above': !card.description || (card.description && card.description.trim() === '') }"
+          >
+            <p v-if="getCardFlavor(card)" class="card-flavor">
+              {{ getCardFlavor(card) }}
+            </p>
+            <div class="card-footer-info">
+              <span v-if="getQuestRank(card)" class="card-footer-rank">
+                RANGA: {{ getQuestRank(card) }}
+              </span>
+              <span v-if="getQuestClient(card)" class="card-footer-client">
+                KLIENT: {{ getQuestClient(card) }}
+              </span>
+            </div>
+          </div>
+        </div>
+      </template>
+
+      <!-- Location Card Design -->
+      <template
+        v-else-if="card.type === CardTypeEnum.LOCATION"
+      >
+        <!-- Header with diagonal stripes -->
+        <div v-if="card.name && card.name.trim()" class="card-header">
+          <div class="card-header-diagonal" />
+          <div class="card-header-content">
+            <div class="card-header-text">
+              <h2 class="card-name">{{ card.name.toUpperCase() }}</h2>
+            </div>
+            <div class="card-header-icon">
+              <span class="material-symbols-outlined">place</span>
+            </div>
+          </div>
+        </div>
+
+        <!-- Illustration Area -->
+        <div class="card-illustration">
+          <div v-if="card.image" class="card-image">
+            <img :src="card.image" :alt="card.name" />
+          </div>
+          <div v-else class="card-image-placeholder">
+            <span class="material-symbols-outlined">place</span>
           </div>
         </div>
       </template>
@@ -1071,6 +1370,216 @@ function getSpellElement(card: Card): string | null {
   return null;
 }
 
+// Item helper functions
+function getItemType(card: Card): string {
+  if (card.type === CardTypeEnum.ITEM) {
+    if ((card as any).consumable) {
+      return 'PRZEDMIOT JEDNORAZOWY';
+    }
+    return 'PRZEDMIOT';
+  }
+  return '';
+}
+
+function getItemCost(card: Card): string | null {
+  if (card.type === CardTypeEnum.ITEM) {
+    const fpCost = (card as any).fpCost;
+    if (fpCost !== undefined && fpCost !== null && fpCost > 0) {
+      return `${fpCost} PE`;
+    }
+    const buyValue = (card as any).buyValue;
+    if (buyValue !== undefined && buyValue !== null && buyValue > 0) {
+      return `${buyValue} ZNT`;
+    }
+  }
+  return null;
+}
+
+function getItemFpCost(card: Card): number | null {
+  if (card.type === CardTypeEnum.ITEM) {
+    const fpCost = (card as any).fpCost;
+    if (fpCost !== undefined && fpCost !== null && fpCost > 0) {
+      return fpCost;
+    }
+  }
+  return null;
+}
+
+function getItemTarget(card: Card): string | null {
+  if (card.type === CardTypeEnum.ITEM && 'target' in card) {
+    const target = (card as any).target;
+    const labels: Record<string, string> = {
+      self: 'Ty',
+      single: 'Jedna istota',
+      three: 'Do trzech istot',
+      special: 'Specjalne',
+    };
+    return labels[target] || null;
+  }
+  return null;
+}
+
+function getItemUsage(card: Card): string | null {
+  if (card.type === CardTypeEnum.ITEM && 'usageType' in card) {
+    const usageType = (card as any).usageType;
+    if (usageType === 'see_below') {
+      return null; // Don't show if "see below"
+    }
+    const labels: Record<string, string> = {
+      single_use: 'Jednorazowe',
+      permanent: 'Trwałe',
+    };
+    return labels[usageType] || null;
+  }
+  return null;
+}
+
+function getItemUses(card: Card): number {
+  if (card.type === CardTypeEnum.ITEM && 'uses' in card) {
+    const uses = (card as any).uses;
+    if (uses !== undefined && uses !== null && uses >= 1 && uses <= 5) {
+      return uses;
+    }
+  }
+  return 0;
+}
+
+// Skill helper functions
+function getSkillCategory(card: Card): string | null {
+  if (card.type === CardTypeEnum.SKILL && 'category' in card) {
+    const category = (card as any).category;
+    if (category && category.trim()) {
+      return category;
+    }
+  }
+  return null;
+}
+
+function getSkillMpCost(card: Card): string | null {
+  if (card.type === CardTypeEnum.SKILL && 'mpCost' in card) {
+    const mpCost = (card as any).mpCost;
+    if (mpCost !== undefined && mpCost !== null && mpCost > 0) {
+      return `${mpCost} MP`;
+    }
+  }
+  return null;
+}
+
+function getSkillTarget(card: Card): string | null {
+  if (card.type === CardTypeEnum.SKILL && 'target' in card) {
+    const target = (card as any).target;
+    const labels: Record<string, string> = {
+      self: 'Self',
+      single: 'Single Target',
+      three: 'Up to 3 Allies',
+      all: 'All Allies',
+      special: 'Special',
+    };
+    return labels[target] || null;
+  }
+  return null;
+}
+
+function getSkillDuration(card: Card): string | null {
+  if (card.type === CardTypeEnum.SKILL && 'duration' in card) {
+    const duration = (card as any).duration;
+    const labels: Record<string, string> = {
+      instant: 'Instant',
+      scene: 'Scene',
+      turn: 'Turn',
+    };
+    return labels[duration] || null;
+  }
+  return null;
+}
+
+function getSkillMaxLevel(card: Card): number | null {
+  if (card.type === CardTypeEnum.SKILL && 'maxLevel' in card) {
+    const maxLevel = (card as any).maxLevel;
+    if (maxLevel !== undefined && maxLevel !== null && maxLevel > 1) {
+      return maxLevel;
+    }
+  }
+  return null;
+}
+
+// Quest helper functions
+function getQuestType(card: Card): string | null {
+  if (card.type === CardTypeEnum.QUEST) {
+    if ((card as any).isMainQuest) {
+      return 'HEROIC QUEST';
+    }
+    return 'SIDE QUEST';
+  }
+  return null;
+}
+
+function getQuestLocation(card: Card): string | null {
+  if (card.type === CardTypeEnum.QUEST && 'location' in card) {
+    const location = (card as any).location;
+    if (location && location.trim()) {
+      return location;
+    }
+  }
+  return null;
+}
+
+function getQuestRewards(card: Card): string[] | null {
+  if (card.type === CardTypeEnum.QUEST && 'rewards' in card) {
+    const rewards = (card as any).rewards;
+    if (rewards && Array.isArray(rewards) && rewards.length > 0) {
+      return rewards;
+    }
+  }
+  return null;
+}
+
+function getQuestRank(card: Card): string | null {
+  if (card.type === CardTypeEnum.QUEST && 'rank' in card) {
+    const rank = (card as any).rank;
+    if (rank && rank !== '-') {
+      return rank;
+    }
+  }
+  return null;
+}
+
+function getQuestClient(card: Card): string | null {
+  if (card.type === CardTypeEnum.QUEST && 'client' in card) {
+    const client = (card as any).client;
+    if (client && client.trim()) {
+      return client;
+    }
+  }
+  return null;
+}
+
+function getQuestTimeLimit(card: Card): string | null {
+  if (card.type === CardTypeEnum.QUEST && 'timeLimit' in card) {
+    const timeLimit = (card as any).timeLimit;
+    if (timeLimit !== undefined && timeLimit !== null && timeLimit > 0) {
+      return `${timeLimit} ${timeLimit === 1 ? 'Dzień' : 'Dni'}`;
+    }
+  }
+  return null;
+}
+
+function getRewardIcon(reward: string): string {
+  // Try to detect reward type and return appropriate icon
+  const lowerReward = reward.toLowerCase();
+  if (lowerReward.includes('zenit') || lowerReward.includes('znt') || lowerReward.includes('$') || lowerReward.match(/\d+\s*(zenit|znt)/i)) {
+    return 'attach_money';
+  }
+  if (lowerReward.includes('material') || lowerReward.includes('materiał')) {
+    return 'diamond';
+  }
+  if (lowerReward.includes('exp') || lowerReward.includes('doświadczenie')) {
+    return 'star';
+  }
+  // Default icon
+  return 'inventory_2';
+}
+
 function getArmorMight(card: Card): string | null {
   // Might będzie w requirements, na razie zwracamy placeholder
   // TODO: Implementować gdy requirements będą gotowe
@@ -1152,6 +1661,18 @@ function getArmorInitiative(card: Card): string | null {
 
   &.card-spell {
     border-color: #dc2626; // Czerwony kolor obramowania dla karty czaru
+  }
+
+  &.card-item {
+    border-color: #f59e0b; // Pomarańczowy kolor obramowania dla karty przedmiotu
+  }
+
+  &.card-quest {
+    border-color: #7c3aed; // Purple color for quest card
+  }
+
+  &.card-location {
+    border-color: #3b82f6; // Blue color for location card
   }
   transition:
     transform 0.3s ease,
@@ -1291,6 +1812,46 @@ function getArmorInitiative(card: Card): string | null {
   .card-inner.card-spell & {
     background: #dc2626;
   }
+
+  .card-item &,
+  .card-inner.card-item & {
+    background: #f59e0b;
+  }
+
+  .card-skill &,
+  .card-inner.card-skill & {
+    background: #0f766e; // Teal/dark green color
+  }
+
+  .card-quest &,
+  .card-inner.card-quest & {
+    background: #7c3aed; // Purple color for quest card
+
+    .card-header-diagonal {
+      background-image: repeating-linear-gradient(
+        45deg,
+        transparent,
+        transparent 10px,
+        rgba(255, 255, 255, 0.3) 10px,
+        rgba(255, 255, 255, 0.3) 12px
+      );
+    }
+  }
+
+  .card-location &,
+  .card-inner.card-location & {
+    background: #3b82f6; // Blue color for location card
+
+    .card-header-diagonal {
+      background-image: repeating-linear-gradient(
+        45deg,
+        transparent,
+        transparent 10px,
+        rgba(255, 255, 255, 0.3) 10px,
+        rgba(255, 255, 255, 0.3) 12px
+      );
+    }
+  }
 }
 
 // Note: Old header styles for other card types removed - now using unified .card-header above
@@ -1406,6 +1967,34 @@ function getArmorInitiative(card: Card): string | null {
   .card-inner.card-spell & {
     .card-image .card-image-gradient {
       background: linear-gradient(to top, #b91c1c, transparent);
+    }
+  }
+
+  .card-item &,
+  .card-inner.card-item & {
+    .card-image .card-image-gradient {
+      background: linear-gradient(to top, #d97706, transparent);
+    }
+  }
+
+  .card-skill &,
+  .card-inner.card-skill & {
+    .card-image .card-image-gradient {
+      background: linear-gradient(to top, #0f766e, transparent);
+    }
+  }
+
+  .card-quest &,
+  .card-inner.card-quest & {
+    .card-image .card-image-gradient {
+      background: linear-gradient(to top, #6d28d9, transparent);
+    }
+  }
+
+  .card-location &,
+  .card-inner.card-location & {
+    .card-image .card-image-gradient {
+      background: linear-gradient(to top, #2563eb, transparent);
     }
   }
 }
@@ -1659,6 +2248,62 @@ function getArmorInitiative(card: Card): string | null {
       background: #991b1b;
     }
   }
+
+  .card-item &,
+  .card-inner.card-item & {
+    background: #d97706;
+    border-bottom: 1px solid #f59e0b;
+
+    .card-stat-item .card-stat-icon {
+      color: #fef3c7;
+    }
+
+    .card-stat-separator {
+      background: #92400e;
+    }
+  }
+
+  .card-skill &,
+  .card-inner.card-skill & {
+    background: #0f766e;
+    border-bottom: 1px solid #14b8a6;
+
+    .card-stat-item .card-stat-icon {
+      color: #5eead4;
+    }
+
+    .card-stat-separator {
+      background: #134e4a;
+    }
+  }
+
+  .card-quest &,
+  .card-inner.card-quest & {
+    background: #6d28d9;
+    border-bottom: 1px solid #8b5cf6;
+
+    .card-stat-item .card-stat-icon {
+      color: #c4b5fd;
+    }
+
+    .card-stat-separator {
+      background: #5b21b6;
+    }
+  }
+
+  .card-location &,
+  .card-inner.card-location & {
+    background: #2563eb;
+    border-bottom: 1px solid #3b82f6;
+
+    .card-stat-item .card-stat-icon {
+      color: #93c5fd;
+    }
+
+    .card-stat-separator {
+      background: #1e40af;
+    }
+  }
 }
 
 .card-stats-row {
@@ -1782,6 +2427,156 @@ function getArmorInitiative(card: Card): string | null {
   }
 }
 
+// Item uses section (moved outside footer, inside body content)
+.item-uses-section {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  margin-top: 12px;
+  margin-bottom: 0;
+
+  .item-uses-label {
+    font-size: 9px;
+    color: #6b7280;
+    text-transform: uppercase;
+    letter-spacing: 0.1em;
+    font-weight: 600;
+  }
+
+  .item-uses-circles {
+    display: flex;
+    gap: 4px;
+    align-items: center;
+
+    .item-use-circle {
+      width: 12px;
+      height: 12px;
+      border-radius: 50%;
+      border: 2px solid #f59e0b;
+      background: transparent;
+      flex-shrink: 0;
+    }
+  }
+}
+
+// Quest specific styles
+.quest-location-time {
+  background: #1f2937;
+  padding: 8px 16px;
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  color: white;
+  font-size: 10px;
+  font-weight: 500;
+
+  .quest-location,
+  .quest-time {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+
+    .material-symbols-outlined {
+      font-size: 14px;
+      color: #a78bfa;
+    }
+  }
+
+  .quest-separator {
+    width: 1px;
+    height: 16px;
+    background: rgba(255, 255, 255, 0.3);
+  }
+}
+
+.quest-objectives {
+  margin-bottom: 12px;
+
+  .quest-section-label {
+    display: block;
+    font-size: 9px;
+    color: #7c3aed;
+    text-transform: uppercase;
+    letter-spacing: 0.1em;
+    font-weight: 700;
+    margin-bottom: 6px;
+  }
+
+  .quest-description {
+    p {
+      color: #374151;
+      font-size: 10px;
+      line-height: 1.4;
+      margin: 0;
+    }
+  }
+}
+
+.quest-rewards {
+  margin-top: 12px;
+  margin-bottom: 0;
+
+  .quest-section-label {
+    display: block;
+    font-size: 9px;
+    color: #7c3aed;
+    text-transform: uppercase;
+    letter-spacing: 0.1em;
+    font-weight: 700;
+    margin-bottom: 8px;
+  }
+
+  .quest-rewards-list {
+    display: flex;
+    gap: 8px;
+    flex-wrap: wrap;
+
+    .quest-reward-badge {
+      display: flex;
+      align-items: center;
+      gap: 6px;
+      padding: 6px 10px;
+      background: #ede9fe;
+      border-radius: 4px;
+      font-size: 9px;
+      color: #7c3aed;
+      font-weight: 600;
+
+      .quest-reward-icon {
+        font-size: 14px;
+        color: #7c3aed;
+      }
+
+      .quest-reward-text {
+        text-transform: uppercase;
+        letter-spacing: 0.05em;
+      }
+    }
+  }
+}
+
+// Quest footer styles
+.card-footer-rank {
+  color: #9ca3af;
+  font-size: 9px;
+  text-transform: uppercase;
+  letter-spacing: 0.1em;
+}
+
+.card-footer-client {
+  color: #9ca3af;
+  font-size: 9px;
+  text-transform: uppercase;
+  letter-spacing: 0.1em;
+  margin-left: auto;
+}
+
+// Quest card body background
+.card-quest .card-body,
+.card-inner.card-quest .card-body {
+  background: #f9fafb; // Light off-white background
+}
+
 // Hover Controls
 .card-controls {
   position: absolute;
@@ -1845,86 +2640,6 @@ function getArmorInitiative(card: Card): string | null {
     font-size: 14px;
   }
 }
-
-// Armor Card Styles - Based on armor card.png design
-.card-header {
-  background: #64748b; // Stalowy szary zamiast czarnego
-  height: 56px;
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  padding: 0 16px;
-  position: relative;
-  overflow: hidden;
-  z-index: 2;
-  font-family: 'Epilogue', sans-serif;
-
-  .card-header-diagonal {
-    position: absolute;
-    inset: 0;
-    opacity: 0.2;
-    background-image: repeating-linear-gradient(
-      45deg,
-      transparent,
-      transparent 10px,
-      rgba(255, 255, 255, 0.3) 10px, // Jaśniejszy stalowy zamiast czarnego
-      rgba(255, 255, 255, 0.3) 12px
-    );
-  }
-
-  .card-header-content {
-    position: relative;
-    z-index: 10;
-    display: flex;
-    align-items: center;
-    justify-content: space-between;
-    width: 100%;
-  }
-
-  .card-header-text {
-    display: flex;
-    flex-direction: column;
-    flex: 1;
-    min-width: 0;
-  }
-
-  .card-name {
-    color: white;
-    font-family: 'Epilogue', sans-serif !important;
-    font-weight: 900;
-    font-size: 20px;
-    letter-spacing: -0.025em; // tracking-tight jak w HTML
-    text-transform: uppercase;
-    line-height: 1;
-    margin-top: 4px;
-    margin-bottom: 2px;
-  }
-
-  .card-category {
-    color: rgba(255, 255, 255, 0.9);
-    font-family: 'Epilogue', sans-serif !important;
-    font-size: 10px;
-    font-weight: 700;
-    letter-spacing: 0.1em; // tracking-widest jak w HTML
-    text-transform: uppercase;
-    margin-top: 2px;
-  }
-
-  .card-header-icon {
-    background: rgba(255, 255, 255, 0.15); // Jaśniejsze tło zamiast czarnego
-    border-radius: 4px;
-    padding: 6px;
-    flex-shrink: 0;
-    margin-left: 8px;
-
-    .material-symbols-outlined {
-      color: white;
-      font-size: 20px;
-      display: block;
-    }
-  }
-}
-
 
   .card-image {
     width: 100%;
@@ -2061,75 +2776,6 @@ function getArmorInitiative(card: Card): string | null {
   }
 }
 
-// Accessory Card Styles - Gold theme
-.card-header {
-  background: #d4af37; // Złoty kolor
-  height: 56px;
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  padding: 0 16px;
-  position: relative;
-  overflow: hidden;
-  z-index: 2;
-  font-family: 'Epilogue', sans-serif;
-
-  .card-header-diagonal {
-    position: absolute;
-    inset: 0;
-    opacity: 0.2;
-    background-image: repeating-linear-gradient(
-      45deg,
-      transparent,
-      transparent 10px,
-      rgba(255, 255, 255, 0.3) 10px,
-      rgba(255, 255, 255, 0.3) 12px
-    );
-  }
-
-  .card-header-content {
-    position: relative;
-    z-index: 10;
-    display: flex;
-    align-items: center;
-    justify-content: space-between;
-    width: 100%;
-  }
-
-  .card-header-text {
-    display: flex;
-    flex-direction: column;
-    flex: 1;
-    min-width: 0;
-  }
-
-  .card-name {
-    color: white;
-    font-family: 'Epilogue', sans-serif !important;
-    font-weight: 900;
-    font-size: 20px;
-    letter-spacing: -0.025em;
-    text-transform: uppercase;
-    line-height: 1;
-    margin-top: 4px;
-    margin-bottom: 2px;
-  }
-
-  .card-header-icon {
-    background: rgba(255, 255, 255, 0.2);
-    border-radius: 4px;
-    padding: 6px;
-    flex-shrink: 0;
-    margin-left: 8px;
-
-    .material-symbols-outlined {
-      color: white;
-      font-size: 20px;
-      display: block;
-    }
-  }
-}
-
 .card-body {
   flex: 0 0 auto;
   display: flex;
@@ -2225,99 +2871,6 @@ function getArmorInitiative(card: Card): string | null {
     }
   }
 }
-
-// Spell Card Styles - Red theme
-.card-header {
-  background: #dc2626; // Czerwony kolor
-  height: 56px;
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  padding: 0 16px;
-  position: relative;
-  overflow: hidden;
-  z-index: 2;
-  font-family: 'Epilogue', sans-serif;
-
-  .card-header-diagonal {
-    position: absolute;
-    inset: 0;
-    opacity: 0.2;
-    background-image: repeating-linear-gradient(
-      45deg,
-      transparent,
-      transparent 10px,
-      rgba(255, 255, 255, 0.3) 10px,
-      rgba(255, 255, 255, 0.3) 12px
-    );
-  }
-
-  .card-header-content {
-    position: relative;
-    z-index: 10;
-    display: flex;
-    align-items: center;
-    justify-content: space-between;
-    width: 100%;
-  }
-
-  .card-header-text {
-    display: flex;
-    flex-direction: column;
-    flex: 1;
-    min-width: 0;
-  }
-
-  .card-name {
-    color: white;
-    font-family: 'Epilogue', sans-serif !important;
-    font-weight: 900;
-    font-size: 20px;
-    letter-spacing: -0.025em;
-    text-transform: uppercase;
-    line-height: 1;
-    margin-top: 4px;
-    margin-bottom: 2px;
-    display: flex;
-    align-items: center;
-    gap: 4px;
-
-    .card-offensive-icon {
-      display: inline-flex;
-      align-items: center;
-
-      .material-symbols-outlined {
-        font-size: 20px;
-        color: #ffeb3b; // Żółty kolor błyskawicy
-      }
-    }
-  }
-
-  .card-category {
-    color: rgba(255, 255, 255, 0.9);
-    font-family: 'Epilogue', sans-serif !important;
-    font-size: 10px;
-    font-weight: 700;
-    letter-spacing: 0.1em;
-    text-transform: uppercase;
-    margin-top: 2px;
-  }
-
-  .card-header-icon {
-    background: rgba(255, 255, 255, 0.2);
-    border-radius: 4px;
-    padding: 6px;
-    flex-shrink: 0;
-    margin-left: 8px;
-
-    .material-symbols-outlined {
-      color: white;
-      font-size: 20px;
-      display: block;
-    }
-  }
-}
-
 
   .card-image {
     width: 100%;

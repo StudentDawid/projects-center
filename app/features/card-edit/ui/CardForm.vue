@@ -36,7 +36,6 @@
                     <option :value="CardTypeEnum.SKILL">Umiejętność</option>
                     <option :value="CardTypeEnum.QUEST">Zadanie</option>
                     <option :value="CardTypeEnum.ITEM">Przedmiot</option>
-                    <option :value="CardTypeEnum.NPC">NPC</option>
                     <option :value="CardTypeEnum.LOCATION">Lokacja</option>
                   </select>
                   <span v-if="hasValidated && errors.type" class="error">{{ errors.type }}</span>
@@ -45,7 +44,7 @@
             </v-row>
 
             <v-row>
-              <v-col cols="12" md="6">
+              <v-col v-if="formData.type !== CardTypeEnum.LOCATION" cols="12" md="6">
                 <div class="form-group">
                   <label for="description">Opis</label>
                   <textarea
@@ -60,7 +59,7 @@
                 </div>
               </v-col>
 
-              <v-col cols="12" md="6">
+              <v-col v-if="formData.type !== CardTypeEnum.LOCATION" cols="12" md="6">
                 <div class="form-group">
                   <label for="flavorText">Flavor Text</label>
                   <textarea
@@ -90,9 +89,9 @@
               </v-col>
 
               <!-- Koszt -->
-              <v-col cols="12" md="4">
+              <v-col v-if="formData.type !== CardTypeEnum.SKILL && formData.type !== CardTypeEnum.LOCATION" cols="12" md="4">
                 <div class="form-group">
-                  <label for="buyValue">Cena (ZNT) *</label>
+                  <label for="buyValue">Cena (ZNT)</label>
                   <div class="input-with-suffix">
                   <input
                     id="buyValue"
@@ -107,7 +106,7 @@
               </v-col>
 
               <!-- Rzadkość -->
-              <v-col cols="12" md="4">
+              <v-col v-if="formData.type !== CardTypeEnum.SKILL && formData.type !== CardTypeEnum.LOCATION" cols="12" md="4">
                 <div class="form-group">
                   <label for="rarity">Rzadkość</label>
                   <select
@@ -457,6 +456,175 @@
             </v-row>
         </div>
 
+        <!-- Item Section -->
+        <div v-if="formData.type === CardTypeEnum.ITEM" class="form-section">
+            <v-row>
+              <v-col cols="12" md="6">
+                <div class="form-group">
+                  <label for="item-uses">Użycia</label>
+                  <input
+                    id="item-uses"
+                    :value="itemData.uses ?? 0"
+                    type="number"
+                    min="0"
+                    max="5"
+                    @input="updateItemData('uses', ($event.target as HTMLInputElement).valueAsNumber)"
+                  />
+                </div>
+              </v-col>
+
+              <v-col cols="12" md="6">
+                <div class="form-group">
+                  <label for="item-target">Cel</label>
+                  <select
+                    id="item-target"
+                    :value="itemData.target"
+                    @change="updateItemData('target', ($event.target as HTMLSelectElement).value)"
+                  >
+                    <option value="single">Jedna istota</option>
+                    <option value="three">Do trzech istot</option>
+                    <option value="self">Ty</option>
+                    <option value="special">Specjalne</option>
+                  </select>
+                </div>
+              </v-col>
+            </v-row>
+
+            <v-row>
+              <v-col cols="12" md="6">
+                <div class="form-group">
+                  <label for="item-usageType">Wykorzystanie</label>
+                  <select
+                    id="item-usageType"
+                    :value="itemData.usageType"
+                    @change="updateItemData('usageType', ($event.target as HTMLSelectElement).value)"
+                  >
+                    <option value="single_use">Jednorazowe</option>
+                    <option value="permanent">Trwałe</option>
+                    <option value="see_below">Patrz poniżej</option>
+                  </select>
+                </div>
+              </v-col>
+
+              <v-col cols="12" md="6">
+                <div class="form-group">
+                  <label for="item-fpCost">Koszt w PE</label>
+                  <input
+                    id="item-fpCost"
+                    :value="itemData.fpCost ?? 0"
+                    type="number"
+                    min="0"
+                    @input="updateItemData('fpCost', ($event.target as HTMLInputElement).valueAsNumber)"
+                  />
+                </div>
+              </v-col>
+            </v-row>
+        </div>
+
+        <!-- Skill Section -->
+        <div v-if="formData.type === CardTypeEnum.SKILL" class="form-section">
+            <v-row>
+              <v-col cols="12" md="6">
+                <div class="form-group">
+                  <label for="skill-maxLevel">Max poziom</label>
+                  <input
+                    id="skill-maxLevel"
+                    :value="skillData.maxLevel ?? 1"
+                    type="number"
+                    min="1"
+                    max="10"
+                    @input="updateSkillData('maxLevel', ($event.target as HTMLInputElement).valueAsNumber)"
+                  />
+                </div>
+              </v-col>
+            </v-row>
+        </div>
+
+        <!-- Quest Section -->
+        <div v-if="formData.type === CardTypeEnum.QUEST" class="form-section">
+            <v-row>
+              <v-col cols="12" md="6">
+                <div class="form-group">
+                  <label for="quest-location">Miejsce</label>
+                  <input
+                    id="quest-location"
+                    :value="questData.location ?? ''"
+                    type="text"
+                    @input="updateQuestData('location', ($event.target as HTMLInputElement).value)"
+                  />
+                </div>
+              </v-col>
+
+              <v-col cols="12" md="6">
+                <div class="form-group">
+                  <label for="quest-rank">Ranga</label>
+                  <select
+                    id="quest-rank"
+                    :value="questData.rank ?? '-'"
+                    @change="updateQuestData('rank', ($event.target as HTMLSelectElement).value)"
+                  >
+                    <option value="-">-</option>
+                    <option value="D">D</option>
+                    <option value="C">C</option>
+                    <option value="B">B</option>
+                    <option value="A">A</option>
+                    <option value="S">S</option>
+                  </select>
+                </div>
+              </v-col>
+            </v-row>
+
+            <v-row>
+              <v-col cols="12" md="6">
+                <div class="form-group">
+                  <label for="quest-client">Klient</label>
+                  <input
+                    id="quest-client"
+                    :value="questData.client ?? ''"
+                    type="text"
+                    @input="updateQuestData('client', ($event.target as HTMLInputElement).value)"
+                  />
+                </div>
+              </v-col>
+
+              <v-col cols="12" md="6">
+                <div class="form-group">
+                  <label for="quest-timeLimit">Czas na ukończenie (dni)</label>
+                  <input
+                    id="quest-timeLimit"
+                    :value="questData.timeLimit ?? 0"
+                    type="number"
+                    min="0"
+                    @input="updateQuestData('timeLimit', ($event.target as HTMLInputElement).valueAsNumber)"
+                  />
+                </div>
+              </v-col>
+            </v-row>
+
+            <v-row>
+              <v-col cols="12">
+                <div class="form-group">
+                  <label>Nagrody</label>
+                  <div class="tags-input">
+                    <input
+                      v-model="newReward"
+                      type="text"
+                      placeholder="Dodaj nagrodę"
+                      @keydown.enter.prevent="handleAddReward"
+                    />
+                    <button type="button" @click="handleAddReward">Dodaj</button>
+                  </div>
+                  <div v-if="questData.rewards && questData.rewards.length > 0" class="tags-list">
+                    <span v-for="reward in questData.rewards" :key="reward" class="tag">
+                      {{ reward }}
+                      <button type="button" @click="handleRemoveReward(reward)" class="tag-remove">×</button>
+                    </span>
+                  </div>
+                </div>
+              </v-col>
+            </v-row>
+        </div>
+
       <!-- Tagi -->
       <div class="form-section">
         <div class="form-group">
@@ -573,6 +741,43 @@ const spellData = ref<{
   duration: 'instant',
   isOffensive: false,
 });
+
+// Item specific data
+const itemData = ref<{
+  uses: number;
+  target: 'self' | 'single' | 'three' | 'special';
+  usageType: 'single_use' | 'permanent' | 'see_below';
+  fpCost: number;
+}>({
+  uses: 0,
+  target: 'single',
+  usageType: 'single_use',
+  fpCost: 0,
+});
+
+// Skill specific data
+const skillData = ref<{
+  maxLevel: number;
+}>({
+  maxLevel: 1,
+});
+
+// Quest specific data
+const questData = ref<{
+  location: string;
+  rewards: string[];
+  rank: '-' | 'D' | 'C' | 'B' | 'A' | 'S';
+  client: string;
+  timeLimit: number;
+}>({
+  location: '',
+  rewards: [],
+  rank: '-',
+  client: '',
+  timeLimit: 0,
+});
+
+const newReward = ref('');
 
 // Initialize equipmentData from formData when editing
 onMounted(() => {
@@ -704,8 +909,51 @@ onMounted(() => {
     setField('isOffensive', spellData.value.isOffensive);
   }
 
-  // Ensure buyValue is set if not already
-  if (!(formData.value as any).buyValue) {
+  if (formData.value.type === CardTypeEnum.ITEM) {
+    // Initialize from formData if available
+    const itemFormData = formData.value as any;
+    itemData.value = {
+      uses: itemFormData.uses ?? 0,
+      target: itemFormData.target ?? 'single',
+      usageType: itemFormData.usageType ?? 'single_use',
+      fpCost: itemFormData.fpCost ?? 0,
+    };
+    // Synchronize itemData with formData
+    setField('uses', itemData.value.uses);
+    setField('target', itemData.value.target);
+    setField('usageType', itemData.value.usageType);
+    setField('fpCost', itemData.value.fpCost);
+  }
+
+  if (formData.value.type === CardTypeEnum.SKILL) {
+    // Initialize from formData if available
+    const skillFormData = formData.value as any;
+    skillData.value = {
+      maxLevel: skillFormData.maxLevel ?? 1,
+    };
+    // Synchronize skillData with formData
+    setField('maxLevel', skillData.value.maxLevel);
+  }
+
+  if (formData.value.type === CardTypeEnum.QUEST) {
+    // Initialize from formData if available
+    const questFormData = formData.value as any;
+    questData.value = {
+      location: questFormData.location ?? '',
+      rewards: questFormData.rewards ?? [],
+      rank: questFormData.rank ?? '-',
+      client: questFormData.client ?? '',
+      timeLimit: questFormData.timeLimit ?? 0,
+    };
+    // Synchronize questData with formData
+    setField('location', questData.value.location);
+    setField('rewards', questData.value.rewards);
+    setField('rank', questData.value.rank);
+    setField('client', questData.value.client);
+  }
+
+  // Ensure buyValue is set if not already (only for non-skill and non-quest cards)
+  if (formData.value.type !== CardTypeEnum.SKILL && formData.value.type !== CardTypeEnum.QUEST && !(formData.value as any).buyValue) {
     setField('buyValue', 100);
   }
 });
@@ -776,6 +1024,32 @@ watch(
       setField('duration', spellData.value.duration);
       setField('isOffensive', spellData.value.isOffensive);
     }
+
+    if (card && card.type === CardTypeEnum.SKILL) {
+      // Initialize skillData from card
+      skillData.value = {
+        maxLevel: (card as any).maxLevel ?? 1,
+      };
+      // Synchronize skillData with formData
+      setField('maxLevel', skillData.value.maxLevel);
+    }
+
+    if (card && card.type === CardTypeEnum.QUEST) {
+      // Initialize questData from card
+      questData.value = {
+        location: (card as any).location ?? '',
+        rewards: (card as any).rewards ?? [],
+        rank: (card as any).rank ?? '-',
+        client: (card as any).client ?? '',
+        timeLimit: (card as any).timeLimit ?? 0,
+      };
+      // Synchronize questData with formData
+      setField('location', questData.value.location);
+      setField('rewards', questData.value.rewards);
+      setField('rank', questData.value.rank);
+      setField('client', questData.value.client);
+      setField('timeLimit', questData.value.timeLimit);
+    }
   },
   { immediate: true }
 );
@@ -802,6 +1076,27 @@ watch(
         duration: spellData.value.duration,
         isOffensive: spellData.value.isOffensive,
         effects: [],
+      });
+    } else if (formData.value.type === CardTypeEnum.ITEM) {
+      Object.assign(formData.value, {
+        ...formData.value,
+        uses: itemData.value.uses,
+        target: itemData.value.target,
+        usageType: itemData.value.usageType,
+        fpCost: itemData.value.fpCost,
+      });
+    } else if (formData.value.type === CardTypeEnum.SKILL) {
+      Object.assign(formData.value, {
+        ...formData.value,
+        maxLevel: skillData.value.maxLevel,
+      });
+    } else if (formData.value.type === CardTypeEnum.QUEST) {
+      Object.assign(formData.value, {
+        ...formData.value,
+        location: questData.value.location,
+        rewards: questData.value.rewards,
+        rank: questData.value.rank,
+        client: questData.value.client,
       });
     }
   }
@@ -901,6 +1196,44 @@ function updateSpellData(field: string, value: any): void {
   (spellData.value as any)[field] = value;
   if (formData.value.type === CardTypeEnum.SPELL) {
     setField(field, value);
+  }
+}
+
+function updateItemData(field: string, value: any): void {
+  (itemData.value as any)[field] = value;
+  if (formData.value.type === CardTypeEnum.ITEM) {
+    setField(field, value);
+  }
+}
+
+function updateSkillData(field: string, value: any): void {
+  (skillData.value as any)[field] = value;
+  if (formData.value.type === CardTypeEnum.SKILL) {
+    setField(field, value);
+  }
+}
+
+function updateQuestData(field: string, value: any): void {
+  (questData.value as any)[field] = value;
+  if (formData.value.type === CardTypeEnum.QUEST) {
+    setField(field, value);
+  }
+}
+
+function handleAddReward(): void {
+  if (newReward.value.trim() && !questData.value.rewards.includes(newReward.value.trim())) {
+    questData.value.rewards.push(newReward.value.trim());
+    newReward.value = '';
+    if (formData.value.type === CardTypeEnum.QUEST) {
+      setField('rewards', questData.value.rewards);
+    }
+  }
+}
+
+function handleRemoveReward(reward: string): void {
+  questData.value.rewards = questData.value.rewards.filter(r => r !== reward);
+  if (formData.value.type === CardTypeEnum.QUEST) {
+    setField('rewards', questData.value.rewards);
   }
 }
 
@@ -1357,6 +1690,21 @@ function handleSubmit(): void {
     setField('target', spellData.value.target);
     setField('duration', spellData.value.duration);
     setField('isOffensive', spellData.value.isOffensive);
+  } else if (formData.value.type === CardTypeEnum.ITEM) {
+    // Synchronize all item data before validation
+    setField('uses', itemData.value.uses);
+    setField('target', itemData.value.target);
+    setField('usageType', itemData.value.usageType);
+    setField('fpCost', itemData.value.fpCost);
+  } else if (formData.value.type === CardTypeEnum.SKILL) {
+    // Synchronize all skill data before validation
+    setField('maxLevel', skillData.value.maxLevel);
+  } else if (formData.value.type === CardTypeEnum.QUEST) {
+    // Synchronize all quest data before validation
+    setField('location', questData.value.location);
+    setField('rewards', questData.value.rewards);
+    setField('rank', questData.value.rank);
+    setField('client', questData.value.client);
   }
 
   // Run validation
