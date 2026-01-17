@@ -1,3 +1,5 @@
+docs/rpg/map-generator/files/*
+
 # Logs
 logs
 *.log
