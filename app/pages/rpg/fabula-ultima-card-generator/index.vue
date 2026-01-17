@@ -75,44 +75,48 @@
 
       <!-- Canvas / Drafting Table -->
       <div class="workspace-canvas">
-        <!-- A4 Sheet Container -->
-        <div class="a4-sheet">
-          <!-- Print Margins Indicators -->
-          <div class="print-margins" />
-          <!-- Card Grid -->
-          <div class="cards-grid">
-            <CardItem
-              v-for="card in displayedCards"
-              :key="card.id"
-              :card="card"
-              @edit="handleEdit"
-              @duplicate="handleDuplicate"
-              @delete="handleDelete"
-            />
-            <!-- Add Card Slot -->
-            <NuxtLink
-              to="/rpg/fabula-ultima-card-generator/new"
-              class="empty-slot add-slot"
-            >
-              <span class="material-symbols-outlined">add_circle</span>
-              <span>Add Card</span>
-            </NuxtLink>
-            <!-- Empty Slots -->
-            <div v-for="i in emptySlots" :key="`empty-${i}`" class="empty-slot">
-              <span>Empty Slot</span>
-            </div>
+        <!-- Card Grid -->
+        <div class="cards-grid">
+          <CardItem
+            v-for="card in displayedCards"
+            :key="card.id"
+            :card="card"
+            @edit="handleEdit"
+            @duplicate="handleDuplicate"
+            @delete="handleDelete"
+          />
+          <!-- Add Card Slot -->
+          <NuxtLink
+            to="/rpg/fabula-ultima-card-generator/new"
+            class="empty-slot add-slot"
+          >
+            <span class="material-symbols-outlined">add_circle</span>
+            <span>Add Card</span>
+          </NuxtLink>
+          <!-- Empty Slots -->
+          <div v-for="i in emptySlots" :key="`empty-${i}`" class="empty-slot">
+            <span>Empty Slot</span>
           </div>
         </div>
       </div>
     </main>
+
+    <!-- Delete Confirmation Modal -->
+    <DeleteCardModal
+      :is-open="deleteModalOpen"
+      :card-name="cardToDelete?.name || ''"
+      @confirm="confirmDelete"
+      @cancel="cancelDelete"
+    />
   </div>
 </template>
 
 <script setup lang="ts">
-import { computed } from 'vue';
+import { computed, ref } from 'vue';
 import type { Card } from '~/shared/fabula-ultima-card-generator/types/card.types';
 import { useCardStore } from '~/stores/fabula-ultima-card-generator/cards';
 import CardItem from '~/features/rpg-fabula-ultima-card-generator/ui/CardItem.vue';
+import DeleteCardModal from '~/features/rpg-fabula-ultima-card-generator/ui/DeleteCardModal.vue';
 
 useHead({
   title: 'Fabula Ultima Card Creator Workspace - Projects Center',
@@ -130,6 +134,9 @@ useHead({
 
 const cardStore = useCardStore();
 const router = useRouter();
+
+const deleteModalOpen = ref(false);
+const cardToDelete = ref<Card | null>(null);
 
 const displayedCards = computed(() => {
   return cardStore.allCards.slice(0, 9); // Show max 9 cards in grid
@@ -149,9 +156,21 @@ function handleDuplicate(card: Card): void {
 }
 
 function handleDelete(card: Card): void {
-  if (confirm(`Czy na pewno chcesz usunąć kartę "${card.name}"?`)) {
-    cardStore.deleteCard(card.id);
+  cardToDelete.value = card;
+  deleteModalOpen.value = true;
+}
+
+function confirmDelete(): void {
+  if (cardToDelete.value) {
+    cardStore.deleteCard(cardToDelete.value.id);
+    deleteModalOpen.value = false;
+    cardToDelete.value = null;
   }
+}
+
+function cancelDelete(): void {
+  deleteModalOpen.value = false;
+  cardToDelete.value = null;
 }
 </script>
 
@@ -418,45 +437,20 @@ function handleDelete(card: Card): void {
   flex: 1;
   overflow-y: auto;
   overflow-x: hidden;
-  display: flex;
-  align-items: flex-start;
-  justify-content: center;
-  padding: 3rem;
-  padding-top: 3rem;
+  padding: 2rem;
   min-height: 0;
-}
-
-.a4-sheet {
-  position: relative;
-  background: white;
-  aspect-ratio: 1 / 1.414;
-  width: 800px;
-  box-shadow:
-    0 20px 25px -5px rgba(0, 0, 0, 0.1),
-    0 10px 10px -5px rgba(0, 0, 0, 0.04),
-    0 0 0 1px rgba(0, 0, 0, 0.05);
-  flex-shrink: 0;
-  transition: transform 0.2s ease;
-  padding: 10mm;
-  box-sizing: border-box;
-  min-height: 0;
-}
-
-.print-margins {
-  position: absolute;
-  inset: 5mm;
-  border: 1px dashed #e7e5e0;
-  pointer-events: none;
+  width: 100%;
 }
 
 .cards-grid {
   display: grid;
-  grid-template-columns: repeat(3, 1fr);
-  gap: 8px;
+  grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+  gap: 2rem;
+  width: 100%;
+  max-width: 100%;
   align-content: start;
   align-items: start;
   justify-items: stretch;
-  width: 100%;
 }
 
 .empty-slot {

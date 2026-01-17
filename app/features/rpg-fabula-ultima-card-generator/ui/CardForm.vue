@@ -1,397 +1,433 @@
 <template>
   <div class="card-form">
     <form @submit.prevent="handleSubmit">
-      <div class="form-section">
-        <h3>Podstawowe informacje</h3>
-        <div class="form-group">
-          <label for="name">Nazwa *</label>
-          <input
-            id="name"
-            v-model="formData.name"
-            type="text"
-            required
-            placeholder="Nazwa karty"
-            @input="setField('name', ($event.target as HTMLInputElement).value)"
-          />
-          <span v-if="errors.name" class="error">{{ errors.name }}</span>
-        </div>
-
-        <div class="form-group">
-          <label for="type">Typ karty *</label>
-          <select
-            id="type"
-            v-model="formData.type"
-            required
-            @change="setField('type', ($event.target as HTMLSelectElement).value)"
-          >
-            <option :value="CardTypeEnum.EQUIPMENT">Ekwipunek</option>
-            <option :value="CardTypeEnum.SPELL">Czar</option>
-            <option :value="CardTypeEnum.SKILL">Umiejętność</option>
-            <option :value="CardTypeEnum.QUEST">Zadanie</option>
-            <option :value="CardTypeEnum.ITEM">Przedmiot</option>
-            <option :value="CardTypeEnum.NPC">NPC</option>
-            <option :value="CardTypeEnum.LOCATION">Lokacja</option>
-          </select>
-          <span v-if="errors.type" class="error">{{ errors.type }}</span>
-        </div>
-
-        <div class="form-group">
-          <label for="description">Opis *</label>
-          <textarea
-            id="description"
-            v-model="formData.description"
-            required
-            rows="4"
-            placeholder="Opis karty"
-            @input="setField('description', ($event.target as HTMLTextAreaElement).value)"
-          ></textarea>
-          <span v-if="errors.description" class="error">{{ errors.description }}</span>
-        </div>
-
-        <div class="form-group">
-          <label for="flavorText">Flavor Text</label>
-          <textarea
-            id="flavorText"
-            v-model="formData.flavorText"
-            rows="2"
-            placeholder="Fluffowy tekst, np. cytat lub krótka historia..."
-            @input="setField('flavorText', ($event.target as HTMLTextAreaElement).value)"
-          ></textarea>
-        </div>
-
-        <div class="form-group">
-          <label for="image">Obrazek (URL)</label>
-          <input
-            id="image"
-            v-model="formData.image"
-            type="url"
-            placeholder="https://..."
-            @input="setField('image', ($event.target as HTMLInputElement).value)"
-          />
-        </div>
-
-        <div class="form-group">
-          <label>Tagi</label>
-          <div class="tags-input">
-            <input
-              v-model="newTag"
-              type="text"
-              placeholder="Dodaj tag"
-              @keydown.enter.prevent="handleAddTag"
-            />
-            <button type="button" @click="handleAddTag">Dodaj</button>
-          </div>
-          <div v-if="formData.tags && formData.tags.length > 0" class="tags-list">
-            <span v-for="tag in formData.tags" :key="tag" class="tag">
-              {{ tag }}
-              <button type="button" @click="removeTag(tag)" class="tag-remove">×</button>
-            </span>
-          </div>
-        </div>
-
-        <!-- Koszt -->
-        <div class="form-group">
-          <label for="buyValue">Cena (ZNT) *</label>
-          <div class="input-with-suffix">
-            <input
-              id="buyValue"
-              :value="formData.buyValue ?? 1"
-              type="number"
-              min="1"
-              required
-              @input="setField('buyValue', ($event.target as HTMLInputElement).valueAsNumber)"
-            />
-            <span class="input-suffix">ZNT</span>
-          </div>
-        </div>
-
-        <!-- Rzadkość -->
-        <div class="form-group">
-          <label for="rarity">Rzadkość</label>
-          <select
-            id="rarity"
-            :value="formData.rarity"
-            @change="setField('rarity', ($event.target as HTMLSelectElement).value)"
-          >
-            <option :value="RarityEnum.COMMON">Powszechna</option>
-            <option :value="RarityEnum.RARE">Rzadka</option>
-            <option :value="RarityEnum.EPIC">Epicka</option>
-            <option :value="RarityEnum.LEGENDARY">Legendarna</option>
-            <option :value="RarityEnum.DIVINE">Boska</option>
-          </select>
-        </div>
+      <!-- Tabs Navigation -->
+      <div class="tabs-nav">
+        <button
+          type="button"
+          class="tab-button"
+          :class="{ active: activeTab === 'basic', 'has-error': hasBasicTabErrors }"
+          @click="activeTab = 'basic'"
+        >
+          Podstawowe
+        </button>
+        <button
+          v-if="formData.type === CardTypeEnum.EQUIPMENT"
+          type="button"
+          class="tab-button"
+          :class="{ active: activeTab === 'equipment', 'has-error': hasEquipmentTabErrors }"
+          @click="activeTab = 'equipment'"
+        >
+          Ekwipunek
+        </button>
+        <button
+          v-if="formData.type === CardTypeEnum.SPELL"
+          type="button"
+          class="tab-button"
+          :class="{ active: activeTab === 'spell', 'has-error': hasSpellTabErrors }"
+          @click="activeTab = 'spell'"
+        >
+          Czar
+        </button>
       </div>
 
-      <!-- Equipment specific fields -->
-      <div v-if="formData.type === CardTypeEnum.EQUIPMENT" class="form-section">
-        <h3>Ekwipunek</h3>
-        <div class="form-group">
-          <label for="slot">Slot</label>
-          <select
-            id="slot"
-            v-model="equipmentData.slot"
-            @change="updateEquipmentData('slot', ($event.target as HTMLSelectElement).value)"
-          >
-            <option value="weapon">Broń</option>
-            <option value="armor">Pancerz</option>
-            <option value="accessory">Akcesorium</option>
-            <option value="shield">Tarcza</option>
-            <option value="helmet">Hełm</option>
-            <option value="boots">Buty</option>
-            <option value="gloves">Rękawice</option>
-          </select>
+      <!-- Tab Content -->
+      <div class="tabs-content">
+        <!-- Basic Tab -->
+        <div v-show="activeTab === 'basic'" class="tab-panel">
+          <div class="form-section">
+            <h3>Podstawowe informacje</h3>
+            <div class="form-group">
+              <label for="name">Nazwa *</label>
+              <input
+                id="name"
+                v-model="formData.name"
+                type="text"
+                placeholder="Nazwa karty"
+                :class="{ 'has-error': hasValidated && errors.name }"
+                @input="setField('name', ($event.target as HTMLInputElement).value)"
+              />
+              <span v-if="hasValidated && errors.name" class="error">{{ errors.name }}</span>
+            </div>
+
+            <div class="form-group">
+              <label for="type">Typ karty *</label>
+              <select
+                id="type"
+                v-model="formData.type"
+                :class="{ 'has-error': hasValidated && errors.type }"
+                @change="setField('type', ($event.target as HTMLSelectElement).value)"
+              >
+                <option :value="CardTypeEnum.EQUIPMENT">Ekwipunek</option>
+                <option :value="CardTypeEnum.SPELL">Czar</option>
+                <option :value="CardTypeEnum.SKILL">Umiejętność</option>
+                <option :value="CardTypeEnum.QUEST">Zadanie</option>
+                <option :value="CardTypeEnum.ITEM">Przedmiot</option>
+                <option :value="CardTypeEnum.NPC">NPC</option>
+                <option :value="CardTypeEnum.LOCATION">Lokacja</option>
+              </select>
+              <span v-if="hasValidated && errors.type" class="error">{{ errors.type }}</span>
+            </div>
+
+            <div class="form-group">
+              <label for="description">Opis *</label>
+              <textarea
+                id="description"
+                v-model="formData.description"
+                rows="4"
+                placeholder="Opis karty"
+                :class="{ 'has-error': hasValidated && errors.description }"
+                @input="setField('description', ($event.target as HTMLTextAreaElement).value)"
+              ></textarea>
+              <span v-if="hasValidated && errors.description" class="error">{{ errors.description }}</span>
+            </div>
+
+            <div class="form-group">
+              <label for="flavorText">Flavor Text</label>
+              <textarea
+                id="flavorText"
+                v-model="formData.flavorText"
+                rows="2"
+                placeholder="Fluffowy tekst, np. cytat lub krótka historia..."
+                @input="setField('flavorText', ($event.target as HTMLTextAreaElement).value)"
+              ></textarea>
+            </div>
+
+            <div class="form-group">
+              <label for="image">Obrazek (URL)</label>
+              <input
+                id="image"
+                v-model="formData.image"
+                type="url"
+                placeholder="https://..."
+                @input="setField('image', ($event.target as HTMLInputElement).value)"
+              />
+            </div>
+
+            <div class="form-group">
+              <label>Tagi</label>
+              <div class="tags-input">
+                <input
+                  v-model="newTag"
+                  type="text"
+                  placeholder="Dodaj tag"
+                  @keydown.enter.prevent="handleAddTag"
+                />
+                <button type="button" @click="handleAddTag">Dodaj</button>
+              </div>
+              <div v-if="formData.tags && formData.tags.length > 0" class="tags-list">
+                <span v-for="tag in formData.tags" :key="tag" class="tag">
+                  {{ tag }}
+                  <button type="button" @click="removeTag(tag)" class="tag-remove">×</button>
+                </span>
+              </div>
+            </div>
+
+            <!-- Koszt -->
+            <div class="form-group">
+              <label for="buyValue">Cena (ZNT) *</label>
+              <div class="input-with-suffix">
+                <input
+                  id="buyValue"
+                  :value="formData.buyValue ?? 100"
+                  type="number"
+                  min="1"
+                  @input="setField('buyValue', ($event.target as HTMLInputElement).valueAsNumber)"
+                />
+                <span class="input-suffix">ZNT</span>
+              </div>
+            </div>
+
+            <!-- Rzadkość -->
+            <div class="form-group">
+              <label for="rarity">Rzadkość</label>
+              <select
+                id="rarity"
+                :value="formData.rarity"
+                @change="setField('rarity', ($event.target as HTMLSelectElement).value)"
+              >
+                <option :value="RarityEnum.COMMON">Powszechna</option>
+                <option :value="RarityEnum.RARE">Rzadka</option>
+                <option :value="RarityEnum.EPIC">Epicka</option>
+                <option :value="RarityEnum.LEGENDARY">Legendarna</option>
+                <option :value="RarityEnum.DIVINE">Boska</option>
+              </select>
+            </div>
+          </div>
         </div>
 
-        <!-- Weapon specific fields -->
-        <template v-if="equipmentData.slot === 'weapon'">
-          <!-- Precyzja -->
-          <div class="form-group">
-            <label>Precyzja</label>
-            <div class="form-row">
+        <!-- Equipment Tab -->
+        <div v-if="formData.type === CardTypeEnum.EQUIPMENT" v-show="activeTab === 'equipment'" class="tab-panel">
+          <div class="form-section">
+            <h3>Ekwipunek</h3>
+            <div class="form-group">
+              <label for="slot">Slot</label>
+              <select
+                id="slot"
+                v-model="equipmentData.slot"
+                @change="updateEquipmentData('slot', ($event.target as HTMLSelectElement).value)"
+              >
+                <option value="weapon">Broń</option>
+                <option value="armor">Pancerz</option>
+                <option value="accessory">Akcesorium</option>
+                <option value="shield">Tarcza</option>
+                <option value="helmet">Hełm</option>
+                <option value="boots">Buty</option>
+                <option value="gloves">Rękawice</option>
+              </select>
+            </div>
+
+            <!-- Weapon specific fields -->
+            <template v-if="equipmentData.slot === 'weapon'">
+              <!-- Precyzja -->
               <div class="form-group">
-                <label for="accuracy-stat1">Statystyka 1</label>
+                <label>Precyzja</label>
+                <div class="form-row">
+                  <div class="form-group">
+                    <label for="accuracy-stat1">Statystyka 1</label>
+                    <select
+                      id="accuracy-stat1"
+                      :value="equipmentData.stats.accuracy?.stat1"
+                      @change="updateAccuracyStat('stat1', ($event.target as HTMLSelectElement).value)"
+                    >
+                      <option :value="AccuracyStatEnum.ZR">ZR (Zręczność)</option>
+                      <option :value="AccuracyStatEnum.PO">PO (Postawa)</option>
+                      <option :value="AccuracyStatEnum.WJ">WJ (Wola)</option>
+                      <option :value="AccuracyStatEnum.SW">SW (Siła Woli)</option>
+                    </select>
+                  </div>
+                  <div class="form-group">
+                    <label for="accuracy-stat2">Statystyka 2</label>
+                    <select
+                      id="accuracy-stat2"
+                      :value="equipmentData.stats.accuracy?.stat2"
+                      @change="updateAccuracyStat('stat2', ($event.target as HTMLSelectElement).value)"
+                    >
+                      <option :value="AccuracyStatEnum.ZR">ZR (Zręczność)</option>
+                      <option :value="AccuracyStatEnum.PO">PO (Postawa)</option>
+                      <option :value="AccuracyStatEnum.WJ">WJ (Wola)</option>
+                      <option :value="AccuracyStatEnum.SW">SW (Siła Woli)</option>
+                    </select>
+                  </div>
+                  <div class="form-group">
+                    <label for="accuracy-modifier">Modyfikator</label>
+                    <input
+                      id="accuracy-modifier"
+                      :value="equipmentData.stats.accuracy?.modifier ?? 0"
+                      type="number"
+                      min="0"
+                      @input="updateAccuracyModifier(($event.target as HTMLInputElement).valueAsNumber)"
+                    />
+                  </div>
+                </div>
+              </div>
+
+              <!-- Obrażenia -->
+              <div class="form-group">
+                <label>Obrażenia</label>
+                <div class="form-row">
+                  <div class="form-group">
+                    <label for="damage-modifier">Modyfikator [WW + X]</label>
+                    <input
+                      id="damage-modifier"
+                      :value="equipmentData.stats.damage?.modifier ?? 0"
+                      type="number"
+                      min="0"
+                      @input="updateDamageModifier(($event.target as HTMLInputElement).valueAsNumber)"
+                    />
+                  </div>
+                  <div class="form-group">
+                    <label for="damage-type">Typ obrażeń</label>
+                    <select
+                      id="damage-type"
+                      :value="equipmentData.stats.damage?.type"
+                      @change="updateDamageType(($event.target as HTMLSelectElement).value)"
+                    >
+                      <option :value="DamageTypeEnum.PHYSICAL">Fizyczne</option>
+                      <option :value="DamageTypeEnum.FIRE">Ogniste</option>
+                      <option :value="DamageTypeEnum.ICE">Lodowe</option>
+                      <option :value="DamageTypeEnum.ELECTRIC">Elektryczne</option>
+                      <option :value="DamageTypeEnum.POISON">Trujące</option>
+                      <option :value="DamageTypeEnum.EARTH">Ziemne</option>
+                      <option :value="DamageTypeEnum.LIGHT">Świetliste</option>
+                      <option :value="DamageTypeEnum.DARK">Mroczne</option>
+                      <option :value="DamageTypeEnum.AIR">Powietrzne</option>
+                    </select>
+                  </div>
+                </div>
+              </div>
+
+              <!-- Typ chwytu -->
+              <div class="form-group">
+                <label for="weaponHands">Typ chwytu</label>
                 <select
-                  id="accuracy-stat1"
-                  :value="equipmentData.stats.accuracy?.stat1"
-                  @change="updateAccuracyStat('stat1', ($event.target as HTMLSelectElement).value)"
+                  id="weaponHands"
+                  :value="equipmentData.weaponHands"
+                  @change="updateEquipmentData('weaponHands', ($event.target as HTMLSelectElement).value)"
                 >
-                  <option :value="AccuracyStatEnum.ZR">ZR (Zręczność)</option>
-                  <option :value="AccuracyStatEnum.PO">PO (Postawa)</option>
-                  <option :value="AccuracyStatEnum.WJ">WJ (Wola)</option>
-                  <option :value="AccuracyStatEnum.SW">SW (Siła Woli)</option>
+                  <option :value="WeaponHandsEnum.ONE_HANDED">Jednoręczna</option>
+                  <option :value="WeaponHandsEnum.TWO_HANDED">Dwuręczna</option>
                 </select>
               </div>
+
+              <!-- Typ broni -->
               <div class="form-group">
-                <label for="accuracy-stat2">Statystyka 2</label>
+                <label for="weaponType">Typ broni</label>
                 <select
-                  id="accuracy-stat2"
-                  :value="equipmentData.stats.accuracy?.stat2"
-                  @change="updateAccuracyStat('stat2', ($event.target as HTMLSelectElement).value)"
+                  id="weaponType"
+                  :value="equipmentData.weaponType"
+                  @change="updateEquipmentData('weaponType', ($event.target as HTMLSelectElement).value)"
                 >
-                  <option :value="AccuracyStatEnum.ZR">ZR (Zręczność)</option>
-                  <option :value="AccuracyStatEnum.PO">PO (Postawa)</option>
-                  <option :value="AccuracyStatEnum.WJ">WJ (Wola)</option>
-                  <option :value="AccuracyStatEnum.SW">SW (Siła Woli)</option>
+                  <option :value="WeaponTypeEnum.MELEE">Biała</option>
+                  <option :value="WeaponTypeEnum.RANGED">Dystansowa</option>
                 </select>
               </div>
+            </template>
+
+            <!-- Armor specific fields -->
+            <template v-else-if="equipmentData.slot === 'armor'">
+              <!-- Pancerz -->
               <div class="form-group">
-                <label for="accuracy-modifier">Modyfikator</label>
+                <label>Pancerz</label>
+                <div class="form-row" style="align-items: center; gap: 8px;">
+                  <select
+                    :value="getArmorDefenseSelectValue('defense')"
+                    @change="setArmorDefenseTypeFromSelect('defense', ($event.target as HTMLSelectElement).value)"
+                  >
+                    <option value="-">-</option>
+                    <option value="die">Kość ZR</option>
+                  </select>
+                  <button
+                    v-if="getArmorDefenseSelectValue('defense') === 'die'"
+                    type="button"
+                    @click="toggleArmorDefenseModifierSign('defense')"
+                    style="font-weight: bold; background: none; border: 1px solid #ccc; padding: 4px 6px; cursor: pointer; min-width: 32px;"
+                  >
+                    {{ getArmorDefenseModifierSign('defense') }}
+                  </button>
+                  <input
+                    :value="getArmorDefenseValue('defense')"
+                    type="number"
+                    min="0"
+                    style="width: 80px;"
+                    @input="updateArmorDefenseValue('defense', ($event.target as HTMLInputElement).valueAsNumber)"
+                  />
+                </div>
+              </div>
+
+              <!-- M. Pancerz -->
+              <div class="form-group">
+                <label>M. Pancerz</label>
+                <div class="form-row" style="align-items: center; gap: 8px;">
+                  <select
+                    :value="getArmorDefenseSelectValue('magicDefense')"
+                    @change="setArmorDefenseTypeFromSelect('magicDefense', ($event.target as HTMLSelectElement).value)"
+                  >
+                    <option value="-">-</option>
+                    <option value="die">Kość WJ</option>
+                  </select>
+                  <button
+                    v-if="getArmorDefenseSelectValue('magicDefense') === 'die'"
+                    type="button"
+                    @click="toggleArmorDefenseModifierSign('magicDefense')"
+                    style="font-weight: bold; background: none; border: 1px solid #ccc; padding: 4px 6px; cursor: pointer; min-width: 32px;"
+                  >
+                    {{ getArmorDefenseModifierSign('magicDefense') }}
+                  </button>
+                  <input
+                    :value="getArmorDefenseValue('magicDefense')"
+                    type="number"
+                    min="0"
+                    style="width: 80px;"
+                    @input="updateArmorDefenseValue('magicDefense', ($event.target as HTMLInputElement).valueAsNumber)"
+                  />
+                </div>
+              </div>
+
+              <!-- Inicjatywa -->
+              <div class="form-group">
+                <label>Inicjatywa</label>
+                <div class="form-row" style="align-items: center; gap: 8px;">
+                  <button
+                    type="button"
+                    @click="toggleInitiativeSign()"
+                    style="font-weight: bold; background: none; border: 1px solid #ccc; padding: 4px 6px; cursor: pointer; min-width: 32px;"
+                  >
+                    {{ getInitiativeSign() }}
+                  </button>
+                  <input
+                    :value="getInitiativeNumber()"
+                    type="number"
+                    min="0"
+                    style="width: 80px;"
+                    @input="updateInitiativeValue(($event.target as HTMLInputElement).valueAsNumber)"
+                  />
+                </div>
+              </div>
+            </template>
+
+            <!-- Other equipment types -->
+            <template v-else>
+              <div class="form-group">
+                <label for="magic">Magia</label>
                 <input
-                  id="accuracy-modifier"
-                  :value="equipmentData.stats.accuracy?.modifier ?? 0"
+                  id="magic"
+                  v-model.number="equipmentData.stats.magic"
                   type="number"
                   min="0"
-                  @input="updateAccuracyModifier(($event.target as HTMLInputElement).valueAsNumber)"
+                  @input="updateEquipmentStats('magic', ($event.target as HTMLInputElement).valueAsNumber)"
+                />
+              </div>
+            </template>
+          </div>
+        </div>
+
+        <!-- Spell Tab -->
+        <div v-if="formData.type === CardTypeEnum.SPELL" v-show="activeTab === 'spell'" class="tab-panel">
+          <div class="form-section">
+            <h3>Czar</h3>
+            <div class="form-row">
+              <div class="form-group">
+                <label for="mpCost">Koszt MP *</label>
+                <input
+                  id="mpCost"
+                  v-model.number="spellData.mpCost"
+                  type="number"
+                  min="0"
+                  @input="updateSpellData('mpCost', ($event.target as HTMLInputElement).valueAsNumber)"
+                />
+              </div>
+              <div class="form-group">
+                <label for="fpCost">Koszt FP</label>
+                <input
+                  id="fpCost"
+                  v-model.number="spellData.fpCost"
+                  type="number"
+                  min="0"
+                  @input="updateSpellData('fpCost', ($event.target as HTMLInputElement).valueAsNumber)"
                 />
               </div>
             </div>
-          </div>
-
-          <!-- Obrażenia -->
-          <div class="form-group">
-            <label>Obrażenia</label>
-            <div class="form-row">
-              <div class="form-group">
-                <label for="damage-modifier">Modyfikator [WW + X]</label>
-                <input
-                  id="damage-modifier"
-                  :value="equipmentData.stats.damage?.modifier ?? 0"
-                  type="number"
-                  min="0"
-                  @input="updateDamageModifier(($event.target as HTMLInputElement).valueAsNumber)"
-                />
-              </div>
-              <div class="form-group">
-                <label for="damage-type">Typ obrażeń</label>
-                <select
-                  id="damage-type"
-                  :value="equipmentData.stats.damage?.type"
-                  @change="updateDamageType(($event.target as HTMLSelectElement).value)"
-                >
-                  <option :value="DamageTypeEnum.PHYSICAL">Fizyczne</option>
-                  <option :value="DamageTypeEnum.FIRE">Ogniste</option>
-                  <option :value="DamageTypeEnum.ICE">Lodowe</option>
-                  <option :value="DamageTypeEnum.ELECTRIC">Elektryczne</option>
-                  <option :value="DamageTypeEnum.POISON">Trujące</option>
-                  <option :value="DamageTypeEnum.EARTH">Ziemne</option>
-                  <option :value="DamageTypeEnum.LIGHT">Świetliste</option>
-                  <option :value="DamageTypeEnum.DARK">Mroczne</option>
-                  <option :value="DamageTypeEnum.AIR">Powietrzne</option>
-                </select>
-              </div>
-            </div>
-          </div>
-
-          <!-- Typ chwytu -->
-          <div class="form-group">
-            <label for="weaponHands">Typ chwytu</label>
-            <select
-              id="weaponHands"
-              :value="equipmentData.weaponHands"
-              @change="updateEquipmentData('weaponHands', ($event.target as HTMLSelectElement).value)"
-            >
-              <option :value="WeaponHandsEnum.ONE_HANDED">Jednoręczna</option>
-              <option :value="WeaponHandsEnum.TWO_HANDED">Dwuręczna</option>
-            </select>
-          </div>
-
-          <!-- Typ broni -->
-          <div class="form-group">
-            <label for="weaponType">Typ broni</label>
-            <select
-              id="weaponType"
-              :value="equipmentData.weaponType"
-              @change="updateEquipmentData('weaponType', ($event.target as HTMLSelectElement).value)"
-            >
-              <option :value="WeaponTypeEnum.MELEE">Biała</option>
-              <option :value="WeaponTypeEnum.RANGED">Dystansowa</option>
-            </select>
-          </div>
-
-        </template>
-
-        <!-- Armor specific fields -->
-        <template v-else-if="equipmentData.slot === 'armor'">
-          <!-- Pancerz -->
-          <div class="form-group">
-            <label>Pancerz</label>
-            <div class="form-row" style="align-items: center; gap: 8px;">
+            <div class="form-group">
+              <label for="range">Zakres</label>
               <select
-                :value="getArmorDefenseSelectValue('defense')"
-                @change="setArmorDefenseTypeFromSelect('defense', ($event.target as HTMLSelectElement).value)"
+                id="range"
+                v-model="spellData.range"
+                @change="updateSpellData('range', ($event.target as HTMLSelectElement).value)"
               >
-                <option value="-">-</option>
-                <option value="die">Kość ZR</option>
+                <option value="self">Siębie</option>
+                <option value="single">Pojedynczy</option>
+                <option value="area">Obszar</option>
+                <option value="all">Wszyscy</option>
               </select>
-              <button
-                v-if="getArmorDefenseSelectValue('defense') === 'die'"
-                type="button"
-                @click="toggleArmorDefenseModifierSign('defense')"
-                style="font-weight: bold; background: none; border: 1px solid #ccc; padding: 4px 6px; cursor: pointer; min-width: 32px;"
-              >
-                {{ getArmorDefenseModifierSign('defense') }}
-              </button>
-              <input
-                :value="getArmorDefenseValue('defense')"
-                type="number"
-                min="0"
-                style="width: 80px;"
-                @input="updateArmorDefenseValue('defense', ($event.target as HTMLInputElement).valueAsNumber)"
-              />
             </div>
           </div>
-
-          <!-- M. Pancerz -->
-          <div class="form-group">
-            <label>M. Pancerz</label>
-            <div class="form-row" style="align-items: center; gap: 8px;">
-              <select
-                :value="getArmorDefenseSelectValue('magicDefense')"
-                @change="setArmorDefenseTypeFromSelect('magicDefense', ($event.target as HTMLSelectElement).value)"
-              >
-                <option value="-">-</option>
-                <option value="die">Kość WJ</option>
-              </select>
-              <button
-                v-if="getArmorDefenseSelectValue('magicDefense') === 'die'"
-                type="button"
-                @click="toggleArmorDefenseModifierSign('magicDefense')"
-                style="font-weight: bold; background: none; border: 1px solid #ccc; padding: 4px 6px; cursor: pointer; min-width: 32px;"
-              >
-                {{ getArmorDefenseModifierSign('magicDefense') }}
-              </button>
-              <input
-                :value="getArmorDefenseValue('magicDefense')"
-                type="number"
-                min="0"
-                style="width: 80px;"
-                @input="updateArmorDefenseValue('magicDefense', ($event.target as HTMLInputElement).valueAsNumber)"
-              />
-            </div>
-          </div>
-
-          <!-- Inicjatywa -->
-          <div class="form-group">
-            <label>Inicjatywa</label>
-            <div class="form-row" style="align-items: center; gap: 8px;">
-              <button
-                type="button"
-                @click="toggleInitiativeSign()"
-                style="font-weight: bold; background: none; border: 1px solid #ccc; padding: 4px 6px; cursor: pointer; min-width: 32px;"
-              >
-                {{ getInitiativeSign() }}
-              </button>
-              <input
-                :value="getInitiativeNumber()"
-                type="number"
-                min="0"
-                style="width: 80px;"
-                @input="updateInitiativeValue(($event.target as HTMLInputElement).valueAsNumber)"
-              />
-            </div>
-          </div>
-
-        </template>
-
-        <!-- Other equipment types -->
-        <template v-else>
-          <div class="form-group">
-            <label for="magic">Magia</label>
-            <input
-              id="magic"
-              v-model.number="equipmentData.stats.magic"
-              type="number"
-              min="0"
-              @input="updateEquipmentStats('magic', ($event.target as HTMLInputElement).valueAsNumber)"
-            />
-          </div>
-        </template>
-      </div>
-
-      <!-- Spell specific fields -->
-      <div v-if="formData.type === CardTypeEnum.SPELL" class="form-section">
-        <h3>Czar</h3>
-        <div class="form-row">
-          <div class="form-group">
-            <label for="mpCost">Koszt MP *</label>
-            <input
-              id="mpCost"
-              v-model.number="spellData.mpCost"
-              type="number"
-              min="0"
-              required
-              @input="updateSpellData('mpCost', ($event.target as HTMLInputElement).valueAsNumber)"
-            />
-          </div>
-          <div class="form-group">
-            <label for="fpCost">Koszt FP</label>
-            <input
-              id="fpCost"
-              v-model.number="spellData.fpCost"
-              type="number"
-              min="0"
-              @input="updateSpellData('fpCost', ($event.target as HTMLInputElement).valueAsNumber)"
-            />
-          </div>
-        </div>
-        <div class="form-group">
-          <label for="range">Zakres</label>
-          <select
-            id="range"
-            v-model="spellData.range"
-            @change="updateSpellData('range', ($event.target as HTMLSelectElement).value)"
-          >
-            <option value="self">Siębie</option>
-            <option value="single">Pojedynczy</option>
-            <option value="area">Obszar</option>
-            <option value="all">Wszyscy</option>
-          </select>
         </div>
       </div>
 
       <div class="form-actions">
         <button type="button" class="btn-secondary" @click="$emit('cancel')">Anuluj</button>
-        <button type="submit" class="btn-primary" :disabled="!isValid">Zapisz</button>
+        <button type="submit" class="btn-primary" :disabled="hasValidated && !isValid">Zapisz</button>
       </div>
     </form>
   </div>
@@ -419,7 +455,51 @@ const emit = defineEmits<{
   cancel: [];
 }>();
 
-const { formData, errors, isValid, setField, addTag, removeTag, save } = useCardForm(props.card);
+const { formData, errors, isValid, setField, addTag, removeTag, save, validate } = useCardForm(props.card);
+
+const hasValidated = ref(false);
+const activeTab = ref<'basic' | 'equipment' | 'spell'>('basic');
+
+// Check if tabs have errors
+const hasBasicTabErrors = computed(() => {
+  return hasValidated.value && (!!errors.value.name || !!errors.value.type || !!errors.value.description);
+});
+
+const hasEquipmentTabErrors = computed(() => {
+  // For now, equipment tab doesn't have validated fields
+  // But we can add checks here in the future if needed
+  return false;
+});
+
+const hasSpellTabErrors = computed(() => {
+  // For now, spell tab doesn't have validated fields
+  // But we can add checks here in the future if needed
+  return false;
+});
+
+// Auto-switch tab when card type changes
+watch(
+  () => formData.value.type,
+  (newType) => {
+    if (newType === CardTypeEnum.EQUIPMENT) {
+      activeTab.value = 'equipment';
+    } else if (newType === CardTypeEnum.SPELL) {
+      activeTab.value = 'spell';
+    } else {
+      activeTab.value = 'basic';
+    }
+  }
+);
+
+// Reset hasValidated when all errors are fixed
+watch(
+  () => Object.keys(errors.value).length,
+  (errorCount) => {
+    if (errorCount === 0 && hasValidated.value) {
+      hasValidated.value = false;
+    }
+  }
+);
 
 // Expose formData for parent components to access
 defineExpose({
@@ -484,7 +564,15 @@ onMounted(() => {
       weaponType: isWeapon ? (props.card.weaponType ?? WeaponTypeEnum.MELEE) : undefined,
       weaponHands: isWeapon ? (props.card.weaponHands ?? WeaponHandsEnum.ONE_HANDED) : undefined,
     };
-  } else if (formData.value.type === CardTypeEnum.EQUIPMENT && 'slot' in formData.value) {
+
+    // Synchronize equipmentData with formData
+    setField('slot', equipmentData.value.slot);
+    setField('stats', equipmentData.value.stats);
+    if (isWeapon) {
+      setField('weaponType', equipmentData.value.weaponType);
+      setField('weaponHands', equipmentData.value.weaponHands);
+    }
+  } else if (formData.value.type === CardTypeEnum.EQUIPMENT) {
     // Initialize from formData if available
     const slot = (formData.value as any).slot || 'weapon';
     const isWeapon = slot === 'weapon';
@@ -513,6 +601,19 @@ onMounted(() => {
       weaponType: isWeapon ? ((formData.value as any).weaponType ?? WeaponTypeEnum.MELEE) : undefined,
       weaponHands: isWeapon ? ((formData.value as any).weaponHands ?? WeaponHandsEnum.ONE_HANDED) : undefined,
     };
+
+    // Synchronize equipmentData with formData
+    setField('slot', equipmentData.value.slot);
+    setField('stats', equipmentData.value.stats);
+    if (isWeapon) {
+      setField('weaponType', equipmentData.value.weaponType);
+      setField('weaponHands', equipmentData.value.weaponHands);
+    }
+  }
+
+  // Ensure buyValue is set if not already
+  if (!formData.value.buyValue) {
+    setField('buyValue', 100);
   }
 });
 
@@ -547,6 +648,14 @@ watch(
         weaponType: isWeapon ? (card.weaponType ?? WeaponTypeEnum.MELEE) : undefined,
         weaponHands: isWeapon ? (card.weaponHands ?? WeaponHandsEnum.ONE_HANDED) : undefined,
       };
+
+      // Synchronize equipmentData with formData
+      setField('slot', equipmentData.value.slot);
+      setField('stats', equipmentData.value.stats);
+      if (isWeapon) {
+        setField('weaponType', equipmentData.value.weaponType);
+        setField('weaponHands', equipmentData.value.weaponHands);
+      }
     }
   },
   { immediate: true }
@@ -992,22 +1101,31 @@ function updateInitiativeValue(value: number): void {
 }
 
 function handleSubmit(): void {
-  try {
-    // Synchronize all equipment data before saving
-    if (formData.value.type === CardTypeEnum.EQUIPMENT) {
-      setField('slot', equipmentData.value.slot);
-      setField('stats', equipmentData.value.stats);
-      // buyValue and rarity are now in formData directly, no need to sync from equipmentData
-      if (equipmentData.value.slot === 'weapon') {
-        setField('weaponType', equipmentData.value.weaponType);
-        setField('weaponHands', equipmentData.value.weaponHands);
-      }
-    }
+  // Mark that validation has been attempted
+  hasValidated.value = true;
 
-    const savedCard = save();
-    emit('save', savedCard);
-  } catch (error) {
-    console.error('Błąd zapisu:', error);
+  // Synchronize all equipment data before validation
+  if (formData.value.type === CardTypeEnum.EQUIPMENT) {
+    setField('slot', equipmentData.value.slot);
+    setField('stats', equipmentData.value.stats);
+    // buyValue and rarity are now in formData directly, no need to sync from equipmentData
+    if (equipmentData.value.slot === 'weapon') {
+      setField('weaponType', equipmentData.value.weaponType);
+      setField('weaponHands', equipmentData.value.weaponHands);
+    }
+  }
+
+  // Run validation
+  const isValidForm = validate();
+
+  // Only save if validation passes
+  if (isValidForm) {
+    try {
+      const savedCard = save();
+      emit('save', savedCard);
+    } catch (error) {
+      console.error('Błąd zapisu:', error);
+    }
   }
 }
 </script>
@@ -1081,6 +1199,86 @@ function handleSubmit(): void {
   }
 }
 
+// Tabs Navigation
+.tabs-nav {
+  display: flex;
+  gap: 0.5rem;
+  margin-bottom: 2rem;
+  border-bottom: 2px solid #a58c6f;
+  padding-bottom: 0;
+}
+
+.tab-button {
+  padding: 0.75rem 1.5rem;
+  background: transparent;
+  border: none;
+  border-bottom: 3px solid transparent;
+  color: #8b5a3c;
+  font-size: 0.95rem;
+  font-weight: 600;
+  font-family: 'Cinzel', 'Georgia', serif;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  position: relative;
+  bottom: -2px;
+  margin-bottom: -2px;
+
+  &:hover {
+    color: #b68c4f;
+    background: rgba(182, 140, 79, 0.05);
+  }
+
+  &.active {
+    color: #b68c4f;
+    border-bottom-color: #b68c4f;
+    background: rgba(182, 140, 79, 0.1);
+  }
+
+  &.has-error {
+    color: #dc2626;
+    border-bottom-color: #dc2626;
+    background: rgba(254, 242, 242, 0.3);
+    position: relative;
+
+    &::after {
+      content: '';
+      position: absolute;
+      top: 50%;
+      right: 0.5rem;
+      transform: translateY(-50%);
+      width: 8px;
+      height: 8px;
+      background: #dc2626;
+      border-radius: 50%;
+    }
+
+    &.active {
+      color: #dc2626;
+      border-bottom-color: #dc2626;
+      background: rgba(254, 242, 242, 0.5);
+    }
+  }
+}
+
+.tabs-content {
+  min-height: 400px;
+}
+
+.tab-panel {
+  animation: fadeIn 0.2s ease;
+}
+
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+    transform: translateY(5px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
 .form-group {
   margin-bottom: 1.5rem;
 
@@ -1120,6 +1318,22 @@ function handleSubmit(): void {
     &::placeholder {
       color: #8b7d6b;
       font-style: italic;
+    }
+
+    &.has-error {
+      border-color: #dc2626;
+      background: rgba(254, 242, 242, 0.95);
+      box-shadow:
+        inset 0 1px 3px rgba(220, 38, 38, 0.1),
+        0 0 0 2px rgba(220, 38, 38, 0.2);
+
+      &:focus {
+        border-color: #dc2626;
+        box-shadow:
+          inset 0 1px 3px rgba(220, 38, 38, 0.1),
+          0 0 0 3px rgba(220, 38, 38, 0.3);
+        background: #fef2f2;
+      }
     }
   }
 

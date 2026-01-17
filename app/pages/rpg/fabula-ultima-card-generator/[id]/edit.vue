@@ -89,7 +89,7 @@
 </template>
 
 <script setup lang="ts">
-import { computed, ref, watch } from 'vue';
+import { computed, ref, watchEffect } from 'vue';
 import type { Card } from '~/shared/fabula-ultima-card-generator/types/card.types';
 import { useCardStore } from '~/stores/fabula-ultima-card-generator/cards';
 import CardForm from '~/features/rpg-fabula-ultima-card-generator/ui/CardForm.vue';
@@ -111,32 +111,34 @@ const cardFormRef = ref<InstanceType<typeof CardForm> | null>(null);
 // Force reactivity by watching formData changes
 const previewCardTrigger = ref(0);
 
-// Watch formData.value.stats directly to catch nested changes
-watch(
-  () => {
-    const formDataRef = cardFormRef.value?.formData;
-    if (!formDataRef) {
-      return null;
-    }
-    // formDataRef might be the ref itself OR the value
-    const formData =
-      'value' in formDataRef ? (formDataRef as any).value : formDataRef;
-    if (!formData || !formData.stats) {
-      return null;
-    }
-    // Return a string representation to force reactivity on nested changes
-    const statsStr = JSON.stringify({
-      defense: formData.stats.defense,
-      magicDefense: formData.stats.magicDefense,
-      initiative: formData.stats.initiative,
-    });
-    return statsStr;
-  },
-  () => {
-    previewCardTrigger.value++;
-  },
-  { immediate: false }
-);
+// Watch entire formData to catch all changes using watchEffect
+watchEffect(() => {
+  const formDataRef = cardFormRef.value?.formData;
+  if (!formDataRef) {
+    return;
+  }
+  // formDataRef might be the ref itself OR the value
+  const formData =
+    'value' in formDataRef ? (formDataRef as any).value : formDataRef;
+  if (!formData) {
+    return;
+  }
+  // Access all fields to track changes
+  void formData.name;
+  void formData.type;
+  void formData.description;
+  void formData.image;
+  void formData.tags;
+  void formData.stats;
+  void formData.rarity;
+  void formData.slot;
+  void formData.buyValue;
+  void formData.sellValue;
+  void formData.weaponType;
+  void formData.weaponHands;
+  // Trigger update
+  previewCardTrigger.value++;
+});
 
 const previewCard = computed(() => {
   // Access trigger to force recomputation
@@ -165,22 +167,26 @@ const previewCard = computed(() => {
   // Access stats to track changes - use trigger to ensure we read latest value
   const stats = formData.stats;
 
-  // Merge formData with card to ensure all required fields are present
-  if (formData.name && formData.type && formData.description) {
-    // Create a completely new object to ensure reactivity
-    const mergedCard: Card = {
-      ...card.value,
-      ...formData,
-      // Deep copy stats to ensure nested changes trigger reactivity
-      stats: stats
-        ? JSON.parse(JSON.stringify(stats))
-        : (card.value as any).stats,
-    } as Card;
+  // Always merge formData with card, using defaults for empty fields
+  // Create a completely new object to ensure reactivity
+  const mergedCard: Card = {
+    ...card.value,
+    ...formData,
+    // Use formData values or fallback to card values or defaults
+    name: formData.name || card.value.name || '',
+    description: formData.description || card.value.description || '',
+    type: formData.type || card.value.type,
+    buyValue: formData.buyValue ?? card.value.buyValue ?? 100,
+    weaponType: formData.weaponType ?? (card.value as any).weaponType,
+    weaponHands: formData.weaponHands ?? (card.value as any).weaponHands,
+    slot: formData.slot ?? (card.value as any).slot,
+    // Deep copy stats to ensure nested changes trigger reactivity
+    stats: stats
+      ? JSON.parse(JSON.stringify(stats))
+      : (card.value as any).stats,
+  } as Card;
 
-    return mergedCard;
-  }
-
-  return card.value;
+  return mergedCard;
 });
 
 function handleSave(_savedCard: Card): void {

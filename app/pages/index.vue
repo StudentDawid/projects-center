@@ -180,6 +180,32 @@ const projects: Project[] = [
     status: 'development',
     featured: false,
   },
+  {
+    id: 'rpg-world-generator',
+    title: 'Generator Świata RPG',
+    description:
+      'Twórz kompletne światy fantasy z kosmologią, bogami, mitami i płaszczyznami. Idealne narzędzie dla mistrzów gry.',
+    category: 'Narzędzie RPG',
+    icon: 'mdi-earth',
+    color: '#667eea',
+    link: '/rpg/world-generator',
+    tags: ['Vue.js', 'World Building', 'RPG Tools'],
+    status: 'development',
+    featured: false,
+  },
+  {
+    id: 'fabula-ultima-card-generator',
+    title: 'Generator Kart Fabula Ultima',
+    description:
+      'Twórz i zarządzaj kartami do systemu Fabula Ultima. Generuj karty broni, zbroi, umiejętności i zaklęć.',
+    category: 'Narzędzie RPG',
+    icon: 'mdi-cards',
+    color: '#296a6a',
+    link: '/rpg/fabula-ultima-card-generator',
+    tags: ['Vue.js', 'Card Creator', 'Fabula Ultima'],
+    status: 'development',
+    featured: false,
+  },
 ];
 
 const activeProjects = computed(

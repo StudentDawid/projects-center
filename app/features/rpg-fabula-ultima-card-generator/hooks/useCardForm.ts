@@ -17,9 +17,9 @@ export function useCardForm(initialCard?: Card) {
           name: '',
           type: CardTypeEnum.EQUIPMENT,
           description: '',
-          image: '',
+          image: 'https://lh3.googleusercontent.com/aida-public/AB6AXuCj7YlMf8R-HRaoS0_Fxl2H3wSEOWSDM7l9vLXS3ggeDKXH62lIFUWFPqN5gN6ZaAf69q5wcwfEQIE7FDtuGCobNQ46MqiQwayhkCgu_99fAX1s9SptKPP0qSNW9RI5vvLSc1vNWBGAY0waXYPzfERe8IPsIfsKDCID20g3htbDp5lynRGFUTlGYmAEg5zBTwAUrdUpBxHIN6aq0fLj19oL-0amb1nfWhqC4HiO7Dfl_C45kiKudddOxoSML8jqzEH2Z7ga6m7SvaM',
           tags: [],
-          buyValue: 1,
+          buyValue: 100,
           rarity: RarityEnum.COMMON,
         }
   );
@@ -117,9 +117,9 @@ export function useCardForm(initialCard?: Card) {
           name: '',
           type: CardTypeEnum.EQUIPMENT,
           description: '',
-          image: '',
+          image: 'https://lh3.googleusercontent.com/aida-public/AB6AXuCj7YlMf8R-HRaoS0_Fxl2H3wSEOWSDM7l9vLXS3ggeDKXH62lIFUWFPqN5gN6ZaAf69q5wcwfEQIE7FDtuGCobNQ46MqiQwayhkCgu_99fAX1s9SptKPP0qSNW9RI5vvLSc1vNWBGAY0waXYPzfERe8IPsIfsKDCID20g3htbDp5lynRGFUTlGYmAEg5zBTwAUrdUpBxHIN6aq0fLj19oL-0amb1nfWhqC4HiO7Dfl_C45kiKudddOxoSML8jqzEH2Z7ga6m7SvaM',
           tags: [],
-          buyValue: 1,
+          buyValue: 100,
           rarity: RarityEnum.COMMON,
         };
     errors.value = {};

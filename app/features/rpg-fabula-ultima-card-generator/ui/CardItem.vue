@@ -1,6 +1,6 @@
 <template>
   <div v-if="card" class="card-container" :class="`card-type-${card.type}`">
-    <div class="card-inner group">
+    <div class="card-inner">
       <!-- Weapon Card Design - Based on code.html -->
       <template
         v-if="
@@ -10,7 +10,7 @@
         "
       >
         <!-- Header with diagonal stripes -->
-        <div class="weapon-header">
+        <div v-if="card.name && card.name.trim()" class="weapon-header">
           <div class="weapon-header-diagonal" />
           <div class="weapon-header-content">
             <div class="weapon-header-text">
@@ -83,13 +83,16 @@
           </div>
           <div class="weapon-body-content">
             <!-- Description -->
-            <div class="weapon-description">
+            <div v-if="card.description && card.description.trim()" class="weapon-description">
               <p v-html="formatDescription(card.description)" />
             </div>
           </div>
 
           <!-- Footer Section -->
-          <div class="weapon-footer">
+          <div
+            class="weapon-footer"
+            :class="{ 'no-content-above': !card.description && !getCardFlavor(card) }"
+          >
             <p v-if="getCardFlavor(card)" class="weapon-flavor">
               {{ getCardFlavor(card) }}
             </p>
@@ -121,7 +124,7 @@
         "
       >
         <!-- Header with diagonal stripes -->
-        <div class="armor-header">
+        <div v-if="card.name && card.name.trim()" class="armor-header">
           <div class="armor-header-diagonal" />
           <div class="armor-header-content">
             <div class="armor-header-text">
@@ -133,7 +136,7 @@
           </div>
         </div>
 
-        <!-- Illustration Area with DEF/M.DEF badges -->
+        <!-- Illustration Area -->
         <div class="armor-illustration">
           <div v-if="card.image" class="armor-image">
             <img :src="card.image" :alt="card.name" />
@@ -142,33 +145,37 @@
           <div v-else class="armor-image-placeholder">
             <span class="material-symbols-outlined">shield</span>
           </div>
-
-          <!-- DEF Badge -->
-          <div v-if="getArmorDefense(card)" class="armor-def-badge">
-            <div class="armor-badge-label">DEF</div>
-            <div class="armor-badge-value">{{ getArmorDefense(card) }}</div>
-          </div>
-
-          <!-- M.DEF Badge -->
-          <div v-if="getArmorMagicDefense(card)" class="armor-mdef-badge">
-            <div class="armor-badge-label">M.DEF</div>
-            <div class="armor-badge-value">{{ getArmorMagicDefense(card) }}</div>
-          </div>
         </div>
 
         <!-- Stats Bar -->
         <div v-if="'stats' in card && card.stats" class="armor-stats-bar">
-          <div v-if="getArmorMight(card)" class="armor-stat-item">
-            <span class="armor-stat-icon material-symbols-outlined">lock</span>
-            <span class="armor-stat-text">{{ getArmorMight(card) }}</span>
+          <div v-if="getArmorDefense(card)" class="armor-stat-item">
+            <span class="armor-stat-icon material-symbols-outlined">shield</span>
+            <span class="armor-stat-text">DEF {{ getArmorDefense(card) }}</span>
           </div>
           <div
-            v-if="getArmorMight(card) && getArmorInitiative(card)"
+            v-if="getArmorDefense(card) && getArmorMagicDefense(card)"
             class="armor-stat-separator"
           />
-          <div v-if="getArmorInitiative(card)" class="armor-stat-item armor-stat-item-right">
+          <div v-if="getArmorMagicDefense(card)" class="armor-stat-item">
+            <span class="armor-stat-icon material-symbols-outlined">auto_awesome</span>
+            <span class="armor-stat-text">M.DEF {{ getArmorMagicDefense(card) }}</span>
+          </div>
+          <div
+            v-if="getArmorMagicDefense(card)"
+            class="armor-stat-separator"
+          />
+          <div class="armor-stat-item">
             <span class="armor-stat-icon material-symbols-outlined">visibility</span>
-            <span class="armor-stat-text">{{ getArmorInitiative(card) }}</span>
+            <span class="armor-stat-text">{{ getArmorInitiative(card) || '-' }}</span>
+          </div>
+          <div
+            v-if="getArmorMight(card)"
+            class="armor-stat-separator"
+          />
+          <div v-if="getArmorMight(card)" class="armor-stat-item armor-stat-item-right">
+            <span class="armor-stat-icon material-symbols-outlined">lock</span>
+            <span class="armor-stat-text">{{ getArmorMight(card) }}</span>
           </div>
         </div>
 
@@ -178,17 +185,17 @@
             <span class="material-symbols-outlined">shield</span>
           </div>
           <div class="armor-body-content">
-            <!-- Properties Title -->
-            <div class="armor-properties-title">PROPERTIES</div>
-
             <!-- Description -->
-            <div class="armor-description">
+            <div v-if="card.description && card.description.trim()" class="armor-description">
               <p v-html="formatDescription(card.description)" />
             </div>
           </div>
 
           <!-- Footer Section -->
-          <div class="armor-footer">
+          <div
+            class="armor-footer"
+            :class="{ 'no-content-above': !card.description && !getCardFlavor(card) }"
+          >
             <p v-if="getCardFlavor(card)" class="armor-flavor">
               {{ getCardFlavor(card) }}
             </p>
@@ -214,7 +221,7 @@
       <!-- Other card types (temporary - will be updated later) -->
       <template v-else>
         <!-- Card Header -->
-        <div class="card-header" :class="getHeaderClass(card)">
+        <div v-if="card.name && card.name.trim()" class="card-header" :class="getHeaderClass(card)">
           <div class="header-left">
             <span class="material-symbols-outlined header-icon">{{
               getTypeIcon(card.type)
@@ -302,31 +309,31 @@
           </div>
         </div>
       </template>
+    </div>
 
-      <!-- Hover Controls -->
-      <div v-if="showControls" class="card-controls">
-        <button
-          class="control-btn edit"
-          title="Edytuj"
-          @click.stop="$emit('edit', card)"
-        >
-          <span class="material-symbols-outlined">edit</span>
-        </button>
-        <button
-          class="control-btn duplicate"
-          title="Kopiuj"
-          @click.stop="$emit('duplicate', card)"
-        >
-          <span class="material-symbols-outlined">content_copy</span>
-        </button>
-        <button
-          class="control-btn delete"
-          title="Usuń"
-          @click.stop="$emit('delete', card)"
-        >
-          <span class="material-symbols-outlined">close</span>
-        </button>
-      </div>
+    <!-- Hover Controls -->
+    <div v-if="showControls" class="card-controls">
+      <button
+        class="control-btn edit"
+        title="Edytuj"
+        @click.stop="$emit('edit', card)"
+      >
+        <span class="material-symbols-outlined">edit</span>
+      </button>
+      <button
+        class="control-btn duplicate"
+        title="Kopiuj"
+        @click.stop="$emit('duplicate', card)"
+      >
+        <span class="material-symbols-outlined">content_copy</span>
+      </button>
+      <button
+        class="control-btn delete"
+        title="Usuń"
+        @click.stop="$emit('delete', card)"
+      >
+        <span class="material-symbols-outlined">close</span>
+      </button>
     </div>
   </div>
 </template>
@@ -454,7 +461,7 @@ function getCardMetaValue(card: Card): string {
         card.stats.damage.modifier > 0
           ? ` + ${card.stats.damage.modifier}`
           : '';
-      return `HR${modifier}`;
+      return `WW${modifier}`;
     }
   }
   if (card.type === CardTypeEnum.SPELL && 'range' in card) {
@@ -569,7 +576,7 @@ function getWeaponDamage(card: Card): string | null {
   ) {
     const damage = card.stats.damage;
     const modifier = damage.modifier > 0 ? ` + ${damage.modifier}` : '';
-    return `【HR${modifier}】`;
+    return `【WW${modifier}】`;
   }
   return null;
 }
@@ -582,7 +589,7 @@ function getDamageTypeIcon(card: Card): string | null {
   ) {
     const damageType = card.stats.damage.type;
     const icons: Record<string, string> = {
-      [DamageTypeEnum.PHYSICAL]: 'cut',
+      [DamageTypeEnum.PHYSICAL]: 'hardware', // Ikona hardware dla obrażeń fizycznych
       [DamageTypeEnum.FIRE]: 'local_fire_department',
       [DamageTypeEnum.ICE]: 'ac_unit',
       [DamageTypeEnum.ELECTRIC]: 'bolt',
@@ -628,7 +635,7 @@ function getDamageTypeColor(card: Card): string {
   ) {
     const damageType = card.stats.damage.type;
     const colors: Record<string, string> = {
-      [DamageTypeEnum.PHYSICAL]: '#8b6d4c', // Brązowy (domyślny)
+      [DamageTypeEnum.PHYSICAL]: '#757575', // Szary metaliczny (wyróżnia się od domyślnego brązowego)
       [DamageTypeEnum.FIRE]: '#ff6b35', // Pomarańczowy/czerwony
       [DamageTypeEnum.ICE]: '#4fc3f7', // Jasnoniebieski
       [DamageTypeEnum.ELECTRIC]: '#ffeb3b', // Żółty
@@ -726,33 +733,39 @@ function getArmorMight(card: Card): string | null {
 }
 
 function getArmorInitiative(card: Card): string | null {
+  // Always return a value for armor cards
   if (
     card.type === CardTypeEnum.EQUIPMENT &&
-    'stats' in card &&
-    card.stats?.initiative !== undefined
+    'slot' in card &&
+    card.slot === 'armor'
   ) {
-    const initiative = card.stats.initiative;
-    if (initiative === null) {
+    const initiative = card.stats?.initiative;
+    // If initiative is null, undefined, or 0, return '-'
+    if (initiative === null || initiative === undefined || initiative === 0) {
       return '-';
     }
     if (initiative > 0) {
       return `+${initiative} Init`;
     } else if (initiative < 0) {
       return `${initiative} Init`;
-    } else {
-      return '0 Init';
     }
+    return '-';
   }
   return null;
 }
 </script>
 
 <style scoped lang="scss">
+@import url('https://fonts.googleapis.com/css2?family=Epilogue:ital,wght@0,100..900;1,100..900&display=swap');
 .card-container {
   aspect-ratio: 63 / 88;
   width: 100%;
   position: relative;
   display: block;
+
+  &:hover .card-controls {
+    opacity: 1;
+  }
 }
 
 .card-inner {
@@ -807,6 +820,7 @@ function getArmorInitiative(card: Card): string | null {
   position: relative;
   overflow: hidden;
   z-index: 2;
+  font-family: 'Epilogue', sans-serif;
 
   .weapon-header-diagonal {
     position: absolute;
@@ -839,9 +853,10 @@ function getArmorInitiative(card: Card): string | null {
 
   .weapon-name {
     color: white;
+    font-family: 'Epilogue', sans-serif !important;
     font-weight: 900;
     font-size: 20px;
-    letter-spacing: -0.015em;
+    letter-spacing: -0.025em; // tracking-tight jak w HTML
     text-transform: uppercase;
     line-height: 1;
     margin-top: 4px;
@@ -850,9 +865,10 @@ function getArmorInitiative(card: Card): string | null {
 
   .weapon-category {
     color: rgba(255, 255, 255, 0.9);
+    font-family: 'Epilogue', sans-serif !important;
     font-size: 10px;
     font-weight: 700;
-    letter-spacing: 0.1em;
+    letter-spacing: 0.1em; // tracking-widest jak w HTML
     text-transform: uppercase;
     margin-top: 2px;
   }
@@ -881,6 +897,7 @@ function getArmorInitiative(card: Card): string | null {
   align-items: center;
   justify-content: space-between;
   padding: 0 8px;
+  font-family: 'Epilogue', sans-serif;
   font-size: 10px;
   font-weight: 700;
   text-transform: uppercase;
@@ -965,6 +982,7 @@ function getArmorInitiative(card: Card): string | null {
 }
 
 .header-title {
+  font-family: 'Epilogue', sans-serif !important;
   font-size: 10px;
   font-weight: 700;
   white-space: nowrap;
@@ -974,6 +992,7 @@ function getArmorInitiative(card: Card): string | null {
 }
 
 .header-cost {
+  font-family: 'Epilogue', sans-serif !important;
   font-size: 10px;
   font-weight: 700;
   flex-shrink: 0;
@@ -983,7 +1002,8 @@ function getArmorInitiative(card: Card): string | null {
 
 // Weapon Card Illustration - Exact match from code.html
 .weapon-illustration {
-  height: 176px;
+  flex: 1; // Rozciąga się, aby wypełnić dostępną przestrzeń
+  min-height: 176px; // Minimalna wysokość, ale może się rozciągać
   width: 100%;
   background: #2a2a2a;
   position: relative;
@@ -1032,7 +1052,8 @@ function getArmorInitiative(card: Card): string | null {
 
 // Card Image Area (for other card types)
 .card-image-area {
-  height: 96px;
+  flex: 1; // Rozciąga się, aby wypełnić dostępną przestrzeń
+  min-height: 96px; // Minimalna wysokość, ale może się rozciągać
   width: 100%;
   background: #f5f5f5;
   border-bottom: 2px solid #1e293b;
@@ -1236,14 +1257,15 @@ function getArmorInitiative(card: Card): string | null {
 
 // Weapon Card Body - Exact match from code.html
 .weapon-body {
-  flex: 1;
-  background: white;
-  padding: 16px;
+  flex: 0 0 auto; // Dostosowuje się do zawartości, nie rozciąga się
   display: flex;
   flex-direction: column;
+  background: white;
+  padding: 16px;
   position: relative;
   min-height: 0;
   overflow: hidden;
+  margin-top: auto; // Przykleja się do dołu karty
 
   .weapon-body-bg-icon {
     position: absolute;
@@ -1261,9 +1283,10 @@ function getArmorInitiative(card: Card): string | null {
   .weapon-body-content {
     position: relative;
     z-index: 10;
-    flex: 1;
+    flex: 0 0 auto; // Dostosowuje się do zawartości, nie rozciąga się
     display: flex;
     flex-direction: column;
+    min-height: 0; // Usuwa minimalną wysokość
   }
 
   .weapon-description {
@@ -1271,7 +1294,7 @@ function getArmorInitiative(card: Card): string | null {
     font-size: 14px;
     line-height: 1.625;
     font-weight: 500;
-    margin-bottom: 16px;
+    margin-bottom: 0; // Usunięto margin-bottom, aby nie było pustej przestrzeni
 
     p {
       margin: 0 0 8px 0;
@@ -1287,11 +1310,17 @@ function getArmorInitiative(card: Card): string | null {
   }
 
   .weapon-footer {
-    margin-top: auto;
+    margin-top: 16px; // Zmieniono z auto na stały margin-top
     padding-top: 16px;
     border-top: 1px solid #f3f4f6;
     position: relative;
     z-index: 10;
+
+    &.no-content-above {
+      margin-top: 0;
+      padding-top: 0;
+      border-top: none;
+    }
 
     .weapon-flavor {
       font-size: 11px;
@@ -1331,11 +1360,12 @@ function getArmorInitiative(card: Card): string | null {
   gap: 4px;
   opacity: 0;
   transition: opacity 0.2s ease;
-  z-index: 20;
-}
+  z-index: 30;
+  pointer-events: none;
 
-.group:hover .card-controls {
-  opacity: 1;
+  .control-btn {
+    pointer-events: all;
+  }
 }
 
 .control-btn {
@@ -1396,6 +1426,7 @@ function getArmorInitiative(card: Card): string | null {
   position: relative;
   overflow: hidden;
   z-index: 2;
+  font-family: 'Epilogue', sans-serif;
 
   .armor-header-diagonal {
     position: absolute;
@@ -1428,9 +1459,10 @@ function getArmorInitiative(card: Card): string | null {
 
   .armor-name {
     color: white;
+    font-family: 'Epilogue', sans-serif !important;
     font-weight: 900;
     font-size: 20px;
-    letter-spacing: -0.015em;
+    letter-spacing: -0.025em; // tracking-tight jak w HTML
     text-transform: uppercase;
     line-height: 1;
     margin-top: 4px;
@@ -1439,9 +1471,10 @@ function getArmorInitiative(card: Card): string | null {
 
   .armor-category {
     color: rgba(255, 255, 255, 0.9);
+    font-family: 'Epilogue', sans-serif !important;
     font-size: 10px;
     font-weight: 700;
-    letter-spacing: 0.1em;
+    letter-spacing: 0.1em; // tracking-widest jak w HTML
     text-transform: uppercase;
     margin-top: 2px;
   }
@@ -1462,7 +1495,8 @@ function getArmorInitiative(card: Card): string | null {
 }
 
 .armor-illustration {
-  height: 176px;
+  flex: 1; // Rozciąga się, aby wypełnić dostępną przestrzeń
+  min-height: 176px; // Minimalna wysokość, ale może się rozciągać
   width: 100%;
   background: #2a2a2a;
   position: relative;
@@ -1508,44 +1542,6 @@ function getArmorInitiative(card: Card): string | null {
     }
   }
 
-  // DEF and M.DEF Badges
-  .armor-def-badge,
-  .armor-mdef-badge {
-    position: absolute;
-    top: 12px;
-    background: white;
-    border-radius: 6px;
-    padding: 6px 10px;
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.2);
-    z-index: 10;
-  }
-
-  .armor-def-badge {
-    left: 12px;
-  }
-
-  .armor-mdef-badge {
-    right: 12px;
-  }
-
-  .armor-badge-label {
-    font-size: 9px;
-    font-weight: 700;
-    color: #1e293b;
-    text-transform: uppercase;
-    letter-spacing: 0.05em;
-    margin-bottom: 2px;
-  }
-
-  .armor-badge-value {
-    font-size: 18px;
-    font-weight: 900;
-    color: #1e293b;
-    line-height: 1;
-  }
 }
 
 .armor-stats-bar {
@@ -1600,12 +1596,13 @@ function getArmorInitiative(card: Card): string | null {
 }
 
 .armor-body {
-  flex: 1;
-  background: #f5f5f5;
-  padding: 16px;
+  flex: 0 0 auto; // Dostosowuje się do zawartości, nie rozciąga się
   display: flex;
   flex-direction: column;
+  background: #f5f5f5;
+  padding: 16px;
   position: relative;
+  margin-top: auto; // Przykleja się do dołu karty
   min-height: 0;
   overflow: hidden;
 
@@ -1625,9 +1622,10 @@ function getArmorInitiative(card: Card): string | null {
   .armor-body-content {
     position: relative;
     z-index: 10;
-    flex: 1;
+    flex: 0 0 auto; // Dostosowuje się do zawartości, nie rozciąga się
     display: flex;
     flex-direction: column;
+    min-height: 0; // Usuwa minimalną wysokość
   }
 
   .armor-properties-title {
@@ -1644,7 +1642,7 @@ function getArmorInitiative(card: Card): string | null {
     font-size: 14px;
     line-height: 1.625;
     font-weight: 500;
-    margin-bottom: 16px;
+    margin-bottom: 0; // Usunięto margin-bottom, aby nie było pustej przestrzeni
 
     p {
       margin: 0 0 8px 0;
@@ -1661,11 +1659,17 @@ function getArmorInitiative(card: Card): string | null {
   }
 
   .armor-footer {
-    margin-top: auto;
+    margin-top: 16px; // Zmieniono z auto na stały margin-top
     padding-top: 16px;
     border-top: 1px solid #e5e7eb;
     position: relative;
     z-index: 10;
+
+    &.no-content-above {
+      margin-top: 0;
+      padding-top: 0;
+      border-top: none;
+    }
 
     .armor-flavor {
       font-size: 11px;

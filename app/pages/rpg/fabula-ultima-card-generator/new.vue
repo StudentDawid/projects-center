@@ -64,18 +64,8 @@
 
       <!-- Content -->
       <div class="workspace-content">
-        <div class="form-container">
-          <div class="form-wrapper">
-            <CardForm @save="handleSave" @cancel="handleCancel" />
-          </div>
-          <div class="preview-wrapper">
-            <div v-if="previewCard" class="preview-container">
-              <CardItem :card="previewCard" :show-controls="false" />
-            </div>
-            <div v-else class="preview-placeholder">
-              <p>Wypełnij formularz, aby zobaczyć podgląd</p>
-            </div>
-          </div>
+        <div class="loading-container">
+          <p>Tworzenie nowej karty...</p>
         </div>
       </div>
     </main>
@@ -84,31 +74,55 @@
 
 <script setup lang="ts">
 import type { Card } from '~/shared/fabula-ultima-card-generator/types/card.types';
-import CardForm from '~/features/rpg-fabula-ultima-card-generator/ui/CardForm.vue';
-import CardItem from '~/features/rpg-fabula-ultima-card-generator/ui/CardItem.vue';
-import { useCardForm } from '~/features/rpg-fabula-ultima-card-generator/hooks/useCardForm';
+import {
+  CardType as CardTypeEnum,
+  Rarity as RarityEnum,
+  AccuracyStat as AccuracyStatEnum,
+  DamageType as DamageTypeEnum,
+  WeaponType as WeaponTypeEnum,
+  WeaponHands as WeaponHandsEnum,
+} from '~/shared/fabula-ultima-card-generator/types/card.types';
+import { useCardStore } from '~/stores/fabula-ultima-card-generator/cards';
 
 useHead({
   title: 'Dodaj kartę - Generator Kart Fabula Ultima',
 });
 
 const router = useRouter();
-const { formData } = useCardForm();
+const cardStore = useCardStore();
 
-const previewCard = computed(() => {
-  if (!formData.value.name || !formData.value.type || !formData.value.description) {
-    return null;
-  }
-  return formData.value as Card;
+// Create empty card and redirect to edit
+onMounted(() => {
+  const emptyCard: Card = {
+    id: cardStore.generateId(),
+    name: '',
+    type: CardTypeEnum.EQUIPMENT,
+    description: '',
+    tags: [],
+    slot: 'weapon',
+    rarity: RarityEnum.COMMON,
+    buyValue: 100,
+    image: 'https://lh3.googleusercontent.com/aida-public/AB6AXuCj7YlMf8R-HRaoS0_Fxl2H3wSEOWSDM7l9vLXS3ggeDKXH62lIFUWFPqN5gN6ZaAf69q5wcwfEQIE7FDtuGCobNQ46MqiQwayhkCgu_99fAX1s9SptKPP0qSNW9RI5vvLSc1vNWBGAY0waXYPzfERe8IPsIfsKDCID20g3htbDp5lynRGFUTlGYmAEg5zBTwAUrdUpBxHIN6aq0fLj19oL-0amb1nfWhqC4HiO7Dfl_C45kiKudddOxoSML8jqzEH2Z7ga6m7SvaM',
+    weaponType: WeaponTypeEnum.MELEE,
+    weaponHands: WeaponHandsEnum.ONE_HANDED,
+    stats: {
+      accuracy: {
+        stat1: AccuracyStatEnum.ZR,
+        stat2: AccuracyStatEnum.PO,
+        modifier: 0,
+      },
+      damage: {
+        modifier: 0,
+        type: DamageTypeEnum.PHYSICAL,
+      },
+    },
+    createdAt: new Date(),
+    updatedAt: new Date(),
+  } as Card;
+
+  cardStore.addCard(emptyCard);
+  router.push(`/rpg/fabula-ultima-card-generator/${emptyCard.id}/edit`);
 });
-
-function handleSave(card: Card): void {
-  router.push('/rpg/fabula-ultima-card-generator');
-}
-
-function handleCancel(): void {
-  router.push('/rpg/fabula-ultima-card-generator');
-}
 </script>
 
 <style scoped lang="scss">
@@ -328,53 +342,13 @@ function handleCancel(): void {
   z-index: 1;
 }
 
-.form-container {
-  display: grid;
-  grid-template-columns: 1fr 360px;
-  gap: 2rem;
-  max-width: 1400px;
-  margin: 0 auto;
-}
-
-.form-wrapper {
-  min-width: 0;
-}
-
-.preview-wrapper {
-  position: sticky;
-  top: 2rem;
-  height: fit-content;
-}
-
-.preview-container {
-  width: 360px;
-  overflow: visible;
-  min-width: 0;
-}
-
-.preview-placeholder {
-  padding: 3rem;
-  text-align: center;
-  background: rgba(255, 255, 255, 0.6);
-  border: 2px dashed #d5e2e2;
-  border-radius: 8px;
+.loading-container {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  min-height: 400px;
   color: #5e8787;
-  font-style: italic;
-
-  p {
-    margin: 0;
-    font-size: 14px;
-  }
-}
-
-@media (max-width: 1200px) {
-  .form-container {
-    grid-template-columns: 1fr;
-  }
-
-  .preview-wrapper {
-    position: static;
-  }
+  font-size: 1rem;
 }
 </style>
 
