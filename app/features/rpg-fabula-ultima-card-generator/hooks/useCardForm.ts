@@ -30,9 +30,7 @@ export function useCardForm(initialCard?: Card) {
   const isEditing = computed(() => !!initialCard?.id);
   const isValid = computed(() => {
     return (
-      !!formData.value.name &&
       !!formData.value.type &&
-      !!formData.value.description &&
       Object.keys(errors.value).length === 0
     );
   });
@@ -41,16 +39,8 @@ export function useCardForm(initialCard?: Card) {
   function validate(): boolean {
     errors.value = {};
 
-    if (!formData.value.name || formData.value.name.trim() === '') {
-      errors.value.name = 'Nazwa jest wymagana';
-    }
-
     if (!formData.value.type) {
       errors.value.type = 'Typ karty jest wymagany';
-    }
-
-    if (!formData.value.description || formData.value.description.trim() === '') {
-      errors.value.description = 'Opis jest wymagany';
     }
 
     return Object.keys(errors.value).length === 0;

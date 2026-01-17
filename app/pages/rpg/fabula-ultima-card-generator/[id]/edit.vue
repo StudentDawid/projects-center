@@ -173,9 +173,10 @@ const previewCard = computed(() => {
     ...card.value,
     ...formData,
     // Use formData values or fallback to card values or defaults
-    name: formData.name || card.value.name || '',
-    description: formData.description || card.value.description || '',
-    type: formData.type || card.value.type,
+    // Use ?? instead of || to allow empty strings to be used
+    name: formData.name ?? card.value.name ?? '',
+    description: formData.description ?? card.value.description ?? '',
+    type: formData.type ?? card.value.type,
     buyValue: formData.buyValue ?? card.value.buyValue ?? 100,
     weaponType: formData.weaponType ?? (card.value as any).weaponType,
     weaponHands: formData.weaponHands ?? (card.value as any).weaponHands,

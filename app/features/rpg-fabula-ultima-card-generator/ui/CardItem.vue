@@ -1,6 +1,28 @@
 <template>
   <div v-if="card" class="card-container" :class="`card-type-${card.type}`">
-    <div class="card-inner">
+    <div
+      class="card-inner"
+      :class="{
+        'card-armor':
+          card.type === CardTypeEnum.EQUIPMENT &&
+          'slot' in card &&
+          card.slot === 'armor',
+        'card-weapon':
+          card.type === CardTypeEnum.EQUIPMENT &&
+          'slot' in card &&
+          card.slot === 'weapon',
+        'card-shield':
+          card.type === CardTypeEnum.EQUIPMENT &&
+          'slot' in card &&
+          card.slot === 'shield',
+        'card-accessory':
+          card.type === CardTypeEnum.EQUIPMENT &&
+          'slot' in card &&
+          card.slot === 'accessory',
+        'card-spell':
+          card.type === CardTypeEnum.SPELL,
+      }"
+    >
       <!-- Weapon Card Design - Based on code.html -->
       <template
         v-if="
@@ -91,7 +113,7 @@
           <!-- Footer Section -->
           <div
             class="weapon-footer"
-            :class="{ 'no-content-above': !card.description && !getCardFlavor(card) }"
+            :class="{ 'no-content-above': !card.description || (card.description && card.description.trim() === '') }"
           >
             <p v-if="getCardFlavor(card)" class="weapon-flavor">
               {{ getCardFlavor(card) }}
@@ -194,7 +216,7 @@
           <!-- Footer Section -->
           <div
             class="armor-footer"
-            :class="{ 'no-content-above': !card.description && !getCardFlavor(card) }"
+            :class="{ 'no-content-above': !card.description || (card.description && card.description.trim() === '') }"
           >
             <p v-if="getCardFlavor(card)" class="armor-flavor">
               {{ getCardFlavor(card) }}
@@ -213,6 +235,251 @@
               <span class="armor-footer-rarity">{{
                 getRarityLabel(card.rarity).toUpperCase()
               }}</span>
+            </div>
+          </div>
+        </div>
+      </template>
+
+      <!-- Shield Card Design -->
+      <template
+        v-else-if="
+          card.type === CardTypeEnum.EQUIPMENT &&
+          'slot' in card &&
+          card.slot === 'shield'
+        "
+      >
+        <!-- Header with diagonal stripes -->
+        <div v-if="card.name && card.name.trim()" class="armor-header">
+          <div class="armor-header-diagonal" />
+          <div class="armor-header-content">
+            <div class="armor-header-text">
+              <h2 class="armor-name">{{ card.name.toUpperCase() }}</h2>
+            </div>
+            <div class="armor-header-icon">
+              <span class="material-symbols-outlined">shield</span>
+            </div>
+          </div>
+        </div>
+
+        <!-- Illustration Area -->
+        <div class="armor-illustration">
+          <div v-if="card.image" class="armor-image">
+            <img :src="card.image" :alt="card.name" />
+            <div class="armor-image-gradient" />
+          </div>
+          <div v-else class="armor-image-placeholder">
+            <span class="material-symbols-outlined">shield</span>
+          </div>
+        </div>
+
+        <!-- Stats Bar -->
+        <div v-if="'stats' in card && card.stats" class="armor-stats-bar">
+          <div v-if="getArmorDefense(card)" class="armor-stat-item">
+            <span class="armor-stat-icon material-symbols-outlined">shield</span>
+            <span class="armor-stat-text">DEF +{{ getShieldDefense(card) }}</span>
+          </div>
+          <div
+            v-if="getArmorDefense(card) && getArmorMagicDefense(card)"
+            class="armor-stat-separator"
+          />
+          <div v-if="getArmorMagicDefense(card)" class="armor-stat-item">
+            <span class="armor-stat-icon material-symbols-outlined">auto_awesome</span>
+            <span class="armor-stat-text">M.DEF +{{ getShieldMagicDefense(card) }}</span>
+          </div>
+        </div>
+
+        <!-- Properties Section -->
+        <div class="armor-body">
+          <div class="armor-body-bg-icon">
+            <span class="material-symbols-outlined">shield</span>
+          </div>
+          <div class="armor-body-content">
+            <!-- Description -->
+            <div v-if="card.description && card.description.trim()" class="armor-description">
+              <p v-html="formatDescription(card.description)" />
+            </div>
+          </div>
+
+          <!-- Footer Section -->
+          <div
+            class="armor-footer"
+            :class="{ 'no-content-above': !card.description || (card.description && card.description.trim() === '') }"
+          >
+            <p v-if="getCardFlavor(card)" class="armor-flavor">
+              {{ getCardFlavor(card) }}
+            </p>
+            <div class="armor-footer-info">
+              <span
+                v-if="'buyValue' in card && card.buyValue"
+                class="armor-footer-cost"
+                >COST: {{ card.buyValue }} ZNT</span
+              >
+              <span
+                v-else-if="'sellValue' in card && card.sellValue"
+                class="armor-footer-cost"
+                >COST: {{ card.sellValue }} ZNT</span
+              >
+              <span class="armor-footer-rarity">{{
+                getRarityLabel(card.rarity).toUpperCase()
+              }}</span>
+            </div>
+          </div>
+        </div>
+      </template>
+
+      <!-- Accessory Card Design -->
+      <template
+        v-else-if="
+          card.type === CardTypeEnum.EQUIPMENT &&
+          'slot' in card &&
+          card.slot === 'accessory'
+        "
+      >
+        <!-- Header with diagonal stripes -->
+        <div v-if="card.name && card.name.trim()" class="accessory-header">
+          <div class="accessory-header-diagonal" />
+          <div class="accessory-header-content">
+            <div class="accessory-header-text">
+              <h2 class="accessory-name">{{ card.name.toUpperCase() }}</h2>
+            </div>
+            <div class="accessory-header-icon">
+              <span class="material-symbols-outlined">diamond</span>
+            </div>
+          </div>
+        </div>
+
+        <!-- Illustration Area -->
+        <div class="accessory-illustration">
+          <div v-if="card.image" class="accessory-image">
+            <img :src="card.image" :alt="card.name" />
+            <div class="accessory-image-gradient" />
+          </div>
+          <div v-else class="accessory-image-placeholder">
+            <span class="material-symbols-outlined">diamond</span>
+          </div>
+        </div>
+
+        <!-- Properties Section -->
+        <div class="accessory-body">
+          <div class="accessory-body-bg-icon">
+            <span class="material-symbols-outlined">diamond</span>
+          </div>
+          <div class="accessory-body-content">
+            <!-- Description -->
+            <div v-if="card.description && card.description.trim()" class="accessory-description">
+              <p v-html="formatDescription(card.description)" />
+            </div>
+          </div>
+
+          <!-- Footer Section -->
+          <div
+            class="accessory-footer"
+            :class="{ 'no-content-above': !card.description || (card.description && card.description.trim() === '') }"
+          >
+            <p v-if="getCardFlavor(card)" class="accessory-flavor">
+              {{ getCardFlavor(card) }}
+            </p>
+            <div class="accessory-footer-info">
+              <span
+                v-if="'buyValue' in card && card.buyValue"
+                class="accessory-footer-cost"
+                >COST: {{ card.buyValue }} ZNT</span
+              >
+              <span
+                v-else-if="'sellValue' in card && card.sellValue"
+                class="accessory-footer-cost"
+                >COST: {{ card.sellValue }} ZNT</span
+              >
+              <span class="accessory-footer-rarity">{{
+                getRarityLabel(card.rarity).toUpperCase()
+              }}</span>
+            </div>
+          </div>
+        </div>
+      </template>
+
+      <!-- Spell Card Design -->
+      <template
+        v-else-if="card.type === CardTypeEnum.SPELL"
+      >
+        <!-- Header with diagonal stripes -->
+        <div v-if="card.name && card.name.trim()" class="spell-header">
+          <div class="spell-header-diagonal" />
+          <div class="spell-header-content">
+            <div class="spell-header-text">
+              <h2 class="spell-name">
+                {{ card.name.toUpperCase() }}
+                <span v-if="(card as any).isOffensive" class="spell-offensive-icon">
+                  <span class="material-symbols-outlined">bolt</span>
+                </span>
+              </h2>
+              <p v-if="getSpellType(card)" class="spell-category">{{ getSpellType(card) }}</p>
+            </div>
+            <div class="spell-header-icon">
+              <span class="material-symbols-outlined">auto_fix</span>
+            </div>
+          </div>
+        </div>
+
+        <!-- Illustration Area -->
+        <div class="spell-illustration">
+          <div v-if="card.image" class="spell-image">
+            <img :src="card.image" :alt="card.name" />
+            <div class="spell-image-gradient" />
+          </div>
+          <div v-else class="spell-image-placeholder">
+            <span class="material-symbols-outlined">auto_fix</span>
+          </div>
+        </div>
+
+        <!-- Stats Bar -->
+        <div v-if="'mpCost' in card || 'target' in card || 'duration' in card" class="spell-stats-bar">
+          <div v-if="getSpellMpCost(card)" class="spell-stat-item">
+            <span class="spell-stat-icon material-symbols-outlined">magic_button</span>
+            <span class="spell-stat-text">{{ getSpellMpCost(card) }} PM</span>
+          </div>
+          <div
+            v-if="getSpellMpCost(card) && getSpellTarget(card)"
+            class="spell-stat-separator"
+          />
+          <div v-if="getSpellTarget(card)" class="spell-stat-item">
+            <span class="spell-stat-icon material-symbols-outlined">target</span>
+            <span class="spell-stat-text">{{ getSpellTarget(card) }}</span>
+          </div>
+          <div
+            v-if="getSpellTarget(card) && getSpellDuration(card)"
+            class="spell-stat-separator"
+          />
+          <div v-if="getSpellDuration(card)" class="spell-stat-item">
+            <span class="spell-stat-icon material-symbols-outlined">schedule</span>
+            <span class="spell-stat-text">{{ getSpellDuration(card) }}</span>
+          </div>
+        </div>
+
+        <!-- Properties Section -->
+        <div class="spell-body">
+          <div class="spell-body-bg-icon">
+            <span class="material-symbols-outlined">auto_fix</span>
+          </div>
+          <div class="spell-body-content">
+            <!-- Description -->
+            <div v-if="card.description && card.description.trim()" class="spell-description">
+              <p v-html="formatDescription(card.description)" />
+            </div>
+          </div>
+
+          <!-- Footer Section -->
+          <div
+            class="spell-footer"
+            :class="{ 'no-content-above': !card.description || (card.description && card.description.trim() === '') }"
+          >
+            <p v-if="getCardFlavor(card)" class="spell-flavor">
+              {{ getCardFlavor(card) }}
+            </p>
+            <div class="spell-footer-info">
+              <span v-if="getSpellElement(card)" class="spell-footer-element">
+                ELEMENT: {{ getSpellElement(card) }}
+              </span>
             </div>
           </div>
         </div>
@@ -259,11 +526,10 @@
             <span class="stat-value">{{ getCardMetaValue(card) }}</span>
           </div>
 
-          <!-- Spell/Skill specific: School and Type -->
+          <!-- Spell/Skill specific: School and Type (only for other card types, not spell card template) -->
           <div
             v-if="
-              (card.type === CardTypeEnum.SPELL ||
-                card.type === CardTypeEnum.SKILL) &&
+              card.type === CardTypeEnum.SKILL &&
               'school' in card
             "
             class="card-stats-row"
@@ -385,6 +651,7 @@ function getHeaderClass(card: Card): string {
   if (card.type === CardTypeEnum.EQUIPMENT && 'slot' in card) {
     if (card.slot === 'weapon') return 'header-weapon';
     if (card.slot === 'armor') return 'header-armor';
+    if (card.slot === 'accessory') return 'header-accessory';
   }
   return `header-${card.type}`;
 }
@@ -635,7 +902,7 @@ function getDamageTypeColor(card: Card): string {
   ) {
     const damageType = card.stats.damage.type;
     const colors: Record<string, string> = {
-      [DamageTypeEnum.PHYSICAL]: '#757575', // Szary metaliczny (wyróżnia się od domyślnego brązowego)
+      [DamageTypeEnum.PHYSICAL]: '#e8d5b7', // Jaśniejszy beżowy dla lepszej widoczności na ciemnym tle
       [DamageTypeEnum.FIRE]: '#ff6b35', // Pomarańczowy/czerwony
       [DamageTypeEnum.ICE]: '#4fc3f7', // Jasnoniebieski
       [DamageTypeEnum.ELECTRIC]: '#ffeb3b', // Żółty
@@ -718,6 +985,93 @@ function getArmorMagicDefense(card: Card): string | null {
   return null;
 }
 
+// Shield defense getters (only fixed values with + prefix)
+function getShieldDefense(card: Card): string | null {
+  if (
+    card.type === CardTypeEnum.EQUIPMENT &&
+    'slot' in card &&
+    card.slot === 'shield' &&
+    'stats' in card &&
+    card.stats?.defense
+  ) {
+    const defense = card.stats.defense;
+    if (defense && typeof defense === 'object' && 'fixedValue' in defense) {
+      return defense.fixedValue?.toString() || '0';
+    }
+  }
+  return null;
+}
+
+function getShieldMagicDefense(card: Card): string | null {
+  if (
+    card.type === CardTypeEnum.EQUIPMENT &&
+    'slot' in card &&
+    card.slot === 'shield' &&
+    'stats' in card &&
+    card.stats?.magicDefense
+  ) {
+    const magicDefense = card.stats.magicDefense;
+    if (magicDefense && typeof magicDefense === 'object' && 'fixedValue' in magicDefense) {
+      return magicDefense.fixedValue?.toString() || '0';
+    }
+  }
+  return null;
+}
+
+// Spell helper functions
+function getSpellMpCost(card: Card): string | null {
+  if (card.type === CardTypeEnum.SPELL && 'mpCost' in card) {
+    const mpCost = (card as any).mpCost;
+    if (mpCost !== undefined && mpCost !== null) {
+      const costStr = typeof mpCost === 'string' ? mpCost : mpCost.toString();
+      return costStr.trim() !== '' ? costStr : null;
+    }
+  }
+  return null;
+}
+
+function getSpellType(card: Card): string {
+  if (card.type === CardTypeEnum.SPELL) {
+    return (card as any).isOffensive ? 'OFFENSIVE SPELL' : 'SPELL';
+  }
+  return '';
+}
+
+function getSpellTarget(card: Card): string | null {
+  if (card.type === CardTypeEnum.SPELL && 'target' in card) {
+    const target = (card as any).target;
+    const labels: Record<string, string> = {
+      self: 'Ty',
+      single: 'Jedna istota',
+      three: 'Do trzech istot',
+      weapon: 'Jedna broń',
+      special: 'Specjalny',
+    };
+    return labels[target] || null;
+  }
+  return null;
+}
+
+function getSpellDuration(card: Card): string | null {
+  if (card.type === CardTypeEnum.SPELL && 'duration' in card) {
+    const duration = (card as any).duration;
+    if (duration !== undefined && duration !== null) {
+      const labels: Record<string, string> = {
+        instant: 'Błyskawiczny',
+        scene: 'Jedna scena',
+      };
+      return labels[duration] || null;
+    }
+  }
+  return null;
+}
+
+function getSpellElement(card: Card): string | null {
+  // TODO: Dodać pole elementu do formularza w przyszłości
+  // Na razie zwracamy null lub możemy użyć jakiegoś domyślnego
+  return null;
+}
+
 function getArmorMight(card: Card): string | null {
   // Might będzie w requirements, na razie zwracamy placeholder
   // TODO: Implementować gdy requirements będą gotowe
@@ -780,6 +1134,26 @@ function getArmorInitiative(card: Card): string | null {
   position: relative;
   box-shadow: 0 20px 40px -10px rgba(0, 0, 0, 0.15);
   font-family: 'Epilogue', sans-serif;
+
+  &.card-armor {
+    border-color: #64748b; // Stalowy kolor obramowania dla karty pancerza
+  }
+
+  &.card-weapon {
+    border-color: #8b6d4c; // Brązowy kolor obramowania dla karty broni
+  }
+
+  &.card-shield {
+    border-color: #64748b; // Stalowy kolor obramowania dla karty tarczy (tak jak pancerz)
+  }
+
+  &.card-accessory {
+    border-color: #d4af37; // Złoty kolor obramowania dla karty akcesorium
+  }
+
+  &.card-spell {
+    border-color: #dc2626; // Czerwony kolor obramowania dla karty czaru
+  }
   transition:
     transform 0.3s ease,
     box-shadow 0.3s ease;
@@ -830,8 +1204,8 @@ function getArmorInitiative(card: Card): string | null {
       45deg,
       transparent,
       transparent 10px,
-      #000 10px,
-      #000 12px
+      rgba(255, 200, 150, 0.4) 10px, // Jaśniejszy brązowy zamiast czarnego
+      rgba(255, 200, 150, 0.4) 12px
     );
   }
 
@@ -874,7 +1248,7 @@ function getArmorInitiative(card: Card): string | null {
   }
 
   .weapon-header-icon {
-    background: rgba(0, 0, 0, 0.2);
+    background: rgba(255, 255, 255, 0.15); // Jaśniejsze tło zamiast czarnego
     border-radius: 4px;
     padding: 6px;
     flex-shrink: 0;
@@ -922,6 +1296,12 @@ function getArmorInitiative(card: Card): string | null {
   &.header-equipment {
     background: linear-gradient(135deg, #d4af37 0%, #b8941f 100%);
     box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.2);
+  }
+
+  // Accessory (Bright Gold)
+  &.header-accessory {
+    background: linear-gradient(135deg, #f4d03f 0%, #d4af37 100%);
+    box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.25);
   }
 
   // Armor (Darker Gold/Bronze)
@@ -1005,10 +1385,10 @@ function getArmorInitiative(card: Card): string | null {
   flex: 1; // Rozciąga się, aby wypełnić dostępną przestrzeń
   min-height: 176px; // Minimalna wysokość, ale może się rozciągać
   width: 100%;
-  background: #2a2a2a;
+  background: #6b5a4a; // Ciemniejszy brąz zamiast czarnego
   position: relative;
   overflow: hidden;
-  border-bottom: 4px solid #2a2a2a;
+  border-bottom: 4px solid #6b5a4a;
   z-index: 2;
 
   .weapon-image {
@@ -1032,7 +1412,7 @@ function getArmorInitiative(card: Card): string | null {
       left: 0;
       right: 0;
       height: 48px;
-      background: linear-gradient(to top, #2a2a2a, transparent);
+      background: linear-gradient(to top, #6b5a4a, transparent); // Ciemniejszy brąz zamiast czarnego
     }
   }
 
@@ -1060,6 +1440,12 @@ function getArmorInitiative(card: Card): string | null {
   position: relative;
   overflow: hidden;
   z-index: 2;
+}
+
+// Accessory card image area - gold background
+.card-accessory .card-image-area {
+  background: #f9e79f; // Jasne złote tło
+  border-bottom: 2px solid #d4af37; // Złoty border
 }
 
 .card-image {
@@ -1174,12 +1560,12 @@ function getArmorInitiative(card: Card): string | null {
 
 // Weapon Card Stats Bar - Exact match from code.html
 .weapon-stats-bar {
-  background: #2a2a2a;
+  background: #6b5a4a; // Ciemniejszy brąz zamiast czarnego
   padding: 6px 8px;
   display: flex;
   align-items: center;
   gap: 8px;
-  border-bottom: 1px solid #374151;
+  border-bottom: 1px solid #8b6d4c; // Brązowy separator
   font-size: 11px;
   font-weight: 700;
   color: white;
@@ -1204,8 +1590,9 @@ function getArmorInitiative(card: Card): string | null {
 
     .weapon-stat-icon {
       font-size: 12px;
-      color: #8b6d4c;
+      color: #f4d5a6; // Jaśniejszy beżowy kolor dla lepszej widoczności na ciemnym brązowym tle
       flex-shrink: 0;
+      text-shadow: 0 1px 2px rgba(0, 0, 0, 0.3); // Dodatkowy cień dla lepszej czytelności
     }
 
     .weapon-stat-text {
@@ -1219,6 +1606,8 @@ function getArmorInitiative(card: Card): string | null {
       font-size: 12px;
       flex-shrink: 0;
       margin-left: 2px;
+      text-shadow: 0 1px 2px rgba(0, 0, 0, 0.4); // Cień dla lepszej widoczności na ciemnym tle
+      filter: brightness(1.2); // Zwiększenie jasności dla lepszego kontrastu
     }
   }
 
@@ -1417,7 +1806,7 @@ function getArmorInitiative(card: Card): string | null {
 
 // Armor Card Styles - Based on armor card.png design
 .armor-header {
-  background: #2a2a2a;
+  background: #64748b; // Stalowy szary zamiast czarnego
   height: 56px;
   display: flex;
   align-items: center;
@@ -1436,8 +1825,8 @@ function getArmorInitiative(card: Card): string | null {
       45deg,
       transparent,
       transparent 10px,
-      #000 10px,
-      #000 12px
+      rgba(255, 255, 255, 0.3) 10px, // Jaśniejszy stalowy zamiast czarnego
+      rgba(255, 255, 255, 0.3) 12px
     );
   }
 
@@ -1480,7 +1869,7 @@ function getArmorInitiative(card: Card): string | null {
   }
 
   .armor-header-icon {
-    background: rgba(0, 0, 0, 0.2);
+    background: rgba(255, 255, 255, 0.15); // Jaśniejsze tło zamiast czarnego
     border-radius: 4px;
     padding: 6px;
     flex-shrink: 0;
@@ -1498,10 +1887,10 @@ function getArmorInitiative(card: Card): string | null {
   flex: 1; // Rozciąga się, aby wypełnić dostępną przestrzeń
   min-height: 176px; // Minimalna wysokość, ale może się rozciągać
   width: 100%;
-  background: #2a2a2a;
+  background: #475569; // Stalowy szary zamiast czarnego
   position: relative;
   overflow: hidden;
-  border-bottom: 4px solid #2a2a2a;
+  border-bottom: 4px solid #475569;
   z-index: 2;
 
   .armor-image {
@@ -1525,7 +1914,7 @@ function getArmorInitiative(card: Card): string | null {
       left: 0;
       right: 0;
       height: 48px;
-      background: linear-gradient(to top, #2a2a2a, transparent);
+      background: linear-gradient(to top, #475569, transparent); // Stalowy zamiast czarnego
     }
   }
 
@@ -1545,12 +1934,12 @@ function getArmorInitiative(card: Card): string | null {
 }
 
 .armor-stats-bar {
-  background: #2a2a2a;
+  background: #475569; // Stalowy szary zamiast czarnego
   padding: 6px 8px;
   display: flex;
   align-items: center;
   gap: 8px;
-  border-bottom: 1px solid #374151;
+  border-bottom: 1px solid #64748b; // Jaśniejszy stalowy separator
   font-size: 11px;
   font-weight: 700;
   color: white;
@@ -1575,7 +1964,7 @@ function getArmorInitiative(card: Card): string | null {
 
     .armor-stat-icon {
       font-size: 12px;
-      color: #8b6d4c;
+      color: #94a3b8; // Stalowy szary zamiast brązowego
       flex-shrink: 0;
     }
 
@@ -1695,6 +2084,499 @@ function getArmorInitiative(card: Card): string | null {
     }
 
     .armor-footer-rarity {
+      color: #1e293b;
+    }
+  }
+}
+
+// Accessory Card Styles - Gold theme
+.accessory-header {
+  background: #d4af37; // Złoty kolor
+  height: 56px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 0 16px;
+  position: relative;
+  overflow: hidden;
+  z-index: 2;
+  font-family: 'Epilogue', sans-serif;
+
+  .accessory-header-diagonal {
+    position: absolute;
+    inset: 0;
+    opacity: 0.2;
+    background-image: repeating-linear-gradient(
+      45deg,
+      transparent,
+      transparent 10px,
+      rgba(255, 255, 255, 0.3) 10px,
+      rgba(255, 255, 255, 0.3) 12px
+    );
+  }
+
+  .accessory-header-content {
+    position: relative;
+    z-index: 10;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    width: 100%;
+  }
+
+  .accessory-header-text {
+    display: flex;
+    flex-direction: column;
+    flex: 1;
+    min-width: 0;
+  }
+
+  .accessory-name {
+    color: white;
+    font-family: 'Epilogue', sans-serif !important;
+    font-weight: 900;
+    font-size: 20px;
+    letter-spacing: -0.025em;
+    text-transform: uppercase;
+    line-height: 1;
+    margin-top: 4px;
+    margin-bottom: 2px;
+  }
+
+  .accessory-header-icon {
+    background: rgba(255, 255, 255, 0.2);
+    border-radius: 4px;
+    padding: 6px;
+    flex-shrink: 0;
+    margin-left: 8px;
+
+    .material-symbols-outlined {
+      color: white;
+      font-size: 20px;
+      display: block;
+    }
+  }
+}
+
+.accessory-illustration {
+  flex: 1;
+  min-height: 176px;
+  width: 100%;
+  background: #b8941f; // Ciemniejszy złoty
+  position: relative;
+  overflow: hidden;
+  border-bottom: 4px solid #b8941f;
+  z-index: 2;
+
+  .accessory-image {
+    width: 100%;
+    height: 100%;
+    position: relative;
+
+    img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+      display: block;
+      opacity: 0.9;
+      mix-blend-mode: normal;
+      filter: brightness(1.1);
+    }
+
+    .accessory-image-gradient {
+      position: absolute;
+      bottom: 0;
+      left: 0;
+      right: 0;
+      height: 48px;
+      background: linear-gradient(to top, #b8941f, transparent);
+    }
+  }
+
+  .accessory-image-placeholder {
+    width: 100%;
+    height: 100%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+
+    .material-symbols-outlined {
+      font-size: 64px;
+      color: rgba(255, 255, 255, 0.2);
+    }
+  }
+}
+
+.accessory-body {
+  flex: 0 0 auto;
+  display: flex;
+  flex-direction: column;
+  background: #f5f5f5;
+  padding: 16px;
+  position: relative;
+  margin-top: auto;
+  min-height: 0;
+  overflow: hidden;
+
+  .accessory-body-bg-icon {
+    position: absolute;
+    right: -20px;
+    bottom: -20px;
+    color: rgba(0, 0, 0, 0.03);
+    opacity: 0.5;
+    z-index: 1;
+
+    .material-symbols-outlined {
+      font-size: 200px;
+    }
+  }
+
+  .accessory-body-content {
+    position: relative;
+    z-index: 10;
+    flex: 0 0 auto;
+    display: flex;
+    flex-direction: column;
+    min-height: 0;
+  }
+
+  .accessory-description {
+    color: #111818;
+    font-size: 14px;
+    line-height: 1.625;
+    font-weight: 500;
+    margin-bottom: 0;
+
+    p {
+      margin: 0 0 8px 0;
+
+      &:last-child {
+        margin-bottom: 0;
+      }
+    }
+
+    :deep(strong) {
+      font-weight: 700;
+      color: #ef4444;
+    }
+  }
+
+  .accessory-footer {
+    margin-top: 16px;
+    padding-top: 16px;
+    border-top: 1px solid #e5e7eb;
+    position: relative;
+    z-index: 10;
+
+    &.no-content-above {
+      margin-top: 0;
+      padding-top: 0;
+      border-top: none;
+    }
+
+    .accessory-flavor {
+      font-size: 11px;
+      color: #6b7280;
+      font-style: italic;
+      line-height: 1.4;
+      font-family: serif;
+      margin-bottom: 8px;
+    }
+
+    .accessory-footer-info {
+      display: flex;
+      justify-content: space-between;
+      align-items: flex-end;
+      font-size: 9px;
+      color: #1e293b;
+      text-transform: uppercase;
+      letter-spacing: 0.1em;
+    }
+
+    .accessory-footer-cost {
+      color: #1e293b;
+    }
+
+    .accessory-footer-rarity {
+      color: #1e293b;
+    }
+  }
+}
+
+// Spell Card Styles - Red theme
+.spell-header {
+  background: #dc2626; // Czerwony kolor
+  height: 56px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 0 16px;
+  position: relative;
+  overflow: hidden;
+  z-index: 2;
+  font-family: 'Epilogue', sans-serif;
+
+  .spell-header-diagonal {
+    position: absolute;
+    inset: 0;
+    opacity: 0.2;
+    background-image: repeating-linear-gradient(
+      45deg,
+      transparent,
+      transparent 10px,
+      rgba(255, 255, 255, 0.3) 10px,
+      rgba(255, 255, 255, 0.3) 12px
+    );
+  }
+
+  .spell-header-content {
+    position: relative;
+    z-index: 10;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    width: 100%;
+  }
+
+  .spell-header-text {
+    display: flex;
+    flex-direction: column;
+    flex: 1;
+    min-width: 0;
+  }
+
+  .spell-name {
+    color: white;
+    font-family: 'Epilogue', sans-serif !important;
+    font-weight: 900;
+    font-size: 20px;
+    letter-spacing: -0.025em;
+    text-transform: uppercase;
+    line-height: 1;
+    margin-top: 4px;
+    margin-bottom: 2px;
+    display: flex;
+    align-items: center;
+    gap: 4px;
+
+    .spell-offensive-icon {
+      display: inline-flex;
+      align-items: center;
+
+      .material-symbols-outlined {
+        font-size: 20px;
+        color: #ffeb3b; // Żółty kolor błyskawicy
+      }
+    }
+  }
+
+  .spell-category {
+    color: rgba(255, 255, 255, 0.9);
+    font-family: 'Epilogue', sans-serif !important;
+    font-size: 10px;
+    font-weight: 700;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    margin-top: 2px;
+  }
+
+  .spell-header-icon {
+    background: rgba(255, 255, 255, 0.2);
+    border-radius: 4px;
+    padding: 6px;
+    flex-shrink: 0;
+    margin-left: 8px;
+
+    .material-symbols-outlined {
+      color: white;
+      font-size: 20px;
+      display: block;
+    }
+  }
+}
+
+.spell-illustration {
+  flex: 1;
+  min-height: 176px;
+  width: 100%;
+  background: #b91c1c; // Ciemniejszy czerwony
+  position: relative;
+  overflow: hidden;
+  border-bottom: 4px solid #b91c1c;
+  z-index: 2;
+
+  .spell-image {
+    width: 100%;
+    height: 100%;
+    position: relative;
+
+    img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+      display: block;
+      opacity: 0.9;
+      mix-blend-mode: normal;
+      filter: brightness(1.1);
+    }
+
+    .spell-image-gradient {
+      position: absolute;
+      bottom: 0;
+      left: 0;
+      right: 0;
+      height: 48px;
+      background: linear-gradient(to top, #b91c1c, transparent);
+    }
+  }
+
+  .spell-image-placeholder {
+    width: 100%;
+    height: 100%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+
+    .material-symbols-outlined {
+      font-size: 64px;
+      color: rgba(255, 255, 255, 0.2);
+    }
+  }
+}
+
+.spell-stats-bar {
+  background: #b91c1c; // Ciemniejszy czerwony
+  padding: 6px 8px;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  border-bottom: 1px solid #dc2626;
+  font-size: 11px;
+  font-weight: 700;
+  color: white;
+  z-index: 2;
+  min-width: 0;
+  overflow: visible;
+  width: 100%;
+  box-sizing: border-box;
+
+  .spell-stat-item {
+    display: flex;
+    align-items: center;
+    gap: 4px;
+    flex-shrink: 0;
+    min-width: 0;
+
+    .spell-stat-icon {
+      font-size: 12px;
+      color: #fca5a5; // Jaśniejszy czerwony dla ikon
+      flex-shrink: 0;
+      text-shadow: 0 1px 2px rgba(0, 0, 0, 0.3);
+    }
+
+    .spell-stat-text {
+      letter-spacing: 0.05em;
+      white-space: nowrap;
+      flex-shrink: 0;
+      overflow: visible;
+    }
+  }
+
+  .spell-stat-separator {
+    width: 1px;
+    height: 12px;
+    background: #991b1b;
+    flex-shrink: 0;
+  }
+}
+
+.spell-body {
+  flex: 0 0 auto;
+  display: flex;
+  flex-direction: column;
+  background: #f5f5f5;
+  padding: 16px;
+  position: relative;
+  margin-top: auto;
+  min-height: 0;
+  overflow: hidden;
+
+  .spell-body-bg-icon {
+    position: absolute;
+    right: -20px;
+    bottom: -20px;
+    color: rgba(0, 0, 0, 0.03);
+    opacity: 0.5;
+    z-index: 1;
+
+    .material-symbols-outlined {
+      font-size: 200px;
+    }
+  }
+
+  .spell-body-content {
+    position: relative;
+    z-index: 10;
+    flex: 0 0 auto;
+    display: flex;
+    flex-direction: column;
+    min-height: 0;
+  }
+
+  .spell-description {
+    color: #111818;
+    font-size: 14px;
+    line-height: 1.625;
+    font-weight: 500;
+    margin-bottom: 0;
+
+    p {
+      margin: 0 0 8px 0;
+
+      &:last-child {
+        margin-bottom: 0;
+      }
+    }
+
+    :deep(strong) {
+      font-weight: 700;
+      color: #ef4444;
+    }
+  }
+
+  .spell-footer {
+    margin-top: 16px;
+    padding-top: 16px;
+    border-top: 1px solid #e5e7eb;
+    position: relative;
+    z-index: 10;
+
+    &.no-content-above {
+      margin-top: 0;
+      padding-top: 0;
+      border-top: none;
+    }
+
+    .spell-flavor {
+      font-size: 11px;
+      color: #6b7280;
+      font-style: italic;
+      line-height: 1.4;
+      font-family: serif;
+      margin-bottom: 8px;
+    }
+
+    .spell-footer-info {
+      display: flex;
+      justify-content: space-between;
+      align-items: flex-end;
+      font-size: 9px;
+      color: #1e293b;
+      text-transform: uppercase;
+      letter-spacing: 0.1em;
+    }
+
+    .spell-footer-element {
       color: #1e293b;
     }
   }

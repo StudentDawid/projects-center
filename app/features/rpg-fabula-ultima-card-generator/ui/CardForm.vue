@@ -18,7 +18,7 @@
           :class="{ active: activeTab === 'equipment', 'has-error': hasEquipmentTabErrors }"
           @click="activeTab = 'equipment'"
         >
-          Ekwipunek
+          {{ getEquipmentTabLabel() }}
         </button>
         <button
           v-if="formData.type === CardTypeEnum.SPELL"
@@ -38,7 +38,7 @@
           <div class="form-section">
             <h3>Podstawowe informacje</h3>
             <div class="form-group">
-              <label for="name">Nazwa *</label>
+              <label for="name">Nazwa</label>
               <input
                 id="name"
                 v-model="formData.name"
@@ -54,11 +54,14 @@
               <label for="type">Typ karty *</label>
               <select
                 id="type"
-                v-model="formData.type"
+                :value="getTypeSelectValue()"
                 :class="{ 'has-error': hasValidated && errors.type }"
-                @change="setField('type', ($event.target as HTMLSelectElement).value)"
+                @change="handleTypeChange(($event.target as HTMLSelectElement).value)"
               >
-                <option :value="CardTypeEnum.EQUIPMENT">Ekwipunek</option>
+                <option value="EQUIPMENT_WEAPON">Broń</option>
+                <option value="EQUIPMENT_ARMOR">Pancerz</option>
+                <option value="EQUIPMENT_SHIELD">Tarcza</option>
+                <option value="EQUIPMENT_ACCESSORY">Akcesorium</option>
                 <option :value="CardTypeEnum.SPELL">Czar</option>
                 <option :value="CardTypeEnum.SKILL">Umiejętność</option>
                 <option :value="CardTypeEnum.QUEST">Zadanie</option>
@@ -70,7 +73,7 @@
             </div>
 
             <div class="form-group">
-              <label for="description">Opis *</label>
+              <label for="description">Opis</label>
               <textarea
                 id="description"
                 v-model="formData.description"
@@ -159,23 +162,7 @@
         <!-- Equipment Tab -->
         <div v-if="formData.type === CardTypeEnum.EQUIPMENT" v-show="activeTab === 'equipment'" class="tab-panel">
           <div class="form-section">
-            <h3>Ekwipunek</h3>
-            <div class="form-group">
-              <label for="slot">Slot</label>
-              <select
-                id="slot"
-                v-model="equipmentData.slot"
-                @change="updateEquipmentData('slot', ($event.target as HTMLSelectElement).value)"
-              >
-                <option value="weapon">Broń</option>
-                <option value="armor">Pancerz</option>
-                <option value="accessory">Akcesorium</option>
-                <option value="shield">Tarcza</option>
-                <option value="helmet">Hełm</option>
-                <option value="boots">Buty</option>
-                <option value="gloves">Rękawice</option>
-              </select>
-            </div>
+            <h3>{{ getEquipmentTabLabel() }}</h3>
 
             <!-- Weapon specific fields -->
             <template v-if="equipmentData.slot === 'weapon'">
@@ -366,6 +353,42 @@
               </div>
             </template>
 
+            <!-- Shield specific fields -->
+            <template v-else-if="equipmentData.slot === 'shield'">
+              <!-- Pancerz (tylko wartość +) -->
+              <div class="form-group">
+                <label>Pancerz +</label>
+                <div class="form-row" style="align-items: center; gap: 8px;">
+                  <input
+                    :value="getShieldDefenseValue('defense')"
+                    type="number"
+                    min="0"
+                    style="width: 80px;"
+                    @input="updateShieldDefenseValue('defense', ($event.target as HTMLInputElement).valueAsNumber)"
+                  />
+                </div>
+              </div>
+
+              <!-- M. Pancerz (tylko wartość +) -->
+              <div class="form-group">
+                <label>M. Pancerz +</label>
+                <div class="form-row" style="align-items: center; gap: 8px;">
+                  <input
+                    :value="getShieldDefenseValue('magicDefense')"
+                    type="number"
+                    min="0"
+                    style="width: 80px;"
+                    @input="updateShieldDefenseValue('magicDefense', ($event.target as HTMLInputElement).valueAsNumber)"
+                  />
+                </div>
+              </div>
+            </template>
+
+            <!-- Accessory has no additional fields beyond basic ones -->
+            <template v-else-if="equipmentData.slot === 'accessory'">
+              <!-- No additional fields for accessories -->
+            </template>
+
             <!-- Other equipment types -->
             <template v-else>
               <div class="form-group">
@@ -386,40 +409,49 @@
         <div v-if="formData.type === CardTypeEnum.SPELL" v-show="activeTab === 'spell'" class="tab-panel">
           <div class="form-section">
             <h3>Czar</h3>
-            <div class="form-row">
-              <div class="form-group">
-                <label for="mpCost">Koszt MP *</label>
-                <input
-                  id="mpCost"
-                  v-model.number="spellData.mpCost"
-                  type="number"
-                  min="0"
-                  @input="updateSpellData('mpCost', ($event.target as HTMLInputElement).valueAsNumber)"
-                />
-              </div>
-              <div class="form-group">
-                <label for="fpCost">Koszt FP</label>
-                <input
-                  id="fpCost"
-                  v-model.number="spellData.fpCost"
-                  type="number"
-                  min="0"
-                  @input="updateSpellData('fpCost', ($event.target as HTMLInputElement).valueAsNumber)"
-                />
-              </div>
+            <div class="form-group">
+              <label for="mpCost">PM (Koszt Punktów Many)</label>
+              <input
+                id="mpCost"
+                v-model="spellData.mpCost"
+                type="text"
+                @input="updateSpellData('mpCost', ($event.target as HTMLInputElement).value)"
+              />
             </div>
             <div class="form-group">
-              <label for="range">Zakres</label>
+              <label for="target">Cel</label>
               <select
-                id="range"
-                v-model="spellData.range"
-                @change="updateSpellData('range', ($event.target as HTMLSelectElement).value)"
+                id="target"
+                v-model="spellData.target"
+                @change="updateSpellData('target', ($event.target as HTMLSelectElement).value)"
               >
-                <option value="self">Siębie</option>
-                <option value="single">Pojedynczy</option>
-                <option value="area">Obszar</option>
-                <option value="all">Wszyscy</option>
+                <option value="self">Ty</option>
+                <option value="single">Jedna istota</option>
+                <option value="three">Do trzech istot</option>
+                <option value="weapon">Jedna broń</option>
+                <option value="special">Specjalny</option>
               </select>
+            </div>
+            <div class="form-group">
+              <label for="duration">Czas trwania</label>
+              <select
+                id="duration"
+                v-model="spellData.duration"
+                @change="updateSpellData('duration', ($event.target as HTMLSelectElement).value)"
+              >
+                <option value="instant">Błyskawiczny</option>
+                <option value="scene">Jedna scena</option>
+              </select>
+            </div>
+            <div class="form-group">
+              <label>
+                <input
+                  type="checkbox"
+                  :checked="spellData.isOffensive"
+                  @change="updateSpellData('isOffensive', ($event.target as HTMLInputElement).checked)"
+                />
+                Ofensywne (błyskawica na końcu nazwy)
+              </label>
             </div>
           </div>
         </div>
@@ -462,7 +494,7 @@ const activeTab = ref<'basic' | 'equipment' | 'spell'>('basic');
 
 // Check if tabs have errors
 const hasBasicTabErrors = computed(() => {
-  return hasValidated.value && (!!errors.value.name || !!errors.value.type || !!errors.value.description);
+  return hasValidated.value && !!errors.value.type;
 });
 
 const hasEquipmentTabErrors = computed(() => {
@@ -477,19 +509,19 @@ const hasSpellTabErrors = computed(() => {
   return false;
 });
 
-// Auto-switch tab when card type changes
-watch(
-  () => formData.value.type,
-  (newType) => {
-    if (newType === CardTypeEnum.EQUIPMENT) {
-      activeTab.value = 'equipment';
-    } else if (newType === CardTypeEnum.SPELL) {
-      activeTab.value = 'spell';
-    } else {
-      activeTab.value = 'basic';
-    }
-  }
-);
+// Auto-switch tab when card type changes - DISABLED per user request
+// watch(
+//   () => formData.value.type,
+//   (newType) => {
+//     if (newType === CardTypeEnum.EQUIPMENT) {
+//       activeTab.value = 'equipment';
+//     } else if (newType === CardTypeEnum.SPELL) {
+//       activeTab.value = 'spell';
+//     } else {
+//       activeTab.value = 'basic';
+//     }
+//   }
+// );
 
 // Reset hasValidated when all errors are fixed
 watch(
@@ -507,6 +539,9 @@ defineExpose({
 });
 
 const newTag = ref('');
+
+// Equipment type selector (weapon, armor, shield, accessory)
+const equipmentType = ref<'weapon' | 'armor' | 'shield' | 'accessory'>('weapon');
 
 // Equipment specific data
 const equipmentData = ref({
@@ -529,17 +564,24 @@ const equipmentData = ref({
 
 // Spell specific data
 const spellData = ref({
-  mpCost: 0,
+  mpCost: '',
   fpCost: 0,
   range: 'single' as const,
+  target: 'single' as 'self' | 'single' | 'three' | 'weapon' | 'special',
+  duration: 'instant' as 'instant' | 'scene',
+  isOffensive: false,
 });
 
 // Initialize equipmentData from formData when editing
 onMounted(() => {
   if (props.card && props.card.type === CardTypeEnum.EQUIPMENT && 'slot' in props.card) {
     const slot = props.card.slot;
+    equipmentType.value = (slot === 'weapon' || slot === 'armor' || slot === 'shield' || slot === 'accessory')
+      ? slot
+      : 'weapon';
     const isWeapon = slot === 'weapon';
     const isArmor = slot === 'armor';
+    const isShield = slot === 'shield';
 
     equipmentData.value = {
       slot,
@@ -558,6 +600,9 @@ onMounted(() => {
         defense: { fixedValue: 0 },
         magicDefense: { fixedValue: 0 },
         initiative: null,
+      } : isShield ? {
+        defense: { fixedValue: 0 },
+        magicDefense: { fixedValue: 0 },
       } : {
         magic: 0,
       }),
@@ -572,11 +617,32 @@ onMounted(() => {
       setField('weaponType', equipmentData.value.weaponType);
       setField('weaponHands', equipmentData.value.weaponHands);
     }
+  } else if (props.card && props.card.type === CardTypeEnum.SPELL) {
+    // Initialize spellData from card
+    spellData.value = {
+      mpCost: props.card.mpCost?.toString() ?? '',
+      fpCost: props.card.fpCost ?? 0,
+      range: props.card.range ?? 'single',
+      target: (props.card as any).target ?? 'single',
+      duration: (props.card as any).duration ?? 'instant',
+      isOffensive: (props.card as any).isOffensive ?? false,
+    };
+    // Synchronize spellData with formData
+    setField('mpCost', spellData.value.mpCost);
+    setField('fpCost', spellData.value.fpCost);
+    setField('range', spellData.value.range);
+    setField('target', spellData.value.target);
+    setField('duration', spellData.value.duration);
+    setField('isOffensive', spellData.value.isOffensive);
   } else if (formData.value.type === CardTypeEnum.EQUIPMENT) {
     // Initialize from formData if available
-    const slot = (formData.value as any).slot || 'weapon';
+    const slot = (formData.value as any).slot || equipmentType.value || 'weapon';
+    equipmentType.value = (slot === 'weapon' || slot === 'armor' || slot === 'shield' || slot === 'accessory')
+      ? slot
+      : 'weapon';
     const isWeapon = slot === 'weapon';
     const isArmor = slot === 'armor';
+    const isShield = slot === 'shield';
 
     equipmentData.value = {
       slot,
@@ -595,6 +661,9 @@ onMounted(() => {
         defense: { fixedValue: 0 },
         magicDefense: { fixedValue: 0 },
         initiative: null,
+      } : isShield ? {
+        defense: { fixedValue: 0 },
+        magicDefense: { fixedValue: 0 },
       } : {
         magic: 0,
       }),
@@ -609,6 +678,40 @@ onMounted(() => {
       setField('weaponType', equipmentData.value.weaponType);
       setField('weaponHands', equipmentData.value.weaponHands);
     }
+  } else if (props.card && props.card.type === CardTypeEnum.SPELL) {
+    // Initialize spellData from card
+    spellData.value = {
+      mpCost: props.card.mpCost?.toString() ?? '',
+      fpCost: props.card.fpCost ?? 0,
+      range: props.card.range ?? 'single',
+      target: (props.card as any).target ?? 'single',
+      duration: (props.card as any).duration ?? 'instant',
+      isOffensive: (props.card as any).isOffensive ?? false,
+    };
+    // Synchronize spellData with formData
+    setField('mpCost', spellData.value.mpCost);
+    setField('fpCost', spellData.value.fpCost);
+    setField('range', spellData.value.range);
+    setField('target', spellData.value.target);
+    setField('duration', spellData.value.duration);
+    setField('isOffensive', spellData.value.isOffensive);
+  } else if (formData.value.type === CardTypeEnum.SPELL) {
+    // Initialize from formData if available
+    spellData.value = {
+      mpCost: (formData.value as any).mpCost?.toString() ?? '',
+      fpCost: (formData.value as any).fpCost ?? 0,
+      range: (formData.value as any).range ?? 'single',
+      target: (formData.value as any).target ?? 'single',
+      duration: (formData.value as any).duration ?? 'instant',
+      isOffensive: (formData.value as any).isOffensive ?? false,
+    };
+    // Synchronize spellData with formData
+    setField('mpCost', spellData.value.mpCost);
+    setField('fpCost', spellData.value.fpCost);
+    setField('range', spellData.value.range);
+    setField('target', spellData.value.target);
+    setField('duration', spellData.value.duration);
+    setField('isOffensive', spellData.value.isOffensive);
   }
 
   // Ensure buyValue is set if not already
@@ -622,8 +725,12 @@ watch(
   (card) => {
     if (card && card.type === CardTypeEnum.EQUIPMENT && 'slot' in card) {
       const slot = card.slot;
+      equipmentType.value = (slot === 'weapon' || slot === 'armor' || slot === 'shield' || slot === 'accessory')
+        ? slot
+        : 'weapon';
       const isWeapon = slot === 'weapon';
       const isArmor = slot === 'armor';
+      const isShield = slot === 'shield';
 
       equipmentData.value = {
         slot,
@@ -642,6 +749,9 @@ watch(
           defense: { fixedValue: 0 },
           magicDefense: { fixedValue: 0 },
           initiative: null,
+        } : isShield ? {
+          defense: { fixedValue: 0 },
+          magicDefense: { fixedValue: 0 },
         } : {
           magic: 0,
         }),
@@ -656,6 +766,24 @@ watch(
         setField('weaponType', equipmentData.value.weaponType);
         setField('weaponHands', equipmentData.value.weaponHands);
       }
+    } else if (card && card.type === CardTypeEnum.SPELL) {
+      // Initialize spellData from card
+      spellData.value = {
+        mpCost: card.mpCost ?? 0,
+        fpCost: card.fpCost ?? 0,
+        range: card.range ?? 'single',
+        target: (card as any).target ?? 'single',
+        duration: (card as any).duration ?? 'instant',
+        isOffensive: (card as any).isOffensive ?? false,
+        damage: (card as any).damage ?? 0,
+      };
+      // Synchronize spellData with formData
+      setField('mpCost', spellData.value.mpCost);
+      setField('fpCost', spellData.value.fpCost);
+      setField('range', spellData.value.range);
+      setField('target', spellData.value.target);
+      setField('duration', spellData.value.duration);
+      setField('isOffensive', spellData.value.isOffensive);
     }
   },
   { immediate: true }
@@ -679,6 +807,9 @@ watch(
         mpCost: spellData.value.mpCost,
         fpCost: spellData.value.fpCost,
         range: spellData.value.range,
+        target: spellData.value.target,
+        duration: spellData.value.duration,
+        isOffensive: spellData.value.isOffensive,
         effects: [],
       });
     }
@@ -1100,6 +1231,124 @@ function updateInitiativeValue(value: number): void {
   }
 }
 
+// Get the select value for type field
+function getTypeSelectValue(): string {
+  if (formData.value.type === CardTypeEnum.EQUIPMENT) {
+    const slot = (formData.value as any).slot || equipmentData.value.slot || equipmentType.value;
+    // Map slot to equipment type (only weapon, armor, shield, accessory are shown in select)
+    if (slot === 'weapon' || slot === 'armor' || slot === 'shield' || slot === 'accessory') {
+      return `EQUIPMENT_${slot.toUpperCase()}`;
+    }
+    // Default to weapon if slot is something else
+    return 'EQUIPMENT_WEAPON';
+  }
+  return formData.value.type || '';
+}
+
+// Handle type change from select
+function handleTypeChange(value: string): void {
+  if (value.startsWith('EQUIPMENT_')) {
+    const slot = value.replace('EQUIPMENT_', '').toLowerCase() as 'weapon' | 'armor' | 'shield' | 'accessory';
+    equipmentType.value = slot;
+    equipmentData.value.slot = slot;
+    setField('type', CardTypeEnum.EQUIPMENT);
+    setField('slot', slot);
+
+    // Initialize stats based on slot type
+    if (slot === 'weapon') {
+      if (!equipmentData.value.stats?.accuracy) {
+        equipmentData.value.stats = {
+          accuracy: {
+            stat1: AccuracyStatEnum.ZR,
+            stat2: AccuracyStatEnum.PO,
+            modifier: 0,
+          },
+          damage: {
+            modifier: 0,
+            type: DamageTypeEnum.PHYSICAL,
+          },
+          magic: 0,
+        };
+      }
+      if (!equipmentData.value.weaponType) {
+        equipmentData.value.weaponType = WeaponTypeEnum.MELEE;
+      }
+      if (!equipmentData.value.weaponHands) {
+        equipmentData.value.weaponHands = WeaponHandsEnum.ONE_HANDED;
+      }
+    } else if (slot === 'armor') {
+      if (!equipmentData.value.stats?.defense) {
+        equipmentData.value.stats = {
+          defense: { fixedValue: 0 },
+          magicDefense: { fixedValue: 0 },
+          initiative: null,
+        };
+      }
+    } else if (slot === 'shield') {
+      if (!equipmentData.value.stats?.defense) {
+        equipmentData.value.stats = {
+          defense: { fixedValue: 0 },
+          magicDefense: { fixedValue: 0 },
+        };
+      }
+    } else {
+      if (!equipmentData.value.stats?.magic) {
+        equipmentData.value.stats = {
+          magic: 0,
+        };
+      }
+    }
+    setField('stats', equipmentData.value.stats);
+  } else {
+    setField('type', value as CardType);
+  }
+}
+
+// Get equipment tab label based on slot
+function getEquipmentTabLabel(): string {
+  const slot = equipmentData.value.slot || equipmentType.value;
+  const labels: Record<string, string> = {
+    weapon: 'Broń',
+    armor: 'Pancerz',
+    shield: 'Tarcza',
+    accessory: 'Akcesorium',
+  };
+  return labels[slot] || 'Ekwipunek';
+}
+
+// Shield defense value getters and setters
+function getShieldDefenseValue(type: 'defense' | 'magicDefense'): number {
+  const stat = type === 'defense' ? 'defense' : 'magicDefense';
+  const value = equipmentData.value.stats?.[stat];
+  if (value && typeof value === 'object' && 'fixedValue' in value) {
+    return value.fixedValue || 0;
+  }
+  return 0;
+}
+
+function updateShieldDefenseValue(type: 'defense' | 'magicDefense', value: number): void {
+  if (!equipmentData.value.stats) {
+    equipmentData.value.stats = {};
+  }
+
+  const stat = type === 'defense' ? 'defense' : 'magicDefense';
+
+  // Create new stats object to ensure reactivity
+  const newStats = {
+    ...equipmentData.value.stats,
+    [stat]: {
+      fixedValue: value ?? 0,
+    },
+  };
+
+  equipmentData.value.stats = newStats;
+
+  if (formData.value.type === CardTypeEnum.EQUIPMENT) {
+    const statsToSet = JSON.parse(JSON.stringify(newStats));
+    setField('stats', statsToSet);
+  }
+}
+
 function handleSubmit(): void {
   // Mark that validation has been attempted
   hasValidated.value = true;
@@ -1113,6 +1362,14 @@ function handleSubmit(): void {
       setField('weaponType', equipmentData.value.weaponType);
       setField('weaponHands', equipmentData.value.weaponHands);
     }
+  } else if (formData.value.type === CardTypeEnum.SPELL) {
+    // Synchronize all spell data before validation
+    setField('mpCost', spellData.value.mpCost);
+    setField('fpCost', spellData.value.fpCost);
+    setField('range', spellData.value.range);
+    setField('target', spellData.value.target);
+    setField('duration', spellData.value.duration);
+    setField('isOffensive', spellData.value.isOffensive);
   }
 
   // Run validation
