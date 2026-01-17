@@ -46,7 +46,7 @@ export function useCardForm(initialCard?: Card) {
     return Object.keys(errors.value).length === 0;
   }
 
-  function setField(field: keyof Card, value: any): void {
+  function setField(field: string, value: any): void {
     // For nested objects like stats, create a completely new object to ensure reactivity
     if (field === 'stats' && typeof value === 'object' && value !== null) {
       // Use JSON parse/stringify to create a completely new object reference

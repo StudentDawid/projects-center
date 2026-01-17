@@ -27,3 +27,4 @@ Rules:
 - Implement code splitting for optimized bundle size
   <!-- - Path to the library for translations: libs/translations/src/translations -->
 - When creating new components, and when moving elements, create the UI file in the /ui folder, and the hook files with logic in the /hooks folder.
+- **ALWAYS check for linter errors and HTML/compilation errors before completing a task. Use `read_lints` tool to verify there are no critical errors that would prevent the application from running.**

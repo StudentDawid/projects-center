@@ -122,12 +122,12 @@
               <span
                 v-if="'buyValue' in card && card.buyValue"
                 class="card-footer-cost"
-                >COST: {{ card.buyValue }} ZNT</span
+                >Koszt: {{ card.buyValue }} ZNT</span
               >
               <span
                 v-else-if="'sellValue' in card && card.sellValue"
                 class="card-footer-cost"
-                >COST: {{ card.sellValue }} ZNT</span
+                >Koszt: {{ card.sellValue }} ZNT</span
               >
               <span class="card-footer-rarity">{{
                 getRarityLabel(card.rarity).toUpperCase()
@@ -173,7 +173,7 @@
         <div v-if="'stats' in card && card.stats" class="card-stats-bar">
           <div v-if="getArmorDefense(card)" class="card-stat-item">
             <span class="card-stat-icon material-symbols-outlined">shield</span>
-            <span class="card-stat-text">DEF {{ getArmorDefense(card) }}</span>
+            <span class="card-stat-text">Pancerz {{ getArmorDefense(card) }}</span>
           </div>
           <div
             v-if="getArmorDefense(card) && getArmorMagicDefense(card)"
@@ -181,7 +181,7 @@
           />
           <div v-if="getArmorMagicDefense(card)" class="card-stat-item">
             <span class="card-stat-icon material-symbols-outlined">auto_awesome</span>
-            <span class="card-stat-text">M.DEF {{ getArmorMagicDefense(card) }}</span>
+            <span class="card-stat-text">M. Pancerz {{ getArmorMagicDefense(card) }}</span>
           </div>
           <div
             v-if="getArmorMagicDefense(card)"
@@ -225,12 +225,12 @@
               <span
                 v-if="'buyValue' in card && card.buyValue"
                 class="card-footer-cost"
-                >COST: {{ card.buyValue }} ZNT</span
+                >Koszt: {{ card.buyValue }} ZNT</span
               >
               <span
                 v-else-if="'sellValue' in card && card.sellValue"
                 class="card-footer-cost"
-                >COST: {{ card.sellValue }} ZNT</span
+                >Koszt: {{ card.sellValue }} ZNT</span
               >
               <span class="card-footer-rarity">{{
                 getRarityLabel(card.rarity).toUpperCase()
@@ -276,7 +276,7 @@
         <div v-if="'stats' in card && card.stats" class="card-stats-bar">
           <div v-if="getArmorDefense(card)" class="card-stat-item">
             <span class="card-stat-icon material-symbols-outlined">shield</span>
-            <span class="card-stat-text">DEF +{{ getShieldDefense(card) }}</span>
+            <span class="card-stat-text">Pancerz +{{ getShieldDefense(card) }}</span>
           </div>
           <div
             v-if="getArmorDefense(card) && getArmorMagicDefense(card)"
@@ -284,7 +284,7 @@
           />
           <div v-if="getArmorMagicDefense(card)" class="card-stat-item">
             <span class="card-stat-icon material-symbols-outlined">auto_awesome</span>
-            <span class="card-stat-text">M.DEF +{{ getShieldMagicDefense(card) }}</span>
+            <span class="card-stat-text">M. Pancerz +{{ getShieldMagicDefense(card) }}</span>
           </div>
         </div>
 
@@ -312,12 +312,12 @@
               <span
                 v-if="'buyValue' in card && card.buyValue"
                 class="card-footer-cost"
-                >COST: {{ card.buyValue }} ZNT</span
+                >Koszt: {{ card.buyValue }} ZNT</span
               >
               <span
                 v-else-if="'sellValue' in card && card.sellValue"
                 class="card-footer-cost"
-                >COST: {{ card.sellValue }} ZNT</span
+                >Koszt: {{ card.sellValue }} ZNT</span
               >
               <span class="card-footer-rarity">{{
                 getRarityLabel(card.rarity).toUpperCase()
@@ -383,12 +383,12 @@
               <span
                 v-if="'buyValue' in card && card.buyValue"
                 class="card-footer-cost"
-                >COST: {{ card.buyValue }} ZNT</span
+                >Koszt: {{ card.buyValue }} ZNT</span
               >
               <span
                 v-else-if="'sellValue' in card && card.sellValue"
                 class="card-footer-cost"
-                >COST: {{ card.sellValue }} ZNT</span
+                >Koszt: {{ card.sellValue }} ZNT</span
               >
               <span class="card-footer-rarity">{{
                 getRarityLabel(card.rarity).toUpperCase()
@@ -413,7 +413,6 @@
                   <span class="material-symbols-outlined">bolt</span>
                 </span>
               </h2>
-              <p v-if="getSpellType(card)" class="card-category">{{ getSpellType(card) }}</p>
             </div>
             <div class="card-header-icon">
               <span class="material-symbols-outlined">auto_fix</span>
@@ -1032,7 +1031,7 @@ function getSpellMpCost(card: Card): string | null {
 
 function getSpellType(card: Card): string {
   if (card.type === CardTypeEnum.SPELL) {
-    return (card as any).isOffensive ? 'OFFENSIVE SPELL' : 'SPELL';
+    return 'SPELL';
   }
   return '';
 }
@@ -1099,9 +1098,9 @@ function getArmorInitiative(card: Card): string | null {
       return '-';
     }
     if (initiative > 0) {
-      return `+${initiative} Init`;
+      return `+${initiative} Inicjatywa`;
     } else if (initiative < 0) {
-      return `${initiative} Init`;
+      return `${initiative} Inicjatywa`;
     }
     return '-';
   }
