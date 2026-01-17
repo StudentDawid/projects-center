@@ -111,7 +111,7 @@
 
 <script setup lang="ts">
 import { ref, watch, computed } from 'vue';
-import type { PrintLayoutSettings } from '~/shared/fabula-ultima-card-generator/types/card.types';
+import type { PrintLayoutSettings } from '~/entities/card';
 
 const props = defineProps<{
   settings: PrintLayoutSettings;

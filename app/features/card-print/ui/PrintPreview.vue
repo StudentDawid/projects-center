@@ -53,8 +53,8 @@
 
 <script setup lang="ts">
 import { computed } from 'vue';
-import type { Card, CardType, PrintLayoutSettings } from '~/shared/fabula-ultima-card-generator/types/card.types';
-import { CardType as CardTypeEnum } from '~/shared/fabula-ultima-card-generator/types/card.types';
+import type { Card, CardType, PrintLayoutSettings } from '~/entities/card';
+import { CardType as CardTypeEnum } from '~/entities/card';
 
 const props = defineProps<{
   cards: Card[];

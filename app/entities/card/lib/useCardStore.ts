@@ -3,8 +3,8 @@ import { ref, computed } from 'vue';
 import type {
   Card,
   CardFilters,
-} from '~/shared/fabula-ultima-card-generator/types/card.types';
-import { CardType } from '~/shared/fabula-ultima-card-generator/types/card.types';
+} from '~/entities/card';
+import { CardType } from '~/entities/card';
 
 export const useCardStore = defineStore(
   'fabula-ultima-cards',
@@ -249,3 +249,4 @@ export const useCardStore = defineStore(
     },
   }
 );
+

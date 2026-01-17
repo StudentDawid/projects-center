@@ -1,7 +1,7 @@
 import { ref, computed } from 'vue';
-import type { Card, CardType } from '~/shared/fabula-ultima-card-generator/types/card.types';
-import { CardType as CardTypeEnum, Rarity as RarityEnum } from '~/shared/fabula-ultima-card-generator/types/card.types';
-import { useCardStore } from '~/stores/fabula-ultima-card-generator/cards';
+import type { Card, CardType } from '~/entities/card';
+import { CardType as CardTypeEnum, Rarity as RarityEnum } from '~/entities/card';
+import { useCardStore } from '~/entities/card/lib/useCardStore';
 
 /**
  * Hook do zarządzania formularzem karty

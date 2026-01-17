@@ -609,14 +609,14 @@ import type {
   Card,
   CardType,
   Rarity,
-} from '~/shared/fabula-ultima-card-generator/types/card.types';
+} from '~/entities/card';
 import {
   CardType as CardTypeEnum,
   Rarity as RarityEnum,
   DamageType as DamageTypeEnum,
   AccuracyStat as AccuracyStatEnum,
   WeaponType as WeaponTypeEnum,
-} from '~/shared/fabula-ultima-card-generator/types/card.types';
+} from '~/entities/card';
 
 withDefaults(
   defineProps<{

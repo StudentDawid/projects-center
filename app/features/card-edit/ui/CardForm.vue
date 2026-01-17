@@ -467,7 +467,7 @@
 
 <script setup lang="ts">
 import { ref, computed, watch, onMounted } from 'vue';
-import type { Card, CardType } from '~/shared/fabula-ultima-card-generator/types/card.types';
+import type { Card, CardType } from '~/entities/card';
 import {
   CardType as CardTypeEnum,
   AccuracyStat as AccuracyStatEnum,
@@ -475,7 +475,7 @@ import {
   WeaponType as WeaponTypeEnum,
   WeaponHands as WeaponHandsEnum,
   Rarity as RarityEnum,
-} from '~/shared/fabula-ultima-card-generator/types/card.types';
+} from '~/entities/card';
 import { useCardForm } from '../hooks/useCardForm';
 
 const props = defineProps<{

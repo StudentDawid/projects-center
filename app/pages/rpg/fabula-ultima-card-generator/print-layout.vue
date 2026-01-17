@@ -65,12 +65,12 @@
 
 <script setup lang="ts">
 import { ref, computed } from 'vue';
-import type { Card, CardType, PrintLayoutSettings } from '~/shared/fabula-ultima-card-generator/types/card.types';
-import { CardType as CardTypeEnum } from '~/shared/fabula-ultima-card-generator/types/card.types';
-import { useCardStore } from '~/stores/fabula-ultima-card-generator/cards';
-import { usePrintLayout } from '~/features/rpg-fabula-ultima-card-generator/hooks/usePrintLayout';
-import PrintLayoutSelector from '~/features/rpg-fabula-ultima-card-generator/ui/PrintLayoutSelector.vue';
-import PrintPreview from '~/features/rpg-fabula-ultima-card-generator/ui/PrintPreview.vue';
+import type { Card, CardType, PrintLayoutSettings } from '~/entities/card';
+import { CardType as CardTypeEnum } from '~/entities/card';
+import { useCardStore } from '~/entities/card/lib/useCardStore';
+import { usePrintLayout } from '~/features/card-print/hooks/usePrintLayout';
+import PrintLayoutSelector from '~/features/card-print/ui/PrintLayoutSelector.vue';
+import PrintPreview from '~/features/card-print/ui/PrintPreview.vue';
 
 useHead({
   title: 'Układ do druku - Generator Kart Fabula Ultima',

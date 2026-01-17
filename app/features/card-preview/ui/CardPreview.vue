@@ -73,8 +73,8 @@
 </template>
 
 <script setup lang="ts">
-import type { Card, CardType } from '~/shared/fabula-ultima-card-generator/types/card.types';
-import { CardType as CardTypeEnum } from '~/shared/fabula-ultima-card-generator/types/card.types';
+import type { Card, CardType } from '~/entities/card';
+import { CardType as CardTypeEnum } from '~/entities/card';
 
 defineProps<{
   card: Card;

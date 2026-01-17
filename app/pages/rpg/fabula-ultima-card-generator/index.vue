@@ -76,28 +76,28 @@
       <!-- Canvas / Drafting Table -->
       <div class="workspace-canvas">
         <!-- Card Grid -->
-        <div class="cards-grid">
-          <CardItem
-            v-for="card in displayedCards"
-            :key="card.id"
-            :card="card"
-            @edit="handleEdit"
-            @duplicate="handleDuplicate"
-            @delete="handleDelete"
-          />
-          <!-- Add Card Slot -->
-          <NuxtLink
-            to="/rpg/fabula-ultima-card-generator/new"
-            class="empty-slot add-slot"
-          >
-            <span class="material-symbols-outlined">add_circle</span>
-            <span>Add Card</span>
-          </NuxtLink>
-          <!-- Empty Slots -->
-          <div v-for="i in emptySlots" :key="`empty-${i}`" class="empty-slot">
-            <span>Empty Slot</span>
-          </div>
-        </div>
+        <CardGrid
+          :cards="displayedCards"
+          :show-controls="true"
+          @edit="handleEdit"
+          @duplicate="handleDuplicate"
+          @delete="handleDelete"
+        >
+          <template #empty-slots>
+            <!-- Add Card Slot -->
+            <NuxtLink
+              to="/rpg/fabula-ultima-card-generator/new"
+              class="empty-slot add-slot"
+            >
+              <span class="material-symbols-outlined">add_circle</span>
+              <span>Add Card</span>
+            </NuxtLink>
+            <!-- Empty Slots -->
+            <div v-for="i in emptySlots" :key="`empty-${i}`" class="empty-slot">
+              <span>Empty Slot</span>
+            </div>
+          </template>
+        </CardGrid>
       </div>
     </main>
 
@@ -113,10 +113,10 @@
 
 <script setup lang="ts">
 import { computed, ref } from 'vue';
-import type { Card } from '~/shared/fabula-ultima-card-generator/types/card.types';
-import { useCardStore } from '~/stores/fabula-ultima-card-generator/cards';
-import CardItem from '~/features/rpg-fabula-ultima-card-generator/ui/CardItem.vue';
-import DeleteCardModal from '~/features/rpg-fabula-ultima-card-generator/ui/DeleteCardModal.vue';
+import type { Card } from '~/entities/card';
+import { useCardStore } from '~/entities/card/lib/useCardStore';
+import { CardGrid } from '~/widgets/card-grid/ui';
+import DeleteCardModal from '~/features/card-delete/ui/DeleteCardModal.vue';
 
 useHead({
   title: 'Fabula Ultima Card Creator Workspace - Projects Center',
@@ -442,16 +442,7 @@ function cancelDelete(): void {
   width: 100%;
 }
 
-.cards-grid {
-  display: grid;
-  grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
-  gap: 2rem;
-  width: 100%;
-  max-width: 100%;
-  align-content: start;
-  align-items: start;
-  justify-items: stretch;
-}
+// Card grid styles moved to widget
 
 .empty-slot {
   aspect-ratio: 63 / 88;

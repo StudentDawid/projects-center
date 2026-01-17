@@ -2,7 +2,7 @@ import { ref, computed } from 'vue';
 import type {
   Card,
   PrintLayoutSettings,
-} from '~/shared/fabula-ultima-card-generator/types/card.types';
+} from '~/entities/card';
 
 /**
  * Hook do zarządzania układem do druku

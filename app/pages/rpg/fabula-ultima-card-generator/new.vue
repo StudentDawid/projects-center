@@ -73,7 +73,7 @@
 </template>
 
 <script setup lang="ts">
-import type { Card } from '~/shared/fabula-ultima-card-generator/types/card.types';
+import type { Card } from '~/entities/card';
 import {
   CardType as CardTypeEnum,
   Rarity as RarityEnum,
@@ -81,8 +81,8 @@ import {
   DamageType as DamageTypeEnum,
   WeaponType as WeaponTypeEnum,
   WeaponHands as WeaponHandsEnum,
-} from '~/shared/fabula-ultima-card-generator/types/card.types';
-import { useCardStore } from '~/stores/fabula-ultima-card-generator/cards';
+} from '~/entities/card';
+import { useCardStore } from '~/entities/card/lib/useCardStore';
 
 useHead({
   title: 'Dodaj kartę - Generator Kart Fabula Ultima',

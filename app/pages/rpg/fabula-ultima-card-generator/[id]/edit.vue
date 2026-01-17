@@ -90,10 +90,10 @@
 
 <script setup lang="ts">
 import { computed, ref, watchEffect } from 'vue';
-import type { Card } from '~/shared/fabula-ultima-card-generator/types/card.types';
-import { useCardStore } from '~/stores/fabula-ultima-card-generator/cards';
-import CardForm from '~/features/rpg-fabula-ultima-card-generator/ui/CardForm.vue';
-import CardItem from '~/features/rpg-fabula-ultima-card-generator/ui/CardItem.vue';
+import type { Card } from '~/entities/card';
+import { useCardStore } from '~/entities/card/lib/useCardStore';
+import CardForm from '~/features/card-edit/ui/CardForm.vue';
+import { CardItem } from '~/entities/card/ui';
 
 const route = useRoute();
 const router = useRouter();

@@ -21,9 +21,10 @@
 </template>
 
 <script setup lang="ts">
-import type { Card, CardFilters } from '~/shared/fabula-ultima-card-generator/types/card.types';
-import { useCardStore } from '~/stores/fabula-ultima-card-generator/cards';
-import CardItem from './CardItem.vue';
+import { computed } from 'vue';
+import type { Card, CardFilters } from '~/entities/card';
+import { useCardStore } from '~/entities/card/lib/useCardStore';
+import { CardItem } from '~/entities/card/ui';
 
 const props = defineProps<{
   filters?: CardFilters;
