@@ -204,6 +204,31 @@ const projects: Project[] = [
     link: '/rpg/fabula-ultima-card-generator',
     tags: ['Vue.js', 'Card Creator', 'Fabula Ultima'],
     status: 'development',
+  },
+  {
+    id: 'merchant-idle',
+    title: 'Merchant Idle',
+    description:
+      'Zarządzaj gildią kupiecką w mrocznym świecie. Handluj, zatrudniaj pracowników i unikaj inkwizycji.',
+    category: 'Gra IDLE',
+    icon: 'mdi-hand-coin',
+    color: '#ff9800',
+    link: '/merchant-idle',
+    tags: ['Vue.js', 'Pinia', 'Idle Game', 'Nuxt'],
+    status: 'development',
+    featured: true,
+  },
+  {
+    id: 'rpg-card-generator',
+    title: 'Generator Kart RPG',
+    description:
+      'Twórz własne karty przedmiotów, czarów i umiejętności do sesji RPG. Drukuj zestawy na A4.',
+    category: 'Narzędzie RPG',
+    icon: 'mdi-cards-playing',
+    color: '#f44336',
+    link: '/mtg-card-generator',
+    tags: ['Vue.js', 'Pinia', 'Print Tools'],
+    status: 'active',
     featured: false,
   },
 ];
