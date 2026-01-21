@@ -3,7 +3,7 @@
     <v-card-title class="text-overline text-grey-lighten-1 pb-1">
       Journal
     </v-card-title>
-    <div class="log-container pa-3" ref="logContainer">
+    <div ref="logContainer" class="log-container pa-3">
       <div
         v-if="store.events.length === 0"
         class="text-center text-grey-darken-2 py-4 text-caption"

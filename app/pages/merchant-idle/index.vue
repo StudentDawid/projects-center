@@ -32,11 +32,45 @@
           </v-alert>
         </v-col>
 
-        <!-- Right Column: Upgrades & Management -->
+        <!-- Right Column: Management Tabs -->
         <v-col cols="12" md="7" lg="8">
-          <WorldMap />
-          <TechTree />
-          <UpgradeList />
+          <v-tabs v-model="rightTab" color="amber-darken-3" grow class="mb-4">
+            <v-tab value="map">
+              <v-icon start>mdi-map</v-icon>
+              Trade Routes
+            </v-tab>
+            <v-tab value="guild">
+              <v-icon start>mdi-office-building</v-icon>
+              Guild Operations
+            </v-tab>
+            <v-tab value="prestige">
+              <v-icon start>mdi-podium-gold</v-icon>
+              Grand Hall
+            </v-tab>
+            <v-tab value="stats">
+              <v-icon start>mdi-chart-bar</v-icon>
+              Ledger
+            </v-tab>
+          </v-tabs>
+
+          <v-window v-model="rightTab">
+            <v-window-item value="map">
+              <WorldMap />
+            </v-window-item>
+
+            <v-window-item value="guild">
+              <TechTree />
+              <UpgradeList />
+            </v-window-item>
+
+            <v-window-item value="prestige">
+              <PrestigeMenu />
+            </v-window-item>
+
+            <v-window-item value="stats">
+              <StatisticsMenu />
+            </v-window-item>
+          </v-window>
         </v-col>
       </v-row>
     </v-container>
@@ -52,12 +86,15 @@ import UpgradeList from '~/features/merchant/ui/UpgradeList.vue';
 import EventLog from '~/features/merchant/ui/EventLog.vue';
 import TechTree from '~/features/merchant/ui/TechTree.vue';
 import WorldMap from '~/features/merchant/ui/WorldMap.vue';
+import PrestigeMenu from '~/features/merchant/ui/PrestigeMenu.vue';
+import StatisticsMenu from '~/features/merchant/ui/StatisticsMenu.vue';
 import FloatingText, {
   type FloatingItem,
 } from '~/features/merchant/ui/FloatingText.vue';
 
 const store = useMerchantStore();
 const floatingTexts = ref<FloatingItem[]>([]);
+const rightTab = ref('guild');
 
 const handleTrade = (e: { x: number; y: number }) => {
   store.clickResource();

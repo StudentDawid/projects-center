@@ -62,4 +62,14 @@ export interface GameState {
   caravans: Caravan[];
   events: LogEvent[];
   lastTick: number; // timestamp
+  reputation: Decimal;
+  reputationUpgrades: string[];
+  stats: {
+    totalClicks: number;
+    totalGoldFromClicks: Decimal;
+    totalGoldFromTrade: Decimal;
+    prestigeCount: number;
+    startTime: number;
+    lastPrestigeTime: number;
+  };
 }

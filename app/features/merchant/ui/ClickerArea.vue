@@ -1,13 +1,13 @@
 <template>
   <div class="d-flex justify-center align-center py-8">
     <v-btn
-      @click="handleClick"
       color="brown-darken-4"
       size="x-large"
       height="120"
       width="120"
       class="clicker-btn rounded-circle elevation-10"
       ripple
+      @click="handleClick"
     >
       <div class="d-flex flex-column align-center">
         <v-icon size="40" class="mb-2">mdi-hand-coin</v-icon>

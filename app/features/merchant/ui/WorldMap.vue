@@ -36,7 +36,7 @@
         }"
       >
         <v-menu location="top" offset="10" open-on-hover>
-          <template v-slot:activator="{ props }">
+          <template #activator="{ props }">
             <v-btn
               v-bind="props"
               icon
@@ -68,7 +68,7 @@
                 color="brown"
                 size="small"
                 block
-                :disabled="!store.gold.lt || store.gold.lt(city.discoveryCost)"
+                :disabled="store.gold.lt(city.discoveryCost)"
                 @click="store.discoverCity(city.id)"
               >
                 Scout Route
@@ -123,7 +123,7 @@ const getCityIcon = (city: City) => {
   return 'mdi-home-group';
 };
 
-const handleCityClick = (city: City) => {
+const handleCityClick = (_city: City) => {
   // handled by menu buttons, but could focus camera later
 };
 

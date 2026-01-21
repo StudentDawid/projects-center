@@ -9,34 +9,41 @@
         :key="worker.id"
         class="border-b border-color-grey-darken-3"
       >
-        <template v-slot:prepend>
+        <template #prepend>
           <v-avatar color="blue-grey-darken-4" size="48">
             <span class="text-h6">{{ worker.count }}</span>
           </v-avatar>
         </template>
 
-        <v-list-item-title class="font-weight-bold text-amber-lighten-4">
-          {{ worker.name }}
-        </v-list-item-title>
+        <div class="w-100 pl-4 pr-2">
+          <v-list-item-title class="font-weight-bold text-amber-lighten-4">
+            {{ worker.name }}
+          </v-list-item-title>
 
-        <v-list-item-subtitle class="text-grey">
-          {{ worker.description }}
-          <br />
-          <span class="text-green-lighten-2 text-caption">
-            +{{ worker.baseProduction }} GPS
-          </span>
-        </v-list-item-subtitle>
+          <div class="text-caption text-grey mb-1 text-wrap">
+            {{ worker.description }}
+          </div>
+          <div class="d-flex justify-space-between align-center mt-1 w-100">
+            <span class="text-green-lighten-2 text-caption font-weight-bold">
+              +{{ store.formatNumber(worker.baseProduction) }} GPS/ea
+            </span>
+            <span
+              class="text-amber-lighten-2 text-caption font-weight-bold"
+              v-if="worker.count > 0"
+            >
+              Total: +{{ store.formatNumber(store.getWorkerTotal(worker)) }} GPS
+            </span>
+          </div>
+        </div>
 
-        <template v-slot:append>
+        <template #append>
           <v-btn
-            :disabled="
-              !store.gold.lt || store.gold.lt(store.getWorkerCost(worker.id))
-            "
-            @click="store.hireWorker(worker.id)"
+            :disabled="store.gold.lt(store.getWorkerCost(worker.id))"
             color="amber-darken-3"
             variant="tonal"
             size="small"
             style="min-width: 80px"
+            @click="store.hireWorker(worker.id)"
           >
             {{ store.formatNumber(store.getWorkerCost(worker.id)) }} G
           </v-btn>
