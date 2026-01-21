@@ -68,7 +68,7 @@
                 color="brown"
                 size="small"
                 block
-                :disabled="store.gold.lt(city.discoveryCost)"
+                :disabled="!store.canAfford(city.discoveryCost)"
                 @click="store.discoverCity(city.id)"
               >
                 Scout Route

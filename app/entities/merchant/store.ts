@@ -395,17 +395,19 @@ export const useMerchantStore = defineStore(
 
     // Getters
     const prestigeGain = computed((): Decimal => {
-      if (lifetimeGold.value.lt(1e12)) return bn(0);
-      return lifetimeGold.value.div(1e12).sqrt().floor();
+      const lg = bn(lifetimeGold.value);
+      if (lg.lt(1e12)) return bn(0);
+      return lg.div(1e12).sqrt().floor();
     });
 
     const reputationMultiplier = computed((): Decimal => {
       // 5% bonus per reputation point
-      return bn(1).add(reputation.value.mul(0.05));
+      const rep = bn(reputation.value);
+      return bn(1).add(rep.mul(0.05));
     });
 
     const goldPerSecond = computed((): Decimal => {
-      let multiplier = reputationMultiplier.value.toNumber();
+      let multiplier = bn(reputationMultiplier.value).toNumber();
       const hasUpgrade = (id: string) =>
         !!upgrades.value.find((u) => u.id === id && u.purchased);
 
@@ -438,7 +440,8 @@ export const useMerchantStore = defineStore(
       if (hasUpgrade('iron_stylus')) power = power.mul(2);
       if (hasUpgrade('gem_stylus')) power = power.mul(3);
 
-      const gpsScaled = goldPerSecond.value.mul(0.05);
+      const gps = bn(goldPerSecond.value);
+      const gpsScaled = gps.mul(0.05);
       return power.gt(gpsScaled) ? power : gpsScaled;
     });
 
@@ -447,8 +450,12 @@ export const useMerchantStore = defineStore(
     );
 
     // Actions
+    function canAfford(cost: Decimal | number): boolean {
+      return bn(gold.value).gte(bn(cost));
+    }
+
     function formatNumber(num: Decimal | number): string {
-      return formatBn(num);
+      return formatBn(bn(num));
     }
 
     function addEvent(message: string, type: LogEvent['type'] = 'info') {
@@ -482,6 +489,13 @@ export const useMerchantStore = defineStore(
       } else {
         stats.value.totalGoldFromClicks = bn(stats.value.totalGoldFromClicks);
         stats.value.totalGoldFromTrade = bn(stats.value.totalGoldFromTrade);
+        // Ensure other fields are present
+        if (stats.value.totalClicks === undefined) stats.value.totalClicks = 0;
+        if (stats.value.prestigeCount === undefined)
+          stats.value.prestigeCount = 0;
+        if (!stats.value.startTime) stats.value.startTime = Date.now();
+        if (!stats.value.lastPrestigeTime)
+          stats.value.lastPrestigeTime = Date.now();
       }
 
       workers.value.forEach((worker) => {
@@ -708,6 +722,7 @@ export const useMerchantStore = defineStore(
       sendCaravan,
       tick,
       prestige,
+      canAfford,
     };
   },
   {

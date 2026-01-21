@@ -22,7 +22,7 @@
               <template #activator="{ props }">
                 <v-btn
                   v-bind="props"
-                  :disabled="store.gold.lt(upgrade.cost)"
+                  :disabled="!store.canAfford(upgrade.cost)"
                   color="amber-darken-4"
                   variant="elevated"
                   class="flex-grow-1"

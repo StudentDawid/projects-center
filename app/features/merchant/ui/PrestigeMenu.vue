@@ -63,13 +63,13 @@
             block
             color="amber-darken-4"
             size="x-large"
-            :disabled="store.prestigeGain.lte(0)"
+            :disabled="store.prestigeGain.eq(0)"
             @click="confirmPrestige = true"
           >
             Retire and Ascend
           </v-btn>
           <span
-            v-if="store.prestigeGain.lte(0)"
+            v-if="store.prestigeGain.eq(0)"
             class="text-caption text-error mt-2"
           >
             Requires at least 1.00T lifetime gold to gain reputation.

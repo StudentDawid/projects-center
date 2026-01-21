@@ -38,7 +38,7 @@
 
         <template #append>
           <v-btn
-            :disabled="store.gold.lt(store.getWorkerCost(worker.id))"
+            :disabled="!store.canAfford(store.getWorkerCost(worker.id))"
             color="amber-darken-3"
             variant="tonal"
             size="small"
