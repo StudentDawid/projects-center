@@ -1,6 +1,6 @@
 import { defineStore } from 'pinia';
 import { ref, computed } from 'vue';
-import type { LogEvent, Caravan, Worker, Upgrade, City } from './model';
+import type { LogEvent, Caravan, Worker, Upgrade, City } from '../model';
 import { bn, Decimal, formatNumber as formatBn } from '~/shared/lib/big-number';
 
 const defaultWorkers: Worker[] = [
@@ -735,3 +735,4 @@ export const useMerchantStore = defineStore(
     },
   }
 );
+

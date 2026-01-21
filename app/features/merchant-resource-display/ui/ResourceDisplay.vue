@@ -34,7 +34,7 @@
 </template>
 
 <script setup lang="ts">
-import { useMerchantStore } from '~/entities/merchant/store';
+import { useMerchantStore } from '~/entities/merchant';
 
 const store = useMerchantStore();
 </script>
@@ -60,3 +60,4 @@ const store = useMerchantStore();
   font-weight: normal;
 }
 </style>
+

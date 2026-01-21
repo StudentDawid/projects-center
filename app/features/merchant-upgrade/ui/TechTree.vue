@@ -90,7 +90,7 @@
 
 <script setup lang="ts">
 import { computed, ref } from 'vue';
-import { useMerchantStore } from '~/entities/merchant/store';
+import { useMerchantStore } from '~/entities/merchant';
 
 const store = useMerchantStore();
 const tab = ref('available');
@@ -112,3 +112,4 @@ const ownedUpgrades = computed(() => {
   border: 1px solid rgba(255, 179, 0, 0.3);
 }
 </style>
+

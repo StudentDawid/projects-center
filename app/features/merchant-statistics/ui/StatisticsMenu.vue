@@ -151,7 +151,7 @@
 
 <script setup lang="ts">
 import { computed, ref, onMounted, onUnmounted } from 'vue';
-import { useMerchantStore } from '~/entities/merchant/store';
+import { useMerchantStore } from '~/entities/merchant';
 import StatItem from './StatItem.vue';
 
 const store = useMerchantStore();
@@ -206,3 +206,4 @@ const formatDuration = (ms: number) => {
   padding: 4px 0;
 }
 </style>
+

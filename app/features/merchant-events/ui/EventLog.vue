@@ -1,6 +1,6 @@
 <template>
   <v-card color="#111" class="mt-4 event-log-card" elevation="4">
-    <v-card-title class="text-overline text-grey-lighten-1 pb-1">
+    <v-card-title class="text-overline text-grey-lighten-1">
       Journal
     </v-card-title>
     <div ref="logContainer" class="log-container pa-3">
@@ -26,7 +26,7 @@
 </template>
 
 <script setup lang="ts">
-import { useMerchantStore } from '~/entities/merchant/store';
+import { useMerchantStore } from '~/entities/merchant';
 
 const store = useMerchantStore();
 
@@ -77,3 +77,4 @@ const formatTime = (ts: number) => {
   border-radius: 3px;
 }
 </style>
+

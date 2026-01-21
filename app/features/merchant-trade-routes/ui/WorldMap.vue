@@ -97,8 +97,8 @@
 
 <script setup lang="ts">
 import { computed } from 'vue';
-import { useMerchantStore } from '~/entities/merchant/store';
-import type { City } from '~/entities/merchant/model';
+import { useMerchantStore } from '~/entities/merchant';
+import type { City } from '~/entities/merchant';
 
 const store = useMerchantStore();
 
@@ -182,3 +182,4 @@ const isCaravanActive = (cityId: string) => {
   }
 }
 </style>
+

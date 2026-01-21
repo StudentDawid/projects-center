@@ -78,56 +78,23 @@
 </template>
 
 <script setup lang="ts">
-import { onMounted, onUnmounted, ref } from 'vue';
-import { useMerchantStore } from '~/entities/merchant/store';
-import ResourceDisplay from '~/features/merchant/ui/ResourceDisplay.vue';
-import ClickerArea from '~/features/merchant/ui/ClickerArea.vue';
-import UpgradeList from '~/features/merchant/ui/UpgradeList.vue';
-import EventLog from '~/features/merchant/ui/EventLog.vue';
-import TechTree from '~/features/merchant/ui/TechTree.vue';
-import WorldMap from '~/features/merchant/ui/WorldMap.vue';
-import PrestigeMenu from '~/features/merchant/ui/PrestigeMenu.vue';
-import StatisticsMenu from '~/features/merchant/ui/StatisticsMenu.vue';
-import FloatingText, {
-  type FloatingItem,
-} from '~/features/merchant/ui/FloatingText.vue';
+import { ref } from 'vue';
+import { useClicker, useGameLoop } from '~/features/merchant-clicker/hooks';
+import { ClickerArea, FloatingText } from '~/features/merchant-clicker/ui';
+import { ResourceDisplay } from '~/features/merchant-resource-display/ui';
+import { EventLog } from '~/features/merchant-events/ui';
+import { TechTree, UpgradeList } from '~/features/merchant-upgrade/ui';
+import { WorldMap } from '~/features/merchant-trade-routes/ui';
+import { PrestigeMenu } from '~/features/merchant-prestige/ui';
+import { StatisticsMenu } from '~/features/merchant-statistics/ui';
 
-const store = useMerchantStore();
-const floatingTexts = ref<FloatingItem[]>([]);
+// Initialize game loop
+useGameLoop();
+
+// Setup clicker functionality
+const { floatingTexts, handleTrade } = useClicker();
+
 const rightTab = ref('guild');
-
-const handleTrade = (e: { x: number; y: number }) => {
-  store.clickResource();
-
-  const id = crypto.randomUUID();
-  // Get formatted amount nicely for float text
-  const amount = store.formatNumber(store.currentClickPower);
-
-  floatingTexts.value.push({
-    id,
-    x: e.x,
-    y: e.y,
-    text: amount,
-  });
-
-  // Cleanup after animation (1s)
-  setTimeout(() => {
-    floatingTexts.value = floatingTexts.value.filter((item) => item.id !== id);
-  }, 1200);
-};
-
-let tickInterval: ReturnType<typeof setInterval> | null = null;
-
-onMounted(() => {
-  store.syncContent();
-  tickInterval = setInterval(() => {
-    store.tick(100); // 100ms ticks
-  }, 100);
-});
-
-onUnmounted(() => {
-  if (tickInterval) clearInterval(tickInterval);
-});
 </script>
 
 <style>

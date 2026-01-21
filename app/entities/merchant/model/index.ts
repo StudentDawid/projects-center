@@ -73,3 +73,4 @@ export interface GameState {
     lastPrestigeTime: number;
   };
 }
+

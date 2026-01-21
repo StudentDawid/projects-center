@@ -105,7 +105,7 @@
 
 <script setup lang="ts">
 import { ref } from 'vue';
-import { useMerchantStore } from '~/entities/merchant/store';
+import { useMerchantStore } from '~/entities/merchant';
 
 const store = useMerchantStore();
 const confirmPrestige = ref(false);
@@ -144,3 +144,4 @@ const doPrestige = () => {
   box-shadow: 0 0 30px rgba(255, 179, 0, 0.4);
 }
 </style>
+

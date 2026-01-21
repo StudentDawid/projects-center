@@ -54,7 +54,7 @@
 </template>
 
 <script setup lang="ts">
-import { useMerchantStore } from '~/entities/merchant/store';
+import { useMerchantStore } from '~/entities/merchant';
 
 const store = useMerchantStore();
 </script>
@@ -64,3 +64,4 @@ const store = useMerchantStore();
   border-bottom: 1px solid rgba(255, 255, 255, 0.1);
 }
 </style>
+
