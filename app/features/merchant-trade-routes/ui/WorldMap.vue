@@ -8,6 +8,9 @@
     </v-card-title>
 
     <div class="map-container relative">
+      <!-- Continent Map Background -->
+      <ContinentMap />
+
       <!-- SVG Layer for Lines -->
       <svg class="map-connections">
         <line
@@ -55,10 +58,16 @@
               <div v-if="!city.unlocked" class="mt-2 text-warning">
                 Cost to discover: {{ store.formatNumber(city.discoveryCost) }} G
               </div>
-              <div v-else-if="city.id !== 'capital'" class="mt-2 text-success">
-                Returns: ~{{ Math.floor(100 * city.tradeRewardMultiplier) }} G
-                <br />
-                Travel: {{ 10 * city.distanceMultiplier }}s
+              <div v-else-if="city.id !== 'capital'" class="mt-2">
+                <div class="text-success">
+                  Returns: ~{{ Math.floor(100 * city.tradeRewardMultiplier) }} G
+                  <br />
+                  Travel: {{ 10 * city.distanceMultiplier }}s
+                </div>
+                <div v-if="hasFactor(city.id)" class="mt-2 text-amber-lighten-2">
+                  <v-icon size="small">mdi-account-tie</v-icon>
+                  Factor Active (Level {{ getFactorLevel(city.id) }})
+                </div>
               </div>
             </v-card-text>
             <v-card-actions v-if="city.id !== 'capital'">
@@ -99,6 +108,7 @@
 import { computed } from 'vue';
 import { useMerchantStore } from '~/entities/merchant';
 import type { City } from '~/entities/merchant';
+import ContinentMap from './ContinentMap.vue';
 
 const store = useMerchantStore();
 
@@ -130,6 +140,15 @@ const handleCityClick = (_city: City) => {
 const isCaravanActive = (cityId: string) => {
   return store.caravans.some((c) => c.targetCityId === cityId);
 };
+
+const hasFactor = (cityId: string) => {
+  return store.factors.some((f) => f.cityId === cityId && f.hired);
+};
+
+const getFactorLevel = (cityId: string) => {
+  const factor = store.factors.find((f) => f.cityId === cityId && f.hired);
+  return factor?.level || 0;
+};
 </script>
 
 <style scoped>
@@ -139,9 +158,7 @@ const isCaravanActive = (cityId: string) => {
 .map-container {
   width: 100%;
   aspect-ratio: 16/9;
-  background: #0d0d0d;
-  background-image: radial-gradient(#1a1a1a 1px, transparent 1px);
-  background-size: 20px 20px;
+  background: #0a0a0a;
   position: relative;
   overflow: hidden;
 }
@@ -152,6 +169,7 @@ const isCaravanActive = (cityId: string) => {
   width: 100%;
   height: 100%;
   pointer-events: none;
+  z-index: 1;
 }
 .city-node {
   position: absolute;

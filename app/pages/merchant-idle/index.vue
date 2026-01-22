@@ -1,5 +1,8 @@
 <template>
   <div class="merchant-game-container fill-height bg-black text-white pa-4">
+    <DevPanel />
+    <AchievementToast />
+    <OfflineProgressModal />
     <FloatingText :items="floatingTexts" />
 
     <v-container>
@@ -51,6 +54,14 @@
               <v-icon start>mdi-chart-bar</v-icon>
               Ledger
             </v-tab>
+            <v-tab value="factors">
+              <v-icon start>mdi-account-tie</v-icon>
+              Factors
+            </v-tab>
+            <v-tab value="achievements">
+              <v-icon start>mdi-trophy</v-icon>
+              Achievements
+            </v-tab>
           </v-tabs>
 
           <v-window v-model="rightTab">
@@ -70,6 +81,14 @@
             <v-window-item value="stats">
               <StatisticsMenu />
             </v-window-item>
+
+            <v-window-item value="factors">
+              <FactorManagement />
+            </v-window-item>
+
+            <v-window-item value="achievements">
+              <AchievementPanel />
+            </v-window-item>
           </v-window>
         </v-col>
       </v-row>
@@ -87,6 +106,10 @@ import { TechTree, UpgradeList } from '~/features/merchant-upgrade/ui';
 import { WorldMap } from '~/features/merchant-trade-routes/ui';
 import { PrestigeMenu } from '~/features/merchant-prestige/ui';
 import { StatisticsMenu } from '~/features/merchant-statistics/ui';
+import { FactorManagement } from '~/features/merchant-factors/ui';
+import { DevPanel } from '~/features/merchant-dev/ui';
+import { AchievementPanel, AchievementToast } from '~/features/merchant-achievements/ui';
+import { OfflineProgressModal } from '~/features/merchant-offline/ui';
 
 // Initialize game loop
 useGameLoop();

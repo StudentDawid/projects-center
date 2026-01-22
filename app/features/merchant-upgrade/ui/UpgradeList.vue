@@ -37,16 +37,29 @@
         </div>
 
         <template #append>
-          <v-btn
-            :disabled="!store.canAfford(store.getWorkerCost(worker.id))"
-            color="amber-darken-3"
-            variant="tonal"
-            size="small"
-            style="min-width: 80px"
-            @click="store.hireWorker(worker.id)"
-          >
-            {{ store.formatNumber(store.getWorkerCost(worker.id)) }} G
-          </v-btn>
+          <div class="d-flex flex-column gap-1 align-end">
+            <v-btn
+              :disabled="!store.canAfford(store.getWorkerCost(worker.id))"
+              color="amber-darken-3"
+              variant="tonal"
+              size="small"
+              style="min-width: 80px"
+              @click="store.hireWorker(worker.id, 1)"
+            >
+              {{ store.formatNumber(store.getWorkerCost(worker.id)) }} G
+            </v-btn>
+            <v-btn
+              v-if="store.getMaxAffordableWorkers(worker.id) > 1"
+              :disabled="!store.canAfford(store.getWorkerCost(worker.id))"
+              color="amber-darken-2"
+              variant="text"
+              size="x-small"
+              style="min-width: 80px"
+              @click="store.hireWorker(worker.id, store.getMaxAffordableWorkers(worker.id))"
+            >
+              Max ({{ store.getMaxAffordableWorkers(worker.id) }})
+            </v-btn>
+          </div>
         </template>
       </v-list-item>
     </v-list>
