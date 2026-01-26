@@ -1,8 +1,5 @@
 # projects-center
-Centrum for all guthub pages projects
-
-
-## Solmar Sanctuary
+Centrum for all github pages projects
 
 A clean Nuxt 3 project with Vue 3, Vuetify, Pinia, TypeScript, Axios, and Sass.
 
