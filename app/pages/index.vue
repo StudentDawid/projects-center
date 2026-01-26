@@ -155,6 +155,19 @@ function handleProjectClick(link: string, event: MouseEvent | KeyboardEvent) {
 
 const projects: Project[] = [
   {
+    id: 'ateria-idle',
+    title: 'Echa Aterii',
+    description:
+      'Gra typu Idle RPG w klimacie fantasy. Wybierz ścieżkę Wojownika, Naukowca lub Handlarza i odkryj złożony świat Aterii.',
+    category: 'Gra IDLE',
+    icon: 'mdi-sword-cross',
+    color: '#9c27b0',
+    link: '/ateria-idle',
+    tags: ['Vue.js', 'Pinia', 'Idle Game', 'RPG'],
+    status: 'development',
+    featured: true,
+  },
+  {
     id: 'rpg-map-generator',
     title: 'Generator Map RPG',
     description:

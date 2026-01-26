@@ -7,11 +7,13 @@ import { onMounted, onUnmounted, ref } from 'vue';
 import { useAteriaGameStore } from '~/features/ateria-idle/core/model/game.store';
 import { useAteriaResourcesStore } from '~/features/ateria-idle/core/model/resources.store';
 import { useAteriaWarriorStore } from '~/features/ateria-idle/warrior/model/warrior.store';
+import type { OfflineReport } from '~/entities/ateria-idle/game';
 
 // Components
 import AteriaResourceBar from '~/features/ateria-idle/core/ui/ResourceBar.vue';
 import AteriaWarriorPanel from '~/features/ateria-idle/warrior/ui/WarriorPanel.vue';
 import AteriaNotifications from '~/features/ateria-idle/core/ui/Notifications.vue';
+import AteriaOfflineProgressModal from '~/features/ateria-idle/core/ui/OfflineProgressModal.vue';
 
 // Stores
 const gameStore = useAteriaGameStore();
@@ -20,11 +22,16 @@ const warriorStore = useAteriaWarriorStore();
 
 // Game loop
 const TICK_RATE = 100; // 10 ticks per second
+const MAX_OFFLINE_HOURS = 24;
 let gameLoopInterval: ReturnType<typeof setInterval> | null = null;
 let lastTickTime = Date.now();
 
 // Navigation
 const activeTab = ref<'warrior' | 'scientist' | 'merchant'>('warrior');
+
+// Offline progress
+const showOfflineModal = ref(false);
+const offlineReport = ref<OfflineReport | null>(null);
 
 // Navigation items
 const navItems = computed(() => [
@@ -83,18 +90,148 @@ function stopGameLoop() {
   }
 }
 
+// Offline progress calculation
+function calculateOfflineProgress(timeAwayMs: number): OfflineReport {
+  // Cap offline time
+  const maxOfflineMs = MAX_OFFLINE_HOURS * 60 * 60 * 1000;
+  const cappedTime = Math.min(timeAwayMs, maxOfflineMs);
+
+  // Only simulate if auto-combat was enabled
+  const wasAutoCombatEnabled = warriorStore.autoCombatEnabled;
+  const selectedMonster = warriorStore.selectedMonster;
+
+  // Get monster data
+  const monster = selectedMonster
+    ? warriorStore.availableMonsters.find(m => m.id === selectedMonster)
+    : warriorStore.availableMonsters[0];
+
+  // Calculate combat stats
+  let monstersKilled = 0;
+  let xpGained = 0;
+  let goldGained = 0;
+  let deaths = 0;
+  let foodConsumed = 0;
+  const loot: Array<{ itemId: string; amount: number }> = [];
+
+  if (wasAutoCombatEnabled && monster) {
+    // Simplified simulation: estimate kills per second
+    const playerDps = warriorStore.effectiveStats.attack * 0.8; // rough DPS estimate
+    const monsterHp = monster.maxHp;
+    const secondsPerKill = Math.max(1, monsterHp / playerDps);
+
+    // Simulate time
+    const totalSeconds = cappedTime / 1000;
+    const potentialKills = Math.floor(totalSeconds / secondsPerKill);
+
+    // Calculate survival (rough estimate based on HP vs monster damage)
+    const survivalRate = Math.min(0.95, warriorStore.effectiveStats.damageReduction + 0.3);
+    const effectiveKills = Math.floor(potentialKills * survivalRate);
+
+    // Check food availability
+    const foodAvailable = resourcesStore.food.amount.toNumber();
+    const killsPerFood = 5; // Roughly 5 kills per food
+    const maxKillsWithFood = Math.floor(foodAvailable * killsPerFood);
+
+    monstersKilled = Math.min(effectiveKills, maxKillsWithFood + 20); // +20 for HP regen
+    xpGained = monstersKilled * monster.xpReward;
+
+    // Calculate gold
+    const avgGold = (monster.goldReward.min + monster.goldReward.max) / 2;
+    goldGained = Math.floor(monstersKilled * avgGold);
+
+    // Calculate deaths (if many kills, some deaths likely)
+    deaths = Math.floor(monstersKilled / 50); // Roughly 1 death per 50 kills
+
+    // Food consumed
+    foodConsumed = Math.min(foodAvailable, Math.floor(monstersKilled / killsPerFood));
+
+    // Loot
+    if (goldGained > 0) {
+      loot.push({ itemId: 'gold', amount: goldGained });
+    }
+
+    // Simulate some material drops
+    for (const lootEntry of monster.lootTable) {
+      const expectedDrops = Math.floor(monstersKilled * lootEntry.chance);
+      if (expectedDrops > 0) {
+        const avgAmount = (lootEntry.minAmount + lootEntry.maxAmount) / 2;
+        loot.push({
+          itemId: lootEntry.itemId,
+          amount: Math.floor(expectedDrops * avgAmount),
+        });
+      }
+    }
+  }
+
+  return {
+    timeAway: cappedTime,
+    combat: {
+      monstersKilled,
+      xpGained,
+      loot,
+      deaths,
+      foodConsumed,
+    },
+    research: {
+      researchProgress: {},
+      potionsProduced: {},
+      golemWork: {},
+    },
+    merchant: {
+      goldEarned: resourcesStore.gold.amount,
+      tradeRoutesCompleted: 0,
+      itemsSold: 0,
+    },
+  };
+}
+
+function applyOfflineProgress(report: OfflineReport) {
+  // Apply combat rewards
+  if (report.combat.xpGained > 0) {
+    warriorStore.addXp(report.combat.xpGained);
+  }
+
+  // Apply gold from loot
+  const goldLoot = report.combat.loot.find(l => l.itemId === 'gold');
+  if (goldLoot) {
+    resourcesStore.addResource('gold', goldLoot.amount);
+  }
+
+  // Consume food
+  if (report.combat.foodConsumed > 0) {
+    resourcesStore.removeResource('food', report.combat.foodConsumed);
+  }
+
+  // Add notification
+  gameStore.addNotification({
+    type: 'success',
+    title: 'Nagrody offline odebrane!',
+    message: `+${report.combat.xpGained} XP, +${goldLoot?.amount || 0} złota`,
+    icon: 'mdi-gift',
+    duration: 5000,
+  });
+}
+
+function handleClaimOffline() {
+  if (offlineReport.value) {
+    applyOfflineProgress(offlineReport.value);
+  }
+  showOfflineModal.value = false;
+  offlineReport.value = null;
+}
+
 // Lifecycle
 onMounted(() => {
-  startGameLoop();
-
-  // Handle offline progress
+  // Handle offline progress BEFORE starting game loop
   const lastLogout = gameStore.lastLogout;
   const timeDiff = Date.now() - lastLogout;
 
   if (timeDiff > 60000) { // More than 1 minute
-    // TODO: Show offline progress modal
-    console.log(`Byłeś offline przez ${Math.floor(timeDiff / 1000)} sekund`);
+    offlineReport.value = calculateOfflineProgress(timeDiff);
+    showOfflineModal.value = true;
   }
+
+  startGameLoop();
 
   // Handle visibility change (pause when hidden)
   document.addEventListener('visibilitychange', handleVisibilityChange);
@@ -112,9 +249,9 @@ function handleVisibilityChange() {
   } else {
     // Calculate offline progress when returning
     const timeDiff = Date.now() - gameStore.lastLogout;
-    if (timeDiff > 1000) {
-      console.log(`Powrót po ${Math.floor(timeDiff / 1000)} sekundach`);
-      // TODO: Process offline progress
+    if (timeDiff > 60000) { // More than 1 minute
+      offlineReport.value = calculateOfflineProgress(timeDiff);
+      showOfflineModal.value = true;
     }
     lastTickTime = Date.now();
   }
@@ -127,6 +264,12 @@ function devAddGold() {
 
 function devAddXp() {
   warriorStore.addXp(100);
+}
+
+function devSimulateOffline() {
+  // Simulate 1 hour offline
+  offlineReport.value = calculateOfflineProgress(60 * 60 * 1000);
+  showOfflineModal.value = true;
 }
 </script>
 
@@ -164,7 +307,7 @@ function devAddXp() {
     <v-navigation-drawer
       permanent
       rail
-      color="surface-variant"
+      class="nav-drawer"
     >
       <v-list
         nav
@@ -299,54 +442,86 @@ function devAddXp() {
         <!-- Dev Panel (only in development) -->
         <v-card
           v-if="true"
-          class="mt-4 pa-2"
-          color="grey-darken-3"
+          class="mt-4 dev-panel"
         >
-          <v-card-subtitle class="text-caption">
-            DEV Panel
-          </v-card-subtitle>
-          <v-card-actions>
-            <v-btn
-              size="small"
-              variant="outlined"
-              @click="devAddGold"
-            >
-              +1000 Gold
-            </v-btn>
-            <v-btn
-              size="small"
-              variant="outlined"
-              @click="devAddXp"
-            >
-              +100 XP
-            </v-btn>
-            <v-btn
-              size="small"
-              variant="outlined"
-              @click="resourcesStore.addResource('food', 50)"
-            >
-              +50 Food
-            </v-btn>
-            <v-btn
-              size="small"
-              variant="outlined"
-              color="warning"
-              @click="() => { gameStore.resetGame(); resourcesStore.resetResources(); warriorStore.resetWarrior(); }"
-            >
-              Reset
-            </v-btn>
-          </v-card-actions>
+          <v-card-text class="py-2 px-3">
+            <div class="d-flex align-center flex-wrap ga-2">
+              <span class="text-caption text-medium-emphasis mr-2">DEV:</span>
+              <v-btn
+                size="x-small"
+                variant="tonal"
+                @click="devAddGold"
+              >
+                +1K Gold
+              </v-btn>
+              <v-btn
+                size="x-small"
+                variant="tonal"
+                @click="devAddXp"
+              >
+                +100 XP
+              </v-btn>
+              <v-btn
+                size="x-small"
+                variant="tonal"
+                @click="resourcesStore.addResource('food', 50)"
+              >
+                +50 Food
+              </v-btn>
+              <v-btn
+                size="x-small"
+                variant="tonal"
+                color="info"
+                @click="devSimulateOffline"
+              >
+                Offline 1h
+              </v-btn>
+              <v-btn
+                size="x-small"
+                variant="tonal"
+                color="error"
+                @click="() => { gameStore.resetGame(); resourcesStore.resetResources(); warriorStore.resetWarrior(); }"
+              >
+                Reset
+              </v-btn>
+            </div>
+          </v-card-text>
         </v-card>
       </v-container>
     </v-main>
 
     <!-- Notifications -->
     <AteriaNotifications />
+
+    <!-- Offline Progress Modal -->
+    <AteriaOfflineProgressModal
+      v-model="showOfflineModal"
+      :report="offlineReport"
+      @claim="handleClaimOffline"
+    />
   </v-app>
 </template>
 
 <style scoped>
 .v-main {
   background-color: rgb(var(--v-theme-background));
+}
+
+.nav-drawer {
+  background: #1a1a1a !important;
+  border-right: 1px solid rgba(255, 255, 255, 0.05) !important;
+}
+
+.nav-drawer :deep(.v-list-item--active) {
+  background: rgba(33, 150, 243, 0.15);
+}
+
+.nav-drawer :deep(.v-list-item:hover:not(.v-list-item--active)) {
+  background: rgba(255, 255, 255, 0.05);
+}
+
+.dev-panel {
+  background: rgba(255, 255, 255, 0.02) !important;
+  border: 1px dashed rgba(255, 255, 255, 0.1);
 }
 </style>

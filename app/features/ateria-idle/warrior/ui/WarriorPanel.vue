@@ -7,7 +7,7 @@ import { computed, ref } from 'vue';
 import { useAteriaWarriorStore } from '../model/warrior.store';
 import { useAteriaResourcesStore } from '../../core/model/resources.store';
 import { formatNumber } from '~/shared/lib/big-number';
-import type { BiomeId } from '~/entities/ateria-idle/warrior';
+import type { BiomeId, SlayerCategory } from '~/entities/ateria-idle/warrior';
 
 const warriorStore = useAteriaWarriorStore();
 const resourcesStore = useAteriaResourcesStore();
@@ -17,6 +17,31 @@ const showBiomeSelector = ref(false);
 
 // Computed
 const stats = computed(() => warriorStore.effectiveStats);
+
+// Monster icon based on slayer category
+function getMonsterIcon(category?: SlayerCategory): string {
+  const icons: Record<SlayerCategory, string> = {
+    beast: 'mdi-paw',
+    undead: 'mdi-skull',
+    demon: 'mdi-fire',
+    elemental: 'mdi-atom',
+    dragon: 'mdi-dragon',
+    aberration: 'mdi-alien',
+  };
+  return icons[category || 'beast'] || 'mdi-skull';
+}
+
+function getMonsterColor(category?: SlayerCategory): string {
+  const colors: Record<SlayerCategory, string> = {
+    beast: '#8D6E63',
+    undead: '#78909C',
+    demon: '#E53935',
+    elemental: '#7E57C2',
+    dragon: '#FF8F00',
+    aberration: '#26A69A',
+  };
+  return colors[category || 'beast'] || '#757575';
+}
 
 const combatStatusText = computed(() => {
   switch (warriorStore.combatState) {
@@ -353,25 +378,34 @@ function selectMonster(monsterId: string) {
         md="4"
       >
         <!-- Biome Selector Card -->
-        <v-card class="mb-4">
-          <v-card-title class="d-flex align-center">
-            <v-icon
-              class="mr-2"
-              :color="warriorStore.currentBiomeData?.color"
+        <v-card class="mb-4 biome-card">
+          <v-card-title class="d-flex align-center py-3">
+            <div
+              class="biome-icon-wrapper mr-3"
+              :style="{ backgroundColor: warriorStore.currentBiomeData?.color + '20' }"
             >
-              {{ warriorStore.currentBiomeData?.icon || 'mdi-map-marker' }}
-            </v-icon>
-            {{ warriorStore.currentBiomeData?.name || 'Nieznany' }}
-            <v-spacer />
+              <v-icon
+                size="24"
+                :color="warriorStore.currentBiomeData?.color"
+              >
+                {{ warriorStore.currentBiomeData?.icon || 'mdi-map-marker' }}
+              </v-icon>
+            </div>
+            <div class="flex-grow-1">
+              <div class="text-subtitle-1 font-weight-medium">
+                {{ warriorStore.currentBiomeData?.name || 'Nieznany' }}
+              </div>
+              <div class="text-caption text-medium-emphasis">
+                Poziom {{ warriorStore.currentBiomeData?.requiredLevel }}+
+              </div>
+            </div>
             <v-btn
               size="small"
-              variant="outlined"
+              variant="text"
+              icon
               @click="showBiomeSelector = !showBiomeSelector"
             >
-              <v-icon start>
-                mdi-map
-              </v-icon>
-              Zmień
+              <v-icon>{{ showBiomeSelector ? 'mdi-chevron-up' : 'mdi-chevron-down' }}</v-icon>
             </v-btn>
           </v-card-title>
 
@@ -460,114 +494,141 @@ function selectMonster(monsterId: string) {
         </v-card>
 
         <!-- Monster Selection Card -->
-        <v-card>
-          <v-card-title class="d-flex align-center">
-            <v-icon class="mr-2">
-              mdi-skull
+        <v-card class="monster-card">
+          <v-card-title class="d-flex align-center py-3">
+            <v-icon
+              class="mr-2"
+              color="error"
+            >
+              mdi-sword-cross
             </v-icon>
-            Potwory
+            <span class="text-subtitle-1 font-weight-medium">Potwory</span>
             <v-chip
               class="ml-2"
               size="x-small"
-              color="primary"
+              variant="flat"
+              color="error"
             >
               {{ warriorStore.availableMonsters.length }}
             </v-chip>
           </v-card-title>
 
-          <v-card-text>
-            <v-list
+          <v-card-text class="pt-0">
+            <div
               v-if="warriorStore.availableMonsters.length"
-              density="compact"
               class="monster-list"
             >
-              <v-list-item
+              <div
                 v-for="monster in warriorStore.availableMonsters"
                 :key="monster.id"
-                :active="warriorStore.selectedMonster === monster.id"
-                :class="{ 'monster-active': warriorStore.currentEnemy?.id === monster.id }"
-                rounded
+                class="monster-item d-flex align-center pa-2 rounded mb-2"
+                :class="{
+                  'monster-selected': warriorStore.selectedMonster === monster.id,
+                  'monster-fighting': warriorStore.currentEnemy?.id === monster.id
+                }"
                 @click="selectMonster(monster.id)"
               >
-                <template #prepend>
-                  <v-avatar
-                    size="40"
-                    color="surface-variant"
+                <div
+                  class="monster-icon-wrapper mr-3"
+                  :style="{ backgroundColor: getMonsterColor(monster.slayerCategory) + '20' }"
+                >
+                  <v-icon
+                    size="20"
+                    :color="getMonsterColor(monster.slayerCategory)"
                   >
-                    <v-icon>mdi-skull</v-icon>
-                  </v-avatar>
-                </template>
+                    {{ getMonsterIcon(monster.slayerCategory) }}
+                  </v-icon>
+                </div>
 
-                <v-list-item-title>
-                  {{ monster.name }}
-                </v-list-item-title>
-                <v-list-item-subtitle>
-                  Lvl {{ monster.level }} • HP {{ monster.maxHp }}
-                </v-list-item-subtitle>
-
-                <template #append>
-                  <div class="text-right">
-                    <div class="text-caption">
-                      <v-icon
-                        size="12"
-                        class="mr-1"
-                      >
-                        mdi-star
-                      </v-icon>
-                      {{ monster.xpReward }} XP
-                    </div>
-                    <div class="text-caption text-warning">
-                      <v-icon
-                        size="12"
-                        class="mr-1"
-                      >
-                        mdi-gold
-                      </v-icon>
-                      {{ monster.goldReward.min }}-{{ monster.goldReward.max }}
-                    </div>
+                <div class="flex-grow-1 overflow-hidden">
+                  <div class="text-body-2 font-weight-medium text-truncate">
+                    {{ monster.name }}
                   </div>
-                </template>
-              </v-list-item>
-            </v-list>
+                  <div class="text-caption text-medium-emphasis">
+                    Lvl {{ monster.level }} • {{ monster.maxHp }} HP
+                  </div>
+                </div>
+
+                <div class="text-right ml-2">
+                  <div class="text-caption d-flex align-center justify-end">
+                    <v-icon
+                      size="12"
+                      color="amber"
+                      class="mr-1"
+                    >
+                      mdi-star
+                    </v-icon>
+                    <span class="text-amber">{{ monster.xpReward }}</span>
+                  </div>
+                  <div class="text-caption d-flex align-center justify-end">
+                    <v-icon
+                      size="12"
+                      color="amber-darken-2"
+                      class="mr-1"
+                    >
+                      mdi-currency-usd
+                    </v-icon>
+                    <span class="text-amber-darken-2">{{ monster.goldReward.min }}-{{ monster.goldReward.max }}</span>
+                  </div>
+                </div>
+              </div>
+            </div>
 
             <div
               v-else
-              class="text-center py-4 text-medium-emphasis"
+              class="text-center py-6 text-medium-emphasis"
             >
               <v-icon
                 size="48"
-                class="mb-2"
+                class="mb-2 opacity-50"
               >
-                mdi-emoticon-sad
+                mdi-ghost-off
               </v-icon>
-              <div>Brak dostępnych potworów</div>
+              <div class="text-body-2">
+                Brak potworów
+              </div>
               <div class="text-caption">
-                Zwiększ poziom, aby walczyć z silniejszymi wrogami
+                Zwiększ poziom wojownika
               </div>
             </div>
 
             <!-- Food Section -->
-            <v-divider class="my-4" />
-            <div class="text-subtitle-2 mb-2">
-              Jedzenie
-            </div>
-            <div class="d-flex align-center justify-space-between">
+            <v-divider class="my-3" />
+            <div class="food-section d-flex align-center justify-space-between pa-2 rounded">
               <div class="d-flex align-center">
-                <v-icon
-                  color="brown"
-                  class="mr-2"
+                <div
+                  class="food-icon-wrapper mr-2"
                 >
-                  mdi-food-drumstick
-                </v-icon>
-                <span>{{ formatNumber(resourcesStore.food.amount) }}</span>
+                  <v-icon
+                    size="18"
+                    color="brown"
+                  >
+                    mdi-food-drumstick
+                  </v-icon>
+                </div>
+                <div>
+                  <div class="text-body-2 font-weight-medium">
+                    {{ formatNumber(resourcesStore.food.amount) }}
+                  </div>
+                  <div class="text-caption text-medium-emphasis">
+                    Jedzenie
+                  </div>
+                </div>
               </div>
               <v-btn
                 size="small"
-                variant="outlined"
+                variant="tonal"
+                color="success"
                 :disabled="!resourcesStore.hasAmount('food', 1) || warriorStore.hpPercent >= 100"
                 @click="warriorStore.consumeFood()"
               >
-                Jedz (+20% HP)
+                <v-icon
+                  start
+                  size="16"
+                >
+                  mdi-silverware-fork-knife
+                </v-icon>
+                Jedz
               </v-btn>
             </div>
           </v-card-text>
@@ -579,7 +640,7 @@ function selectMonster(monsterId: string) {
 
 <style scoped>
 .monster-list {
-  max-height: 250px;
+  max-height: 280px;
   overflow-y: auto;
 }
 
@@ -588,11 +649,83 @@ function selectMonster(monsterId: string) {
   overflow-y: auto;
 }
 
-.monster-active {
-  border-left: 3px solid rgb(var(--v-theme-error));
-}
-
 .combat-view {
   min-height: 250px;
+}
+
+/* Biome card styles */
+.biome-card {
+  border: 1px solid rgba(255, 255, 255, 0.05);
+}
+
+.biome-icon-wrapper {
+  width: 44px;
+  height: 44px;
+  border-radius: 12px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+/* Monster card styles */
+.monster-card {
+  border: 1px solid rgba(255, 255, 255, 0.05);
+}
+
+.monster-item {
+  background: rgba(255, 255, 255, 0.02);
+  border: 1px solid transparent;
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+
+.monster-item:hover {
+  background: rgba(255, 255, 255, 0.05);
+  border-color: rgba(255, 255, 255, 0.1);
+}
+
+.monster-selected {
+  background: rgba(33, 150, 243, 0.1);
+  border-color: rgba(33, 150, 243, 0.3);
+}
+
+.monster-fighting {
+  background: rgba(244, 67, 54, 0.1);
+  border-color: rgba(244, 67, 54, 0.5);
+  animation: pulse-border 1.5s infinite;
+}
+
+@keyframes pulse-border {
+  0%, 100% {
+    border-color: rgba(244, 67, 54, 0.5);
+  }
+  50% {
+    border-color: rgba(244, 67, 54, 0.2);
+  }
+}
+
+.monster-icon-wrapper {
+  width: 36px;
+  height: 36px;
+  border-radius: 8px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+}
+
+/* Food section */
+.food-section {
+  background: rgba(255, 255, 255, 0.02);
+}
+
+.food-icon-wrapper {
+  width: 32px;
+  height: 32px;
+  border-radius: 8px;
+  background: rgba(141, 110, 99, 0.2);
+  display: flex;
+  align-items: center;
+  justify-content: center;
 }
 </style>
