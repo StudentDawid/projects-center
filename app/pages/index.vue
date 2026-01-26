@@ -155,19 +155,6 @@ function handleProjectClick(link: string, event: MouseEvent | KeyboardEvent) {
 
 const projects: Project[] = [
   {
-    id: 'solmar-sanctuary',
-    title: 'Sanktuarium Solmara',
-    description:
-      'Gra typu Premium Idle w mrocznym klimacie Religious Grimdark. Buduj sanktuarium, zbieraj wiarę i walcz z demonami.',
-    category: 'Gra IDLE',
-    icon: 'mdi-church',
-    color: '#c5a059',
-    link: '/solmar-sanctuary',
-    tags: ['Vue.js', 'Pinia', 'Idle Game'],
-    status: 'active',
-    featured: true,
-  },
-  {
     id: 'rpg-map-generator',
     title: 'Generator Map RPG',
     description:
@@ -204,19 +191,6 @@ const projects: Project[] = [
     link: '/rpg/fabula-ultima-card-generator',
     tags: ['Vue.js', 'Card Creator', 'Fabula Ultima'],
     status: 'development',
-  },
-  {
-    id: 'merchant-idle',
-    title: 'Merchant Idle',
-    description:
-      'Zarządzaj gildią kupiecką w mrocznym świecie. Handluj, zatrudniaj pracowników i unikaj inkwizycji.',
-    category: 'Gra IDLE',
-    icon: 'mdi-hand-coin',
-    color: '#ff9800',
-    link: '/merchant-idle',
-    tags: ['Vue.js', 'Pinia', 'Idle Game', 'Nuxt'],
-    status: 'development',
-    featured: true,
   },
   {
     id: 'rpg-card-generator',
