@@ -284,6 +284,20 @@ export const useAteriaResourcesStore = defineStore('ateria-resources', () => {
       },
       deserialize: (value) => {
         const parsed = JSON.parse(value);
+        // Convert strings back to Decimals
+        if (parsed.resources) {
+          for (const [key, data] of Object.entries(parsed.resources)) {
+            const resourceData = data as { amount: string; maxAmount: string | null; perSecond: string };
+            if (DEFAULT_RESOURCES[key as ResourceId]) {
+              parsed.resources[key] = {
+                ...DEFAULT_RESOURCES[key as ResourceId],
+                amount: bn(resourceData.amount || '0'),
+                maxAmount: resourceData.maxAmount ? bn(resourceData.maxAmount) : DEFAULT_RESOURCES[key as ResourceId].maxAmount,
+                perSecond: bn(resourceData.perSecond || '0'),
+              };
+            }
+          }
+        }
         return parsed;
       },
     },

@@ -6,14 +6,18 @@
 import { computed, ref } from 'vue';
 import { useAteriaWarriorStore } from '../model/warrior.store';
 import { useAteriaResourcesStore } from '../../core/model/resources.store';
+import { useAteriaScientistStore } from '../../scientist/model/scientist.store';
 import { formatNumber } from '~/shared/lib/big-number';
 import type { BiomeId, SlayerCategory } from '~/entities/ateria-idle/warrior';
+import { getPotion } from '../../data/scientist.data';
 
 const warriorStore = useAteriaWarriorStore();
 const resourcesStore = useAteriaResourcesStore();
+const scientistStore = useAteriaScientistStore();
 
 // UI State
 const showBiomeSelector = ref(false);
+const showPotionDialog = ref(false);
 
 // Computed
 const stats = computed(() => warriorStore.effectiveStats);
@@ -73,6 +77,55 @@ const combatStatusColor = computed(() => {
   }
 });
 
+// Available potions from Scientist
+const availablePotions = computed(() => {
+  return scientistStore.getAvailableCombatPotions();
+});
+
+// Combat potions (allocated to warrior)
+const combatPotionsList = computed(() => {
+  const result: { potionId: string; amount: number; name: string; icon: string; description: string }[] = [];
+  for (const [potionId, amount] of warriorStore.combatPotions.entries()) {
+    if (amount <= 0) continue;
+    const potion = getPotion(potionId);
+    if (!potion) continue;
+    result.push({
+      potionId,
+      amount,
+      name: potion.name,
+      icon: potion.icon,
+      description: potion.description,
+    });
+  }
+  return result;
+});
+
+// Active buffs display
+const activeBuffs = computed(() => {
+  return warriorStore.activePotionEffects.map(effect => {
+    const potion = getPotion(effect.potionId);
+    return {
+      ...effect,
+      name: potion?.name || effect.potionId,
+      icon: potion?.icon || 'mdi-flask',
+      remainingSeconds: Math.ceil(effect.remainingTicks / 10),
+    };
+  });
+});
+
+// Environmental effect mitigation potion
+const mitigationPotionId = computed(() => {
+  const effect = warriorStore.currentEnvironmentalEffect;
+  if (!effect?.mitigation?.potionId) return null;
+  return effect.mitigation.potionId;
+});
+
+const hasMitigationPotion = computed(() => {
+  const potionId = mitigationPotionId.value;
+  if (!potionId) return false;
+  return (warriorStore.combatPotions.get(potionId) || 0) > 0;
+});
+
 // Actions
 function toggleAutoCombat() {
   warriorStore.autoCombatEnabled = !warriorStore.autoCombatEnabled;
@@ -85,6 +138,31 @@ function selectMonster(monsterId: string) {
   warriorStore.selectedMonster = monsterId;
   if (warriorStore.combatState === 'idle') {
     warriorStore.startCombat(monsterId);
+  }
+}
+
+function allocatePotion(potionId: string, amount: number = 1) {
+  const allocated = scientistStore.allocatePotionToWarrior(potionId, amount);
+  if (allocated > 0) {
+    warriorStore.addCombatPotion(potionId, allocated);
+  }
+}
+
+function allocateAllPotions(potionId: string) {
+  const available = scientistStore.getPotionCount(potionId);
+  if (available > 0) {
+    allocatePotion(potionId, available);
+  }
+}
+
+function usePotion(potionId: string) {
+  warriorStore.usePotion(potionId);
+}
+
+function useMitigationPotion() {
+  const potionId = mitigationPotionId.value;
+  if (potionId) {
+    usePotion(potionId);
   }
 }
 </script>
@@ -211,6 +289,82 @@ function selectMonster(monsterId: string) {
             <div class="d-flex justify-space-between text-body-2">
               <span class="text-medium-emphasis">Zdobyte złoto</span>
               <span class="font-weight-medium">{{ formatNumber(warriorStore.sessionGoldGained) }}</span>
+            </div>
+
+            <!-- Active Buffs Display -->
+            <v-divider
+              v-if="activeBuffs.length > 0"
+              class="my-3"
+            />
+            <div
+              v-if="activeBuffs.length > 0"
+              class="active-buffs"
+            >
+              <div class="text-subtitle-2 mb-2">
+                <v-icon
+                  size="16"
+                  class="mr-1"
+                >
+                  mdi-flask-round-bottom
+                </v-icon>
+                Aktywne efekty
+              </div>
+              <div class="d-flex flex-wrap gap-1">
+                <v-chip
+                  v-for="buff in activeBuffs"
+                  :key="buff.potionId"
+                  size="small"
+                  color="primary"
+                  variant="tonal"
+                >
+                  <v-icon
+                    start
+                    size="14"
+                  >
+                    {{ buff.icon }}
+                  </v-icon>
+                  {{ buff.name }}
+                  <template #append>
+                    <span class="ml-1 text-caption">({{ buff.remainingSeconds }}s)</span>
+                  </template>
+                </v-chip>
+              </div>
+            </div>
+
+            <!-- Bonus Indicators -->
+            <div
+              v-if="stats.xpBonusPercent > 0 || stats.goldBonusPercent > 0"
+              class="bonus-indicators mt-2"
+            >
+              <v-chip
+                v-if="stats.xpBonusPercent > 0"
+                size="x-small"
+                color="amber"
+                variant="tonal"
+                class="mr-1"
+              >
+                <v-icon
+                  start
+                  size="12"
+                >
+                  mdi-star
+                </v-icon>
+                +{{ stats.xpBonusPercent }}% XP
+              </v-chip>
+              <v-chip
+                v-if="stats.goldBonusPercent > 0"
+                size="x-small"
+                color="amber-darken-2"
+                variant="tonal"
+              >
+                <v-icon
+                  start
+                  size="12"
+                >
+                  mdi-currency-usd
+                </v-icon>
+                +{{ stats.goldBonusPercent }}% Złoto
+              </v-chip>
             </div>
           </v-card-text>
         </v-card>
@@ -408,6 +562,61 @@ function selectMonster(monsterId: string) {
               <v-icon>{{ showBiomeSelector ? 'mdi-chevron-up' : 'mdi-chevron-down' }}</v-icon>
             </v-btn>
           </v-card-title>
+
+          <!-- Environmental Effect Warning -->
+          <v-alert
+            v-if="warriorStore.currentEnvironmentalEffect && !warriorStore.isEnvironmentalEffectMitigated"
+            type="warning"
+            variant="tonal"
+            density="compact"
+            class="mx-4 mb-2"
+          >
+            <template #prepend>
+              <v-icon size="20">
+                mdi-alert-circle
+              </v-icon>
+            </template>
+            <div class="d-flex align-center justify-space-between">
+              <div>
+                <div class="text-body-2 font-weight-medium">
+                  {{ warriorStore.currentEnvironmentalEffect.name }}
+                </div>
+                <div class="text-caption">
+                  {{ warriorStore.currentEnvironmentalEffect.description }}
+                </div>
+              </div>
+              <v-btn
+                v-if="hasMitigationPotion"
+                size="small"
+                variant="tonal"
+                color="success"
+                @click="useMitigationPotion"
+              >
+                <v-icon start>
+                  mdi-shield
+                </v-icon>
+                Ochrona
+              </v-btn>
+            </div>
+          </v-alert>
+
+          <!-- Mitigated Environmental Effect -->
+          <v-alert
+            v-if="warriorStore.currentEnvironmentalEffect && warriorStore.isEnvironmentalEffectMitigated"
+            type="success"
+            variant="tonal"
+            density="compact"
+            class="mx-4 mb-2"
+          >
+            <template #prepend>
+              <v-icon size="20">
+                mdi-shield-check
+              </v-icon>
+            </template>
+            <div class="text-body-2">
+              {{ warriorStore.currentEnvironmentalEffect.name }} - Chroniony!
+            </div>
+          </v-alert>
 
           <v-expand-transition>
             <v-card-text v-if="showBiomeSelector">
@@ -631,10 +840,188 @@ function selectMonster(monsterId: string) {
                 Jedz
               </v-btn>
             </div>
+
+            <!-- Combat Potions Section -->
+            <v-divider class="my-3" />
+            <div class="d-flex align-center justify-space-between mb-2">
+              <div class="text-subtitle-2">
+                <v-icon
+                  size="16"
+                  class="mr-1"
+                >
+                  mdi-flask
+                </v-icon>
+                Mikstury bojowe
+              </div>
+              <v-btn
+                size="x-small"
+                variant="text"
+                color="primary"
+                @click="showPotionDialog = true"
+              >
+                <v-icon start>
+                  mdi-plus
+                </v-icon>
+                Dodaj
+              </v-btn>
+            </div>
+
+            <!-- Combat Potions List -->
+            <div
+              v-if="combatPotionsList.length > 0"
+              class="combat-potions-list"
+            >
+              <div
+                v-for="potion in combatPotionsList"
+                :key="potion.potionId"
+                class="potion-item d-flex align-center pa-2 rounded mb-1"
+              >
+                <div class="potion-icon-wrapper mr-2">
+                  <v-icon
+                    size="18"
+                    color="purple"
+                  >
+                    {{ potion.icon }}
+                  </v-icon>
+                </div>
+                <div class="flex-grow-1 overflow-hidden">
+                  <div class="text-body-2 font-weight-medium text-truncate">
+                    {{ potion.name }}
+                  </div>
+                  <div class="text-caption text-medium-emphasis">
+                    x{{ potion.amount }}
+                  </div>
+                </div>
+                <v-btn
+                  size="x-small"
+                  variant="tonal"
+                  color="primary"
+                  :disabled="potion.amount <= 0"
+                  @click="usePotion(potion.potionId)"
+                >
+                  Użyj
+                </v-btn>
+              </div>
+            </div>
+
+            <div
+              v-else
+              class="text-center py-3 text-caption text-medium-emphasis"
+            >
+              Brak mikstur bojowych
+            </div>
+
+            <!-- Auto-potion settings -->
+            <div class="d-flex align-center justify-space-between mt-2 pa-2 rounded auto-potion-settings">
+              <div>
+                <div class="text-caption font-weight-medium">
+                  Auto-mikstury
+                </div>
+                <div class="text-caption text-medium-emphasis">
+                  Automatyczne leczenie ({{ Math.floor(warriorStore.autoHealThreshold * 100) }}% HP)
+                </div>
+              </div>
+              <v-switch
+                v-model="warriorStore.autoPotionEnabled"
+                color="primary"
+                density="compact"
+                hide-details
+              />
+            </div>
           </v-card-text>
         </v-card>
       </v-col>
     </v-row>
+
+    <!-- Potion Allocation Dialog -->
+    <v-dialog
+      v-model="showPotionDialog"
+      max-width="500"
+    >
+      <v-card>
+        <v-card-title class="d-flex align-center">
+          <v-icon class="mr-2">
+            mdi-flask
+          </v-icon>
+          Przydziel mikstury
+        </v-card-title>
+        <v-card-text>
+          <div
+            v-if="availablePotions.length > 0"
+            class="potion-allocation-list"
+          >
+            <div
+              v-for="potion in availablePotions"
+              :key="potion.potionId"
+              class="potion-allocation-item d-flex align-center pa-3 rounded mb-2"
+            >
+              <div class="potion-icon-wrapper mr-3">
+                <v-icon
+                  size="24"
+                  color="purple"
+                >
+                  {{ potion.icon }}
+                </v-icon>
+              </div>
+              <div class="flex-grow-1">
+                <div class="text-body-1 font-weight-medium">
+                  {{ potion.name }}
+                </div>
+                <div class="text-caption text-medium-emphasis">
+                  Dostępne: {{ potion.amount }}
+                </div>
+              </div>
+              <div class="d-flex gap-1">
+                <v-btn
+                  size="small"
+                  variant="tonal"
+                  color="primary"
+                  :disabled="potion.amount <= 0"
+                  @click="allocatePotion(potion.potionId, 1)"
+                >
+                  +1
+                </v-btn>
+                <v-btn
+                  size="small"
+                  variant="tonal"
+                  color="primary"
+                  :disabled="potion.amount <= 0"
+                  @click="allocateAllPotions(potion.potionId)"
+                >
+                  Wszystko
+                </v-btn>
+              </div>
+            </div>
+          </div>
+          <div
+            v-else
+            class="text-center py-8 text-medium-emphasis"
+          >
+            <v-icon
+              size="64"
+              class="mb-4 opacity-50"
+            >
+              mdi-flask-empty
+            </v-icon>
+            <div class="text-body-1">
+              Brak dostępnych mikstur
+            </div>
+            <div class="text-caption">
+              Stwórz mikstury w laboratorium Naukowca
+            </div>
+          </div>
+        </v-card-text>
+        <v-card-actions>
+          <v-spacer />
+          <v-btn
+            variant="text"
+            @click="showPotionDialog = false"
+          >
+            Zamknij
+          </v-btn>
+        </v-card-actions>
+      </v-card>
+    </v-dialog>
   </div>
 </template>
 
@@ -727,5 +1114,59 @@ function selectMonster(monsterId: string) {
   display: flex;
   align-items: center;
   justify-content: center;
+}
+
+/* Combat potions */
+.combat-potions-list {
+  max-height: 150px;
+  overflow-y: auto;
+}
+
+.potion-item {
+  background: rgba(156, 39, 176, 0.08);
+  border: 1px solid rgba(156, 39, 176, 0.15);
+  transition: all 0.2s ease;
+}
+
+.potion-item:hover {
+  background: rgba(156, 39, 176, 0.12);
+  border-color: rgba(156, 39, 176, 0.25);
+}
+
+.potion-icon-wrapper {
+  width: 32px;
+  height: 32px;
+  border-radius: 8px;
+  background: rgba(156, 39, 176, 0.2);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+}
+
+.auto-potion-settings {
+  background: rgba(255, 255, 255, 0.02);
+}
+
+/* Potion allocation dialog */
+.potion-allocation-item {
+  background: rgba(255, 255, 255, 0.02);
+  border: 1px solid rgba(255, 255, 255, 0.08);
+}
+
+.potion-allocation-item:hover {
+  background: rgba(255, 255, 255, 0.05);
+}
+
+/* Active buffs */
+.active-buffs {
+  background: rgba(33, 150, 243, 0.05);
+  padding: 8px;
+  border-radius: 8px;
+}
+
+.bonus-indicators {
+  display: flex;
+  gap: 4px;
 }
 </style>

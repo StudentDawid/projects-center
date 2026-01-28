@@ -40,6 +40,7 @@ export const useAteriaGameStore = defineStore('ateria-game', () => {
   // Tutorial
   const tutorialStep = ref(0);
   const tutorialCompleted = ref(false);
+  // Only warrior is unlocked by default, others must be earned
   const unlockedFeatures = ref<Set<FeatureId>>(new Set(['warrior']));
 
   // Prestige
@@ -280,6 +281,18 @@ export const useAteriaGameStore = defineStore('ateria-game', () => {
     if (state.settings) settings.value = { ...DEFAULT_SETTINGS, ...state.settings };
   }
 
+  function resetForPrestige() {
+    // Reset progression but keep settings and prestige-related data
+    lastSave.value = Date.now();
+    lastLogout.value = Date.now();
+    tickCount.value = 0;
+    tutorialStep.value = 0;
+    tutorialCompleted.value = true; // Skip tutorial on prestige
+    unlockedFeatures.value = new Set(['warrior']); // Reset unlocks
+    notifications.value = [];
+    // Note: prestigeCount and legacyPoints are managed by prestige.store
+  }
+
   function resetGame() {
     version.value = SAVE_VERSION;
     lastSave.value = Date.now();
@@ -340,6 +353,7 @@ export const useAteriaGameStore = defineStore('ateria-game', () => {
     getState,
     loadState,
     resetGame,
+    resetForPrestige,
   };
 }, {
   persist: {
@@ -353,6 +367,7 @@ export const useAteriaGameStore = defineStore('ateria-game', () => {
       'tickCount',
       'tutorialStep',
       'tutorialCompleted',
+      'unlockedFeatures',
       'prestigeCount',
       'legacyPoints',
       'spentLegacyPoints',

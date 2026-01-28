@@ -3,22 +3,56 @@
  * Ateria Idle - Main Game Page
  */
 
-import { onMounted, onUnmounted, ref } from 'vue';
+import { onMounted, onUnmounted, ref, watch } from 'vue';
 import { useAteriaGameStore } from '~/features/ateria-idle/core/model/game.store';
 import { useAteriaResourcesStore } from '~/features/ateria-idle/core/model/resources.store';
 import { useAteriaWarriorStore } from '~/features/ateria-idle/warrior/model/warrior.store';
+import { useAteriaInventoryStore } from '~/features/ateria-idle/warrior/model/inventory.store';
+import { useAteriaMerchantStore } from '~/features/ateria-idle/merchant/model/merchant.store';
+import { useAteriaScientistStore } from '~/features/ateria-idle/scientist/model/scientist.store';
 import type { OfflineReport } from '~/entities/ateria-idle/game';
 
 // Components
 import AteriaResourceBar from '~/features/ateria-idle/core/ui/ResourceBar.vue';
 import AteriaWarriorPanel from '~/features/ateria-idle/warrior/ui/WarriorPanel.vue';
+import AteriaEquipmentPanel from '~/features/ateria-idle/warrior/ui/EquipmentPanel.vue';
+import AteriaDungeonPanel from '~/features/ateria-idle/warrior/ui/DungeonPanel.vue';
+import AteriaSlayerPanel from '~/features/ateria-idle/warrior/ui/SlayerPanel.vue';
+import AteriaLoadoutPanel from '~/features/ateria-idle/warrior/ui/LoadoutPanel.vue';
+import AteriaMerchantPanel from '~/features/ateria-idle/merchant/ui/MerchantPanel.vue';
+import AteriaCaravanPanel from '~/features/ateria-idle/merchant/ui/CaravanPanel.vue';
+import AteriaScientistPanel from '~/features/ateria-idle/scientist/ui/ScientistPanel.vue';
+import AteriaGolemPanel from '~/features/ateria-idle/scientist/ui/GolemPanel.vue';
 import AteriaNotifications from '~/features/ateria-idle/core/ui/Notifications.vue';
 import AteriaOfflineProgressModal from '~/features/ateria-idle/core/ui/OfflineProgressModal.vue';
+import AteriaAchievementsPanel from '~/features/ateria-idle/core/ui/AchievementsPanel.vue';
+import AteriaPrestigePanel from '~/features/ateria-idle/core/ui/PrestigePanel.vue';
+import AteriaEventsPanel from '~/features/ateria-idle/core/ui/EventsPanel.vue';
+import AteriaSettingsPanel from '~/features/ateria-idle/core/ui/SettingsPanel.vue';
+import AteriaStatsPanel from '~/features/ateria-idle/core/ui/StatsPanel.vue';
+import { useAteriaAchievementsStore } from '~/features/ateria-idle/core/model/achievements.store';
+import { useAteriaPrestigeStore } from '~/features/ateria-idle/core/model/prestige.store';
+import { useAteriaEventsStore } from '~/features/ateria-idle/core/model/events.store';
 
 // Stores
 const gameStore = useAteriaGameStore();
 const resourcesStore = useAteriaResourcesStore();
 const warriorStore = useAteriaWarriorStore();
+const inventoryStore = useAteriaInventoryStore();
+const merchantStore = useAteriaMerchantStore();
+const scientistStore = useAteriaScientistStore();
+const achievementsStore = useAteriaAchievementsStore();
+const prestigeStore = useAteriaPrestigeStore();
+const eventsStore = useAteriaEventsStore();
+
+// Sync equipment bonuses when equipped items change
+watch(
+  () => inventoryStore.totalEquipmentStats,
+  (newStats) => {
+    warriorStore.updateEquipmentBonuses(newStats);
+  },
+  { immediate: true, deep: true }
+);
 
 // Game loop
 const TICK_RATE = 100; // 10 ticks per second
@@ -27,34 +61,136 @@ let gameLoopInterval: ReturnType<typeof setInterval> | null = null;
 let lastTickTime = Date.now();
 
 // Navigation
-const activeTab = ref<'warrior' | 'scientist' | 'merchant'>('warrior');
+const activeTab = ref<'warrior' | 'scientist' | 'merchant' | 'achievements' | 'prestige' | 'events' | 'stats' | 'settings'>('warrior');
+const warriorSubTab = ref<'combat' | 'equipment' | 'dungeon' | 'slayer' | 'loadout'>('combat');
+const merchantSubTab = ref<'shop' | 'caravans'>('shop');
+const scientistSubTab = ref<'main' | 'golems'>('main');
 
 // Offline progress
 const showOfflineModal = ref(false);
 const offlineReport = ref<OfflineReport | null>(null);
 
-// Navigation items
+// Unlock requirements
+const UNLOCK_REQUIREMENTS = {
+  scientist: { warriorLevel: 5, label: 'Wojownik Lvl 5' },
+  merchant: { warriorLevel: 10, label: 'Wojownik Lvl 10' },
+} as const;
+
+// Check and unlock features based on progress
+watch(
+  () => warriorStore.stats.level,
+  (newLevel) => {
+    // Unlock scientist at warrior level 5
+    if (newLevel >= UNLOCK_REQUIREMENTS.scientist.warriorLevel && !gameStore.isFeatureUnlocked('scientist')) {
+      gameStore.unlockFeature('scientist');
+    }
+    // Unlock merchant at warrior level 10
+    if (newLevel >= UNLOCK_REQUIREMENTS.merchant.warriorLevel && !gameStore.isFeatureUnlocked('merchant')) {
+      gameStore.unlockFeature('merchant');
+    }
+  },
+  { immediate: true }
+);
+
+// Navigation items with unlock progress
 const navItems = computed(() => [
   {
     id: 'warrior' as const,
     label: 'Wojownik',
     icon: 'mdi-sword',
-    unlocked: gameStore.isFeatureUnlocked('warrior'),
+    unlocked: true, // Always unlocked
     level: warriorStore.stats.level,
+    progress: null,
+    requirement: null,
   },
   {
     id: 'scientist' as const,
     label: 'Naukowiec',
     icon: 'mdi-flask',
     unlocked: gameStore.isFeatureUnlocked('scientist'),
-    level: 1,
+    level: scientistStore.stats.level,
+    progress: gameStore.isFeatureUnlocked('scientist')
+      ? null
+      : Math.min(100, (warriorStore.stats.level / UNLOCK_REQUIREMENTS.scientist.warriorLevel) * 100),
+    requirement: gameStore.isFeatureUnlocked('scientist')
+      ? null
+      : UNLOCK_REQUIREMENTS.scientist.label,
+    currentProgress: warriorStore.stats.level,
+    requiredProgress: UNLOCK_REQUIREMENTS.scientist.warriorLevel,
   },
   {
     id: 'merchant' as const,
     label: 'Handlarz',
     icon: 'mdi-cart',
     unlocked: gameStore.isFeatureUnlocked('merchant'),
-    level: 1,
+    level: merchantStore.stats.level,
+    progress: gameStore.isFeatureUnlocked('merchant')
+      ? null
+      : Math.min(100, (warriorStore.stats.level / UNLOCK_REQUIREMENTS.merchant.warriorLevel) * 100),
+    requirement: gameStore.isFeatureUnlocked('merchant')
+      ? null
+      : UNLOCK_REQUIREMENTS.merchant.label,
+    currentProgress: warriorStore.stats.level,
+    requiredProgress: UNLOCK_REQUIREMENTS.merchant.warriorLevel,
+  },
+  {
+    id: 'achievements' as const,
+    label: 'Osiągnięcia',
+    icon: 'mdi-trophy',
+    unlocked: true, // Always unlocked
+    level: null,
+    progress: achievementsStore.completionPercent,
+    requirement: null,
+    currentProgress: achievementsStore.unlockedCount,
+    requiredProgress: achievementsStore.totalCount,
+  },
+  {
+    id: 'prestige' as const,
+    label: 'Prestiż',
+    icon: 'mdi-star-circle',
+    unlocked: true, // Always unlocked
+    level: null,
+    progress: null,
+    requirement: null,
+    currentProgress: prestigeStore.legacyPoints,
+    requiredProgress: null,
+    badge: prestigeStore.canPrestige ? '!' : null,
+  },
+  {
+    id: 'events' as const,
+    label: 'Wydarzenia',
+    icon: 'mdi-calendar-star',
+    unlocked: true,
+    level: null,
+    progress: null,
+    requirement: null,
+    currentProgress: eventsStore.activeEvents.length,
+    requiredProgress: null,
+    badge: eventsStore.availableToClaim.length > 0 ? eventsStore.availableToClaim.length.toString() : null,
+  },
+  {
+    id: 'stats' as const,
+    label: 'Statystyki',
+    icon: 'mdi-chart-bar',
+    unlocked: true,
+    level: null,
+    progress: null,
+    requirement: null,
+    currentProgress: null,
+    requiredProgress: null,
+    badge: null,
+  },
+  {
+    id: 'settings' as const,
+    label: 'Ustawienia',
+    icon: 'mdi-cog',
+    unlocked: true,
+    level: null,
+    progress: null,
+    requirement: null,
+    currentProgress: null,
+    requiredProgress: null,
+    badge: null,
   },
 ]);
 
@@ -70,6 +206,10 @@ function gameTick() {
       gameStore.tick();
       resourcesStore.processTick(1);
       warriorStore.processTick();
+      scientistStore.processTick();
+      merchantStore.processTick();
+      achievementsStore.processTick();
+      eventsStore.processTick();
     }
   }
 
@@ -306,78 +446,177 @@ function devSimulateOffline() {
     <!-- Navigation Drawer -->
     <v-navigation-drawer
       permanent
-      rail
+      width="220"
       class="nav-drawer"
     >
+      <div class="nav-header pa-3">
+        <div class="text-caption text-medium-emphasis">
+          ŚCIEŻKI ROZWOJU
+        </div>
+      </div>
+
       <v-list
         nav
-        density="compact"
+        density="comfortable"
+        class="px-2"
       >
-        <v-list-item
+        <div
           v-for="item in navItems"
           :key="item.id"
-          :value="item.id"
-          :active="activeTab === item.id"
-          :disabled="!item.unlocked"
-          @click="activeTab = item.id"
+          class="nav-item-wrapper mb-1"
         >
-          <template #prepend>
-            <v-icon :color="activeTab === item.id ? 'primary' : undefined">
-              {{ item.icon }}
-            </v-icon>
-          </template>
-
-          <v-tooltip
-            activator="parent"
-            location="end"
+          <v-list-item
+            :value="item.id"
+            :active="activeTab === item.id"
+            :disabled="!item.unlocked"
+            rounded="lg"
+            class="nav-item"
+            :class="{ 'nav-item-locked': !item.unlocked }"
+            @click="item.unlocked ? activeTab = item.id : null"
           >
-            <div>{{ item.label }}</div>
-            <div
-              v-if="item.unlocked"
+            <template #prepend>
+              <v-avatar
+                size="32"
+                :color="item.unlocked ? (activeTab === item.id ? 'primary' : 'surface-variant') : 'grey-darken-2'"
+                class="mr-3"
+              >
+                <v-icon
+                  :color="item.unlocked ? (activeTab === item.id ? 'white' : undefined) : 'grey'"
+                  size="18"
+                >
+                  {{ item.unlocked ? item.icon : 'mdi-lock' }}
+                </v-icon>
+              </v-avatar>
+            </template>
+
+            <v-list-item-title class="text-body-2 font-weight-medium">
+              {{ item.label }}
+            </v-list-item-title>
+
+            <v-list-item-subtitle v-if="item.unlocked">
+              <span class="text-caption">Poziom {{ item.level }}</span>
+            </v-list-item-subtitle>
+
+            <v-list-item-subtitle
+              v-else
               class="text-caption"
             >
-              Poziom {{ item.level }}
+              <span class="text-warning">{{ item.requirement }}</span>
+            </v-list-item-subtitle>
+
+            <template #append>
+              <v-chip
+                v-if="item.unlocked"
+                size="x-small"
+                :color="activeTab === item.id ? 'primary' : 'default'"
+                variant="tonal"
+              >
+                {{ item.level }}
+              </v-chip>
+            </template>
+          </v-list-item>
+
+          <!-- Progress bar for locked items -->
+          <div
+            v-if="!item.unlocked && item.progress !== null"
+            class="unlock-progress px-3 pb-2"
+          >
+            <v-progress-linear
+              :model-value="item.progress"
+              color="warning"
+              height="4"
+              rounded
+              class="mb-1"
+            />
+            <div class="d-flex justify-space-between text-caption text-medium-emphasis">
+              <span>Postęp</span>
+              <span>{{ item.currentProgress }} / {{ item.requiredProgress }}</span>
             </div>
-            <div
-              v-else
-              class="text-caption text-warning"
+          </div>
+        </div>
+      </v-list>
+
+      <v-divider class="my-2" />
+
+      <v-list
+        nav
+        density="comfortable"
+        class="px-2"
+      >
+        <v-list-item
+          value="prestige"
+          rounded="lg"
+          disabled
+        >
+          <template #prepend>
+            <v-avatar
+              size="32"
+              color="grey-darken-2"
+              class="mr-3"
             >
-              Zablokowane
-            </div>
-          </v-tooltip>
+              <v-icon
+                size="18"
+                color="grey"
+              >
+                mdi-crown
+              </v-icon>
+            </v-avatar>
+          </template>
+          <v-list-item-title class="text-body-2">
+            Dziedzictwo
+          </v-list-item-title>
+          <v-list-item-subtitle class="text-caption text-medium-emphasis">
+            Wkrótce...
+          </v-list-item-subtitle>
+        </v-list-item>
+
+        <v-list-item
+          value="stats"
+          rounded="lg"
+          disabled
+        >
+          <template #prepend>
+            <v-avatar
+              size="32"
+              color="grey-darken-2"
+              class="mr-3"
+            >
+              <v-icon
+                size="18"
+                color="grey"
+              >
+                mdi-chart-bar
+              </v-icon>
+            </v-avatar>
+          </template>
+          <v-list-item-title class="text-body-2">
+            Statystyki
+          </v-list-item-title>
+          <v-list-item-subtitle class="text-caption text-medium-emphasis">
+            Wkrótce...
+          </v-list-item-subtitle>
         </v-list-item>
       </v-list>
 
-      <template #append>
-        <v-list
-          nav
-          density="compact"
+      <!-- Dev unlock all button -->
+      <div class="pa-2 mt-auto">
+        <v-btn
+          size="small"
+          variant="outlined"
+          color="warning"
+          block
+          class="dev-unlock-btn"
+          @click="() => { gameStore.unlockFeature('scientist'); gameStore.unlockFeature('merchant'); }"
         >
-          <v-list-item value="prestige">
-            <template #prepend>
-              <v-icon>mdi-crown</v-icon>
-            </template>
-            <v-tooltip
-              activator="parent"
-              location="end"
-            >
-              Dziedzictwo
-            </v-tooltip>
-          </v-list-item>
-
-          <v-list-item value="stats">
-            <template #prepend>
-              <v-icon>mdi-chart-bar</v-icon>
-            </template>
-            <v-tooltip
-              activator="parent"
-              location="end"
-            >
-              Statystyki
-            </v-tooltip>
-          </v-list-item>
-        </v-list>
-      </template>
+          <v-icon
+            start
+            size="14"
+          >
+            mdi-lock-open
+          </v-icon>
+          DEV: Odblokuj wszystko
+        </v-btn>
+      </div>
     </v-navigation-drawer>
 
     <!-- Main Content -->
@@ -386,58 +625,164 @@ function devSimulateOffline() {
         fluid
         class="pa-4"
       >
-        <!-- Warrior Panel -->
-        <AteriaWarriorPanel v-if="activeTab === 'warrior'" />
+        <!-- Warrior Section -->
+        <div v-if="activeTab === 'warrior'">
+          <!-- Sub-tabs for Warrior -->
+          <v-tabs
+            v-model="warriorSubTab"
+            color="primary"
+            density="compact"
+            class="mb-4"
+          >
+            <v-tab value="combat">
+              <v-icon start>
+                mdi-sword-cross
+              </v-icon>
+              Walka
+            </v-tab>
+            <v-tab value="dungeon">
+              <v-icon start>
+                mdi-castle
+              </v-icon>
+              Lochy
+              <v-badge
+                v-if="warriorStore.isInDungeon"
+                dot
+                color="error"
+                class="ml-2"
+              />
+            </v-tab>
+            <v-tab value="slayer">
+              <v-icon start>
+                mdi-target-account
+              </v-icon>
+              Łowca
+              <v-badge
+                v-if="warriorStore.hasActiveSlayerTask"
+                dot
+                color="deep-purple"
+                class="ml-2"
+              />
+            </v-tab>
+            <v-tab value="loadout">
+              <v-icon start>
+                mdi-bag-personal
+              </v-icon>
+              Zestawy
+              <v-badge
+                v-if="warriorStore.loadouts.length > 0"
+                :content="warriorStore.loadouts.length"
+                color="deep-purple"
+                inline
+              />
+            </v-tab>
+            <v-tab value="equipment">
+              <v-icon start>
+                mdi-shield-sword
+              </v-icon>
+              Ekwipunek
+              <v-badge
+                v-if="inventoryStore.ownedEquipment.length > 0"
+                :content="inventoryStore.ownedEquipment.length"
+                color="primary"
+                inline
+                class="ml-2"
+              />
+            </v-tab>
+          </v-tabs>
 
-        <!-- Scientist Panel (placeholder) -->
-        <v-card
-          v-else-if="activeTab === 'scientist'"
-          class="pa-4"
-        >
-          <v-card-title>
-            <v-icon class="mr-2">
-              mdi-flask
-            </v-icon>
-            Naukowiec
-          </v-card-title>
-          <v-card-text class="text-center text-medium-emphasis">
-            <v-icon
-              size="64"
-              class="mb-4"
-            >
-              mdi-hammer-wrench
-            </v-icon>
-            <div>W budowie...</div>
-            <div class="text-caption">
-              Ścieżka Naukowca będzie dostępna wkrótce
-            </div>
-          </v-card-text>
-        </v-card>
+          <!-- Warrior Combat Panel -->
+          <AteriaWarriorPanel v-if="warriorSubTab === 'combat'" />
 
-        <!-- Merchant Panel (placeholder) -->
-        <v-card
-          v-else-if="activeTab === 'merchant'"
-          class="pa-4"
-        >
-          <v-card-title>
-            <v-icon class="mr-2">
-              mdi-cart
-            </v-icon>
-            Handlarz
-          </v-card-title>
-          <v-card-text class="text-center text-medium-emphasis">
-            <v-icon
-              size="64"
-              class="mb-4"
-            >
-              mdi-hammer-wrench
-            </v-icon>
-            <div>W budowie...</div>
-            <div class="text-caption">
-              Ścieżka Handlarza będzie dostępna wkrótce
-            </div>
-          </v-card-text>
-        </v-card>
+          <!-- Warrior Dungeon Panel -->
+          <AteriaDungeonPanel v-else-if="warriorSubTab === 'dungeon'" />
+
+          <!-- Warrior Slayer Panel -->
+          <AteriaSlayerPanel v-else-if="warriorSubTab === 'slayer'" />
+
+          <!-- Warrior Loadout Panel -->
+          <AteriaLoadoutPanel v-else-if="warriorSubTab === 'loadout'" />
+
+          <!-- Warrior Equipment Panel -->
+          <AteriaEquipmentPanel v-else-if="warriorSubTab === 'equipment'" />
+        </div>
+
+        <!-- Scientist Panel -->
+        <div v-else-if="activeTab === 'scientist'">
+          <v-tabs
+            v-model="scientistSubTab"
+            color="green"
+            class="mb-4"
+          >
+            <v-tab value="main">
+              <v-icon start>
+                mdi-flask
+              </v-icon>
+              Laboratorium
+            </v-tab>
+            <v-tab value="golems">
+              <v-icon start>
+                mdi-robot
+              </v-icon>
+              Golemy
+              <v-badge
+                v-if="scientistStore.golemsUnlocked && scientistStore.workshop.golems.length > 0"
+                :content="scientistStore.activeGolems.length"
+                color="blue-grey"
+                inline
+              />
+            </v-tab>
+          </v-tabs>
+
+          <AteriaScientistPanel v-if="scientistSubTab === 'main'" />
+          <AteriaGolemPanel v-else-if="scientistSubTab === 'golems'" />
+        </div>
+
+        <!-- Merchant Panel -->
+        <div v-else-if="activeTab === 'merchant'">
+          <v-tabs
+            v-model="merchantSubTab"
+            color="amber-darken-2"
+            class="mb-4"
+          >
+            <v-tab value="shop">
+              <v-icon start>
+                mdi-store
+              </v-icon>
+              Sklep
+            </v-tab>
+            <v-tab value="caravans">
+              <v-icon start>
+                mdi-truck
+              </v-icon>
+              Karawany
+              <v-badge
+                v-if="merchantStore.caravans.filter(c => c.state === 'traveling').length > 0"
+                :content="merchantStore.caravans.filter(c => c.state === 'traveling').length"
+                color="info"
+                inline
+              />
+            </v-tab>
+          </v-tabs>
+
+          <AteriaMerchantPanel v-if="merchantSubTab === 'shop'" />
+          <AteriaCaravanPanel v-else-if="merchantSubTab === 'caravans'" />
+        </div>
+
+        <!-- Achievements Panel -->
+        <AteriaAchievementsPanel v-else-if="activeTab === 'achievements'" />
+
+        <!-- Prestige Panel -->
+        <AteriaPrestigePanel v-else-if="activeTab === 'prestige'" />
+
+        <!-- Events Panel -->
+        <AteriaEventsPanel v-else-if="activeTab === 'events'" />
+
+        <!-- Stats Panel -->
+        <AteriaStatsPanel v-else-if="activeTab === 'stats'" />
+
+        <!-- Settings Panel -->
+        <AteriaSettingsPanel v-else-if="activeTab === 'settings'" />
 
         <!-- Dev Panel (only in development) -->
         <v-card
@@ -479,8 +824,96 @@ function devSimulateOffline() {
               <v-btn
                 size="x-small"
                 variant="tonal"
+                color="amber"
+                @click="inventoryStore.devAddRandomEquipment()"
+              >
+                +Losowy Ekwipunek
+              </v-btn>
+              <v-btn
+                size="x-small"
+                variant="tonal"
+                color="purple"
+                @click="inventoryStore.devAddAllStarterGear()"
+              >
+                +Starter Gear
+              </v-btn>
+              <v-btn
+                size="x-small"
+                variant="tonal"
+                color="orange"
+                @click="merchantStore.devAddTestItems()"
+              >
+                +Towary
+              </v-btn>
+              <v-btn
+                size="x-small"
+                variant="tonal"
+                color="deep-purple"
+                @click="scientistStore.devAddFlasks()"
+              >
+                +Kolby
+              </v-btn>
+              <v-btn
+                size="x-small"
+                variant="tonal"
+                color="pink"
+                @click="scientistStore.devUnlockAll()"
+              >
+                Unlock Sci
+              </v-btn>
+              <v-btn
+                size="x-small"
+                variant="tonal"
+                color="teal"
+                @click="scientistStore.devAddIngredients()"
+              >
+                +Składniki
+              </v-btn>
+              <v-btn
+                size="x-small"
+                variant="tonal"
+                color="cyan"
+                @click="() => { warriorStore.addDungeonKey('goblin_key', 5); warriorStore.addDungeonKey('swamp_key', 3); warriorStore.addDungeonKey('infernal_key', 2); warriorStore.addDungeonKey('frost_key', 1); warriorStore.addDungeonKey('void_key', 1); }"
+              >
+                +Klucze
+              </v-btn>
+              <v-btn
+                size="x-small"
+                variant="tonal"
+                color="deep-purple"
+                @click="resourcesStore.addResource('slayerCoins', 500)"
+              >
+                +500 Monety Łowcy
+              </v-btn>
+              <v-btn
+                size="x-small"
+                variant="tonal"
+                color="purple"
+                @click="prestigeStore.legacyPoints += 100"
+              >
+                +100 LP
+              </v-btn>
+              <v-btn
+                size="x-small"
+                variant="tonal"
+                color="pink"
+                @click="eventsStore.startEvent('gold_rush')"
+              >
+                +Gold Rush
+              </v-btn>
+              <v-btn
+                size="x-small"
+                variant="tonal"
+                color="red"
+                @click="eventsStore.startEvent('blood_moon')"
+              >
+                +Blood Moon
+              </v-btn>
+              <v-btn
+                size="x-small"
+                variant="tonal"
                 color="error"
-                @click="() => { gameStore.resetGame(); resourcesStore.resetResources(); warriorStore.resetWarrior(); }"
+                @click="() => { gameStore.resetGame(); resourcesStore.resetResources(); warriorStore.resetWarrior(); inventoryStore.resetInventory(); scientistStore.resetScientist(); merchantStore.resetMerchant(); }"
               >
                 Reset
               </v-btn>
@@ -510,14 +943,52 @@ function devSimulateOffline() {
 .nav-drawer {
   background: #1a1a1a !important;
   border-right: 1px solid rgba(255, 255, 255, 0.05) !important;
+  display: flex;
+  flex-direction: column;
+}
+
+.nav-header {
+  border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+}
+
+.nav-item-wrapper {
+  border-radius: 8px;
+  overflow: hidden;
+}
+
+.nav-item {
+  min-height: 48px;
+}
+
+.nav-item-locked {
+  opacity: 0.7;
+}
+
+.nav-item-locked:hover {
+  cursor: not-allowed;
 }
 
 .nav-drawer :deep(.v-list-item--active) {
   background: rgba(33, 150, 243, 0.15);
 }
 
-.nav-drawer :deep(.v-list-item:hover:not(.v-list-item--active)) {
+.nav-drawer :deep(.v-list-item:hover:not(.v-list-item--active):not(.v-list-item--disabled)) {
   background: rgba(255, 255, 255, 0.05);
+}
+
+.unlock-progress {
+  background: rgba(0, 0, 0, 0.2);
+  border-radius: 0 0 8px 8px;
+  margin-top: -4px;
+}
+
+.dev-unlock-btn {
+  font-size: 10px;
+  opacity: 0.6;
+}
+
+.dev-unlock-btn:hover {
+  opacity: 1;
 }
 
 .dev-panel {

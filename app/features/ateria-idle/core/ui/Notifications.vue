@@ -24,46 +24,30 @@ function getColor(type: string): string {
     <TransitionGroup
       name="notification"
       tag="div"
+      class="notification-list"
     >
-      <v-snackbar
+      <div
         v-for="notification in gameStore.notifications.slice(-5)"
         :key="notification.id"
-        :model-value="true"
-        :timeout="-1"
-        :color="getColor(notification.type)"
-        location="top right"
-        class="notification-snackbar"
-        multi-line
+        class="notification-item"
       >
-        <div class="d-flex align-center">
-          <v-icon
-            v-if="notification.icon"
-            :icon="notification.icon"
-            class="mr-2"
-          />
-          <div>
-            <div class="font-weight-bold">
-              {{ notification.title }}
-            </div>
-            <div class="text-caption">
-              {{ notification.message }}
-            </div>
+        <v-alert
+          :color="getColor(notification.type)"
+          :icon="notification.icon"
+          closable
+          variant="elevated"
+          density="comfortable"
+          class="notification-alert"
+          @click:close="gameStore.removeNotification(notification.id)"
+        >
+          <div class="font-weight-bold">
+            {{ notification.title }}
           </div>
-        </div>
-
-        <template #actions>
-          <v-btn
-            icon
-            size="small"
-            variant="text"
-            @click="gameStore.removeNotification(notification.id)"
-          >
-            <v-icon size="small">
-              mdi-close
-            </v-icon>
-          </v-btn>
-        </template>
-      </v-snackbar>
+          <div class="text-caption">
+            {{ notification.message }}
+          </div>
+        </v-alert>
+      </div>
     </TransitionGroup>
   </div>
 </template>
@@ -74,18 +58,23 @@ function getColor(type: string): string {
   top: 64px;
   right: 16px;
   z-index: 1000;
-  display: flex;
-  flex-direction: column;
-  gap: 8px;
   pointer-events: none;
 }
 
-.notifications-container > * {
-  pointer-events: auto;
+.notification-list {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
 }
 
-.notification-snackbar {
-  position: relative !important;
+.notification-item {
+  pointer-events: auto;
+  min-width: 280px;
+  max-width: 360px;
+}
+
+.notification-alert {
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.3);
 }
 
 .notification-enter-active,
