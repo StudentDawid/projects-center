@@ -39,6 +39,15 @@ import {
   getShopItem,
   type SlayerTaskTemplate,
 } from '../../data/slayer.data';
+import {
+  generateMonsterDropTable,
+  rollDrops,
+  calculateFinalXp,
+  HUMANOID_MONSTERS,
+  BIOME_LEVEL_RANGES,
+  BIOME_TIER,
+} from '../../data/drops.data';
+import { useAteriaIntegrationStore } from '../../core/model/integration.store';
 
 // Inventory store import (lazy to avoid circular dependency)
 const getInventoryStore = () => import('./inventory.store').then(m => m.useAteriaInventoryStore());
@@ -827,9 +836,14 @@ export const useAteriaWarriorStore = defineStore('ateria-warrior', () => {
       checkAutoPotions();
     }
 
-    // Auto-eat check (if potions didn't help)
-    if (foodInventory.value.autoEatEnabled && hpPercent.value <= foodInventory.value.autoEatThreshold * 100) {
-      consumeFood();
+    // Auto-eat check (if potions didn't help) - use integration store
+    const integrationStore = useAteriaIntegrationStore();
+    if (integrationStore.autoEatSettings.enabled &&
+        hpPercent.value <= integrationStore.autoEatSettings.threshold) {
+      const healAmount = integrationStore.processAutoEat(stats.value.currentHp, stats.value.maxHp);
+      if (healAmount > 0) {
+        stats.value.currentHp = Math.min(stats.value.currentHp + healAmount, stats.value.maxHp);
+      }
     }
 
     // Player attack (every 10 ticks = 1 second, modified by speed buff)
@@ -920,9 +934,19 @@ export const useAteriaWarriorStore = defineStore('ateria-warrior', () => {
     }
 
     const enemy = currentEnemy.value;
+    const biome = enemy.biome;
 
-    // Grant XP (bonus applied in addXp)
-    addXp(enemy.xpReward);
+    // Generate enhanced drop table with food/equipment/next biome drops
+    const dropTable = generateMonsterDropTable(
+      enemy.id,
+      biome,
+      enemy.level,
+      enemy.lootTable,
+    );
+
+    // Grant XP with scaling (stronger monsters give up to 2x XP)
+    const scaledXp = calculateFinalXp(enemy.xpReward, enemy.level, biome);
+    addXp(scaledXp);
 
     // Grant gold (with potion bonus)
     let goldAmount = Math.floor(Math.random() * (enemy.goldReward.max - enemy.goldReward.min + 1)) + enemy.goldReward.min;
@@ -936,15 +960,66 @@ export const useAteriaWarriorStore = defineStore('ateria-warrior', () => {
     // Track gold for achievements
     achievementsStore.recordGoldEarned(goldAmount);
 
-    // Process loot table (with loot bonus)
-    const lootBonus = potionBuffs.value.lootBonus;
-    for (const loot of enemy.lootTable) {
-      const effectiveChance = loot.chance * (1 + lootBonus / 100);
-      if (Math.random() < effectiveChance) {
-        const amount = Math.floor(Math.random() * (loot.maxAmount - loot.minAmount + 1)) + loot.minAmount;
-        // TODO: Add to inventory
-        console.log(`Loot: ${amount}x ${loot.itemId}`);
-      }
+    // Process all drop tables with luck bonus
+    const lootBonus = potionBuffs.value.lootBonus || 0;
+    const allDrops: { itemId: string; amount: number }[] = [];
+
+    // Material drops (original loot table)
+    const materialDrops = rollDrops(dropTable.materialDrops, lootBonus);
+    allDrops.push(...materialDrops);
+
+    // Food drops
+    const foodDrops = rollDrops(dropTable.foodDrops, lootBonus);
+    allDrops.push(...foodDrops);
+
+    // Equipment drops (only for humanoid monsters)
+    if (dropTable.equipmentDrops.length > 0) {
+      const equipDrops = rollDrops(dropTable.equipmentDrops, lootBonus);
+      allDrops.push(...equipDrops);
+    }
+
+    // Next biome drops (for strong monsters)
+    if (dropTable.nextBiomeDrops.length > 0) {
+      const nextBiomeDropItems = rollDrops(dropTable.nextBiomeDrops, lootBonus);
+      allDrops.push(...nextBiomeDropItems);
+    }
+
+    // Add items to inventory
+    if (allDrops.length > 0) {
+      const integrationStore = useAteriaIntegrationStore();
+
+      getInventoryStore().then((inventoryStore) => {
+        for (const drop of allDrops) {
+          // Check if food drop - add to integration store instead
+          const isFoodDrop = foodDrops.some(f => f.itemId === drop.itemId);
+          const isEquipmentDrop = dropTable.equipmentDrops.some(d => d.itemId === drop.itemId);
+
+          if (isFoodDrop) {
+            // Food goes to integration store for auto-eat system
+            integrationStore.addFood(drop.itemId, drop.amount);
+          } else {
+            // Materials and equipment go to regular inventory
+            const dropRarity = isEquipmentDrop
+              ? dropTable.equipmentDrops.find(d => d.itemId === drop.itemId)?.rarity
+              : undefined;
+
+            inventoryStore.addItem(drop.itemId, drop.amount, 'material', undefined, undefined, dropRarity);
+          }
+
+          // Notification for rare drops (equipment or next biome items)
+          const isRareDrop = isEquipmentDrop ||
+                            dropTable.nextBiomeDrops.some(d => d.itemId === drop.itemId);
+          if (isRareDrop) {
+            gameStore.addNotification({
+              type: 'success',
+              title: 'Rzadki drop!',
+              message: `Zdobyto: ${drop.amount}x ${drop.itemId}`,
+              icon: 'mdi-treasure-chest',
+              duration: 3000,
+            });
+          }
+        }
+      });
     }
 
     // Slayer progress
@@ -1452,24 +1527,65 @@ export const useAteriaWarriorStore = defineStore('ateria-warrior', () => {
 
     const dungeon = currentDungeonData.value;
     const enemy = currentEnemy.value;
+    const biome = enemy.biome;
 
-    // Grant XP
-    addXp(enemy.xpReward);
+    // Generate enhanced drop table
+    const dropTable = generateMonsterDropTable(
+      enemy.id,
+      biome,
+      enemy.level,
+      enemy.lootTable,
+    );
+
+    // Grant XP with scaling (stronger monsters and dungeon bonus)
+    const scaledXp = calculateFinalXp(enemy.xpReward, enemy.level, biome);
+    const dungeonXpBonus = 1 + dungeon.tier * 0.1; // +10% XP per dungeon tier
+    addXp(Math.floor(scaledXp * dungeonXpBonus));
 
     // Add to session stats
     sessionKills.value++;
     activeDungeonRun.value.totalMonstersKilled++;
 
-    // Collect loot
-    for (const loot of enemy.lootTable) {
-      if (Math.random() < loot.chance) {
-        const amount = Math.floor(Math.random() * (loot.maxAmount - loot.minAmount + 1)) + loot.minAmount;
-        activeDungeonRun.value.loot.push({
-          itemId: loot.itemId,
-          amount,
-          rarity: loot.rarity,
-        });
-      }
+    // Collect all loot types
+    const lootBonus = potionBuffs.value.lootBonus || 0;
+    const dungeonLootBonus = dungeon.tier * 5; // +5% loot chance per tier
+    const totalLootBonus = lootBonus + dungeonLootBonus;
+
+    // Material drops
+    for (const drop of rollDrops(dropTable.materialDrops, totalLootBonus)) {
+      activeDungeonRun.value.loot.push({
+        itemId: drop.itemId,
+        amount: drop.amount,
+        rarity: 'common',
+      });
+    }
+
+    // Food drops
+    for (const drop of rollDrops(dropTable.foodDrops, totalLootBonus)) {
+      activeDungeonRun.value.loot.push({
+        itemId: drop.itemId,
+        amount: drop.amount,
+        rarity: 'common',
+      });
+    }
+
+    // Equipment drops (humanoids)
+    for (const drop of rollDrops(dropTable.equipmentDrops, totalLootBonus)) {
+      const eqDrop = dropTable.equipmentDrops.find(d => d.itemId === drop.itemId);
+      activeDungeonRun.value.loot.push({
+        itemId: drop.itemId,
+        amount: drop.amount,
+        rarity: eqDrop?.rarity || 'uncommon',
+      });
+    }
+
+    // Next biome drops
+    for (const drop of rollDrops(dropTable.nextBiomeDrops, totalLootBonus)) {
+      activeDungeonRun.value.loot.push({
+        itemId: drop.itemId,
+        amount: drop.amount,
+        rarity: 'rare',
+      });
     }
 
     // Check if boss was killed

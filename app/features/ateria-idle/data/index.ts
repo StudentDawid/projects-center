@@ -50,3 +50,9 @@ export * from './events.data';
 
 // Settings
 export * from './settings.data';
+
+// Food
+export * from './food.data';
+
+// Drops
+export * from './drops.data';

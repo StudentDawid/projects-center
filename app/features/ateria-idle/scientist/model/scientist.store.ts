@@ -858,6 +858,18 @@ export const useAteriaScientistStore = defineStore('ateria-scientist', () => {
     flasks.value.blue += 20;
   }
 
+  // Public function to add flasks (used by integration store for offline progress)
+  function addFlasks(type: 'red' | 'green' | 'blue', amount: number) {
+    flasks.value[type] += amount;
+  }
+
+  // Flask production rate computed (for offline progress calculations)
+  const flaskProductionRate = computed(() => ({
+    red: flasks.value.redPerSecond,
+    green: flasks.value.greenPerSecond,
+    blue: flasks.value.bluePerSecond,
+  }));
+
   function devUnlockAll() {
     greenFlasksUnlocked.value = true;
     blueFlasksUnlocked.value = true;
@@ -977,6 +989,10 @@ export const useAteriaScientistStore = defineStore('ateria-scientist', () => {
     allocatePotionToWarrior,
     getPotionCount,
     getAvailableCombatPotions,
+
+    // Integration (offline progress)
+    addFlasks,
+    flaskProductionRate,
 
     // Dev
     devAddFlasks,

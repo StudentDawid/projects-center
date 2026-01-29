@@ -30,9 +30,21 @@ import AteriaPrestigePanel from '~/features/ateria-idle/core/ui/PrestigePanel.vu
 import AteriaEventsPanel from '~/features/ateria-idle/core/ui/EventsPanel.vue';
 import AteriaSettingsPanel from '~/features/ateria-idle/core/ui/SettingsPanel.vue';
 import AteriaStatsPanel from '~/features/ateria-idle/core/ui/StatsPanel.vue';
+import AteriaIntegrationPanel from '~/features/ateria-idle/core/ui/IntegrationPanel.vue';
+import AteriaGatheringPanel from '~/features/ateria-idle/gathering/ui/GatheringPanel.vue';
+import AteriaCraftingPanel from '~/features/ateria-idle/crafting/ui/CraftingPanel.vue';
+import AteriaDiplomatPanel from '~/features/ateria-idle/diplomat/ui/DiplomatPanel.vue';
+import AteriaDruidPanel from '~/features/ateria-idle/druid/ui/DruidPanel.vue';
+import AteriaMysticPanel from '~/features/ateria-idle/mystic/ui/MysticPanel.vue';
 import { useAteriaAchievementsStore } from '~/features/ateria-idle/core/model/achievements.store';
 import { useAteriaPrestigeStore } from '~/features/ateria-idle/core/model/prestige.store';
 import { useAteriaEventsStore } from '~/features/ateria-idle/core/model/events.store';
+import { useAteriaIntegrationStore } from '~/features/ateria-idle/core/model/integration.store';
+import { useAteriaGatheringStore } from '~/features/ateria-idle/gathering/model/gathering.store';
+import { useAteriaCraftingStore } from '~/features/ateria-idle/crafting/model/crafting.store';
+import { useAteriaDiplomatStore } from '~/features/ateria-idle/diplomat/model/diplomat.store';
+import { useAteriaDruidStore } from '~/features/ateria-idle/druid/model/druid.store';
+import { useAteriaMysticStore } from '~/features/ateria-idle/mystic/model/mystic.store';
 
 // Stores
 const gameStore = useAteriaGameStore();
@@ -44,6 +56,12 @@ const scientistStore = useAteriaScientistStore();
 const achievementsStore = useAteriaAchievementsStore();
 const prestigeStore = useAteriaPrestigeStore();
 const eventsStore = useAteriaEventsStore();
+const integrationStore = useAteriaIntegrationStore();
+const gatheringStore = useAteriaGatheringStore();
+const craftingStore = useAteriaCraftingStore();
+const diplomatStore = useAteriaDiplomatStore();
+const druidStore = useAteriaDruidStore();
+const mysticStore = useAteriaMysticStore();
 
 // Sync equipment bonuses when equipped items change
 watch(
@@ -61,7 +79,7 @@ let gameLoopInterval: ReturnType<typeof setInterval> | null = null;
 let lastTickTime = Date.now();
 
 // Navigation
-const activeTab = ref<'warrior' | 'scientist' | 'merchant' | 'achievements' | 'prestige' | 'events' | 'stats' | 'settings'>('warrior');
+const activeTab = ref<'warrior' | 'scientist' | 'merchant' | 'gathering' | 'crafting' | 'diplomat' | 'druid' | 'mystic' | 'achievements' | 'prestige' | 'events' | 'stats' | 'settings' | 'integration'>('warrior');
 const warriorSubTab = ref<'combat' | 'equipment' | 'dungeon' | 'slayer' | 'loadout'>('combat');
 const merchantSubTab = ref<'shop' | 'caravans'>('shop');
 const scientistSubTab = ref<'main' | 'golems'>('main');
@@ -134,6 +152,61 @@ const navItems = computed(() => [
     requiredProgress: UNLOCK_REQUIREMENTS.merchant.warriorLevel,
   },
   {
+    id: 'gathering' as const,
+    label: 'Zbieranie',
+    icon: 'mdi-pickaxe',
+    unlocked: true, // Always unlocked
+    level: Math.max(
+      gatheringStore.skills.mining.level,
+      gatheringStore.skills.woodcutting.level,
+      gatheringStore.skills.fishing.level,
+      gatheringStore.skills.herbalism.level
+    ),
+    progress: null,
+    requirement: null,
+  },
+  {
+    id: 'crafting' as const,
+    label: 'Rzemiosło',
+    icon: 'mdi-anvil',
+    unlocked: true, // Always unlocked
+    level: Math.max(
+      craftingStore.professions.smithing.level,
+      craftingStore.professions.tailoring.level,
+      craftingStore.professions.jewelcrafting.level,
+      craftingStore.professions.woodworking.level
+    ),
+    progress: null,
+    requirement: null,
+  },
+  {
+    id: 'diplomat' as const,
+    label: 'Dyplomata',
+    icon: 'mdi-account-tie',
+    unlocked: true, // Always unlocked
+    level: diplomatStore.progress.level,
+    progress: null,
+    requirement: null,
+  },
+  {
+    id: 'druid' as const,
+    label: 'Druid',
+    icon: 'mdi-leaf',
+    unlocked: true, // Always unlocked
+    level: druidStore.progress.level,
+    progress: null,
+    requirement: null,
+  },
+  {
+    id: 'mystic' as const,
+    label: 'Mistyk',
+    icon: 'mdi-crystal-ball',
+    unlocked: true, // Always unlocked
+    level: mysticStore.progress.level,
+    progress: null,
+    requirement: null,
+  },
+  {
     id: 'achievements' as const,
     label: 'Osiągnięcia',
     icon: 'mdi-trophy',
@@ -181,6 +254,18 @@ const navItems = computed(() => [
     badge: null,
   },
   {
+    id: 'integration' as const,
+    label: 'Integracja',
+    icon: 'mdi-link-variant',
+    unlocked: true,
+    level: null,
+    progress: null,
+    requirement: null,
+    currentProgress: integrationStore.totalFoodCount,
+    requiredProgress: null,
+    badge: integrationStore.totalFoodCount > 0 ? integrationStore.totalFoodCount.toString() : null,
+  },
+  {
     id: 'settings' as const,
     label: 'Ustawienia',
     icon: 'mdi-cog',
@@ -210,6 +295,12 @@ function gameTick() {
       merchantStore.processTick();
       achievementsStore.processTick();
       eventsStore.processTick();
+      integrationStore.processTick();
+      gatheringStore.processTick();
+      craftingStore.processTick();
+      diplomatStore.processTick();
+      druidStore.processTick();
+      mysticStore.processTick();
     }
   }
 
@@ -781,6 +872,24 @@ function devSimulateOffline() {
         <!-- Stats Panel -->
         <AteriaStatsPanel v-else-if="activeTab === 'stats'" />
 
+        <!-- Integration Panel -->
+        <AteriaIntegrationPanel v-else-if="activeTab === 'integration'" />
+
+        <!-- Gathering Panel -->
+        <AteriaGatheringPanel v-else-if="activeTab === 'gathering'" />
+
+        <!-- Crafting Panel -->
+        <AteriaCraftingPanel v-else-if="activeTab === 'crafting'" />
+
+        <!-- Diplomat Panel -->
+        <AteriaDiplomatPanel v-else-if="activeTab === 'diplomat'" />
+
+        <!-- Druid Panel -->
+        <AteriaDruidPanel v-else-if="activeTab === 'druid'" />
+
+        <!-- Mystic Panel -->
+        <AteriaMysticPanel v-else-if="activeTab === 'mystic'" />
+
         <!-- Settings Panel -->
         <AteriaSettingsPanel v-else-if="activeTab === 'settings'" />
 
@@ -912,8 +1021,96 @@ function devSimulateOffline() {
               <v-btn
                 size="x-small"
                 variant="tonal"
+                color="brown"
+                @click="integrationStore.addFood('bread', 10)"
+              >
+                +10 Chleb
+              </v-btn>
+              <v-btn
+                size="x-small"
+                variant="tonal"
+                color="orange"
+                @click="integrationStore.addFood('cooked_meat', 5)"
+              >
+                +5 Mięso
+              </v-btn>
+              <v-btn
+                size="x-small"
+                variant="tonal"
+                color="brown"
+                @click="gatheringStore.devAddAllTools()"
+              >
+                +Narzędzia
+              </v-btn>
+              <v-btn
+                size="x-small"
+                variant="tonal"
+                color="lime"
+                @click="gatheringStore.devAddResources()"
+              >
+                +Surowce
+              </v-btn>
+              <v-btn
+                size="x-small"
+                variant="tonal"
+                color="amber"
+                @click="craftingStore.devDiscoverAll()"
+              >
+                +Receptury
+              </v-btn>
+              <v-btn
+                size="x-small"
+                variant="tonal"
+                color="indigo"
+                @click="craftingStore.devAddMaterials()"
+              >
+                +Materiały
+              </v-btn>
+              <v-btn
+                size="x-small"
+                variant="tonal"
+                color="deep-purple"
+                @click="diplomatStore.devMaxReputations()"
+              >
+                +Max Reputacja
+              </v-btn>
+              <v-btn
+                size="x-small"
+                variant="tonal"
+                color="green"
+                @click="druidStore.devUnlockAllTotems()"
+              >
+                +Totemy
+              </v-btn>
+              <v-btn
+                size="x-small"
+                variant="tonal"
+                color="light-green"
+                @click="druidStore.devFillInventory()"
+              >
+                +Produkty Farmy
+              </v-btn>
+              <v-btn
+                size="x-small"
+                variant="tonal"
+                color="purple"
+                @click="mysticStore.devFillResources()"
+              >
+                +Mana/Oświecenie
+              </v-btn>
+              <v-btn
+                size="x-small"
+                variant="tonal"
+                color="deep-purple"
+                @click="mysticStore.devCollectAllCards()"
+              >
+                +Karty Tarota
+              </v-btn>
+              <v-btn
+                size="x-small"
+                variant="tonal"
                 color="error"
-                @click="() => { gameStore.resetGame(); resourcesStore.resetResources(); warriorStore.resetWarrior(); inventoryStore.resetInventory(); scientistStore.resetScientist(); merchantStore.resetMerchant(); }"
+                @click="() => { gameStore.resetGame(); resourcesStore.resetResources(); warriorStore.resetWarrior(); inventoryStore.resetInventory(); scientistStore.resetScientist(); merchantStore.resetMerchant(); gatheringStore.resetGathering(); craftingStore.resetCrafting(); diplomatStore.resetDiplomat(); druidStore.resetDruid(); mysticStore.resetMystic(); }"
               >
                 Reset
               </v-btn>
