@@ -23,6 +23,16 @@
 | 🎭 Dyplomata | ✅ | 7 frakcji, reputacja, misje dyplomatyczne, tytuły, wpływy |
 | 🌿 Druid | ✅ | Rolnictwo, hodowla zwierząt, pory roku, 6 totemów natury |
 | 🔮 Mistyk | ✅ | Medytacja, transy, przepowiednie, rytuały, karty tarota |
+| 🍳 Kucharz | ✅ | Gotowanie, przepisy, restauracja, buffy z jedzenia |
+| 🎣 Wędkarz | ✅ | Łowienie ryb, sprzęt wędkarski, kolekcja ryb, 6 łowisk |
+| 🧙 Czarodziej | ✅ | 25+ zaklęć, 7 żywiołów, kostury, badania magiczne |
+| 🏴‍☠️ Odkrywca | ✅ | 8 regionów, 40+ odkryć, ekspedycje, sprzęt podróżniczy |
+| 🎵 Bard | ✅ | 15+ pieśni, 10 instrumentów, 7 miejsc występów, sława |
+| ⚗️ Alchemik | ✅ | 15+ mikstur, składniki, eksperymenty, transmutacja |
+| 🏛️ Architekt | ✅ | 15+ budowli, materiały, efekty pasywne, populacja |
+| 👤 Szpieg | ✅ | 10+ misji szpiegowskich, sprzęt, informatorzy |
+| 🐲 Zaklinacz | ✅ | 15+ stworzeń do oswojenia, przedmioty, towarzysze |
+| ⛪ Kapłan | ✅ | 6 bóstw, 15+ modlitw, rytuały, relikwie |
 
 ### Systemy Podstawowe
 
@@ -66,20 +76,70 @@
 
 ---
 
-### Macierz Zależności (Zaimplementowane Ścieżki)
+### Macierz Zależności (Zaimplementowane Ścieżki) - ✅ W PEŁNI ZAIMPLEMENTOWANE
+
+System synergii obejmuje **75+ unikalnych połączeń** między 18 ścieżkami.
 
 ```
-              │ ⚔️Woj │ 🏪Kup │ 🔬Nau │ ⛏️Zbi │ 🔨Rze │ 🎭Dyp │ 🌿Dru │ 🔮Mis │
-──────────────┼───────┼───────┼───────┼───────┼───────┼───────┼───────┼───────┤
-⚔️ Wojownik   │   -   │  ✅   │  ✅   │  📋   │  ✅   │  📋   │  📋   │  📋   │
-🏪 Kupiec     │  ✅   │   -   │  ✅   │  📋   │  📋   │  📋   │  📋   │  📋   │
-🔬 Naukowiec  │  ✅   │  ✅   │   -   │  📋   │  📋   │  📋   │  📋   │  📋   │
-⛏️ Zbieracz   │  🔧   │  📋   │  📋   │   -   │  ✅   │  📋   │  📋   │  📋   │
-🔨 Rzemieślnik│  ✅   │  📋   │  📋   │  ✅   │   -   │  📋   │  📋   │  📋   │
-🎭 Dyplomata  │  📋   │  📋   │  📋   │  📋   │  📋   │   -   │  📋   │  📋   │
-🌿 Druid      │  📋   │  📋   │  📋   │  📋   │  📋   │  📋   │   -   │  📋   │
-🔮 Mistyk     │  📋   │  📋   │  📋   │  📋   │  📋   │  📋   │  📋   │   -   │
+              │ ⚔️Woj │ 🏪Kup │ 🔬Nau │ ⛏️Zbi │ 🔨Rze │ 🎭Dyp │ 🌿Dru │ 🔮Mis │ 🍳Kuc │ 🎣Węd │ 🧙Cza │ 🏴‍☠️Odk │ 🎵Bar │ ⚗️Alc │ 🏛️Arc │ 👤Szp │ 🐲Zak │ ⛪Kap │
+──────────────┼───────┼───────┼───────┼───────┼───────┼───────┼───────┼───────┼───────┼───────┼───────┼───────┼───────┼───────┼───────┼───────┼───────┼───────┤
+⚔️ Wojownik   │   -   │  ✅   │  ✅   │  ·    │  ✅   │  ✅   │  ·    │  ·    │  ·    │  ·    │  ·    │  ·    │  ·    │  ·    │  ·    │  ·    │  ✅   │  ·    │
+🏪 Kupiec     │  ✅   │   -   │  ✅   │  ·    │  ·    │  ·    │  ·    │  ·    │  ·    │  ·    │  ·    │  ·    │  ·    │  ·    │  ·    │  ✅   │  ·    │  ·    │
+🔬 Naukowiec  │  ✅   │  ✅   │   -   │  ·    │  ·    │  ·    │  ·    │  ·    │  ·    │  ·    │  ✅   │  ·    │  ·    │  ✅   │  ·    │  ·    │  ·    │  ·    │
+⛏️ Zbieracz   │  ·    │  ·    │  ·    │   -   │  ✅   │  ·    │  ·    │  ·    │  ·    │  ·    │  ·    │  ·    │  ·    │  ✅   │  ✅   │  ·    │  ·    │  ·    │
+🔨 Rzemieślnik│  ✅   │  ✅   │  ·    │  ✅   │   -   │  ·    │  ·    │  ·    │  ·    │  ✅   │  ·    │  ·    │  ✅   │  ·    │  ·    │  ·    │  ·    │  ·    │
+🎭 Dyplomata  │  ✅   │  ✅   │  ·    │  ·    │  ·    │   -   │  ·    │  ·    │  ·    │  ·    │  ·    │  ✅   │  ✅   │  ·    │  ✅   │  ✅   │  ·    │  ✅   │
+🌿 Druid      │  ✅   │  ·    │  ·    │  ✅   │  ·    │  ·    │   -   │  ✅   │  ✅   │  ✅   │  ·    │  ·    │  ·    │  ✅   │  ·    │  ·    │  ✅   │  ·    │
+🔮 Mistyk     │  ✅   │  ·    │  ✅   │  ·    │  ·    │  ·    │  ✅   │   -   │  ·    │  ✅   │  ✅   │  ·    │  ✅   │  ·    │  ·    │  ·    │  ✅   │  ✅   │
+🍳 Kucharz    │  ✅   │  ·    │  ·    │  ·    │  ·    │  ·    │  ·    │  ·    │   -   │  ·    │  ·    │  ·    │  ·    │  ·    │  ·    │  ·    │  ✅   │  ·    │
+🎣 Wędkarz    │  ·    │  ·    │  ·    │  ·    │  ·    │  ·    │  ·    │  ·    │  ✅   │   -   │  ·    │  ·    │  ·    │  ·    │  ·    │  ·    │  ·    │  ·    │
+🧙 Czarodziej │  ✅   │  ·    │  ·    │  ·    │  ✅   │  ·    │  ·    │  ✅   │  ·    │  ·    │   -   │  ·    │  ·    │  ✅   │  ✅   │  ·    │  ·    │  ✅   │
+🏴‍☠️ Odkrywca │  ·    │  ✅   │  ·    │  ✅   │  ·    │  ·    │  ·    │  ·    │  ✅   │  ✅   │  ·    │   -   │  ·    │  ·    │  ·    │  ✅   │  ·    │  ·    │
+🎵 Bard       │  ✅   │  ✅   │  ·    │  ·    │  ·    │  ✅   │  ·    │  ·    │  ·    │  ·    │  ·    │  ·    │   -   │  ·    │  ·    │  ✅   │  ·    │  ✅   │
+⚗️ Alchemik   │  ✅   │  ·    │  ✅   │  ·    │  ✅   │  ·    │  ✅   │  ·    │  ✅   │  ·    │  ✅   │  ·    │  ·    │   -   │  ·    │  ·    │  ·    │  ·    │
+🏛️ Architekt  │  ·    │  ✅   │  ·    │  ✅   │  ✅   │  ✅   │  ·    │  ·    │  ·    │  ·    │  ·    │  ✅   │  ·    │  ·    │   -   │  ·    │  ·    │  ✅   │
+👤 Szpieg     │  ·    │  ✅   │  ·    │  ·    │  ·    │  ✅   │  ·    │  ·    │  ·    │  ·    │  ·    │  ✅   │  ·    │  ·    │  ·    │   -   │  ·    │  ·    │
+🐲 Zaklinacz  │  ✅   │  ·    │  ·    │  ·    │  ·    │  ·    │  ·    │  ·    │  ·    │  ·    │  ·    │  ✅   │  ·    │  ·    │  ·    │  ·    │   -   │  ·    │
+⛪ Kapłan     │  ✅   │  ·    │  ·    │  ·    │  ·    │  ✅   │  ✅   │  ✅   │  ·    │  ·    │  ✅   │  ·    │  ✅   │  ·    │  ·    │  ·    │  ·    │   -   │
 ```
+
+**Legenda:** ✅ Synergia zaimplementowana | · Brak synergii
+
+---
+
+### 🔗 System Synergii - ✅ ZAIMPLEMENTOWANY
+
+Kompleksowy system zależności między wszystkimi 18 ścieżkami.
+
+**Główne cechy:**
+- **75+ synergii** zdefiniowanych między ścieżkami
+- **4 tiery synergii**: Minor, Moderate, Major, Legendary (z mnożnikami x1, x1.5, x2, x3)
+- **40+ typów bonusów**: atak, obrona, HP, złoto, XP, szybkość craftingu, jakość, itd.
+- **Efekty specjalne**: unikalne zdolności odblokowywane przez synergie
+
+**Przykłady synergii:**
+
+| Od | Do | Nazwa | Tier | Bonusy |
+|----|----|----|----|----|
+| Kucharz → | Wojownik | Siła z Pożywienia | Major | +HP, +Regeneracja, +Atak |
+| Alchemik → | Wojownik | Bojowe Eliksiry | Major | +Atak, +Obrona, +Redukcja |
+| Kapłan → | Wojownik | Błogosławieństwo Wojny | Major | +HP, +Redukcja, +Regen |
+| Bard → | Kupiec | Melodia Targów | Major | +Złoto, +Targowanie |
+| Druid → | Zbieracz | Obfitość Natury | Major | +Plony, +Zasoby |
+| Mistyk → | Czarodziej | Duchowa Moc | Major | +Moc Zaklęć, +Mana Regen |
+| Szpieg → | Odkrywca | Ukryte Ścieżki | Major | +Szansa Odkrycia |
+| Architekt → | Rzemieślnik | Warsztat Mistrzowski | Major | +Szybkość, +Jakość |
+
+**Mechanika obliczania:**
+- Bonus = (Poziom_źródła - Poziom_odblokowania + 1) × Wartość_bazowa × Mnożnik_tieru
+- Każdy bonus ma maksymalną wartość (cap)
+- Synergie odblokowują się po osiągnięciu wymaganego poziomu w ścieżce źródłowej
+
+**UI Synergii:**
+- **Przegląd**: Podsumowanie aktywnych synergii, top bonusów
+- **Macierz**: Wizualna mapa wszystkich połączeń między ścieżkami
+- **Bonusy**: Szczegółowa lista bonusów wg kategorii
+- **Ścieżki**: Eksploracja synergii dla wybranej ścieżki
 
 ---
 
@@ -173,110 +233,110 @@
 
 ---
 
-### 💡 Zależności z Proponowanymi Ścieżkami
+### 📋 Zależności Nowych Ścieżek (do zaimplementowania)
 
-#### 🍳 Kucharz - Proponowane Połączenia
+#### 🍳 Kucharz - Połączenia do zaimplementowania
 
-| Od/Do | Proponowana Zależność |
-|-------|----------------------|
-| Zbieracz → Kucharz | Ryby z wędkarstwa jako składniki |
-| Druid → Kucharz | Warzywa, owoce, mięso, jajka, mleko |
-| Wojownik → Kucharz | Mięso z potworów |
-| Kucharz → Wojownik | Posiłki dające buffy bojowe |
-| Kucharz → Kupiec | Potrawy na sprzedaż |
-| Kucharz → Dyplomata | Bankiety zwiększające reputację |
+| Od/Do | Zależność | Priorytet |
+|-------|-----------|-----------|
+| Zbieracz → Kucharz | Ryby z wędkarstwa jako składniki | 🔴 Wysoki |
+| Druid → Kucharz | Warzywa, owoce, mięso, jajka, mleko | 🔴 Wysoki |
+| Wojownik → Kucharz | Mięso z potworów | 🟡 Średni |
+| Kucharz → Wojownik | Posiłki dające buffy bojowe | 🔴 Wysoki |
+| Kucharz → Kupiec | Potrawy na sprzedaż | 🟡 Średni |
+| Kucharz → Dyplomata | Bankiety zwiększające reputację | 🟢 Niski |
 
-#### 🎣 Wędkarz - Proponowane Połączenia
+#### 🎣 Wędkarz - Połączenia do zaimplementowania
 
-| Od/Do | Proponowana Zależność |
-|-------|----------------------|
-| Wędkarz → Kucharz | Ryby jako składniki potraw |
-| Wędkarz → Naukowiec | Olej rybi, perły dla alchemii |
-| Wędkarz → Rzemieślnik | Perły dla jubilerstwa |
-| Wędkarz → Kupiec | Eksport ryb i przetworów |
-| Mistyk → Wędkarz | Przepowiednie o dobrych łowiskach |
-| Druid → Wędkarz | Pory roku wpływają na połowy |
+| Od/Do | Zależność | Priorytet |
+|-------|-----------|-----------|
+| Wędkarz → Kucharz | Ryby jako składniki potraw | 🔴 Wysoki |
+| Wędkarz → Naukowiec | Olej rybi, perły dla alchemii | 🟡 Średni |
+| Wędkarz → Rzemieślnik | Perły dla jubilerstwa | 🟡 Średni |
+| Wędkarz → Kupiec | Eksport ryb i przetworów | 🟡 Średni |
+| Mistyk → Wędkarz | Przepowiednie o dobrych łowiskach | 🟢 Niski |
+| Druid → Wędkarz | Pory roku wpływają na połowy | 🟢 Niski |
 
-#### 🧙 Czarodziej - Proponowane Połączenia
+#### 🧙 Czarodziej - Połączenia do zaimplementowania
 
-| Od/Do | Proponowana Zależność |
-|-------|----------------------|
-| Czarodziej → Wojownik | Zaklęcia ofensywne jako alternatywa/wsparcie |
-| Mistyk → Czarodziej | Mana jako wspólny zasób |
-| Naukowiec → Czarodziej | Wspólne badania magiczne |
-| Rzemieślnik → Czarodziej | Różdżki, księgi, artefakty |
-| Czarodziej → Rzemieślnik | Enchanting przedmiotów |
-| Dyplomata → Czarodziej | Dostęp do Zakonu Magów |
+| Od/Do | Zależność | Priorytet |
+|-------|-----------|-----------|
+| Czarodziej → Wojownik | Zaklęcia ofensywne jako alternatywa/wsparcie | 🔴 Wysoki |
+| Mistyk → Czarodziej | Mana jako wspólny zasób | 🟡 Średni |
+| Naukowiec → Czarodziej | Wspólne badania magiczne | 🟡 Średni |
+| Rzemieślnik → Czarodziej | Różdżki, księgi, artefakty | 🟡 Średni |
+| Czarodziej → Rzemieślnik | Enchanting przedmiotów | 🟢 Niski |
+| Dyplomata → Czarodziej | Dostęp do Zakonu Magów | 🟢 Niski |
 
-#### ⛪ Kapłan - Proponowane Połączenia
+#### ⛪ Kapłan - Połączenia do zaimplementowania
 
-| Od/Do | Proponowana Zależność |
-|-------|----------------------|
-| Kapłan → Wojownik | Uzdrawianie, błogosławieństwa, wskrzeszenie |
-| Kapłan → Mistyk | Wspólne rytuały duchowe |
-| Kapłan → Dyplomata | Wpływy religijne we frakcjach |
-| Kupiec → Kapłan | Ofiary/donacje |
-| Rzemieślnik → Kapłan | Święte relikwie, ołtarze |
+| Od/Do | Zależność | Priorytet |
+|-------|-----------|-----------|
+| Kapłan → Wojownik | Uzdrawianie, błogosławieństwa, wskrzeszenie | 🔴 Wysoki |
+| Kapłan → Mistyk | Wspólne rytuały duchowe | 🟡 Średni |
+| Kapłan → Dyplomata | Wpływy religijne we frakcjach | 🟡 Średni |
+| Kupiec → Kapłan | Ofiary/donacje | 🟢 Niski |
+| Rzemieślnik → Kapłan | Święte relikwie, ołtarze | 🟢 Niski |
 
-#### 🏴‍☠️ Odkrywca - Proponowane Połączenia
+#### 🏴‍☠️ Odkrywca - Połączenia do zaimplementowania
 
-| Od/Do | Proponowana Zależność |
-|-------|----------------------|
-| Odkrywca → Wojownik | Odkrywanie nowych biomów |
-| Odkrywca → Zbieracz | Nowe źródła surowców |
-| Odkrywca → Rzemieślnik | Starożytne schematy |
-| Odkrywca → Naukowiec | Artefakty do badań |
-| Odkrywca → Kupiec | Mapy na sprzedaż |
-| Odkrywca → Dyplomata | Kontakty z odległymi frakcjami |
+| Od/Do | Zależność | Priorytet |
+|-------|-----------|-----------|
+| Odkrywca → Wojownik | Odkrywanie nowych biomów | 🔴 Wysoki |
+| Odkrywca → Zbieracz | Nowe źródła surowców | 🟡 Średni |
+| Odkrywca → Rzemieślnik | Starożytne schematy | 🟡 Średni |
+| Odkrywca → Naukowiec | Artefakty do badań | 🟡 Średni |
+| Odkrywca → Kupiec | Mapy na sprzedaż | 🟢 Niski |
+| Odkrywca → Dyplomata | Kontakty z odległymi frakcjami | 🟢 Niski |
 
-#### ⚗️ Alchemik - Proponowane Połączenia
+#### ⚗️ Alchemik - Połączenia do zaimplementowania
 
-| Od/Do | Proponowana Zależność |
-|-------|----------------------|
-| Naukowiec ↔ Alchemik | Wspólne badania, dzielenie się recepturami |
-| Zbieracz → Alchemik | Rzadkie składniki |
-| Druid → Alchemik | Magiczne rośliny |
-| Alchemik → Wojownik | Potężne eliksiry |
-| Alchemik → Kupiec | Transmutacja (ołów → złoto) |
+| Od/Do | Zależność | Priorytet |
+|-------|-----------|-----------|
+| Naukowiec ↔ Alchemik | Wspólne badania, dzielenie się recepturami | 🔴 Wysoki |
+| Zbieracz → Alchemik | Rzadkie składniki | 🔴 Wysoki |
+| Druid → Alchemik | Magiczne rośliny | 🟡 Średni |
+| Alchemik → Wojownik | Potężne eliksiry | 🔴 Wysoki |
+| Alchemik → Kupiec | Transmutacja (ołów → złoto) | 🟢 Niski |
 
-#### 👤 Szpieg - Proponowane Połączenia
+#### 👤 Szpieg - Połączenia do zaimplementowania
 
-| Od/Do | Proponowana Zależność |
-|-------|----------------------|
-| Dyplomata ↔ Szpieg | Rozszerzenie dyplomacji, wywiad |
-| Szpieg → Wojownik | Informacje o słabościach wrogów |
-| Szpieg → Kupiec | Informacje o cenach konkurencji |
-| Szpieg → Naukowiec | Skradzione receptury |
-| Kupiec → Szpieg | Finansowanie sieci szpiegów |
+| Od/Do | Zależność | Priorytet |
+|-------|-----------|-----------|
+| Dyplomata ↔ Szpieg | Rozszerzenie dyplomacji, wywiad | 🔴 Wysoki |
+| Szpieg → Wojownik | Informacje o słabościach wrogów | 🟡 Średni |
+| Szpieg → Kupiec | Informacje o cenach konkurencji | 🟡 Średni |
+| Szpieg → Naukowiec | Skradzione receptury | 🟢 Niski |
+| Kupiec → Szpieg | Finansowanie sieci szpiegów | 🟢 Niski |
 
-#### 🐲 Zaklinacz - Proponowane Połączenia
+#### 🐲 Zaklinacz - Połączenia do zaimplementowania
 
-| Od/Do | Proponowana Zależność |
-|-------|----------------------|
-| Zaklinacz → Wojownik | Bestie bojowe |
-| Zaklinacz → Kupiec | Egzotyczne zwierzęta na sprzedaż |
-| Zaklinacz → Dyplomata | Prezenty dla frakcji |
-| Druid ↔ Zaklinacz | Wspólna praca ze zwierzętami |
-| Naukowiec → Zaklinacz | Badania nad bestiami |
+| Od/Do | Zależność | Priorytet |
+|-------|-----------|-----------|
+| Zaklinacz → Wojownik | Bestie bojowe | 🔴 Wysoki |
+| Zaklinacz → Kupiec | Egzotyczne zwierzęta na sprzedaż | 🟡 Średni |
+| Zaklinacz → Dyplomata | Prezenty dla frakcji | 🟢 Niski |
+| Druid ↔ Zaklinacz | Wspólna praca ze zwierzętami | 🟡 Średni |
+| Naukowiec → Zaklinacz | Badania nad bestiami | 🟢 Niski |
 
-#### 🏛️ Architekt - Proponowane Połączenia
+#### 🏛️ Architekt - Połączenia do zaimplementowania
 
-| Od/Do | Proponowana Zależność |
-|-------|----------------------|
-| Rzemieślnik → Architekt | Materiały budowlane |
-| Zbieracz → Architekt | Surowce (kamień, drewno) |
-| Architekt → Wszystkie | Budynki Township dające bonusy |
-| Kupiec → Architekt | Finansowanie budowy |
-| Dyplomata → Architekt | Ambasady, sale audiencyjne |
+| Od/Do | Zależność | Priorytet |
+|-------|-----------|-----------|
+| Rzemieślnik → Architekt | Materiały budowlane | 🔴 Wysoki |
+| Zbieracz → Architekt | Surowce (kamień, drewno) | 🔴 Wysoki |
+| Architekt → Wszystkie | Budynki Township dające bonusy | 🔴 Wysoki |
+| Kupiec → Architekt | Finansowanie budowy | 🟡 Średni |
+| Dyplomata → Architekt | Ambasady, sale audiencyjne | 🟢 Niski |
 
-#### 🎵 Bard - Proponowane Połączenia
+#### 🎵 Bard - Połączenia do zaimplementowania
 
-| Od/Do | Proponowana Zależność |
-|-------|----------------------|
-| Bard → Wszystkie | Pieśni Mocy (globalne buffy) |
-| Bard → Kupiec | Zarobki z występów |
-| Bard → Dyplomata | Propaganda, wpływ na frakcje |
-| Rzemieślnik → Bard | Instrumenty muzyczne |
+| Od/Do | Zależność | Priorytet |
+|-------|-----------|-----------|
+| Bard → Wszystkie | Pieśni Mocy (globalne buffy) | 🔴 Wysoki |
+| Bard → Kupiec | Zarobki z występów | 🟡 Średni |
+| Bard → Dyplomata | Propaganda, wpływ na frakcje | 🟡 Średni |
+| Rzemieślnik → Bard | Instrumenty muzyczne | 🟢 Niski |
 
 ---
 
@@ -467,409 +527,341 @@
 
 ---
 
-## Propozycje Nowych Ścieżek
+## Szczegóły Zaimplementowanych Ścieżek (Nowe)
 
-### 🏴‍☠️ ŚCIEŻKA 8: ODKRYWCA (The Explorer)
+### 🏴‍☠️ ŚCIEŻKA 8: ODKRYWCA (The Explorer) ✅
 
 *"Za każdym horyzontem czeka nowy świat"*
 
-**Opis:** Ścieżka skupiona na eksploracji, kartografii i odkrywaniu sekretów.
+**Status:** ✅ Zaimplementowane
 
-**Mechaniki:**
-- **Ekspedycje**: Wyprawy do nieznanych krain
-  - Koszt: zasoby, czas, ryzyko
-  - Nagrody: mapy, artefakty, wiedza
-  - Typy: morskie, lądowe, podziemne, niebieskie
-
-- **Kartografia**: 
-  - Tworzenie map nowych regionów
-  - Odkrywanie sekretnych lokacji
-  - Sprzedaż map innym (bonus dla Kupca)
-
-- **Archeologia**:
-  - Wykopaliska w ruinach
-  - Odkrywanie starożytnych artefaktów
-  - Rozszyfrowywanie tekstów
-
-- **Survival Skills**:
-  - Przetrwanie w różnych środowiskach
-  - Budowanie obozów
-  - Tropienie
-
-**Synergia:**
-- Nowe biomy dla Wojownika
-- Rzadkie materiały dla Rzemieślnika
-- Starożytna wiedza dla Naukowca
-- Kontakty z odległymi frakcjami dla Dyplomaty
+**Zaimplementowane mechaniki:**
+- **8 Regionów eksploracji**: 
+  - Verdant Woods (las), Iron Peaks (góry), Scorched Wastes (pustynia)
+  - Misty Swamps (bagno), Frozen North (śnieg), Volcanic Isles (wulkaniczny)
+  - Ancient Ruins (ruiny), Void Rift (pustka)
+  
+- **40+ Odkryć**: 
+  - Hidden Grove, Crystal Cave, Desert Oasis, Buried Temple
+  - Każdy region ma unikalne możliwe odkrycia
+  
+- **System ekspedycji**:
+  - Forest Survey, Mountain Expedition, Desert Crossing
+  - Void Incursion (legendarny)
+  - Różne trudności i nagrody
+  
+- **Sprzęt odkrywcy**:
+  - Basic Pack, Climbing Gear, Desert Robes, Diving Suit
+  - Legendary Atlas, Void Compass
+  
+- **System lore**: Odblokowane fragmenty wiedzy
 
 **Złożoność:** ⭐⭐⭐
 
 ---
 
-### 🎵 ŚCIEŻKA 9: BARD (The Bard)
+### 🎵 ŚCIEŻKA 9: BARD (The Bard) ✅
 
 *"Pieśń ma moc zmieniać serca i umysły"*
 
-**Opis:** Ścieżka skupiona na muzyce, opowieściach i inspiracji.
+**Status:** ✅ Zaimplementowane
 
-**Mechaniki:**
-- **Występy**: 
-  - Granie w tawernach za złoto
-  - Koncerty zwiększające morale całej gry
-  - Różne instrumenty z bonusami
+**Zaimplementowane mechaniki:**
+- **6 Gatunków muzycznych**: Ballad, Epic, Folk, Comedy, Mystical, War
 
-- **Pieśni Mocy**:
-  - Buffs dla innych ścieżek
-  - Pieśń Wojenna (+obrażenia)
-  - Pieśń Handlowa (+zyski)
-  - Pieśń Inspiracji (+XP)
+- **15+ Pieśni**:
+  - Lovers Lament, Hero Ballad, Tavern Dance, Harvest Song
+  - Whispers of Void, Victory Anthem, Legend of Heroes
+  - Każda z buffy, XP i napiwkami
 
-- **Legendy**:
-  - Odkrywanie i opowiadanie legend
-  - Bonusy za poznane historie
-  - Wpływ na reputację frakcji
+- **10 Instrumentów**:
+  - Voice (podstawowy), Wooden Flute, Lute, War Drum
+  - Crystal Harp, Golden Harp, Void Violin
+  - Różne bonusy do występów
 
-- **Teatr**:
-  - Organizowanie przedstawień
-  - Propagowanie wartości (wpływ na Dyplomację)
+- **7 Miejsc występów**:
+  - Village Tavern, Market Square, Noble Court
+  - Royal Palace, Colosseum, Mystic Gathering, Void Temple
 
-**Synergia:**
-- Buff Pieśni Wojennej dla Wojownika
-- Rozrywka w sklepie dla Kupca
-- Inspiracja dla badań Naukowca
-- Propaganda dla Dyplomaty
+- **System sławy**: Reputacja rosnąca z występami
+
+- **Historia występów**: Log z ostatnimi występami
 
 **Złożoność:** ⭐⭐
 
 ---
 
-### ⚗️ ŚCIEŻKA 10: ALCHEMIK (The Alchemist)
+### ⚗️ ŚCIEŻKA 10: ALCHEMIK (The Alchemist) ✅
 
 *"Wszystko jest możliwe, wystarczy odpowiednia formuła"*
 
-**Opis:** Zaawansowana ścieżka alchemiczna, rozszerzenie Naukowca.
+**Status:** ✅ Zaimplementowane
 
-**Mechaniki:**
-- **Transmutacja**:
-  - Zamiana materiałów (ołów w złoto, ale drogie)
-  - Ulepszanie jakości surowców
-  - Tworzenie nowych materiałów
+**Zaimplementowane mechaniki:**
+- **15+ Składników alchemicznych**:
+  - Moonpetal, Dragon Blood, Quicksilver, Phoenix Ash
+  - Void Essence, Philosophers Stone Fragment, itp.
 
-- **Eliksiry Mocy**:
-  - Silniejsze mikstury niż standardowe
-  - Efekty permanentne (do następnego prestiżu)
-  - Eliksir Nieśmiertelności jako cel końcowy
+- **15+ Mikstur (5 typów)**:
+  - Healing: Minor/Major/Superior Healing
+  - Buff: Strength, Speed, Intelligence
+  - Combat: Fire Bomb, Frost Bomb, Paralysis Poison
+  - Utility: Invisibility, Gold Elixir
+  - Legendary: Philosopher's Elixir (+wszystkie staty)
 
-- **Homunculus**:
-  - Tworzenie sztucznych pomocników
-  - Różne typy: bojowy, zbierający, craftujący
-  - Ewolucja i rozwój
+- **Eksperymenty**:
+  - New Combination (odkrywanie receptur)
+  - Volatile Mixture (ryzyko/nagroda)
+  - Legendary Research (rzadkie odkrycia)
 
-- **Kamień Filozoficzny**:
-  - Legendarny cel długoterminowy
-  - Ogromne bonusy do wszystkiego
-  - Wymaga setek godzin grania
+- **Sprzęt alchemiczny**:
+  - Basic Cauldron → Master Cauldron → Golden Cauldron
+  - Różne bonusy do warzenia
 
-**Synergia:**
-- Potężne mikstury dla Wojownika
-- Transmutacja złota dla Kupca
-- Wspólne badania z Naukowcem
-- Składniki od Druida
+- **System buffów**: Aktywne efekty z wypitych mikstur
 
 **Złożoność:** ⭐⭐⭐⭐
 
 ---
 
-### 🏛️ ŚCIEŻKA 11: ARCHITEKT (The Architect)
+### 🏛️ ŚCIEŻKA 11: ARCHITEKT (The Architect) ✅
 
 *"Budować znaczy tworzyć dziedzictwo"*
 
-**Opis:** Ścieżka skupiona na budowaniu i Township.
+**Status:** ✅ Zaimplementowane
 
-**Mechaniki:**
-- **Budynki**:
-  - Projektowanie i stawianie budynków
-  - Unikalne architektury (elficka, krasnoludzka, ludzka)
-  - Budynki specjalne z questów
+**Zaimplementowane mechaniki:**
+- **15+ Budowli (5 kategorii)**:
+  - Residential: Cottage, House, Manor, Palace
+  - Production: Sawmill, Quarry, Gold Mine
+  - Military: Barracks, Fortress, War Academy
+  - Magical: Mage Tower, Library
+  - Wonder: Colossus (legendarny)
 
-- **Infrastruktura**:
-  - Drogi (szybsze karawany)
-  - Mosty (nowe regiony)
-  - Kanalizacja (zdrowie osady)
+- **Materiały budowlane**:
+  - Wood, Stone, Iron, Gold Bars
+  - Marble, Dragon Stone (rzadkie)
 
-- **Fortyfikacje**:
-  - Obrona przed najazdami
-  - Wieże strażnicze
-  - Mury i bramy
+- **System efektów budynków**:
+  - Populacja (+housing)
+  - Obrona (+defense)
+  - Produkcja zasobów
+  - Bonusy globalne
 
-- **Cuda Świata**:
-  - Monumentalne budowle
-  - Wymagają ogromnych zasobów
-  - Permanentne globalne bonusy
-
-**Synergia:**
-- Koszary dla Wojownika
-- Targi dla Kupca
-- Laboratoria dla Naukowca
-- Sale audiencyjne dla Dyplomaty
+- **Statystyki miasta**:
+  - Całkowita populacja
+  - Całkowita obrona
+  - Liczba wybudowanych budynków
 
 **Złożoność:** ⭐⭐⭐
 
 ---
 
-### 👤 ŚCIEŻKA 12: SZPIEG (The Spy)
+### 👤 ŚCIEŻKA 12: SZPIEG (The Spy) ✅
 
 *"Informacja to najpotężniejsza broń"*
 
-**Opis:** Ścieżka cienia, rozszerzenie Dyplomaty.
+**Status:** ✅ Zaimplementowane
 
-**Mechaniki:**
-- **Infiltracja**:
-  - Wnikanie do wrogich frakcji
-  - Zdobywanie sekretnych informacji
-  - Sabotaż
+**Zaimplementowane mechaniki:**
+- **10+ Misji szpiegowskich (5 typów)**:
+  - Recon: Gather Info, Scout Location
+  - Theft: Pickpocket, Burglary, Vault Heist
+  - Infiltration: Infiltrate Merchants, Palace
+  - Sabotage: Sabotage Shipment
+  - Assassination: Royal Assassination (legendary)
 
-- **Sieć Szpiegów**:
-  - Rekrutowanie agentów
-  - Rozmieszczanie w różnych lokacjach
-  - Pasywne zbieranie informacji
+- **Sprzęt szpiegowski**:
+  - Dark Cloak, Lockpicks, Smoke Bombs
+  - Phantom Cloak, Master Disguise Kit
+  - Void Shadow (legendary)
 
-- **Kontrwywiad**:
-  - Ochrona przed szpiegami
-  - Wykrywanie zdrajców
-  - Dezinformacja
+- **System informatorów**:
+  - Street Urchin, Tavern Keeper, Corrupt Guard
+  - Noble Spy, Shadow Broker
+  - Pasywne zbieranie inteligencji
 
-- **Skrytobójstwo**:
-  - Eliminacja kluczowych celów
-  - Wysokie ryzyko, wysokie nagrody
-  - Wpływ na politykę frakcji
-
-**Synergia:**
-- Informacje o słabościach potworów dla Wojownika
-- Informacje handlowe dla Kupca
-- Skradzione receptury dla Naukowca
-- Szantaż dla Dyplomaty
+- **Statystyki**:
+  - Stealth (skradanie)
+  - Intel (zebrana informacja)
+  - Completed Missions, Gold Stolen
 
 **Złożoność:** ⭐⭐⭐⭐
 
 ---
 
-### ⛪ ŚCIEŻKA 13: KAPŁAN (The Priest)
+### ⛪ ŚCIEŻKA 13: KAPŁAN (The Priest) ✅
 
 *"Wiara czyni cuda"*
 
-**Opis:** Ścieżka duchowa skupiona na religii, uzdrowieniu i błogosławieństwach.
+**Status:** ✅ Zaimplementowane
 
-**Mechaniki:**
-- **Modlitwy**:
-  - Codzienne modlitwy za bonusy
-  - Różne bóstwa z unikalnymi błogosławieństwami
-  - System pobożności
+**Zaimplementowane mechaniki:**
+- **6 Bóstw z unikalnymi domenami**:
+  - Solaris (Light) - leczenie, obrona
+  - Terra (Nature) - HP regen, zbieranie
+  - Bellum (War) - obrażenia, krytyczne
+  - Athena (Wisdom) - XP bonus, badania
+  - Mortis (Death) - lifesteal, vs nieumarli
+  - Libra (Balance) - wszystkie statystyki
 
-- **Uzdrawianie**:
-  - Leczenie ran Wojownika
-  - Oczyszczanie z trucizn i klątw
-  - Wskrzeszenie (powrót bez kar)
+- **15+ Modlitw**:
+  - Blessing of Light, Smite, Divine Shield
+  - Nature's Embrace, Wild Growth
+  - Battle Cry, Divine Fury
+  - Enlightenment, Divine Insight
+  - Drain Life, Undead Bane, Equilibrium
 
-- **Błogosławieństwa**:
-  - Święcenie przedmiotów (+bonusy)
-  - Ochrona przed złem
-  - Aura świętości
+- **Rytuały**:
+  - Daily Prayer, Offering, Pilgrimage
+  - Consecration, Divine Communion
 
-- **Świątynia**:
-  - Budowanie miejsc kultu
-  - Wyznawcy generujący zasoby
-  - Święte relikwie
+- **Święte relikwie**:
+  - Prayer Beads, Holy Symbol, Blessed Tome
+  - Divine Staff, Celestial Halo, Ark of Covenant
 
-- **Egzorcyzmy**:
-  - Walka z demonami i nieumarłymi
-  - Oczyszczanie przeklętych lokacji
-  - Bonusy przeciwko złu
-
-**Synergia:**
-- Uzdrawianie i błogosławieństwa dla Wojownika
-- Święcone towary dla Kupca (wyższa cena)
-- Boska wiedza dla Naukowca
-- Wpływy religijne dla Dyplomaty
-- Rytuały wspólne z Mistykiem
+- **System wiary i łaski**: Regeneracja wiary, favor z bóstwami
 
 **Złożoność:** ⭐⭐⭐
 
 ---
 
-### 🐲 ŚCIEŻKA 14: ZAKLINACZ (The Tamer)
+### 🐲 ŚCIEŻKA 14: ZAKLINACZ (The Tamer) ✅
 
 *"Każda bestia może zostać przyjacielem"*
 
-**Opis:** Ścieżka oswajania i hodowli stworzeń.
+**Status:** ✅ Zaimplementowane
 
-**Mechaniki:**
-- **Oswajanie**:
-  - Łapanie dzikich stworzeń
-  - Różne metody (siła, jedzenie, magia)
-  - Szanse zależne od poziomu i ekwipunku
+**Zaimplementowane mechaniki:**
+- **15+ Stworzeń (5 typów)**:
+  - Beast: Wolf, Bear, Giant Spider
+  - Elemental: Fire Elemental, Water Spirit
+  - Undead: Skeleton Knight, Vampire Bat
+  - Dragon: Wyvern, Dragon (legendary)
+  - Mythical: Phoenix, Unicorn, Griffin
 
-- **Hodowla**:
-  - Rozmnażanie stworzeń
-  - Krzyżowanie gatunków
-  - Unikalne hybrydy
+- **Przedmioty do oswajania**:
+  - Basic Leash, Beast Whistle
+  - Elemental Orb, Soul Chain
+  - Dragon Scales, Mythical Charm
 
-- **Wierzchowce**:
-  - Szybsza podróż
-  - Bonusy w walce
-  - Unikalne zdolności
+- **Karmienie stworzeń**:
+  - Raw Meat, Honey, Magic Treats, Dragon Food
+  - Wpływa na szczęście i statystyki
 
-- **Arena Bestii**:
-  - Walki między stworami
-  - Zakłady
-  - Turnieje
+- **System towarzyszy**:
+  - Aktywny towarzysz w walce
+  - Max 3+ stworzeń (rośnie z poziomem)
+  - Statystyki: ATK, DEF, HP, Speed
 
-**Synergia:**
-- Bestie bojowe dla Wojownika
-- Egzotyczne towary dla Kupca
-- Badania nad bestiami dla Naukowca
-- Prezenty dla frakcji (Dyplomata)
+- **Statystyki**: Umiejętność oswajania, bonus z przedmiotów
 
 **Złożoność:** ⭐⭐⭐
 
 ---
 
-### 🍳 ŚCIEŻKA 15: KUCHARZ (The Chef)
+### 🍳 ŚCIEŻKA 15: KUCHARZ (The Chef) ✅
 
 *"Droga do serca prowadzi przez żołądek"*
 
-**Opis:** Ścieżka kulinarna skupiona na gotowaniu, przepisach i restauracji.
+**Status:** ✅ Zaimplementowane
 
-**Mechaniki:**
-- **Gotowanie**:
-  - Przygotowywanie posiłków z surowców
-  - Receptury od prostych do mistrzowskich
-  - Jakość potrawy zależna od umiejętności
+**Zaimplementowane mechaniki:**
+- **20+ Składników**:
+  - Mięso: Raw Meat, Poultry, Fish Fillet
+  - Warzywa: Potato, Carrot, Tomato, Onion
+  - Inne: Flour, Eggs, Milk, Butter, Sugar, Salt
+  - Luksusowe: Dragon Meat, Lobster, Truffle
 
-- **Przepisy**:
-  - Odkrywanie przez eksperymentowanie
-  - Przepisy regionalne (różne biomy)
-  - Sekretne przepisy od NPC
-  - Księga Kucharza
+- **15+ Przepisów (5 kategorii)**:
+  - Bread: Basic Bread, Sweet Roll
+  - Meat: Fried Egg, Grilled Steak, Roast Chicken
+  - Soup: Vegetable Soup, Dragon Stew
+  - Dessert: Apple Pie, Chocolate Cake
+  - Legendary: Lobster Thermidor, Ambrosia
 
-- **Efekty Jedzenia**:
-  - Buffy czasowe (HP regen, +obrażenia, +obrona)
-  - Efekty specjalne (odporności, bonusy do skill)
-  - Jedzenie luksusowe = silniejsze efekty
+- **System restauracji**:
+  - Otwieranie/zamykanie restauracji
+  - Klienci: Peasant, Merchant, Noble
+  - Serwowanie potraw za złoto
 
-- **Restauracja**:
-  - Prowadzenie własnej tawerny
-  - Klienci z różnymi gustami
-  - Konkursy kulinarne
-  - Gwiazdy Michelin (reputacja)
+- **Buffy z jedzenia**:
+  - HP Regen, Attack Boost, Defense Boost
+  - XP Bonus, Luck Boost
+  - Czas trwania zależny od potrawy
 
-- **Catering**:
-  - Bankiety dla frakcji (Dyplomata)
-  - Prowiant dla karawan
-  - Jedzenie dla Township
-
-**Synergia:**
-- Buffy żywieniowe dla Wojownika
-- Sprzedaż potraw dla Kupca
-- Składniki alchemiczne od Kucharza dla Naukowca
-- Produkty od Druida jako składniki
-- Bankiety dla Dyplomaty
+- **System jakości**: Poor → Normal → Good → Excellent → Masterwork
 
 **Złożoność:** ⭐⭐
 
 ---
 
-### 🎣 ŚCIEŻKA 16: WĘDKARZ (The Fisherman)
+### 🎣 ŚCIEŻKA 16: WĘDKARZ (The Fisherman) ✅
 
 *"Cierpliwość zawsze zostaje wynagrodzona"*
 
-**Opis:** Rozbudowana ścieżka wędkarska z głęboką mechaniką łowienia.
+**Status:** ✅ Zaimplementowane
 
-**Mechaniki:**
-- **Łowienie**:
-  - Różne typy wód (rzeka, jezioro, morze, podziemne)
-  - Pory dnia wpływające na połowy
-  - Pogoda wpływająca na ryby
-  - Mini-gra łowienia (timing, siła)
+**Zaimplementowane mechaniki:**
+- **20+ Gatunków ryb (4 typy wód)**:
+  - Freshwater: Minnow, Carp, Trout, Catfish
+  - Saltwater: Mackerel, Tuna, Shark, Marlin
+  - Deep Sea: Anglerfish, Giant Squid, Kraken (legendary)
+  - Magical: Moonfish, Starfish, Void Leviathan (legendary)
 
-- **Sprzęt Wędkarski**:
-  - Wędki różnych jakości
-  - Kołowrotki (szybkość, siła)
-  - Przynęty (specyficzne dla ryb)
-  - Łodzie (dostęp do głębokich wód)
+- **6 Łowisk**:
+  - Village River, Forest Lake, Ocean Shore
+  - Deep Sea, Underground Cave, Enchanted Pond
 
-- **Ryby**:
-  - 50+ gatunków ryb
-  - Legendarne ryby (unikalne, trudne do złapania)
-  - Trofea ścienne
-  - Akwarium (kolekcjonowanie)
+- **Sprzęt wędkarski**:
+  - Wędki: Wooden Rod → Steel Rod → Mithril Rod → Legendary Rod
+  - Przynęty: Worm, Shrimp, Live Fish, Magical Lure
 
-- **Przetwórstwo**:
-  - Wędzenie ryb
-  - Kawior z ikry
-  - Olej rybi (alchemia)
-  - Perły z małży
+- **System kolekcji**:
+  - Fish Collection (złapane gatunki)
+  - Fish Records (największe okazy)
+  - Selling fish for gold
 
-- **Turnieje**:
-  - Zawody wędkarskie
-  - Rekordy wielkości ryb
-  - Nagrody i trofea
+- **System rzadkości**: Common → Uncommon → Rare → Epic → Legendary
 
-**Synergia:**
-- Ryby jako składniki dla Kucharza
-- Eksport ryb dla Kupca
-- Rzadkie składniki dla Naukowca
-- Perły dla Jubilera (Rzemieślnik)
+- **Trwałość wędek**: Zużycie, naprawa
 
 **Złożoność:** ⭐⭐⭐
 
 ---
 
-### 🧙 ŚCIEŻKA 17: CZARODZIEJ (The Wizard)
+### 🧙 ŚCIEŻKA 17: CZARODZIEJ (The Wizard) ✅
 
 *"Magia to sztuka zginania rzeczywistości"*
 
-**Opis:** Ścieżka arcane'owa skupiona na zaklęciach bojowych i magii żywiołów.
+**Status:** ✅ Zaimplementowane
 
-**Mechaniki:**
-- **Szkoły Magii**:
-  - Ogień (obrażenia, DOT)
-  - Lód (spowolnienie, zamrożenie)
-  - Błyskawica (szybkość, przebicie)
-  - Arkana (czysta magia, uniwersalna)
-  - Nekromancja (nieumarli, drain)
-  - Iluzja (uniki, dezorientacja)
+**Zaimplementowane mechaniki:**
+- **7 Żywiołów (Element Mastery)**:
+  - Fire, Water, Earth, Air
+  - Light, Dark, Arcane
 
-- **Zaklęcia**:
-  - Aktywne zaklęcia bojowe
-  - Pasywne aury
-  - Zaklęcia użytkowe (teleport, widzenie)
-  - Rytuały (potężne, długi cast)
+- **25+ Zaklęć**:
+  - Fire: Fireball, Fire Storm, Meteor (legendary)
+  - Water: Ice Shard, Heal, Tsunami
+  - Earth: Stone Skin, Earthquake, Petrify
+  - Air: Lightning Bolt, Wind Slash, Tornado
+  - Light: Holy Light, Purify, Divine Judgement
+  - Dark: Shadow Bolt, Drain Life, Summon Demon
+  - Arcane: Arcane Missile, Teleport, Time Stop (legendary)
 
-- **Mana System**:
-  - Regeneracja many
-  - Medytacja dla szybszej regeneracji
-  - Artefakty zwiększające pulę
-  - Pożeranie many (od wrogów)
+- **Kostury magiczne**:
+  - Wooden Staff → Crystal Staff → Elemental Staff
+  - Void Staff, Legendary Staff of Ages
 
-- **Grimuar**:
-  - Księga zaklęć
-  - Odkrywanie nowych zaklęć
-  - Ulepszanie istniejących
-  - Tworzenie własnych zaklęć
+- **System many**:
+  - Mana pool (rosnący z poziomem)
+  - Mana regeneration
+  - Spell costs, cooldowns
 
-- **Wieża Maga**:
-  - Osobista wieża jako baza
-  - Laboratorium magiczne
-  - Obserwatorium gwiazd
-  - Portal do innych lokacji
+- **System badań**: Researching new spells (koszt złota + many)
 
-**Synergia:**
-- Zaklęcia ofensywne dla Wojownika (lub zamiast)
-- Magiczne towary dla Kupca
-- Wspólne badania z Naukowcem
-- Połączenie z Mistykiem (inne podejście do magii)
-- Enchanting dla Rzemieślnika
+- **Aktywne efekty zaklęć**: Buffs, shields, DOT
 
 **Złożoność:** ⭐⭐⭐⭐
 
@@ -877,51 +869,73 @@
 
 ## Planowane Systemy Ogólne
 
-### 🏰 Township (Osada) - 📋 PLANOWANE
+### 🏰 Township (Osada) - ✅ ZAIMPLEMENTOWANE
 
-System budowania i rozwijania bazy gildii.
+System budowania i rozwijania osady gildii.
 
-**Budynki:**
-| Budynek | Efekt | Wymagania |
-|---------|-------|-----------|
-| Kuźnia | +% do jakości ekwipunku | Wojownik Lvl 20 |
-| Laboratorium | +% do prędkości badań | Naukowiec Lvl 15 |
-| Targ | +% do zysków ze sprzedaży | Kupiec Lvl 15 |
-| Koszary | +% do HP Wojownika | 1000 Gold |
-| Biblioteka | +% do XP wszystkich ścieżek | 5000 Gold |
-| Bank | Pasywne generowanie złota | Kupiec Lvl 30 |
-| Świątynia | Bonusy Mistyka | Mistyk Lvl 10 |
-| Ambasada | Bonusy Dyplomaty | Dyplomata Lvl 15 |
-| Stajnie | Szybsze karawany | Kupiec Lvl 20 |
-| Obserwatorium | Bonusy do przepowiedni | Mistyk Lvl 20 |
+**Zaimplementowane mechaniki:**
+- **20+ Budynków** w 6 kategoriach:
+  - Produkcja: Tartak, Kamieniołom, Kopalnia, Farma
+  - Wojskowe: Koszary, Plac Ćwiczeń, Forteca
+  - Ekonomiczne: Targowisko, Bank, Magazyn, Stajnie
+  - Magiczne: Wieża Maga, Biblioteka, Obserwatorium, Świątynia, Laboratorium Alchemiczne
+  - Społeczne: Tawerna, Ambasada, Hala Gildii, Szpital, Teatr
+  - Cuda: Wielka Kuźnia, Akademia Tajemnej Sztuki, Drzewo Świata
+
+- **System populacji i szczęścia**
+- **Produkcja zasobów** (drewno, kamień, ruda, jedzenie, złoto)
+- **Globalne bonusy** z budynków dla wszystkich ścieżek
+- **System wydarzeń** (festiwale, najazdy, karawany kupieckie)
+- **System obrony osady**
 
 ---
 
-### 📜 System Questów - 📋 PLANOWANE
+### 📜 System Questów - ✅ ZAIMPLEMENTOWANE
 
 Fabularne zadania rozwijające historię świata.
 
-**Typy:**
-| Typ | Opis | Nagrody |
-|-----|------|---------|
-| Main Story | Główna fabuła Aterii | Unikalne przedmioty, LP |
-| Side Quest | Poboczne historie | Złoto, XP |
-| Faction Quest | Zadania frakcji | Reputacja, odblokowania |
-| Repeatable | Powtarzalne zadania | Materiały |
-| Hidden | Ukryte warunki | Sekrety, achievements |
+**Zaimplementowane mechaniki:**
+- **5 typów questów**:
+  - Main Story (7+ questów) - Główna fabuła z rozdziałami
+  - Side Quest (5+ questów) - Poboczne historie
+  - Faction Quest (3+ questów) - Zadania frakcji
+  - Daily Quest (4 questy) - Codzienne powtarzalne
+  - Hidden Quest (2 questy) - Ukryte z sekretami
+
+- **System celów**: kill, collect, reach_level, build, craft, explore, reputation, gold, custom
+- **System nagród**: złoto, XP, przedmioty, reputacja, Legacy Points, odblokowania
+- **Śledzenie postępu** dla wszystkich aktywnych questów
+- **System cooldownów** dla questów codziennych
 
 ---
 
-### 🐉 World Bosses - 📋 PLANOWANE
+### 🐉 World Bosses - ✅ ZAIMPLEMENTOWANE
 
-| Boss | Spawn | Trudność | Unikalna Nagroda |
-|------|-------|----------|------------------|
-| Starożytny Smok | Niedziela | ⭐⭐⭐⭐⭐ | Smocza Zbroja |
-| Lodowy Tytan | Co 3 dni | ⭐⭐⭐⭐ | Młot Mrozu |
-| Król Goblinów | Codziennie | ⭐⭐ | Korona Goblinów |
-| Avatar Pustki | Raz w miesiącu | ⭐⭐⭐⭐⭐⭐ | Fragment Pustki |
-| Pramatka Lasów | Co tydzień | ⭐⭐⭐ | Łuk Natury |
-| Mechaniczny Tytan | Co 5 dni | ⭐⭐⭐⭐ | Serce Golema |
+Globalne bossowie z unikalnymi mechanikami i legendarnymi nagrodami.
+
+**6 World Bossów:**
+| Boss | Spawn | Trudność | Element | Unikalne Nagrody |
+|------|-------|----------|---------|------------------|
+| Starożytny Smok | Niedziela | ⭐⭐⭐⭐⭐ | Ogień | Smocza Zbroja, Smocze Ostrze, Serce Smoka (mythic) |
+| Lodowy Tytan | Co 3 dni | ⭐⭐⭐⭐ | Lód | Młot Mrozu, Rękawice Tytana, Zamrożony Rdzeń (mythic) |
+| Król Goblinów | Codziennie | ⭐⭐ | Cień | Korona Goblinów, Sztylet Podstępu |
+| Avatar Pustki | Raz w miesiącu | ⭐⭐⭐⭐⭐⭐ | Pustka | Fragment Pustki (mythic), Płaszcz Pustki (mythic), Ostrze Nicości (mythic) |
+| Pramatka Lasów | Środa | ⭐⭐⭐ | Natura | Łuk Natury, Błogosławieństwo Lasu, Nasienie Życia (mythic) |
+| Mechaniczny Tytan | Co 5 dni | ⭐⭐⭐⭐ | Mechanika | Serce Golema, Zbroja Zegarmistrza, Schemat Tytana (mythic) |
+
+**Zaimplementowane mechaniki:**
+- **System faz**: Każdy boss ma 3-5 faz z różnymi umiejętnościami i mnożnikami obrażeń
+- **Umiejętności bossów**: Unikalne ataki, efekty DOT, wezwania, tarcze
+- **System spawnu**: Daily, Weekly, Biweekly, Monthly z cooldownami po pokonaniu
+- **Wymagania**: Poziom wojownika, liczba pokonanych bossów
+- **Nagrody**: Złoto, XP, Legacy Points, materiały z bossów, legendarne przedmioty
+
+**20+ Legendarnych przedmiotów:**
+- Bronie: Smocze Ostrze, Młot Mrozu, Łuk Natury, Ostrze Nicości
+- Zbroje: Smocza Zbroja, Rękawice Tytana, Płaszcz Pustki, Zbroja Zegarmistrza
+- Akcesoria: Korona Goblinów, Błogosławieństwo Lasu
+- Artefakty (Mythic): Serce Smoka, Fragment Pustki, Nasienie Życia
+- Materiały: Esencja Bossa, Mityczny Odłamek
 
 ---
 
@@ -954,23 +968,24 @@ Fabularne zadania rozwijające historię świata.
 | ✅ | Dyplomata | Zaimplementowane | ⭐⭐⭐⭐ |
 | ✅ | Druid | Zaimplementowane | ⭐⭐⭐ |
 | ✅ | Mistyk | Zaimplementowane | ⭐⭐⭐ |
-| 1 | Township | Planowane | ⭐⭐⭐ |
-| 2 | System Questów | Planowane | ⭐⭐ |
-| 3 | Kucharz | Pomysł | ⭐⭐ |
-| 4 | Wędkarz | Pomysł | ⭐⭐⭐ |
-| 5 | Czarodziej | Pomysł | ⭐⭐⭐⭐ |
-| 6 | Odkrywca | Pomysł | ⭐⭐⭐ |
-| 7 | Bard | Pomysł | ⭐⭐ |
-| 8 | Alchemik | Pomysł | ⭐⭐⭐⭐ |
-| 9 | Architekt | Pomysł | ⭐⭐⭐ |
-| 10 | Szpieg | Pomysł | ⭐⭐⭐⭐ |
-| 11 | Zaklinacz | Pomysł | ⭐⭐⭐ |
-| 12 | Kapłan | Pomysł | ⭐⭐⭐ |
-| 13 | World Bosses | Planowane | ⭐⭐ |
-| 14 | System Eksploracji | Planowane | ⭐⭐⭐ |
-| 15 | Lore/Kodeks | Planowane | ⭐⭐ |
-| 16 | Gildie Graczy | Pomysł | ⭐⭐⭐⭐⭐ |
-| 17 | System Er/Timeline | Pomysł | ⭐⭐⭐⭐ |
+| ✅ | Kucharz | Zaimplementowane | ⭐⭐ |
+| ✅ | Wędkarz | Zaimplementowane | ⭐⭐⭐ |
+| ✅ | Czarodziej | Zaimplementowane | ⭐⭐⭐⭐ |
+| ✅ | Odkrywca | Zaimplementowane | ⭐⭐⭐ |
+| ✅ | Bard | Zaimplementowane | ⭐⭐ |
+| ✅ | Alchemik | Zaimplementowane | ⭐⭐⭐⭐ |
+| ✅ | Architekt | Zaimplementowane | ⭐⭐⭐ |
+| ✅ | Szpieg | Zaimplementowane | ⭐⭐⭐⭐ |
+| ✅ | Zaklinacz | Zaimplementowane | ⭐⭐⭐ |
+| ✅ | Kapłan | Zaimplementowane | ⭐⭐⭐ |
+| ✅ | Township | Zaimplementowane | ⭐⭐⭐ |
+| ✅ | System Questów | Zaimplementowane | ⭐⭐ |
+| ✅ | World Bosses | Zaimplementowane | ⭐⭐⭐ |
+| ✅ | Synergie Ścieżek | Zaimplementowane | ⭐⭐⭐ |
+| 1 | System Eksploracji (globalny) | Planowane | ⭐⭐⭐ |
+| 3 | Lore/Kodeks | Planowane | ⭐⭐ |
+| 4 | Gildie Graczy | Pomysł | ⭐⭐⭐⭐⭐ |
+| 5 | System Er/Timeline | Pomysł | ⭐⭐⭐⭐ |
 
 ---
 
@@ -980,60 +995,64 @@ Fabularne zadania rozwijające historię świata.
 
 ```
 app/features/ateria-idle/
-├── warrior/         ✅ Zaimplementowane
-├── merchant/        ✅ Zaimplementowane  
-├── scientist/       ✅ Zaimplementowane
-├── gathering/       ✅ Zaimplementowane
-├── crafting/        ✅ Zaimplementowane
-├── diplomat/        ✅ Zaimplementowane
-├── druid/           ✅ Zaimplementowane
-├── mystic/          ✅ Zaimplementowane
-├── chef/            💡 Pomysł (Kucharz)
-├── fisherman/       💡 Pomysł (Wędkarz)
-├── wizard/          💡 Pomysł (Czarodziej)
-├── explorer/        💡 Pomysł (Odkrywca)
-├── bard/            💡 Pomysł (Bard)
-├── alchemist/       💡 Pomysł (Alchemik)
-├── architect/       💡 Pomysł (Architekt)
-├── spy/             💡 Pomysł (Szpieg)
-├── tamer/           💡 Pomysł (Zaklinacz)
-└── priest/          💡 Pomysł (Kapłan)
+├── warrior/         ✅ Zaimplementowane (Wojownik)
+├── merchant/        ✅ Zaimplementowane (Kupiec)
+├── scientist/       ✅ Zaimplementowane (Naukowiec)
+├── gathering/       ✅ Zaimplementowane (Zbieracz)
+├── crafting/        ✅ Zaimplementowane (Rzemieślnik)
+├── diplomat/        ✅ Zaimplementowane (Dyplomata)
+├── druid/           ✅ Zaimplementowane (Druid)
+├── mystic/          ✅ Zaimplementowane (Mistyk)
+├── chef/            ✅ Zaimplementowane (Kucharz)
+├── fisherman/       ✅ Zaimplementowane (Wędkarz)
+├── wizard/          ✅ Zaimplementowane (Czarodziej)
+├── explorer/        ✅ Zaimplementowane (Odkrywca)
+├── bard/            ✅ Zaimplementowane (Bard)
+├── alchemist/       ✅ Zaimplementowane (Alchemik)
+├── architect/       ✅ Zaimplementowane (Architekt)
+├── spy/             ✅ Zaimplementowane (Szpieg)
+├── tamer/           ✅ Zaimplementowane (Zaklinacz)
+├── priest/          ✅ Zaimplementowane (Kapłan)
+├── township/        ✅ Zaimplementowane (Osada)
+├── quests/          ✅ Zaimplementowane (Questy)
+├── world-bosses/    ✅ Zaimplementowane (World Bosses)
+└── synergies/       ✅ Zaimplementowane (Synergie Ścieżek)
 ```
 
 ### Typy Ścieżek (aktualne)
 
 ```typescript
 type PathId = 
-  | 'warrior' 
-  | 'merchant' 
-  | 'scientist' 
-  | 'gathering'
-  | 'crafting'
-  | 'diplomat' 
-  | 'druid' 
-  | 'mystic';
-
-// Planowane rozszerzenie
-type FuturePathId = 
-  | 'chef'       // Kucharz
-  | 'fisherman'  // Wędkarz
-  | 'wizard'     // Czarodziej
-  | 'explorer'   // Odkrywca
-  | 'bard'       // Bard
-  | 'alchemist'  // Alchemik
-  | 'architect'  // Architekt
-  | 'spy'        // Szpieg
-  | 'tamer'      // Zaklinacz
-  | 'priest';    // Kapłan
+  | 'warrior'    // Wojownik - walka, biomy, dungeony
+  | 'merchant'   // Kupiec - handel, karawany
+  | 'scientist'  // Naukowiec - badania, golemy
+  | 'gathering'  // Zbieracz - górnictwo, drwalnictwo, wędkarstwo, zielarstwo
+  | 'crafting'   // Rzemieślnik - kowalstwo, krawiectwo, jubilerstwo, stolarstwo
+  | 'diplomat'   // Dyplomata - frakcje, reputacja, misje
+  | 'druid'      // Druid - farma, hodowla, totemy
+  | 'mystic'     // Mistyk - medytacja, przepowiednie, tarot
+  | 'chef'       // Kucharz - gotowanie, restauracja, buffy
+  | 'fisherman'  // Wędkarz - łowienie, sprzęt, kolekcja
+  | 'wizard'     // Czarodziej - zaklęcia, żywioły, kostury
+  | 'explorer'   // Odkrywca - eksploracja, ekspedycje, odkrycia
+  | 'bard'       // Bard - muzyka, pieśni, występy
+  | 'alchemist'  // Alchemik - eliksiry, eksperymenty, transmutacja
+  | 'architect'  // Architekt - budowanie, miasto, materiały
+  | 'spy'        // Szpieg - misje, infiltracja, informatorzy
+  | 'tamer'      // Zaklinacz - oswajanie, bestie, towarzysze
+  | 'priest';    // Kapłan - wiara, modlitwy, bóstwa
 ```
 
 ---
 
 ## Statystyki Implementacji
 
-- **Ścieżki zaimplementowane:** 8 (podstawowe + rozszerzenia)
-- **Ścieżki w propozycjach:** 10 nowych pomysłów
-- **Systemy główne:** 15+ w pełni działających
+- **Ścieżki zaimplementowane:** 18 (wszystkie podstawowe + rozszerzenia)
+- **Systemy globalne:** Township, Questy, World Bosses, Synergie
+- **Systemy główne:** 24+ w pełni działających
+- **World Bossowie:** 6 (z unikalnymi mechanikami i fazami)
+- **Legendarne przedmioty:** 20+ (w tym 8 mythic)
+- **Synergie między ścieżkami:** 75+ unikalnych połączeń
 - **Frakcje:** 7 z pełnym systemem reputacji
 - **Uprawy:** 12 typów roślin
 - **Zwierzęta:** 8 typów hodowlanych
@@ -1046,21 +1065,62 @@ type FuturePathId =
 - **Receptury craftingowe:** 25+
 - **Narzędzia:** 36+ (po ~9 na kategorię)
 
-### Proponowane Ścieżki (10)
+### Nowe Ścieżki (zaimplementowane)
 
-| Ikona | Ścieżka | Główna mechanika |
-|-------|---------|------------------|
-| 🍳 | Kucharz | Gotowanie, restauracja, buffy |
-| 🎣 | Wędkarz | Łowienie, akwarium, turnieje |
-| 🧙 | Czarodziej | Zaklęcia, szkoły magii, grimuar |
-| 🏴‍☠️ | Odkrywca | Ekspedycje, kartografia, archeologia |
-| 🎵 | Bard | Muzyka, pieśni mocy, legendy |
-| ⚗️ | Alchemik | Transmutacja, eliksiry, homunculus |
-| 🏛️ | Architekt | Budowanie, infrastruktura, cuda |
-| 👤 | Szpieg | Infiltracja, sieć agentów |
-| 🐲 | Zaklinacz | Oswajanie bestii, arena |
-| ⛪ | Kapłan | Modlitwy, uzdrawianie, świątynia |
+| Ikona | Ścieżka | Główna mechanika | Status |
+|-------|---------|------------------|--------|
+| 🍳 | Kucharz | Gotowanie, restauracja, przepisy, buffy z jedzenia | ✅ |
+| 🎣 | Wędkarz | Łowienie ryb, 20+ gatunków, wędki, przynęty, 6 łowisk | ✅ |
+| 🧙 | Czarodziej | 25+ zaklęć, 7 żywiołów, kostury, badania magiczne | ✅ |
+| 🏴‍☠️ | Odkrywca | 8 regionów, 40+ odkryć, ekspedycje, sprzęt | ✅ |
+| 🎵 | Bard | 15+ pieśni, 10 instrumentów, 7 miejsc, sława | ✅ |
+| ⚗️ | Alchemik | 15+ mikstur, eksperymenty, transmutacja | ✅ |
+| 🏛️ | Architekt | 15+ budowli, materiały, populacja, obrona | ✅ |
+| 👤 | Szpieg | 10+ misji, sprzęt, informatorzy, infiltracja | ✅ |
+| 🐲 | Zaklinacz | 15+ stworzeń, oswajanie, towarzysze | ✅ |
+| ⛪ | Kapłan | 6 bóstw, 15+ modlitw, rytuały, relikwie | ✅ |
 
 ---
 
-*Ostatnia aktualizacja: Styczeń 2026*
+*Ostatnia aktualizacja: 26 Stycznia 2026*
+
+---
+
+## Changelog
+
+### 26.01.2026 (aktualizacja 4)
+- ✅ Zaimplementowano pełny **System Synergii**:
+  - 75+ unikalnych synergii między 18 ścieżkami
+  - 4 tiery synergii (Minor, Moderate, Major, Legendary)
+  - 40+ typów bonusów (bojowe, ekonomiczne, produkcyjne, magiczne)
+  - Efekty specjalne dla synergii wyższych tierów
+  - UI z macierzą, przeglądem bonusów i eksploracją ścieżek
+  - Dynamiczne obliczanie bonusów na podstawie poziomów
+- Zaktualizowano macierz zależności w dokumentacji
+
+### 26.01.2026 (aktualizacja 3)
+- ✅ Zaimplementowano system **World Bosses**:
+  - 6 globalnych bossów (Starożytny Smok, Lodowy Tytan, Król Goblinów, Avatar Pustki, Pramatka Lasów, Mechaniczny Tytan)
+  - System faz walki z unikalnymi umiejętnościami
+  - 20+ legendarnych przedmiotów (w tym 8 mythic)
+  - System spawnu (daily, weekly, biweekly, monthly)
+  - Wymagania odblokowujące (poziom, liczba zabójstw bossów)
+
+### 26.01.2026 (aktualizacja 2)
+- ✅ Zaimplementowano system **Township (Osada)**:
+  - 20+ budynków w 6 kategoriach
+  - System populacji, szczęścia, obrony
+  - Produkcja zasobów i globalne bonusy
+  - System wydarzeń losowych
+- ✅ Zaimplementowano system **Questów**:
+  - 20+ questów w 5 typach (Main, Side, Faction, Daily, Hidden)
+  - 7 rozdziałów głównej fabuły
+  - System celów i nagród
+  - Śledzenie postępu i cooldowny
+
+### 26.01.2026
+- ✅ Zaimplementowano 10 nowych ścieżek: Kucharz, Wędkarz, Czarodziej, Odkrywca, Bard, Alchemik, Architekt, Szpieg, Zaklinacz, Kapłan
+- Zaktualizowano status wszystkich ścieżek w dokumentacji
+- Rozszerzono macierz zależności o nowe ścieżki
+- Zaktualizowano strukturę plików i typy ścieżek
+- Łączna liczba ścieżek: 18

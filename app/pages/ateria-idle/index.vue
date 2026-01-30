@@ -36,6 +36,20 @@ import AteriaCraftingPanel from '~/features/ateria-idle/crafting/ui/CraftingPane
 import AteriaDiplomatPanel from '~/features/ateria-idle/diplomat/ui/DiplomatPanel.vue';
 import AteriaDruidPanel from '~/features/ateria-idle/druid/ui/DruidPanel.vue';
 import AteriaMysticPanel from '~/features/ateria-idle/mystic/ui/MysticPanel.vue';
+import AteriaChefPanel from '~/features/ateria-idle/chef/ui/ChefPanel.vue';
+import AteriaFishermanPanel from '~/features/ateria-idle/fisherman/ui/FishermanPanel.vue';
+import AteriaWizardPanel from '~/features/ateria-idle/wizard/ui/WizardPanel.vue';
+import AteriaExplorerPanel from '~/features/ateria-idle/explorer/ui/ExplorerPanel.vue';
+import AteriaBardPanel from '~/features/ateria-idle/bard/ui/BardPanel.vue';
+import AteriaAlchemistPanel from '~/features/ateria-idle/alchemist/ui/AlchemistPanel.vue';
+import AteriaArchitectPanel from '~/features/ateria-idle/architect/ui/ArchitectPanel.vue';
+import AteriaSpyPanel from '~/features/ateria-idle/spy/ui/SpyPanel.vue';
+import AteriaTamerPanel from '~/features/ateria-idle/tamer/ui/TamerPanel.vue';
+import AteriaPriestPanel from '~/features/ateria-idle/priest/ui/PriestPanel.vue';
+import AteriaTownshipPanel from '~/features/ateria-idle/township/ui/TownshipPanel.vue';
+import AteriaQuestsPanel from '~/features/ateria-idle/quests/ui/QuestsPanel.vue';
+import AteriaWorldBossesPanel from '~/features/ateria-idle/world-bosses/ui/WorldBossesPanel.vue';
+import AteriaSynergiesPanel from '~/features/ateria-idle/synergies/ui/SynergiesPanel.vue';
 import { useAteriaAchievementsStore } from '~/features/ateria-idle/core/model/achievements.store';
 import { useAteriaPrestigeStore } from '~/features/ateria-idle/core/model/prestige.store';
 import { useAteriaEventsStore } from '~/features/ateria-idle/core/model/events.store';
@@ -45,6 +59,20 @@ import { useAteriaCraftingStore } from '~/features/ateria-idle/crafting/model/cr
 import { useAteriaDiplomatStore } from '~/features/ateria-idle/diplomat/model/diplomat.store';
 import { useAteriaDruidStore } from '~/features/ateria-idle/druid/model/druid.store';
 import { useAteriaMysticStore } from '~/features/ateria-idle/mystic/model/mystic.store';
+import { useAteriaChefStore } from '~/features/ateria-idle/chef/model/chef.store';
+import { useAteriaFishermanStore } from '~/features/ateria-idle/fisherman/model/fisherman.store';
+import { useAteriaWizardStore } from '~/features/ateria-idle/wizard/model/wizard.store';
+import { useAteriaExplorerStore } from '~/features/ateria-idle/explorer/model/explorer.store';
+import { useAteriaBardStore } from '~/features/ateria-idle/bard/model/bard.store';
+import { useAteriaAlchemistStore } from '~/features/ateria-idle/alchemist/model/alchemist.store';
+import { useAteriaArchitectStore } from '~/features/ateria-idle/architect/model/architect.store';
+import { useAteriaSpyStore } from '~/features/ateria-idle/spy/model/spy.store';
+import { useAteriaTamerStore } from '~/features/ateria-idle/tamer/model/tamer.store';
+import { useAteriaPriestStore } from '~/features/ateria-idle/priest/model/priest.store';
+import { useAteriaTownshipStore } from '~/features/ateria-idle/township/model/township.store';
+import { useAteriaQuestsStore } from '~/features/ateria-idle/quests/model/quests.store';
+import { useAteriaWorldBossesStore } from '~/features/ateria-idle/world-bosses/model/world-bosses.store';
+import { useAteriaSynergiesStore } from '~/features/ateria-idle/synergies/model/synergies.store';
 
 // Stores
 const gameStore = useAteriaGameStore();
@@ -62,6 +90,20 @@ const craftingStore = useAteriaCraftingStore();
 const diplomatStore = useAteriaDiplomatStore();
 const druidStore = useAteriaDruidStore();
 const mysticStore = useAteriaMysticStore();
+const chefStore = useAteriaChefStore();
+const fishermanStore = useAteriaFishermanStore();
+const wizardStore = useAteriaWizardStore();
+const explorerStore = useAteriaExplorerStore();
+const bardStore = useAteriaBardStore();
+const alchemistStore = useAteriaAlchemistStore();
+const architectStore = useAteriaArchitectStore();
+const spyStore = useAteriaSpyStore();
+const tamerStore = useAteriaTamerStore();
+const priestStore = useAteriaPriestStore();
+const townshipStore = useAteriaTownshipStore();
+const questsStore = useAteriaQuestsStore();
+const worldBossesStore = useAteriaWorldBossesStore();
+const synergiesStore = useAteriaSynergiesStore();
 
 // Sync equipment bonuses when equipped items change
 watch(
@@ -79,7 +121,7 @@ let gameLoopInterval: ReturnType<typeof setInterval> | null = null;
 let lastTickTime = Date.now();
 
 // Navigation
-const activeTab = ref<'warrior' | 'scientist' | 'merchant' | 'gathering' | 'crafting' | 'diplomat' | 'druid' | 'mystic' | 'achievements' | 'prestige' | 'events' | 'stats' | 'settings' | 'integration'>('warrior');
+const activeTab = ref<'warrior' | 'scientist' | 'merchant' | 'gathering' | 'crafting' | 'diplomat' | 'druid' | 'mystic' | 'chef' | 'fisherman' | 'wizard' | 'explorer' | 'bard' | 'alchemist' | 'architect' | 'spy' | 'tamer' | 'priest' | 'township' | 'quests' | 'world_bosses' | 'synergies' | 'achievements' | 'prestige' | 'events' | 'stats' | 'settings' | 'integration'>('warrior');
 const warriorSubTab = ref<'combat' | 'equipment' | 'dungeon' | 'slayer' | 'loadout'>('combat');
 const merchantSubTab = ref<'shop' | 'caravans'>('shop');
 const scientistSubTab = ref<'main' | 'golems'>('main');
@@ -207,6 +249,145 @@ const navItems = computed(() => [
     requirement: null,
   },
   {
+    id: 'chef' as const,
+    label: 'Kucharz',
+    icon: 'mdi-chef-hat',
+    unlocked: true,
+    level: chefStore.progress.level,
+    progress: null,
+    requirement: null,
+  },
+  {
+    id: 'fisherman' as const,
+    label: 'Wędkarz',
+    icon: 'mdi-fishing',
+    unlocked: true,
+    level: fishermanStore.progress.level,
+    progress: null,
+    requirement: null,
+  },
+  {
+    id: 'wizard' as const,
+    label: 'Czarodziej',
+    icon: 'mdi-wizard-hat',
+    unlocked: true,
+    level: wizardStore.progress.level,
+    progress: null,
+    requirement: null,
+  },
+  {
+    id: 'explorer' as const,
+    label: 'Odkrywca',
+    icon: 'mdi-compass',
+    unlocked: true,
+    level: explorerStore.progress.level,
+    progress: null,
+    requirement: null,
+  },
+  {
+    id: 'bard' as const,
+    label: 'Bard',
+    icon: 'mdi-music',
+    unlocked: true,
+    level: bardStore.progress.level,
+    progress: null,
+    requirement: null,
+  },
+  {
+    id: 'alchemist' as const,
+    label: 'Alchemik',
+    icon: 'mdi-flask',
+    unlocked: true,
+    level: alchemistStore.progress.level,
+    progress: null,
+    requirement: null,
+  },
+  {
+    id: 'architect' as const,
+    label: 'Architekt',
+    icon: 'mdi-home-city',
+    unlocked: true,
+    level: architectStore.progress.level,
+    progress: null,
+    requirement: null,
+  },
+  {
+    id: 'spy' as const,
+    label: 'Szpieg',
+    icon: 'mdi-eye-off',
+    unlocked: true,
+    level: spyStore.progress.level,
+    progress: null,
+    requirement: null,
+  },
+  {
+    id: 'tamer' as const,
+    label: 'Zaklinacz',
+    icon: 'mdi-paw',
+    unlocked: true,
+    level: tamerStore.progress.level,
+    progress: null,
+    requirement: null,
+  },
+  {
+    id: 'priest' as const,
+    label: 'Kapłan',
+    icon: 'mdi-hands-pray',
+    unlocked: true,
+    level: priestStore.progress.level,
+    progress: null,
+    requirement: null,
+  },
+  {
+    id: 'township' as const,
+    label: 'Osada',
+    icon: 'mdi-home-city',
+    unlocked: true,
+    level: townshipStore.progress.level,
+    progress: null,
+    requirement: null,
+    currentProgress: townshipStore.totalBuildingsBuilt,
+    requiredProgress: null,
+  },
+  {
+    id: 'quests' as const,
+    label: 'Questy',
+    icon: 'mdi-book-open-variant',
+    unlocked: true,
+    level: null,
+    progress: null,
+    requirement: null,
+    currentProgress: questsStore.activeQuestsList.length,
+    requiredProgress: null,
+    badge: questsStore.activeQuestsList.filter(q => q.status === 'completed').length > 0 
+      ? questsStore.activeQuestsList.filter(q => q.status === 'completed').length.toString() 
+      : null,
+  },
+  {
+    id: 'world_bosses' as const,
+    label: 'World Bosses',
+    icon: 'mdi-skull-crossbones',
+    unlocked: true,
+    level: null,
+    progress: null,
+    requirement: null,
+    currentProgress: worldBossesStore.totalBossKills,
+    requiredProgress: null,
+    badge: worldBossesStore.activeBosses.length > 0 ? worldBossesStore.activeBosses.length.toString() : null,
+  },
+  {
+    id: 'synergies' as const,
+    label: 'Synergie',
+    icon: 'mdi-link-variant',
+    unlocked: true,
+    level: null,
+    progress: null,
+    requirement: null,
+    currentProgress: synergiesStore.totalActiveSynergies,
+    requiredProgress: null,
+    badge: null,
+  },
+  {
     id: 'achievements' as const,
     label: 'Osiągnięcia',
     icon: 'mdi-trophy',
@@ -301,6 +482,20 @@ function gameTick() {
       diplomatStore.processTick();
       druidStore.processTick();
       mysticStore.processTick();
+      chefStore.processTick();
+      fishermanStore.processTick();
+      wizardStore.processTick();
+      explorerStore.processTick();
+      bardStore.processTick();
+      alchemistStore.processTick();
+      architectStore.processTick();
+      spyStore.processTick();
+      tamerStore.processTick();
+      priestStore.processTick();
+      townshipStore.processTick();
+      questsStore.processTick();
+      worldBossesStore.processTick();
+      synergiesStore.processTick();
     }
   }
 
@@ -889,6 +1084,20 @@ function devSimulateOffline() {
 
         <!-- Mystic Panel -->
         <AteriaMysticPanel v-else-if="activeTab === 'mystic'" />
+        <AteriaChefPanel v-else-if="activeTab === 'chef'" />
+        <AteriaFishermanPanel v-else-if="activeTab === 'fisherman'" />
+        <AteriaWizardPanel v-else-if="activeTab === 'wizard'" />
+        <AteriaExplorerPanel v-else-if="activeTab === 'explorer'" />
+        <AteriaBardPanel v-else-if="activeTab === 'bard'" />
+        <AteriaAlchemistPanel v-else-if="activeTab === 'alchemist'" />
+        <AteriaArchitectPanel v-else-if="activeTab === 'architect'" />
+        <AteriaSpyPanel v-else-if="activeTab === 'spy'" />
+        <AteriaTamerPanel v-else-if="activeTab === 'tamer'" />
+        <AteriaPriestPanel v-else-if="activeTab === 'priest'" />
+        <AteriaTownshipPanel v-else-if="activeTab === 'township'" />
+        <AteriaQuestsPanel v-else-if="activeTab === 'quests'" />
+        <AteriaWorldBossesPanel v-else-if="activeTab === 'world_bosses'" />
+        <AteriaSynergiesPanel v-else-if="activeTab === 'synergies'" />
 
         <!-- Settings Panel -->
         <AteriaSettingsPanel v-else-if="activeTab === 'settings'" />
@@ -1110,7 +1319,7 @@ function devSimulateOffline() {
                 size="x-small"
                 variant="tonal"
                 color="error"
-                @click="() => { gameStore.resetGame(); resourcesStore.resetResources(); warriorStore.resetWarrior(); inventoryStore.resetInventory(); scientistStore.resetScientist(); merchantStore.resetMerchant(); gatheringStore.resetGathering(); craftingStore.resetCrafting(); diplomatStore.resetDiplomat(); druidStore.resetDruid(); mysticStore.resetMystic(); }"
+                @click="() => { gameStore.resetGame(); resourcesStore.resetResources(); warriorStore.resetWarrior(); inventoryStore.resetInventory(); scientistStore.resetScientist(); merchantStore.resetMerchant(); gatheringStore.resetGathering(); craftingStore.resetCrafting(); diplomatStore.resetDiplomat(); druidStore.resetDruid(); mysticStore.resetMystic(); chefStore.resetChef(); fishermanStore.resetFisherman(); wizardStore.resetWizard(); explorerStore.resetExplorer(); bardStore.resetBard(); alchemistStore.resetAlchemist(); architectStore.resetArchitect(); spyStore.resetSpy(); tamerStore.resetTamer(); priestStore.resetPriest(); townshipStore.resetTownship(); questsStore.resetQuests(); worldBossesStore.resetWorldBosses(); synergiesStore.resetSynergies(); }"
               >
                 Reset
               </v-btn>
