@@ -939,24 +939,59 @@ Globalne bossowie z unikalnymi mechanikami i legendarnymi nagrodami.
 
 ---
 
-### 🗺️ System Eksploracji - 📋 PLANOWANE
+### 🗺️ System Eksploracji - ✅ ZAIMPLEMENTOWANE
 
-- Mapa świata z regionami do odkrycia
-- Fog of War - odkrywanie przez eksplorację
-- POI (Points of Interest): Ruiny, Wioski, Dungeons, Sekrety
-- Random Events podczas podróży
-- Fast Travel między odkrytymi lokacjami
+Pełny system eksploracji świata z mapą, podróżami i odkryciami.
+
+**12 Regionów świata:**
+| Region | Teren | Poziom | Niebezpieczeństwo |
+|--------|-------|--------|-------------------|
+| Zielone Równiny | Równiny | 1 | ⭐ |
+| Szepczący Las | Las | 5 | ⭐⭐⭐ |
+| Kryształowe Szczyty | Góry | 10 | ⭐⭐⭐⭐⭐ |
+| Spalone Pustkowia | Pustynia | 15 | ⭐⭐⭐⭐⭐⭐ |
+| Mroźna Tundra | Tundra | 20 | ⭐⭐⭐⭐⭐⭐⭐ |
+| Cieniste Bagna | Bagno | 18 | ⭐⭐⭐⭐⭐⭐⭐ |
+| Starożytne Ruiny | Równiny | 25 | ⭐⭐⭐⭐⭐⭐⭐⭐ |
+| Niebiańskie Wyspy | Ocean | 30 | ⭐⭐⭐⭐⭐⭐⭐⭐ |
+| Otchłanne Głębiny | Pustka | 35 | ⭐⭐⭐⭐⭐⭐⭐⭐⭐ |
+| Smocze Góry | Wulkan | 35 | ⭐⭐⭐⭐⭐⭐⭐⭐⭐⭐ |
+| Mistyczny Gaj | Las | 25 | ⭐⭐⭐⭐⭐ |
+| Żelazna Forteca | Góry | 30 | ⭐⭐⭐⭐⭐⭐ |
+
+**Zaimplementowane mechaniki:**
+- **Mapa świata** z połączeniami między regionami
+- **30+ POI (Points of Interest)**: Ruiny, Wioski, Jaskinie, Świątynie, Sekrety
+- **System podróży** z czasem i niebezpieczeństwem
+- **8 typów wydarzeń losowych**: Combat, Treasure, Merchant, NPC, Trap, Blessing, Mystery
+- **Fast Travel** między odkrytymi lokacjami
+- **System ekspedycji** z nagrodami i odkryciami
+- **Statystyki eksploracji**
 
 ---
 
-### 📜 Lore/Kodeks - 📋 PLANOWANE
+### 📜 Lore/Kodeks - ✅ ZAIMPLEMENTOWANE
 
-- Bestiariusz (potwory)
-- Herbarium (rośliny)
-- Atlas (lokacje)
-- Kroniki (historia)
-- Biografie (NPC)
-- Artefakty (legendarne przedmioty)
+Encyklopedia świata Aterii z 6 kategoriami wpisów.
+
+**6 Kategorii:**
+| Kategoria | Opis | Wpisy |
+|-----------|------|-------|
+| Bestiariusz | Potwory i stworzenia | 15+ |
+| Herbarium | Rośliny i zioła | 5+ |
+| Atlas | Lokacje i regiony | 10+ |
+| Kroniki | Historia świata | 5+ |
+| Biografie | Postacie i frakcje | 5+ |
+| Artefakty | Legendarne przedmioty | 5+ |
+
+**Zaimplementowane mechaniki:**
+- **45+ wpisów** do odkrycia
+- **5 poziomów rzadkości**: Common, Uncommon, Rare, Epic, Legendary
+- **System odkrywania** przez zabijanie, zbieranie, odwiedzanie
+- **Powiązane wpisy** między kategoriami
+- **Ulubione i ostatnio odkryte**
+- **Pasek postępu** odkrywania
+- **Wyszukiwanie** i filtrowanie
 
 ---
 
@@ -982,10 +1017,14 @@ Globalne bossowie z unikalnymi mechanikami i legendarnymi nagrodami.
 | ✅ | System Questów | Zaimplementowane | ⭐⭐ |
 | ✅ | World Bosses | Zaimplementowane | ⭐⭐⭐ |
 | ✅ | Synergie Ścieżek | Zaimplementowane | ⭐⭐⭐ |
-| 1 | System Eksploracji (globalny) | Planowane | ⭐⭐⭐ |
-| 3 | Lore/Kodeks | Planowane | ⭐⭐ |
-| 4 | Gildie Graczy | Pomysł | ⭐⭐⭐⭐⭐ |
-| 5 | System Er/Timeline | Pomysł | ⭐⭐⭐⭐ |
+| ✅ | System Eksploracji | Zaimplementowane | ⭐⭐⭐ |
+| ✅ | Lore/Kodeks | Zaimplementowane | ⭐⭐ |
+| ✅ | System Reputacji | Zaimplementowane | ⭐⭐⭐ |
+| ✅ | Kalendarz & Pory Roku | Zaimplementowane | ⭐⭐⭐ |
+| ✅ | System Companionów | Zaimplementowane | ⭐⭐⭐⭐ |
+| ✅ | Mini-gry | Zaimplementowane | ⭐⭐⭐ |
+| 1 | Gildie Graczy | Pomysł | ⭐⭐⭐⭐⭐ |
+| 2 | System Er/Timeline | Pomysł | ⭐⭐⭐⭐ |
 
 ---
 
@@ -1016,7 +1055,13 @@ app/features/ateria-idle/
 ├── township/        ✅ Zaimplementowane (Osada)
 ├── quests/          ✅ Zaimplementowane (Questy)
 ├── world-bosses/    ✅ Zaimplementowane (World Bosses)
-└── synergies/       ✅ Zaimplementowane (Synergie Ścieżek)
+├── synergies/       ✅ Zaimplementowane (Synergie Ścieżek)
+├── exploration/     ✅ Zaimplementowane (Eksploracja)
+├── codex/           ✅ Zaimplementowane (Kodeks/Lore)
+├── reputation/      ✅ Zaimplementowane (Reputacja Globalna)
+├── calendar/        ✅ Zaimplementowane (Kalendarz & Pory Roku)
+├── companions/      ✅ Zaimplementowane (Towarzysze NPC)
+└── minigames/       ✅ Zaimplementowane (Mini-gry)
 ```
 
 ### Typy Ścieżek (aktualne)
@@ -1048,8 +1093,13 @@ type PathId =
 ## Statystyki Implementacji
 
 - **Ścieżki zaimplementowane:** 18 (wszystkie podstawowe + rozszerzenia)
-- **Systemy globalne:** Township, Questy, World Bosses, Synergie
-- **Systemy główne:** 24+ w pełni działających
+- **Systemy globalne:** Township, Questy, World Bosses, Synergie, Eksploracja, Kodeks, Reputacja, Kalendarz, Towarzysze, Mini-gry
+- **Systemy główne:** 30+ w pełni działających
+- **Regiony świata:** 12 (z unikalnymi biomami i POI)
+- **POI do odkrycia:** 30+
+- **Wpisy w Kodeksie:** 45+ (6 kategorii)
+- **Towarzysze:** 10 unikalnych NPC (8 klas)
+- **Mini-gry:** 7 różnych gier (kości, karty, automaty, puzzle, memory)
 - **World Bossowie:** 6 (z unikalnymi mechanikami i fazami)
 - **Legendarne przedmioty:** 20+ (w tym 8 mythic)
 - **Synergie między ścieżkami:** 75+ unikalnych połączeń
@@ -1087,6 +1137,46 @@ type PathId =
 ---
 
 ## Changelog
+
+### 26.01.2026 (aktualizacja 6)
+- ✅ Zaimplementowano **System Reputacji Globalnej**:
+  - 9 alignmentów (od Praworządnego Dobrego do Chaotycznego Złego)
+  - System karmy (-100 do +100) wpływający na interakcje
+  - 6 poziomów sławy z nagrodami
+  - 17+ tytułów do odblokowania w 8 kategoriach
+  - Bonusy statystyk z alignmentu, sławy i tytułów
+- ✅ Zaimplementowano **Kalendarz & Pory Roku**:
+  - 4 pory roku z unikalnymi bonusami
+  - 8 typów pogody wpływających na rozgrywkę
+  - 8 faz księżyca z efektami
+  - 8 festiwali sezonowych z nagrodami
+  - 7 bonusów dziennych (różne każdego dnia)
+- ✅ Zaimplementowano **System Companionów/NPC**:
+  - 10 unikalnych towarzyszy w 8 klasach
+  - System levelowania i relacji (6 poziomów)
+  - 16 typów zadań do przydzielenia
+  - Unikalne umiejętności pasywne i aktywne
+  - Preferencje prezentów i dialogi
+- ✅ Zaimplementowano **Mini-gry**:
+  - 7 różnych gier (kości, karty, automaty, puzzle, memory)
+  - System zakładów i nagród
+  - Statystyki i rekordy
+  - Różne poziomy trudności
+
+### 26.01.2026 (aktualizacja 5)
+- ✅ Zaimplementowano **System Eksploracji**:
+  - 12 regionów świata z unikalnymi biomami
+  - 30+ POI (Points of Interest) do odkrycia
+  - System podróży z czasem i wydarzeniami losowymi
+  - 8 typów wydarzeń podczas podróży
+  - Fast Travel między odkrytymi lokacjami
+  - System ekspedycji z nagrodami
+- ✅ Zaimplementowano **Kodeks/Lore**:
+  - 45+ wpisów w 6 kategoriach
+  - Bestiariusz, Herbarium, Atlas, Kroniki, Biografie, Artefakty
+  - System odkrywania przez grę
+  - 5 poziomów rzadkości wpisów
+  - Ulubione, ostatnio odkryte, wyszukiwanie
 
 ### 26.01.2026 (aktualizacja 4)
 - ✅ Zaimplementowano pełny **System Synergii**:

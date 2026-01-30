@@ -50,6 +50,12 @@ import AteriaTownshipPanel from '~/features/ateria-idle/township/ui/TownshipPane
 import AteriaQuestsPanel from '~/features/ateria-idle/quests/ui/QuestsPanel.vue';
 import AteriaWorldBossesPanel from '~/features/ateria-idle/world-bosses/ui/WorldBossesPanel.vue';
 import AteriaSynergiesPanel from '~/features/ateria-idle/synergies/ui/SynergiesPanel.vue';
+import AteriaExplorationPanel from '~/features/ateria-idle/exploration/ui/ExplorationPanel.vue';
+import AteriaCodexPanel from '~/features/ateria-idle/codex/ui/CodexPanel.vue';
+import AteriaReputationPanel from '~/features/ateria-idle/reputation/ui/ReputationPanel.vue';
+import AteriaCalendarPanel from '~/features/ateria-idle/calendar/ui/CalendarPanel.vue';
+import AteriaCompanionsPanel from '~/features/ateria-idle/companions/ui/CompanionsPanel.vue';
+import AteriaMinigamesPanel from '~/features/ateria-idle/minigames/ui/MinigamesPanel.vue';
 import { useAteriaAchievementsStore } from '~/features/ateria-idle/core/model/achievements.store';
 import { useAteriaPrestigeStore } from '~/features/ateria-idle/core/model/prestige.store';
 import { useAteriaEventsStore } from '~/features/ateria-idle/core/model/events.store';
@@ -73,6 +79,12 @@ import { useAteriaTownshipStore } from '~/features/ateria-idle/township/model/to
 import { useAteriaQuestsStore } from '~/features/ateria-idle/quests/model/quests.store';
 import { useAteriaWorldBossesStore } from '~/features/ateria-idle/world-bosses/model/world-bosses.store';
 import { useAteriaSynergiesStore } from '~/features/ateria-idle/synergies/model/synergies.store';
+import { useAteriaExplorationStore } from '~/features/ateria-idle/exploration/model/exploration.store';
+import { useAteriaCodexStore } from '~/features/ateria-idle/codex/model/codex.store';
+import { useAteriaReputationStore } from '~/features/ateria-idle/reputation/model/reputation.store';
+import { useAteriaCalendarStore } from '~/features/ateria-idle/calendar/model/calendar.store';
+import { useAteriaCompanionsStore } from '~/features/ateria-idle/companions/model/companions.store';
+import { useAteriaMinigamesStore } from '~/features/ateria-idle/minigames/model/minigames.store';
 
 // Stores
 const gameStore = useAteriaGameStore();
@@ -104,6 +116,12 @@ const townshipStore = useAteriaTownshipStore();
 const questsStore = useAteriaQuestsStore();
 const worldBossesStore = useAteriaWorldBossesStore();
 const synergiesStore = useAteriaSynergiesStore();
+const explorationStore = useAteriaExplorationStore();
+const codexStore = useAteriaCodexStore();
+const reputationStore = useAteriaReputationStore();
+const calendarStore = useAteriaCalendarStore();
+const companionsStore = useAteriaCompanionsStore();
+const minigamesStore = useAteriaMinigamesStore();
 
 // Sync equipment bonuses when equipped items change
 watch(
@@ -121,7 +139,7 @@ let gameLoopInterval: ReturnType<typeof setInterval> | null = null;
 let lastTickTime = Date.now();
 
 // Navigation
-const activeTab = ref<'warrior' | 'scientist' | 'merchant' | 'gathering' | 'crafting' | 'diplomat' | 'druid' | 'mystic' | 'chef' | 'fisherman' | 'wizard' | 'explorer' | 'bard' | 'alchemist' | 'architect' | 'spy' | 'tamer' | 'priest' | 'township' | 'quests' | 'world_bosses' | 'synergies' | 'achievements' | 'prestige' | 'events' | 'stats' | 'settings' | 'integration'>('warrior');
+const activeTab = ref<'warrior' | 'scientist' | 'merchant' | 'gathering' | 'crafting' | 'diplomat' | 'druid' | 'mystic' | 'chef' | 'fisherman' | 'wizard' | 'explorer' | 'bard' | 'alchemist' | 'architect' | 'spy' | 'tamer' | 'priest' | 'township' | 'quests' | 'world_bosses' | 'synergies' | 'exploration' | 'codex' | 'reputation' | 'calendar' | 'companions' | 'minigames' | 'achievements' | 'prestige' | 'events' | 'stats' | 'settings' | 'integration'>('warrior');
 const warriorSubTab = ref<'combat' | 'equipment' | 'dungeon' | 'slayer' | 'loadout'>('combat');
 const merchantSubTab = ref<'shop' | 'caravans'>('shop');
 const scientistSubTab = ref<'main' | 'golems'>('main');
@@ -388,6 +406,78 @@ const navItems = computed(() => [
     badge: null,
   },
   {
+    id: 'exploration' as const,
+    label: 'Eksploracja',
+    icon: 'mdi-compass',
+    unlocked: true,
+    level: null,
+    progress: null,
+    requirement: null,
+    currentProgress: explorationStore.stats.regionsExplored,
+    requiredProgress: null,
+    badge: explorationStore.isTraveling ? '!' : null,
+  },
+  {
+    id: 'codex' as const,
+    label: 'Kodeks',
+    icon: 'mdi-book-open-page-variant',
+    unlocked: true,
+    level: null,
+    progress: null,
+    requirement: null,
+    currentProgress: codexStore.stats.totalDiscovered,
+    requiredProgress: null,
+    badge: codexStore.unreadCount > 0 ? codexStore.unreadCount.toString() : null,
+  },
+  {
+    id: 'reputation' as const,
+    label: 'Reputacja',
+    icon: 'mdi-account-star',
+    unlocked: true,
+    level: null,
+    progress: null,
+    requirement: null,
+    currentProgress: reputationStore.fame,
+    requiredProgress: null,
+    badge: null,
+  },
+  {
+    id: 'calendar' as const,
+    label: 'Kalendarz',
+    icon: 'mdi-calendar',
+    unlocked: true,
+    level: null,
+    progress: null,
+    requirement: null,
+    currentProgress: null,
+    requiredProgress: null,
+    badge: calendarStore.activeFestivals.length > 0 ? '!' : null,
+  },
+  {
+    id: 'companions' as const,
+    label: 'Towarzysze',
+    icon: 'mdi-account-group',
+    unlocked: true,
+    level: null,
+    progress: null,
+    requirement: null,
+    currentProgress: companionsStore.recruitedCount,
+    requiredProgress: companionsStore.maxCompanions,
+    badge: companionsStore.idleCompanions.length > 0 ? companionsStore.idleCompanions.length.toString() : null,
+  },
+  {
+    id: 'minigames' as const,
+    label: 'Mini-gry',
+    icon: 'mdi-gamepad-variant',
+    unlocked: true,
+    level: null,
+    progress: null,
+    requirement: null,
+    currentProgress: minigamesStore.stats.gamesWon,
+    requiredProgress: null,
+    badge: null,
+  },
+  {
     id: 'achievements' as const,
     label: 'Osiągnięcia',
     icon: 'mdi-trophy',
@@ -496,6 +586,9 @@ function gameTick() {
       questsStore.processTick();
       worldBossesStore.processTick();
       synergiesStore.processTick();
+      explorationStore.processTick();
+      calendarStore.processTick();
+      companionsStore.processTick();
     }
   }
 
@@ -1098,6 +1191,12 @@ function devSimulateOffline() {
         <AteriaQuestsPanel v-else-if="activeTab === 'quests'" />
         <AteriaWorldBossesPanel v-else-if="activeTab === 'world_bosses'" />
         <AteriaSynergiesPanel v-else-if="activeTab === 'synergies'" />
+        <AteriaExplorationPanel v-else-if="activeTab === 'exploration'" />
+        <AteriaCodexPanel v-else-if="activeTab === 'codex'" />
+        <AteriaReputationPanel v-else-if="activeTab === 'reputation'" />
+        <AteriaCalendarPanel v-else-if="activeTab === 'calendar'" />
+        <AteriaCompanionsPanel v-else-if="activeTab === 'companions'" />
+        <AteriaMinigamesPanel v-else-if="activeTab === 'minigames'" />
 
         <!-- Settings Panel -->
         <AteriaSettingsPanel v-else-if="activeTab === 'settings'" />
@@ -1319,7 +1418,7 @@ function devSimulateOffline() {
                 size="x-small"
                 variant="tonal"
                 color="error"
-                @click="() => { gameStore.resetGame(); resourcesStore.resetResources(); warriorStore.resetWarrior(); inventoryStore.resetInventory(); scientistStore.resetScientist(); merchantStore.resetMerchant(); gatheringStore.resetGathering(); craftingStore.resetCrafting(); diplomatStore.resetDiplomat(); druidStore.resetDruid(); mysticStore.resetMystic(); chefStore.resetChef(); fishermanStore.resetFisherman(); wizardStore.resetWizard(); explorerStore.resetExplorer(); bardStore.resetBard(); alchemistStore.resetAlchemist(); architectStore.resetArchitect(); spyStore.resetSpy(); tamerStore.resetTamer(); priestStore.resetPriest(); townshipStore.resetTownship(); questsStore.resetQuests(); worldBossesStore.resetWorldBosses(); synergiesStore.resetSynergies(); }"
+                @click="() => { gameStore.resetGame(); resourcesStore.resetResources(); warriorStore.resetWarrior(); inventoryStore.resetInventory(); scientistStore.resetScientist(); merchantStore.resetMerchant(); gatheringStore.resetGathering(); craftingStore.resetCrafting(); diplomatStore.resetDiplomat(); druidStore.resetDruid(); mysticStore.resetMystic(); chefStore.resetChef(); fishermanStore.resetFisherman(); wizardStore.resetWizard(); explorerStore.resetExplorer(); bardStore.resetBard(); alchemistStore.resetAlchemist(); architectStore.resetArchitect(); spyStore.resetSpy(); tamerStore.resetTamer(); priestStore.resetPriest(); townshipStore.resetTownship(); questsStore.resetQuests(); worldBossesStore.resetWorldBosses(); synergiesStore.resetSynergies(); explorationStore.resetExploration(); codexStore.resetCodex(); reputationStore.resetReputation(); calendarStore.resetCalendar(); companionsStore.resetCompanions(); minigamesStore.resetMinigames(); }"
               >
                 Reset
               </v-btn>
