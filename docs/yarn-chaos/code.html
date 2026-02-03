@@ -1,0 +1,329 @@
+<!DOCTYPE html>
+
+<html class="light" lang="en"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>Knits &amp; Knots - Handmade Knitwear Home &amp; Shop</title>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;700;800&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<script id="tailwind-config">
+    tailwind.config = {
+      darkMode: "class",
+      theme: {
+        extend: {
+          colors: {
+            "primary": "#ee5b2b",
+            "background-light": "#f8f6f6",
+            "background-dark": "#221510",
+          },
+          fontFamily: {
+            "display": ["Plus Jakarta Sans", "sans-serif"]
+          },
+          borderRadius: {"DEFAULT": "0.5rem", "lg": "1rem", "xl": "1.5rem", "full": "9999px"},
+        },
+      },
+    }
+  </script>
+<style>
+    /* Custom Scrollbar for a cleaner look */
+    ::-webkit-scrollbar {
+      width: 8px;
+    }
+    ::-webkit-scrollbar-track {
+      background: #f1f1f1; 
+    }
+    ::-webkit-scrollbar-thumb {
+      background: #ccc; 
+      border-radius: 4px;
+    }
+    ::-webkit-scrollbar-thumb:hover {
+      background: #aaa; 
+    }
+  </style>
+</head>
+<body class="bg-background-light dark:bg-background-dark text-[#181311] dark:text-white font-display">
+<div class="relative flex min-h-screen w-full flex-col overflow-x-hidden">
+<!-- Navigation -->
+<header class="sticky top-0 z-50 flex items-center justify-between border-b border-solid border-b-[#f4f1f0] dark:border-b-[#3a2d28] bg-white/95 dark:bg-[#1a120e]/95 backdrop-blur-sm px-6 py-4 md:px-10 lg:px-20">
+<div class="flex items-center gap-4 text-[#181311] dark:text-white">
+<div class="size-8 text-primary">
+<svg class="w-full h-full" fill="none" viewbox="0 0 48 48" xmlns="http://www.w3.org/2000/svg">
+<path d="M4 42.4379C4 42.4379 14.0962 36.0744 24 41.1692C35.0664 46.8624 44 42.2078 44 42.2078L44 7.01134C44 7.01134 35.068 11.6577 24.0031 5.96913C14.0971 0.876274 4 7.27094 4 7.27094L4 42.4379Z" fill="currentColor"></path>
+</svg>
+</div>
+<h2 class="text-xl font-bold leading-tight tracking-[-0.015em]">Knits &amp; Knots</h2>
+</div>
+<!-- Desktop Menu -->
+<div class="hidden md:flex flex-1 justify-end gap-8 items-center">
+<nav class="flex items-center gap-8">
+<a class="text-sm font-medium hover:text-primary transition-colors" href="#">Home</a>
+<a class="text-sm font-medium hover:text-primary transition-colors" href="#portfolio">Portfolio</a>
+<a class="text-sm font-medium hover:text-primary transition-colors" href="#shop">Shop</a>
+<a class="text-sm font-medium hover:text-primary transition-colors" href="#contact">Contact</a>
+</nav>
+<button class="flex items-center justify-center overflow-hidden rounded-full h-10 px-6 bg-primary text-white text-sm font-bold hover:bg-primary/90 transition-colors shadow-md">
+<span class="truncate flex items-center gap-2">
+<span class="material-symbols-outlined text-[18px]">shopping_bag</span>
+          Cart (0)
+        </span>
+</button>
+</div>
+<!-- Mobile Menu Button -->
+<button class="md:hidden p-2 text-[#181311] dark:text-white">
+<span class="material-symbols-outlined">menu</span>
+</button>
+</header>
+<!-- Hero Section -->
+<div class="px-4 py-6 md:px-10 lg:px-20 lg:py-10">
+<div class="mx-auto max-w-7xl">
+<div class="relative overflow-hidden rounded-xl bg-cover bg-center min-h-[500px] lg:min-h-[600px] flex flex-col justify-end p-8 md:p-12 lg:p-16 group" data-alt="Cozy handmade knitted white plushie on soft blanket" style='background-image: linear-gradient(rgba(0, 0, 0, 0.2) 0%, rgba(0, 0, 0, 0.5) 100%), url("https://lh3.googleusercontent.com/aida-public/AB6AXuCONh1mvtvCSEBSz56AffdFubXClmQDetPB-Lrl78ukoCVynKaiyW-wuCuwungoYAoR2jYf2zZHgk5UFV_cwK4KVRvMD_E_jgG2HiIHT2oXREJhUHUOiaKdcw-vwzbpWVa_7KzNT-D8DTjNJtqyYllu7DKo_gstP9sExe4giMKwvp3f9GiEE8EXZ4hVapoDMI46a7-koF-FRznBzo2BI01QpOw4dKqv3yo8fKJnBOmb1eAfQwQ9f4REr5KLPIGl3N7n2-lIayW7wso");'>
+<div class="relative z-10 max-w-2xl animate-fade-in-up">
+<h1 class="text-white text-4xl md:text-5xl lg:text-6xl font-black leading-tight tracking-tight mb-4 drop-shadow-lg">
+            Handmade with love,<br/>stitch by stitch.
+          </h1>
+<p class="text-white/90 text-base md:text-lg lg:text-xl font-medium mb-8 max-w-lg shadow-black drop-shadow-md">
+            Discover cozy crochet toys, bespoke sweaters, and patterns made for warmth and comfort in every season.
+          </p>
+<button class="inline-flex h-12 md:h-14 items-center justify-center rounded-full bg-primary px-8 text-base font-bold text-white shadow-lg transition-transform hover:scale-105 hover:bg-primary/90 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary focus-visible:ring-offset-2">
+            Shop Collection
+          </button>
+</div>
+</div>
+</div>
+</div>
+<!-- Featured Section Header -->
+<div class="px-4 md:px-10 lg:px-20 pt-8" id="shop">
+<div class="mx-auto max-w-7xl flex flex-col md:flex-row md:items-end justify-between gap-4 pb-6 border-b border-[#f4f1f0] dark:border-[#3a2d28]">
+<div>
+<span class="text-primary font-bold text-sm tracking-wider uppercase mb-1 block">New Arrivals</span>
+<h2 class="text-3xl md:text-4xl font-bold text-[#181311] dark:text-white">Featured Cuddles</h2>
+</div>
+<a class="text-primary font-bold flex items-center gap-1 hover:gap-2 transition-all" href="#">
+        View all products <span class="material-symbols-outlined text-sm">arrow_forward</span>
+</a>
+</div>
+</div>
+<!-- Product Grid -->
+<div class="px-4 md:px-10 lg:px-20 py-8">
+<div class="mx-auto max-w-7xl grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+<!-- Card 1 -->
+<div class="group flex flex-col bg-white dark:bg-[#2a1d18] rounded-2xl overflow-hidden shadow-sm hover:shadow-xl transition-all duration-300 border border-transparent hover:border-primary/20">
+<div class="relative aspect-[4/3] overflow-hidden bg-[#f4f1f0]">
+<div class="absolute inset-0 bg-cover bg-center transition-transform duration-500 group-hover:scale-110" data-alt="Cute brown teddy bear knitted toy on table" style='background-image: url("https://lh3.googleusercontent.com/aida-public/AB6AXuCdNfqP4t4YyWIUH-S465aZnADV4wWkSk8u1U1lcseolT9W_n7MO6MzAosbunwFNIQrXdReyJa0qKZFPoaae_muTX0-GZqg1fonYp7nqC1KKArhmSfSPQ-NmrnUAQfLKTq8KF-XdaKbHGem47AEHGqiqXkESHDjULyzvWBgdTaa_cD20PcuCotjGT09BOcNU8Xx3zd4J0cyoW5Ximusb9oqyE2ELdoDWEPmGNhRZKDWPOK9uhAx7QyuYlKV9-UnPUjequtVcgYOgAw");'>
+</div>
+<button class="absolute top-3 right-3 p-2 bg-white/80 dark:bg-black/50 backdrop-blur rounded-full text-gray-500 hover:text-red-500 transition-colors">
+<span class="material-symbols-outlined text-[20px]">favorite</span>
+</button>
+</div>
+<div class="p-5 flex flex-col grow">
+<div class="flex justify-between items-start mb-2">
+<h3 class="text-lg font-bold text-[#181311] dark:text-white group-hover:text-primary transition-colors">Cuddly Bear Plushie</h3>
+<span class="font-bold text-lg text-primary">$45.00</span>
+</div>
+<p class="text-gray-500 dark:text-gray-400 text-sm line-clamp-2 mb-4">Hand-knitted with organic cotton yarn, perfect for baby showers and cozy nights.</p>
+<div class="mt-auto pt-4 border-t border-gray-100 dark:border-gray-800">
+<button class="w-full flex items-center justify-center gap-2 h-10 rounded-lg bg-[#181311] dark:bg-white text-white dark:text-[#181311] font-bold text-sm hover:opacity-90 transition-opacity">
+<span class="material-symbols-outlined text-[18px]">shopping_cart</span>
+              Add to Cart
+            </button>
+</div>
+</div>
+</div>
+<!-- Card 2 -->
+<div class="group flex flex-col bg-white dark:bg-[#2a1d18] rounded-2xl overflow-hidden shadow-sm hover:shadow-xl transition-all duration-300 border border-transparent hover:border-primary/20">
+<div class="relative aspect-[4/3] overflow-hidden bg-[#f4f1f0]">
+<div class="absolute inset-0 bg-cover bg-center transition-transform duration-500 group-hover:scale-110" data-alt="Folded white merino wool knitted sweater texture" style='background-image: url("https://lh3.googleusercontent.com/aida-public/AB6AXuCEdANCHPQpM-P9ZEyHR30aWIjbFpuaD7OSuntQBZ4VOd9-dcguYKqJWfKuiC_eZBCp2xMxHkoQLhUHvOxDC7X4uTlIdjQEpfI90bYfbgJa22mZkii1UrSIYny0ELKZrmpRVrBUsJtvquCYcQ_ap7mcPplCa4oS7Lgs_nBvTklg8nPXJKvTZj27NNhOssYe67Er8dHh_gNdROfP1WZ4u-SRpTO1rRvTY9L5fOaQScW-acZBIve1QlmXbSVH0MMZLTmHn_HXzc2pxwc");'>
+</div>
+<button class="absolute top-3 right-3 p-2 bg-white/80 dark:bg-black/50 backdrop-blur rounded-full text-gray-500 hover:text-red-500 transition-colors">
+<span class="material-symbols-outlined text-[20px]">favorite</span>
+</button>
+</div>
+<div class="p-5 flex flex-col grow">
+<div class="flex justify-between items-start mb-2">
+<h3 class="text-lg font-bold text-[#181311] dark:text-white group-hover:text-primary transition-colors">Merino Wool Sweater</h3>
+<span class="font-bold text-lg text-primary">$120.00</span>
+</div>
+<p class="text-gray-500 dark:text-gray-400 text-sm line-clamp-2 mb-4">Luxuriously soft merino wool sweater in a classic cable knit pattern.</p>
+<div class="mt-auto pt-4 border-t border-gray-100 dark:border-gray-800">
+<button class="w-full flex items-center justify-center gap-2 h-10 rounded-lg bg-[#181311] dark:bg-white text-white dark:text-[#181311] font-bold text-sm hover:opacity-90 transition-opacity">
+<span class="material-symbols-outlined text-[18px]">shopping_cart</span>
+              Add to Cart
+            </button>
+</div>
+</div>
+</div>
+<!-- Card 3 -->
+<div class="group flex flex-col bg-white dark:bg-[#2a1d18] rounded-2xl overflow-hidden shadow-sm hover:shadow-xl transition-all duration-300 border border-transparent hover:border-primary/20">
+<div class="relative aspect-[4/3] overflow-hidden bg-[#f4f1f0]">
+<span class="absolute top-3 left-3 bg-primary text-white text-xs font-bold px-2 py-1 rounded">Sale</span>
+<div class="absolute inset-0 bg-cover bg-center transition-transform duration-500 group-hover:scale-110" data-alt="Colorful crochet baby blanket folded neatly" style='background-image: url("https://lh3.googleusercontent.com/aida-public/AB6AXuBChT1w4Qw0LQOsixGMCUOxs8JDyJFXs2fFrDZlDX7v_fiKQxW5TY6FRCIpwjqvGGHcRA9xP44uiz3twMPHVDhDOxvOuCFnaa6AAiLiPmEQkHe-jPZC7iLbu5RYVEB1jVWTU0Y1aCvUqk8NkOZzVxZGi5uBegLUdP-ksaOKITdBcG_5rdfXR-ZsRZsdpbVDEFt8RtC_cpdnt7gzeMN8QvP2QRFUIT6pJmk3bQieTvdWQcQHqSEo16nOS-XJqqmsgmwaxNk3QVQ-vcw");'>
+</div>
+<button class="absolute top-3 right-3 p-2 bg-white/80 dark:bg-black/50 backdrop-blur rounded-full text-gray-500 hover:text-red-500 transition-colors">
+<span class="material-symbols-outlined text-[20px]">favorite</span>
+</button>
+</div>
+<div class="p-5 flex flex-col grow">
+<div class="flex justify-between items-start mb-2">
+<h3 class="text-lg font-bold text-[#181311] dark:text-white group-hover:text-primary transition-colors">Pastel Baby Blanket</h3>
+<div class="flex flex-col items-end">
+<span class="font-bold text-lg text-primary">$65.00</span>
+<span class="text-xs text-gray-400 line-through">$85.00</span>
+</div>
+</div>
+<p class="text-gray-500 dark:text-gray-400 text-sm line-clamp-2 mb-4">Soft pastel colors woven into a durable, washable baby blanket.</p>
+<div class="mt-auto pt-4 border-t border-gray-100 dark:border-gray-800">
+<button class="w-full flex items-center justify-center gap-2 h-10 rounded-lg bg-[#181311] dark:bg-white text-white dark:text-[#181311] font-bold text-sm hover:opacity-90 transition-opacity">
+<span class="material-symbols-outlined text-[18px]">shopping_cart</span>
+              Add to Cart
+            </button>
+</div>
+</div>
+</div>
+</div>
+</div>
+<!-- Portfolio Section -->
+<div class="bg-white dark:bg-[#1a120e] py-16 px-4 md:px-10 lg:px-20 mt-8" id="portfolio">
+<div class="mx-auto max-w-7xl">
+<div class="text-center mb-12">
+<h2 class="text-3xl md:text-4xl font-bold mb-4 text-[#181311] dark:text-white">Made With Passion</h2>
+<p class="text-gray-600 dark:text-gray-300 max-w-2xl mx-auto">Explore some of my custom commissions and favorite past projects. Each piece tells a story of patience and creativity.</p>
+</div>
+<div class="grid grid-cols-2 md:grid-cols-4 gap-4 auto-rows-[200px]">
+<div class="col-span-2 row-span-2 rounded-2xl overflow-hidden relative group cursor-pointer">
+<div class="w-full h-full bg-cover bg-center transition duration-500 group-hover:scale-105" data-alt="Hands knitting with chunky orange yarn" style='background-image: url("https://lh3.googleusercontent.com/aida-public/AB6AXuA80SgqEdxwO-NMjhhoeAT3m5voPZv1KqiOSUJhiPg427chIB0tNkk_gEJEHOAcs-8fZKEsz_xFv3tvq6I6ZUYlPBVqdEF7N1hkIHVyaBweTOyV63dXcfPxtIyd3dhEC3I-F-o5G15baTJhXmxd07EzNrWAxC69YHqN3KZ_-tmrkTtascL5_7uBFOj0ol9lKZROcnNI97Em0qMegdKWQEgIsIGjk9UDPwDKR8bMYD4msQsFxnKCOgfL8_tadMc-r5UhA5DeIMOyshM");'>
+</div>
+<div class="absolute inset-0 bg-black/40 opacity-0 group-hover:opacity-100 transition duration-300 flex items-center justify-center">
+<p class="text-white font-bold text-xl">The Process</p>
+</div>
+</div>
+<div class="rounded-2xl overflow-hidden relative group cursor-pointer">
+<div class="w-full h-full bg-cover bg-center transition duration-500 group-hover:scale-105" data-alt="Amigurumi crochet cactus toy" style='background-image: url("https://lh3.googleusercontent.com/aida-public/AB6AXuDBwJqS2-el1WmKp_ipfdYpfMSjbFNWWPlPEelvehdYXXUTCJNJrImXcSR0NQ3cBY-bGFKlq7RL2VtC1YQOTmRer7hIfzAFz_fIpSrjP-h_XvjGDiDX8wD1WKBSXCvSw7TKBdCqqj6hagKjb8FMblNEtXoiA_C3qXfYDC3H8NsCmW5Cd0F3aeXNB4fujwFcrmjo-VMemFBkYjdV1oR_9s-McTvLC6XPXwA6QmNzjOIj-1x1LZCNZCFKMnfjw9EC5t8jVrn_s2mjsNQ");'>
+</div>
+<div class="absolute inset-0 bg-black/40 opacity-0 group-hover:opacity-100 transition duration-300 flex items-center justify-center">
+<p class="text-white font-bold text-sm">Amigurumi</p>
+</div>
+</div>
+<div class="rounded-2xl overflow-hidden relative group cursor-pointer">
+<div class="w-full h-full bg-cover bg-center transition duration-500 group-hover:scale-105" data-alt="Basket full of colorful yarn balls" style='background-image: url("https://lh3.googleusercontent.com/aida-public/AB6AXuCjsE0GvYkK2GbKsN24GW5cieZq0nw7agIzzAfe3o-B-YZpuutBbkXuQS0q-JWdKXwVpkHeEQV0Lh06f7lqB5IpqO27OQU0zRFEQi6liDiyA66b25hduALLevoaHx_vPcGCtK0CfokEG7ARJeUWJODzrAPCbdjE-l-KJ6jiFZx2lgb0ac9fgQC2sEz7OQBdUjQSQDPEl-ySKZdQ90KM45rWpcck_hU233Qo3VbpE8YXebA0ctAqwo7zFlEm1t8FsPylfVz_76HXusg");'>
+</div>
+<div class="absolute inset-0 bg-black/40 opacity-0 group-hover:opacity-100 transition duration-300 flex items-center justify-center">
+<p class="text-white font-bold text-sm">Materials</p>
+</div>
+</div>
+<div class="col-span-2 rounded-2xl overflow-hidden relative group cursor-pointer">
+<div class="w-full h-full bg-cover bg-center transition duration-500 group-hover:scale-105" data-alt="Detailed texture of knitted beige pattern" style='background-image: url("https://lh3.googleusercontent.com/aida-public/AB6AXuAem46qbQlMSsYZafLcYt8EDm-mxyD1L6xMjWajI-fNIqSq0ipTXa8Y4uWJxrGV67AK3GfOHpwv9GLrafozJrcbrStOiEV1MHfF0QOv1xwgOW2oe7krAjBJoorJbC3iGxN01GmtAhd30sfGAc2fVa1ordkOYQ9l9FGl5YzuWEyfGbBjNMPpC2qMUtmEdYRs4NA4K0bFdtHvphysVattwT0e5KTbiNbkLEuTkVBRWvIMLXfuPDjjJSLbqllezfKlh-XDC1qAWfMCIM8");'>
+</div>
+<div class="absolute inset-0 bg-black/40 opacity-0 group-hover:opacity-100 transition duration-300 flex items-center justify-center">
+<p class="text-white font-bold text-lg">Detailed Textures</p>
+</div>
+</div>
+</div>
+</div>
+</div>
+<!-- Instagram Grid Mockup -->
+<div class="py-16 px-4 md:px-10 lg:px-20 bg-[#f8f6f6] dark:bg-[#221510]">
+<div class="mx-auto max-w-7xl">
+<div class="flex justify-between items-center mb-8">
+<h2 class="text-2xl font-bold flex items-center gap-2 text-[#181311] dark:text-white">
+<span class="p-1 bg-gradient-to-tr from-yellow-400 to-purple-600 text-white rounded-lg">
+<svg class="w-5 h-5" fill="currentColor" viewbox="0 0 24 24"><path d="M12 2.163c3.204 0 3.584.012 4.85.07 3.252.148 4.771 1.691 4.919 4.919.058 1.265.069 1.645.069 4.849 0 3.205-.012 3.584-.069 4.849-.149 3.225-1.664 4.771-4.919 4.919-1.266.058-1.644.07-4.85.07-3.204 0-3.584-.012-4.849-.07-3.26-.149-4.771-1.699-4.919-4.92-.058-1.265-.07-1.644-.07-4.849 0-3.204.013-3.583.07-4.849.149-3.227 1.664-4.771 4.919-4.919 1.266-.057 1.645-.069 4.849-.069zm0-2.163c-3.259 0-3.667.014-4.947.072-4.358.2-6.78 2.618-6.98 6.98-.059 1.281-.073 1.689-.073 4.948 0 3.259.014 3.668.072 4.948.2 4.358 2.618 6.78 6.98 6.98 1.281.058 1.689.072 4.948.072 3.259 0 3.668-.014 4.948-.072 4.354-.2 6.782-2.618 6.979-6.98.059-1.28.073-1.689.073-4.948 0-3.259-.014-3.667-.072-4.947-.196-4.354-2.617-6.78-6.979-6.98-1.281-.059-1.69-.073-4.949-.073zm0 5.838c-3.403 0-6.162 2.759-6.162 6.162s2.759 6.163 6.162 6.163 6.162-2.759 6.162-6.163c0-3.403-2.759-6.162-6.162-6.162zm0 10.162c-2.209 0-4-1.79-4-4 0-2.209 1.791-4 4-4s4 1.791 4 4c0 2.21-1.791 4-4 4zm6.406-11.845c-.796 0-1.441.645-1.441 1.44s.645 1.44 1.441 1.44c.795 0 1.439-.645 1.439-1.44s-.644-1.44-1.439-1.44z"></path></svg>
+</span>
+           @KnitsAndKnots
+         </h2>
+<a class="text-sm font-medium hover:text-primary" href="#">Follow Us</a>
+</div>
+<div class="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-6 gap-2">
+<div class="aspect-square bg-cover bg-center rounded-lg hover:opacity-80 transition cursor-pointer" data-alt="Knitted scarf in progress on wooden table" style='background-image: url("https://lh3.googleusercontent.com/aida-public/AB6AXuBOUXKBnMvT8v1VrM9_cLak8yfZ0aYji9eGv7-JHYpkS5EL956ykdiNxnRqOwpJGiAyZcvxqdB5I4q1xqVUm7TnzYHmyvdUZtO8QD8FJeLC-Yb_FvVe1lkjX441xelMiyvaemNSq15hEsNFEy0Dr4M835QOVccLfyQinvCIt5XHUpyRWnI_90RbP1cneajlZiE35-9wP8sSkuU_lghg83kbl0xyfWYsNKzD_mcwMc1t8ocE3Eq9bkFYpLkR1KG1RHeh0flLGuyhW7c");'></div>
+<div class="aspect-square bg-cover bg-center rounded-lg hover:opacity-80 transition cursor-pointer" data-alt="Close up of yarn texture" style='background-image: url("https://lh3.googleusercontent.com/aida-public/AB6AXuBqIjf279ROGb3UAhRpFGWMaBJSnW8xvjfXViyoapx79CMlzalaA4VgVvE_1gTFFGplpw1hBrH-dxU_3YVoahqQZTrvdKw4ojEkD8KKQIHQxfoTyFTXr7lftpYj-wOjUOe4MyWDgjQ6MDgTdkInbOIm2A08gFnfvub-1T3ble3BrwM0LMmenAh8spyAncO-9MWzfjYuHpnlMQY1OQ-yUl8ZWovnf-jh7vPuErekXFe3cTcOs3t4U8xCrZj98IAwC9zwvw2yr2kpm_4");'></div>
+<div class="aspect-square bg-cover bg-center rounded-lg hover:opacity-80 transition cursor-pointer" data-alt="Finished handmade wool socks" style='background-image: url("https://lh3.googleusercontent.com/aida-public/AB6AXuAJTuNP4fbRwR2TXiRICILYW0USz_gLac3MfYdDc_sdQiRXYB0ylmh-8GDywSJ70LwPPEUgSeSLKnOzFXuYCpegr-sxXn9BTkRcQbutl_0zh3XgaPG7K4dJnOg2lh-qxhgdQYrSz3LeouhbCnTyObd5LscSoIjApvTKHRpwQ6aXNgSCLD3cieKiqIXyFfsbhlbBpWvwpqqs9lu7KlCnitUldDGB60v93_pBAhTUF3kAPmoD6_Bp7DYraLLq4rTDfTyO3gkm05n6FsE");'></div>
+<div class="aspect-square bg-cover bg-center rounded-lg hover:opacity-80 transition cursor-pointer" data-alt="Knitting needles and wool basket" style='background-image: url("https://lh3.googleusercontent.com/aida-public/AB6AXuB4jZ7NThjrYKRLt-KunmdzHjzDT2Z3SI6Dymu8bQwTHmK1vSqPTu6r41wDfViYKjlLKT_0jM_lsiL2Bb8YU4u_PYrNbTemWMKR20oqmYvVB94bSFIa31CKYX7-Maf6CcmP-eIMNMAXE6mC7a_ImZGmMN04eM8tYkPZduKrhXEGsEOF253SSQZZSpq1M4yha5GPssLME7qYSPBTqRAgaGyLLvuffn_xdYvqfEnyf6TBOQ1dPmD-yygcxzDfGVxSuDDcnas4KhkLeUI");'></div>
+<div class="aspect-square bg-cover bg-center rounded-lg hover:opacity-80 transition cursor-pointer" data-alt="Woman holding a crochet plushie" style='background-image: url("https://lh3.googleusercontent.com/aida-public/AB6AXuBWPROHx8dGMqq3kLXDeSRqTww2UwXmU0l4aE4bES_f3mIz3B-O5i50KfZVHLksxhITKPB8VLNK6R0y5v-qL-XqQceSBs_dPTcBACBpviJ8uj5DLERlVGFh4C1x6XYEGiGQbBVD76O1XWSFqfRlwBefiRdvwsTQJbcMqDOJuPmkaEYYc5Up-ijjq5N_mbrcFunYSlqvoeF93Y7ovSpjVqsivtOJvaip-5soXYwwAQOi_67TYLDzxK-tInf91oBKzRsYzu59VXUf5lI");'></div>
+<div class="aspect-square bg-cover bg-center rounded-lg hover:opacity-80 transition cursor-pointer" data-alt="Various colored yarn balls" style='background-image: url("https://lh3.googleusercontent.com/aida-public/AB6AXuC9JaPNuhgxttbvFtsJfyhC0qvkqOxEh14wJcBJGyNlC3j48q0BQGxFsD3xqLdRyPjf99zGKWdrlNH3VajP-CsQ_pIZJKhlB-VXjQJAyVMzIdE-XNkg5Ui2maNVBvEEXY2LMvuQJJ2LI62EZWM-FBckSDRgVSZqYUChN3g5kv8PM0bwGFF9_Tb_cLS96djLk3akmOzfQUdzJaStGyOkxsjlVv_yX9tPiWbU25DfWNn779KZJPG1G5ysJFaVVJhv7U4e4y9jKP6ZlBc");'></div>
+</div>
+</div>
+</div>
+<!-- Contact & Newsletter -->
+<div class="py-16 px-4 md:px-10 lg:px-20" id="contact">
+<div class="mx-auto max-w-7xl">
+<div class="grid lg:grid-cols-2 gap-12 items-center">
+<!-- Contact Form -->
+<div class="bg-white dark:bg-[#1a120e] p-8 rounded-3xl shadow-lg border border-[#f4f1f0] dark:border-[#3a2d28]">
+<h2 class="text-3xl font-bold mb-2 text-[#181311] dark:text-white">Get in Touch</h2>
+<p class="text-gray-500 mb-6">Have a custom commission in mind or questions about an order?</p>
+<form class="flex flex-col gap-4">
+<div class="grid grid-cols-2 gap-4">
+<div class="flex flex-col gap-1">
+<label class="text-sm font-medium text-[#181311] dark:text-white">First Name</label>
+<input class="rounded-lg border-gray-200 bg-background-light dark:bg-background-dark/50 dark:border-gray-700 p-3 focus:ring-2 focus:ring-primary focus:border-transparent outline-none transition-all" placeholder="Jane" type="text"/>
+</div>
+<div class="flex flex-col gap-1">
+<label class="text-sm font-medium text-[#181311] dark:text-white">Last Name</label>
+<input class="rounded-lg border-gray-200 bg-background-light dark:bg-background-dark/50 dark:border-gray-700 p-3 focus:ring-2 focus:ring-primary focus:border-transparent outline-none transition-all" placeholder="Doe" type="text"/>
+</div>
+</div>
+<div class="flex flex-col gap-1">
+<label class="text-sm font-medium text-[#181311] dark:text-white">Email</label>
+<input class="rounded-lg border-gray-200 bg-background-light dark:bg-background-dark/50 dark:border-gray-700 p-3 focus:ring-2 focus:ring-primary focus:border-transparent outline-none transition-all" placeholder="jane@example.com" type="email"/>
+</div>
+<div class="flex flex-col gap-1">
+<label class="text-sm font-medium text-[#181311] dark:text-white">Message</label>
+<textarea class="rounded-lg border-gray-200 bg-background-light dark:bg-background-dark/50 dark:border-gray-700 p-3 focus:ring-2 focus:ring-primary focus:border-transparent outline-none transition-all" placeholder="Tell me about your idea..." rows="4"></textarea>
+</div>
+<button class="mt-2 flex w-full cursor-pointer items-center justify-center rounded-xl bg-primary py-3 text-white font-bold hover:bg-primary/90 transition-colors shadow-lg shadow-primary/20" type="button">
+              Send Message
+            </button>
+</form>
+</div>
+<!-- Info & Newsletter -->
+<div class="flex flex-col gap-8">
+<div>
+<h3 class="text-2xl font-bold mb-4 text-[#181311] dark:text-white">Visit Our Studio</h3>
+<div class="bg-white dark:bg-[#1a120e] p-1 rounded-2xl shadow-sm overflow-hidden mb-6">
+<div class="w-full aspect-video rounded-xl bg-cover bg-center" data-location="Studio location map placeholder" style='background-image: url("https://placeholder.pics/svg/300");'></div>
+</div>
+<div class="flex flex-col gap-2 text-gray-600 dark:text-gray-300">
+<div class="flex items-start gap-3">
+<span class="material-symbols-outlined text-primary">location_on</span>
+<p>123 Yarn Street, Craftsville, CA 90210</p>
+</div>
+<div class="flex items-start gap-3">
+<span class="material-symbols-outlined text-primary">mail</span>
+<p>hello@knitsandknots.com</p>
+</div>
+</div>
+</div>
+<div class="bg-primary/10 dark:bg-primary/5 p-6 rounded-2xl">
+<h3 class="text-xl font-bold mb-2 text-[#181311] dark:text-white">Join the Knitting Circle</h3>
+<p class="text-sm text-gray-600 dark:text-gray-400 mb-4">Subscribe for free patterns, shop updates, and exclusive discounts.</p>
+<div class="flex gap-2">
+<input class="flex-1 rounded-lg border-none bg-white dark:bg-[#2a1d18] p-3 shadow-sm focus:ring-2 focus:ring-primary outline-none text-sm" placeholder="Email address" type="email"/>
+<button class="bg-primary text-white rounded-lg px-4 py-2 font-bold text-sm hover:bg-primary/90 transition-colors">Subscribe</button>
+</div>
+</div>
+</div>
+</div>
+</div>
+</div>
+<!-- Footer -->
+<footer class="bg-white dark:bg-[#1a120e] border-t border-[#f4f1f0] dark:border-[#3a2d28] py-10 px-4 md:px-10 lg:px-20">
+<div class="mx-auto max-w-7xl flex flex-col md:flex-row justify-between items-center gap-6">
+<div class="flex items-center gap-2 text-[#181311] dark:text-white">
+<div class="size-6 text-primary">
+<svg class="w-full h-full" fill="none" viewbox="0 0 48 48" xmlns="http://www.w3.org/2000/svg">
+<path d="M4 42.4379C4 42.4379 14.0962 36.0744 24 41.1692C35.0664 46.8624 44 42.2078 44 42.2078L44 7.01134C44 7.01134 35.068 11.6577 24.0031 5.96913C14.0971 0.876274 4 7.27094 4 7.27094L4 42.4379Z" fill="currentColor"></path>
+</svg>
+</div>
+<span class="font-bold text-lg">Knits &amp; Knots</span>
+</div>
+<div class="flex gap-6 text-sm text-gray-500 dark:text-gray-400">
+<a class="hover:text-primary transition-colors" href="#">Terms of Service</a>
+<a class="hover:text-primary transition-colors" href="#">Privacy Policy</a>
+<a class="hover:text-primary transition-colors" href="#">Shipping &amp; Returns</a>
+</div>
+<p class="text-sm text-gray-400">© 2023 Knits &amp; Knots. All rights reserved.</p>
+</div>
+</footer>
+</div>
+</body></html>

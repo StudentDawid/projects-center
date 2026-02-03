@@ -1,0 +1,198 @@
+<!DOCTYPE html>
+<html lang="en"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>Alex Rivers — Portfolio</title>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;500;600;700&amp;family=Plus+Jakarta+Sans:wght@300;400;500;600&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<script id="tailwind-config">
+        tailwind.config = {
+            theme: {
+                extend: {
+                    colors: {
+                        "primary": "#1a1a1a",
+                        "accent": "#6366f1",
+                        "canvas": "#fbfbfb",
+                    },
+                    fontFamily: {
+                        "serif": ["Playfair Display", "serif"],
+                        "sans": ["Plus Jakarta Sans", "sans-serif"]
+                    },
+                },
+            },
+        }
+    </script>
+<style type="text/tailwindcss">
+        @layer base {
+            body {
+                @apply bg-canvas text-slate-900 font-sans antialiased;
+            }
+            .material-symbols-outlined {
+                font-variation-settings: 'FILL' 0, 'wght' 300, 'GRAD' 0, 'opsz' 24;
+            }
+        }
+        .project-card:hover .project-image {
+            transform: scale(1.05);
+        }
+        .project-image {
+            transition: transform 0.8s cubic-bezier(0.16, 1, 0.3, 1);
+        }
+        .no-scrollbar::-webkit-scrollbar {
+            display: none;
+        }
+        .no-scrollbar {
+            -ms-overflow-style: none;
+            scrollbar-width: none;
+        }
+    </style>
+</head>
+<body class="selection:bg-accent/20">
+<header class="fixed top-0 w-full z-50 bg-canvas/80 backdrop-blur-xl border-b border-slate-100">
+<div class="max-w-7xl mx-auto px-6 h-20 flex items-center justify-between">
+<div class="flex items-center gap-2 group cursor-pointer">
+<div class="w-8 h-8 bg-primary rounded-full flex items-center justify-center text-white font-serif text-lg italic">R</div>
+<span class="text-lg font-serif font-bold tracking-tight">Alex Rivers</span>
+</div>
+<nav class="hidden md:flex items-center gap-10">
+<a class="text-sm font-medium hover:text-accent transition-colors" href="#">Work</a>
+<a class="text-sm font-medium hover:text-accent transition-colors" href="#">About</a>
+<a class="text-sm font-medium hover:text-accent transition-colors" href="#">Journal</a>
+<a class="text-sm font-medium hover:text-accent transition-colors" href="#">Contact</a>
+</nav>
+<div class="flex items-center gap-6">
+<a class="hidden sm:block text-sm font-semibold border-b-2 border-primary pb-0.5 hover:border-accent transition-colors" href="mailto:hello@alexrivers.com">Let's talk</a>
+<button class="md:hidden">
+<span class="material-symbols-outlined text-2xl">menu</span>
+</button>
+</div>
+</div>
+</header>
+<main class="pt-32 pb-24">
+<section class="max-w-7xl mx-auto px-6 mb-24">
+<div class="max-w-3xl">
+<h1 class="text-5xl md:text-6xl font-serif font-medium leading-tight mb-8">
+                    Crafting digital experiences for the next generation.
+                </h1>
+<p class="text-lg text-slate-500 font-light leading-relaxed">
+                    Product Designer &amp; Strategist based in San Francisco. Focused on building elegant solutions to complex problems through research and minimalist design.
+                </p>
+</div>
+</section>
+<section class="max-w-7xl mx-auto px-6 mb-16">
+<div class="flex overflow-x-auto pb-4 gap-8 no-scrollbar border-b border-slate-100">
+<button class="whitespace-nowrap text-xs font-bold uppercase tracking-widest text-primary border-b-2 border-primary pb-4 -mb-[1px]">All Projects</button>
+<button class="whitespace-nowrap text-xs font-bold uppercase tracking-widest text-slate-400 hover:text-primary transition-colors pb-4 -mb-[1px]">Product Design</button>
+<button class="whitespace-nowrap text-xs font-bold uppercase tracking-widest text-slate-400 hover:text-primary transition-colors pb-4 -mb-[1px]">Brand Identity</button>
+<button class="whitespace-nowrap text-xs font-bold uppercase tracking-widest text-slate-400 hover:text-primary transition-colors pb-4 -mb-[1px]">Interactive</button>
+</div>
+</section>
+<section class="max-w-7xl mx-auto px-6 grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-x-10 gap-y-16">
+<div class="project-card group cursor-pointer">
+<div class="aspect-[4/3] overflow-hidden rounded-xl bg-slate-100 mb-6 shadow-sm group-hover:shadow-md transition-shadow duration-500">
+<div class="project-image w-full h-full bg-center bg-cover" style='background-image: url("https://lh3.googleusercontent.com/aida-public/AB6AXuD2D0HRZxcmBCo1k9qgm8a4luilGOV1CERfsziszB_ns-r53HtDeDIUo7Uq87PhYysyJ3vN3IY0Z8hp9ila73p7wHUcIqUPsG78_rMahxkc4huy8DCHKnwgHSK-ZsGsTks-khpcNEZP4tyggQ9wcXp42ksQiYvVeuSxixjzj769umlwuJi_mEtANLB51ru717V-N9KtmcyDPPgjZFov4rYGt1qbBjngapiLDacY7brqDmItHoUpccMQPYAaMqOgdOot1opZCqB4mAM");'></div>
+</div>
+<div class="space-y-2">
+<h3 class="text-xl font-serif font-bold text-slate-900 group-hover:text-accent transition-colors">Portfolio Redesign</h3>
+<p class="text-sm text-slate-500 font-light truncate">An exploration in motion design and minimalist typography.</p>
+<div class="pt-2">
+<a class="text-[10px] font-bold uppercase tracking-[0.2em] text-slate-400 group-hover:text-primary transition-colors flex items-center gap-1" href="#">
+                            View <span class="material-symbols-outlined text-xs">north_east</span>
+</a>
+</div>
+</div>
+</div>
+<div class="project-card group cursor-pointer">
+<div class="aspect-[4/3] overflow-hidden rounded-xl bg-slate-100 mb-6 shadow-sm group-hover:shadow-md transition-shadow duration-500">
+<div class="project-image w-full h-full bg-center bg-cover" style='background-image: url("https://lh3.googleusercontent.com/aida-public/AB6AXuBe4qou0DAPT0EbNx8ngqhZ1nVR_N3AGvnDogldPTFdh0RINxM82AHIUAHlUuwjxtRfYpg4sP4BDiSGOyO6Ug0jlU3D4hEiV_kIuRlSIlT_9rfQiqGFlhfucENcx36ixnFc3lIBHkgF0-MwlUiqS7wbFEiSfB4NYIGk0-Ou-LG1i3HfNeF7ldTLB7xhRFy-r7x8qydlBXz9pGm-hYZk4Z3cIAFtxnKMn5yEh_z9vZ9AUhbI_n1cpt_gFXi-F78qDFZNG7ve8Ct2hf0");'></div>
+</div>
+<div class="space-y-2">
+<h3 class="text-xl font-serif font-bold text-slate-900 group-hover:text-accent transition-colors">Banking Ecosystem</h3>
+<p class="text-sm text-slate-500 font-light truncate">Bridging traditional banking and modern digital assets.</p>
+<div class="pt-2">
+<a class="text-[10px] font-bold uppercase tracking-[0.2em] text-slate-400 group-hover:text-primary transition-colors flex items-center gap-1" href="#">
+                            View <span class="material-symbols-outlined text-xs">north_east</span>
+</a>
+</div>
+</div>
+</div>
+<div class="project-card group cursor-pointer">
+<div class="aspect-[4/3] overflow-hidden rounded-xl bg-slate-100 mb-6 shadow-sm group-hover:shadow-md transition-shadow duration-500">
+<div class="project-image w-full h-full bg-center bg-cover" style='background-image: url("https://lh3.googleusercontent.com/aida-public/AB6AXuDcjOLhUXkgLVtZCI-o3cGDYFpTLPBD2G35WIgYTkSvT2Z1u87CDJiAWvlplLeTCdcMDmCzfoxUgSK88oPh9cnfImjim04P9CcIDH1FnoXGOAse4ZdRNhnadeM-VbigRMhPgo4xAu1ia0fsuBPrNgtLoLHQSofySb0iwHYQiCM87kUmiXc_XmXz6nfcEITxxeDLQGOpdBOAl-z8V43R15uIuLX6Wn3hZX5a2ZrgPoFwZu1J_SsfoRrvtlBWLkT2hfO6J9GHN4FwEIA");'></div>
+</div>
+<div class="space-y-2">
+<h3 class="text-xl font-serif font-bold text-slate-900 group-hover:text-accent transition-colors">Lumina Visual System</h3>
+<p class="text-sm text-slate-500 font-light truncate">Creating a cohesive visual language for a tech startup.</p>
+<div class="pt-2">
+<a class="text-[10px] font-bold uppercase tracking-[0.2em] text-slate-400 group-hover:text-primary transition-colors flex items-center gap-1" href="#">
+                            View <span class="material-symbols-outlined text-xs">north_east</span>
+</a>
+</div>
+</div>
+</div>
+<div class="project-card group cursor-pointer">
+<div class="aspect-[4/3] overflow-hidden rounded-xl bg-slate-100 mb-6 shadow-sm group-hover:shadow-md transition-shadow duration-500">
+<div class="project-image w-full h-full bg-center bg-cover" style='background-image: url("https://lh3.googleusercontent.com/aida-public/AB6AXuAuhlG06zn_0Wv6hNip2NLkiqKzEPa-uuawBxLLOhLRjhfXySL4qgPTjZyQVUVs_nuvwO4J4C5emn9tuW8AJB5jTTwrQGzjaAZONsuI8t1eurOBuTTkKZdiZmidDG4Smqtaa7EVRKOoX9WkOZGzs7AJnqmsLH7INYu7Sz7s2h9BdafCj0fK_xhZEF29Bu109lPRJmyIKYvaguNuCdVERNlqqve0DB_ODYb93kYBN3Ka3RHP_5fGfNappb5XaPSJuKtcYyIzGheSKQ0");'></div>
+</div>
+<div class="space-y-2">
+<h3 class="text-xl font-serif font-bold text-slate-900 group-hover:text-accent transition-colors">Human Intelligence</h3>
+<p class="text-sm text-slate-500 font-light truncate">Intuitive interfaces for large language models.</p>
+<div class="pt-2">
+<a class="text-[10px] font-bold uppercase tracking-[0.2em] text-slate-400 group-hover:text-primary transition-colors flex items-center gap-1" href="#">
+                            View <span class="material-symbols-outlined text-xs">north_east</span>
+</a>
+</div>
+</div>
+</div>
+<div class="project-card group cursor-pointer">
+<div class="aspect-[4/3] overflow-hidden rounded-xl bg-slate-100 mb-6 shadow-sm group-hover:shadow-md transition-shadow duration-500">
+<div class="project-image w-full h-full bg-center bg-cover" style='background-image: url("https://lh3.googleusercontent.com/aida-public/AB6AXuD2D0HRZxcmBCo1k9qgm8a4luilGOV1CERfsziszB_ns-r53HtDeDIUo7Uq87PhYysyJ3vN3IY0Z8hp9ila73p7wHUcIqUPsG78_rMahxkc4huy8DCHKnwgHSK-ZsGsTks-khpcNEZP4tyggQ9wcXp42ksQiYvVeuSxixjzj769umlwuJi_mEtANLB51ru717V-N9KtmcyDPPgjZFov4rYGt1qbBjngapiLDacY7brqDmItHoUpccMQPYAaMqOgdOot1opZCqB4mAM"); opacity: 0.8;'></div>
+</div>
+<div class="space-y-2">
+<h3 class="text-xl font-serif font-bold text-slate-900 group-hover:text-accent transition-colors">Journal Concept</h3>
+<p class="text-sm text-slate-500 font-light truncate">A minimalist writing platform for creative minds.</p>
+<div class="pt-2">
+<a class="text-[10px] font-bold uppercase tracking-[0.2em] text-slate-400 group-hover:text-primary transition-colors flex items-center gap-1" href="#">
+                            View <span class="material-symbols-outlined text-xs">north_east</span>
+</a>
+</div>
+</div>
+</div>
+<div class="project-card group cursor-pointer">
+<div class="aspect-[4/3] overflow-hidden rounded-xl bg-slate-100 mb-6 shadow-sm group-hover:shadow-md transition-shadow duration-500">
+<div class="project-image w-full h-full bg-center bg-cover" style='background-image: url("https://lh3.googleusercontent.com/aida-public/AB6AXuBe4qou0DAPT0EbNx8ngqhZ1nVR_N3AGvnDogldPTFdh0RINxM82AHIUAHlUuwjxtRfYpg4sP4BDiSGOyO6Ug0jlU3D4hEiV_kIuRlSIlT_9rfQiqGFlhfucENcx36ixnFc3lIBHkgF0-MwlUiqS7wbFEiSfB4NYIGk0-Ou-LG1i3HfNeF7ldTLB7xhRFy-r7x8qydlBXz9pGm-hYZk4Z3cIAFtxnKMn5yEh_z9vZ9AUhbI_n1cpt_gFXi-F78qDFZNG7ve8Ct2hf0"); opacity: 0.8;'></div>
+</div>
+<div class="space-y-2">
+<h3 class="text-xl font-serif font-bold text-slate-900 group-hover:text-accent transition-colors">Sphere Identity</h3>
+<p class="text-sm text-slate-500 font-light truncate">Branding for a global architectural collective.</p>
+<div class="pt-2">
+<a class="text-[10px] font-bold uppercase tracking-[0.2em] text-slate-400 group-hover:text-primary transition-colors flex items-center gap-1" href="#">
+                            View <span class="material-symbols-outlined text-xs">north_east</span>
+</a>
+</div>
+</div>
+</div>
+</section>
+<section class="max-w-7xl mx-auto px-6 mt-40">
+<div class="border-t border-slate-100 pt-24 text-center">
+<h2 class="text-4xl md:text-5xl font-serif font-medium mb-10 tracking-tight">Have a project in mind?</h2>
+<a class="inline-flex items-center gap-4 bg-primary text-white px-12 py-5 rounded-full text-base font-medium hover:bg-accent transition-all hover:scale-105" href="mailto:hello@alexrivers.com">
+                    Start a conversation
+                    <span class="material-symbols-outlined">mail</span>
+</a>
+</div>
+</section>
+</main>
+<footer class="bg-white py-16 border-t border-slate-100">
+<div class="max-w-7xl mx-auto px-6 flex flex-col md:flex-row justify-between items-center gap-10">
+<p class="text-slate-400 text-sm font-light">© 2024 Alex Rivers — All Rights Reserved</p>
+<div class="flex items-center gap-10">
+<a class="text-xs font-bold uppercase tracking-widest text-slate-500 hover:text-accent transition-colors" href="#">LinkedIn</a>
+<a class="text-xs font-bold uppercase tracking-widest text-slate-500 hover:text-accent transition-colors" href="#">Dribbble</a>
+<a class="text-xs font-bold uppercase tracking-widest text-slate-500 hover:text-accent transition-colors" href="#">Instagram</a>
+<a class="text-xs font-bold uppercase tracking-widest text-slate-500 hover:text-accent transition-colors" href="#">Twitter</a>
+</div>
+</div>
+</footer>
+
+</body></html>

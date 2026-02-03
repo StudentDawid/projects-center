@@ -1,0 +1,11 @@
+{
+  "name": "rpg-tools-features-rpg-map-generator",
+  "$schema": "../../../../node_modules/nx/schemas/project-schema.json",
+  "projectType": "library",
+  "sourceRoot": "libs/rpg-tools/features/rpg-map-generator",
+  "targets": {},
+  "tags": [
+    "type:features",
+    "domain:rpg"
+  ]
+}

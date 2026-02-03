@@ -1,0 +1,11 @@
+{
+  "name": "shared-features-card-preview",
+  "$schema": "../../../../node_modules/nx/schemas/project-schema.json",
+  "projectType": "library",
+  "sourceRoot": "libs/shared/features/card-preview",
+  "targets": {},
+  "tags": [
+    "type:features",
+    "domain:card"
+  ]
+}

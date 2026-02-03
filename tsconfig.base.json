@@ -1,0 +1,89 @@
+{
+  "compileOnSave": false,
+  "compilerOptions": {
+    "rootDir": ".",
+    "sourceMap": true,
+    "declaration": false,
+    "moduleResolution": "bundler",
+    "emitDecoratorMetadata": true,
+    "experimentalDecorators": true,
+    "importHelpers": true,
+    "target": "ES2022",
+    "module": "ESNext",
+    "lib": [
+      "ES2023",
+      "DOM",
+      "DOM.Iterable"
+    ],
+    "skipLibCheck": true,
+    "skipDefaultLibCheck": true,
+    "strict": true,
+    "esModuleInterop": true,
+    "resolveJsonModule": true,
+    "allowJs": true,
+    "baseUrl": ".",
+    "paths": {
+      "@ateria-idle/features/ateria-idle/*": [
+        "libs/ateria-idle/features/ateria-idle/*"
+      ],
+      "@ateria-idle/entities/ateria-idle": [
+        "libs/ateria-idle/entities/ateria-idle/index.ts"
+      ],
+      "@ateria-idle/entities/ateria-idle/*": [
+        "libs/ateria-idle/entities/ateria-idle/*"
+      ],
+      "@mtg-generator/features/mtg-card-generator/*": [
+        "libs/mtg-generator/features/mtg-card-generator/*"
+      ],
+      "@rpg-tools/features/rpg-map-generator/*": [
+        "libs/rpg-tools/features/rpg-map-generator/*"
+      ],
+      "@rpg-tools/features/rpg-world-generator/*": [
+        "libs/rpg-tools/features/rpg-world-generator/*"
+      ],
+      "@rpg-tools/shared/map-generator/*": [
+        "libs/rpg-tools/shared/map-generator/*"
+      ],
+      "@rpg-tools/shared/world-generator/*": [
+        "libs/rpg-tools/shared/world-generator/*"
+      ],
+      "@shared/features/card-preview/*": [
+        "libs/shared/features/card-preview/*"
+      ],
+      "@shared/features/card-print/*": [
+        "libs/shared/features/card-print/*"
+      ],
+      "@shared/features/card-edit/*": [
+        "libs/shared/features/card-edit/*"
+      ],
+      "@shared/features/card-list/*": [
+        "libs/shared/features/card-list/*"
+      ],
+      "@shared/features/card-delete/*": [
+        "libs/shared/features/card-delete/*"
+      ],
+      "@shared/entities/card": [
+        "libs/shared/entities/card/index.ts"
+      ],
+      "@shared/entities/card/*": [
+        "libs/shared/entities/card/*"
+      ],
+      "@shared/widgets/card-grid/*": [
+        "libs/shared/widgets/card-grid/*"
+      ],
+      "@shared/lib/*": [
+        "libs/shared/lib/*"
+      ],
+      "@shared/stores/*": [
+        "libs/shared/stores/*"
+      ],
+      "@shared/types/*": [
+        "libs/shared/types/*"
+      ]
+    }
+  },
+  "exclude": [
+    "node_modules",
+    "tmp"
+  ]
+}

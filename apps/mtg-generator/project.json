@@ -1,0 +1,38 @@
+{
+  "name": "mtg-generator",
+  "$schema": "../../node_modules/nx/schemas/project-schema.json",
+  "projectType": "application",
+  "sourceRoot": "apps/mtg-generator",
+  "targets": {
+    "build": {
+      "executor": "nx:run-commands",
+      "outputs": ["{workspaceRoot}/dist/apps/mtg-generator"],
+      "options": {
+        "command": "nuxt generate && mkdir -p ../../dist/apps/mtg-generator && cp -R .output/public/. ../../dist/apps/mtg-generator/",
+        "cwd": "apps/mtg-generator"
+      }
+    },
+    "dev": {
+      "executor": "nx:run-commands",
+      "options": {
+        "command": "nuxt dev --port 3002 --host 127.0.0.1",
+        "cwd": "apps/mtg-generator"
+      }
+    },
+    "preview": {
+      "executor": "nx:run-commands",
+      "options": {
+        "command": "nuxt preview",
+        "cwd": "apps/mtg-generator"
+      }
+    },
+    "prepare": {
+      "executor": "nx:run-commands",
+      "options": {
+        "command": "nuxi prepare",
+        "cwd": "apps/mtg-generator"
+      }
+    }
+  },
+  "tags": ["type:app", "framework:nuxt"]
+}

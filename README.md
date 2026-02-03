@@ -1,64 +1,94 @@
-# projects-center
-Centrum for all guthub pages projects
+# Projects Center
 
+Centrum zarządzania projektami GitHub Pages, oparte na monorepo **Nx**.
 
-## Solmar Sanctuary
+Projekt wykorzystuje nowoczesny stos technologiczny oraz architekturę **Feature-Sliced Design (FSD)** dla zapewnienia skalowalności i przejrzystości kodu.
 
-A clean Nuxt 3 project with Vue 3, Vuetify, Pinia, TypeScript, Axios, and Sass.
+## 🚀 Tech Stack
 
-### Tech Stack
-
-- **Framework**: Nuxt 4 / Vue 3
-- **UI Library**: Vuetify 3
-- **State Management**: Pinia
-- **HTTP Client**: Axios
+- **Monorepo Manager**: [Nx](https://nx.dev)
+- **Framework**: [Nuxt 4](https://nuxt.com) / [Vue 3](https://vuejs.org)
+- **UI Library**: [Vuetify 3](https://vuetifyjs.com)
+- **State Management**: [Pinia](https://pinia.vuejs.org)
+- **HTTP Client**: [Axios](https://axios-http.com)
+- **Architecture**: [Feature-Sliced Design (FSD)](https://feature-sliced.design)
 - **Styling**: Sass/SCSS
-- **Code Quality**: ESLint, Prettier
-- **Language**: TypeScript, TSX support
+- **Code Quality**: [ESLint](https://eslint.org), [Prettier](https://prettier.io)
+- **Language**: TypeScript (wsparcie dla TSX)
 
-# Setup
+## 📁 Struktura Projektu
 
-Install dependencies:
+Projekt zorganizowany jest jako monorepo Nx:
+
+- `apps/` - Aplikacje (główna aplikacja `projects-center`).
+- `libs/` - Biblioteki i reużywalne moduły.
+- `app/` - Kod źródłowy aplikacji zgodnie z FSD:
+  - `features/` - Logika biznesowa i komponenty specyficzne dla funkcjonalności.
+  - `entities/` - Encje biznesowe (typy, modele, store'y).
+  - `shared/` - Generyczne komponenty, utility, UI kit.
+  - `pages/` - Tylko routing i kompozycja układów.
+
+## 🛠️ Setup
+
+Zainstaluj zależności:
 
 ```bash
 yarn install
 ```
 
-## Development
+## 💻 Development
 
-Start the development server on `http://localhost:3000`:
+Uruchom serwer deweloperski aplikacji głównej:
 
 ```bash
 yarn dev
+# lub bezpośrednio przez nx
+nx serve projects-center
 ```
 
-## Production
+Serwer będzie dostępny pod adresem `http://localhost:3000`.
 
-Build the application for production:
+## 🏗️ Production
+
+Zbuduj aplikację dla produkcji:
 
 ```bash
 yarn build
 ```
 
-Preview production build locally:
+Podgląd buildu lokalnie:
 
 ```bash
 yarn preview
 ```
 
-## Code Quality
+## 📊 Narzędzia Nx
+
+Nx oferuje zaawansowane narzędzia do zarządzania monorepo:
 
 ```bash
-# Lint code
-yarn lint
+# Wyświetl graf zależności projektów
+yarn graph
 
-# Fix lint issues
-yarn lint:fix
+# Uruchom build dla wszystkich projektów
+yarn build:all
 
-# Format code
-yarn format
-
-# Check formatting
-yarn format:check
+# Sprawdź zmiany (affected)
+yarn affected
 ```
 
+## 🧹 Code Quality
+
+```bash
+# Lintowanie (wszystkie projekty)
+yarn lint
+
+# Automatyczna naprawa błędów linta
+yarn lint:fix
+
+# Formatowanie kodu (Prettier)
+yarn format
+
+# Sprawdzenie formatowania
+yarn format:check
+```

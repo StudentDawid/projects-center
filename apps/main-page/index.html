@@ -1,0 +1,102 @@
+<!doctype html>
+<html lang="pl">
+  <head>
+    <meta charset="UTF-8" />
+    <link rel="icon" type="image/x-icon" href="/projects-center/favicon.ico" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Dawid Kozak — Projects Center</title>
+    <link
+      href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;500;600;700&family=Plus+Jakarta+Sans:wght@300;400;500;600&display=swap"
+      rel="stylesheet"
+    />
+    <link
+      rel="stylesheet"
+      href="https://cdn.jsdelivr.net/npm/@mdi/font@7.4.47/css/materialdesignicons.min.css"
+    />
+    <link rel="stylesheet" href="./src/style.css" />
+  </head>
+  <body class="bg-canvas text-slate-900 antialiased">
+    <header class="header">
+      <div class="header-content">
+        <div class="brand">
+          <div class="brand-logo">D</div>
+          <span class="brand-name">Dawid Kozak</span>
+        </div>
+        <!-- <nav class="nav">
+          <a href="#" class="nav-link">Projekty</a>
+          <a
+            href="https://github.com/StudentDawid"
+            target="_blank"
+            class="nav-link"
+            >Github</a
+          >
+        </nav> -->
+        <div class="header-actions">
+          <a href="mailto:dkozak92@gmail.com" class="talk-link">Kontakt</a>
+        </div>
+      </div>
+    </header>
+
+    <main class="main">
+      <section class="hero">
+        <div class="hero-content">
+          <h1 class="hero-title">
+            Tworzenie cyfrowych narzędzi dla nowej generacji graczy i twórców.
+          </h1>
+          <p class="hero-description">
+            Full-stack Developer pasjonujący się Grami RPG i narzędziami
+            proceduralnymi. Buduję minimalistyczne i wydajne rozwiązania dla
+            złożonych problemów.
+          </p>
+        </div>
+      </section>
+
+      <section class="filter-section">
+        <div class="filters">
+          <button class="filter-btn active" data-filter="all">
+            Wszystkie projekty
+          </button>
+          <button class="filter-btn" data-filter="game">Gry IDLE</button>
+          <button class="filter-btn" data-filter="rpg">Narzędzia RPG</button>
+          <button class="filter-btn" data-filter="finished">Ukończone</button>
+        </div>
+      </section>
+
+      <section class="projects-section">
+        <div id="projects-grid" class="projects-grid">
+          <!-- Dynamiczne karty projektów -->
+        </div>
+      </section>
+
+      <section class="contact-cta">
+        <div class="cta-content">
+          <h2 class="cta-title">Masz pomysł na projekt?</h2>
+          <a href="mailto:dkozak92@gmail.com" class="cta-button">
+            Zacznijmy rozmowę
+            <i class="mdi mdi-email-outline"></i>
+          </a>
+        </div>
+      </section>
+    </main>
+
+    <footer class="footer">
+      <div class="footer-content">
+        <p class="copyright">
+          © <span id="current-year"></span> Dawid Kozak — Wszelkie prawa
+          zastrzeżone
+        </p>
+        <div class="social-links">
+          <a href="https://www.linkedin.com/in/dkozak92/" class="social-link"
+            >LinkedIn</a
+          >
+          <a href="https://github.com/StudentDawid" class="social-link"
+            >Github</a
+          >
+          <!-- <a href="#" class="social-link">Twitter</a> -->
+        </div>
+      </div>
+    </footer>
+
+    <script type="module" src="./src/main.js"></script>
+  </body>
+</html>
