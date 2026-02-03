@@ -41,3 +41,9 @@ logs
 .env
 .env.*
 !.env.example
+
+# Nx
+.nx
+.vscode/settings.json
+package-lock.json
+tmp
