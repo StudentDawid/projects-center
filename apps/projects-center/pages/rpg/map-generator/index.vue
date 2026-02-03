@@ -20,9 +20,9 @@
 
 <script setup lang="ts">
 import { ref } from 'vue';
-import MapCanvas from '@libs/features/rpg-map-generator/ui/MapCanvas.vue';
-import MapViewControls from '@libs/features/rpg-map-generator/ui/MapViewControls.vue';
-import type { DisplayMode } from '@libs/features/rpg-map-generator/ui/MapViewControls.vue';
+import MapCanvas from '@projects-center/features/rpg-map-generator/ui/MapCanvas.vue';
+import MapViewControls from '@projects-center/features/rpg-map-generator/ui/MapViewControls.vue';
+import type { DisplayMode } from '@projects-center/features/rpg-map-generator/ui/MapViewControls.vue';
 
 // Stan trybu wyświetlania
 const displayMode = ref<DisplayMode>('biomes');

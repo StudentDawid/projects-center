@@ -1,0 +1,11 @@
+{
+  "name": "projects-center-features-ateria-idle",
+  "$schema": "../../../../node_modules/nx/schemas/project-schema.json",
+  "projectType": "library",
+  "sourceRoot": "libs/projects-center/features/ateria-idle",
+  "targets": {},
+  "tags": [
+    "type:features",
+    "domain:ateria-idle"
+  ]
+}

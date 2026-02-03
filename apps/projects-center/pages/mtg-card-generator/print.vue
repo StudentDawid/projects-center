@@ -74,10 +74,10 @@
 
 <script setup lang="ts">
 import { computed } from 'vue';
-import { useMtgCardStore } from '@libs/features/mtg-card-generator/stores/mtg-card-store';
-import MtgCard from '@libs/features/mtg-card-generator/ui/MtgCard.vue';
-import MtgCardBack from '@libs/features/mtg-card-generator/ui/MtgCardBack.vue';
-import type { RpgCard as MtgCardType } from '@libs/features/mtg-card-generator/types';
+import { useMtgCardStore } from '@projects-center/features/mtg-card-generator/stores/mtg-card-store';
+import MtgCard from '@projects-center/features/mtg-card-generator/ui/MtgCard.vue';
+import MtgCardBack from '@projects-center/features/mtg-card-generator/ui/MtgCardBack.vue';
+import type { RpgCard as MtgCardType } from '@projects-center/features/mtg-card-generator/types';
 
 const store = useMtgCardStore();
 const cards = computed(() => store.cards);

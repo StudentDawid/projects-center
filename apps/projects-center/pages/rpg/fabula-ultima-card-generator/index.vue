@@ -113,10 +113,10 @@
 
 <script setup lang="ts">
 import { computed, ref } from 'vue';
-import type { Card } from '@libs/entities/card';
-import { useCardStore } from '@libs/entities/card/lib/useCardStore';
-import { CardGrid } from '@libs/widgets/card-grid/ui';
-import DeleteCardModal from '@libs/features/card-delete/ui/DeleteCardModal.vue';
+import type { Card } from '@projects-center/entities/card';
+import { useCardStore } from '@projects-center/entities/card/lib/useCardStore';
+import { CardGrid } from '@projects-center/widgets/card-grid/ui';
+import DeleteCardModal from '@projects-center/features/card-delete/ui/DeleteCardModal.vue';
 
 useHead({
   title: 'Fabula Ultima Card Creator Workspace - Projects Center',

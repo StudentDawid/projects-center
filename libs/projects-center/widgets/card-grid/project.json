@@ -1,0 +1,11 @@
+{
+  "name": "projects-center-widgets-card-grid",
+  "$schema": "../../../../node_modules/nx/schemas/project-schema.json",
+  "projectType": "library",
+  "sourceRoot": "libs/projects-center/widgets/card-grid",
+  "targets": {},
+  "tags": [
+    "type:widgets",
+    "domain:card"
+  ]
+}

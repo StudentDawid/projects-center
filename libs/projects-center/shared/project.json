@@ -1,0 +1,10 @@
+{
+  "name": "projects-center-shared",
+  "$schema": "../../../node_modules/nx/schemas/project-schema.json",
+  "projectType": "library",
+  "sourceRoot": "libs/projects-center/shared",
+  "targets": {},
+  "tags": [
+    "type:shared"
+  ]
+}

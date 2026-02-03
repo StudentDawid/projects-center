@@ -1,5 +1,28 @@
+import { fileURLToPath } from 'node:url';
+import { dirname, join } from 'node:path';
+
+const __dirname = dirname(fileURLToPath(import.meta.url));
+
 // https://nuxt.com/docs/api/configuration/nuxt-config
 export default defineNuxtConfig({
+  alias: {
+    '@projects-center/entities': join(
+      __dirname,
+      '../../libs/projects-center/entities'
+    ),
+    '@projects-center/features': join(
+      __dirname,
+      '../../libs/projects-center/features'
+    ),
+    '@projects-center/shared': join(
+      __dirname,
+      '../../libs/projects-center/shared'
+    ),
+    '@projects-center/widgets': join(
+      __dirname,
+      '../../libs/projects-center/widgets'
+    ),
+  },
   compatibilityDate: '2026-02-03',
   devtools: { enabled: true },
   modules: ['@pinia/nuxt', '@nuxt/eslint'],
@@ -45,7 +68,10 @@ export default defineNuxtConfig({
   },
   imports: {
     autoImport: true,
-    dirs: ['../../libs/shared/lib', '../../libs/shared/types'],
+    dirs: [
+      '../../libs/projects-center/shared/lib',
+      '../../libs/projects-center/shared/types',
+    ],
   },
   css: [
     'vuetify/lib/styles/main.sass',

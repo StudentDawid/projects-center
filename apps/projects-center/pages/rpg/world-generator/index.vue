@@ -38,8 +38,8 @@
 
 <script setup lang="ts">
 import { ref } from 'vue';
-import { useWorldGenerator } from '@libs/features/rpg-world-generator/hooks/useWorldGenerator';
-import CosmologyView from '@libs/features/rpg-world-generator/ui/CosmologyView.vue';
+import { useWorldGenerator } from '@projects-center/features/rpg-world-generator/hooks/useWorldGenerator';
+import CosmologyView from '@projects-center/features/rpg-world-generator/ui/CosmologyView.vue';
 
 const { world, isGenerating, error, progress, generate } = useWorldGenerator();
 

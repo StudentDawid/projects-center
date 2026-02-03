@@ -1,0 +1,11 @@
+{
+  "name": "projects-center-features-mtg-card-generator",
+  "$schema": "../../../../node_modules/nx/schemas/project-schema.json",
+  "projectType": "library",
+  "sourceRoot": "libs/projects-center/features/mtg-card-generator",
+  "targets": {},
+  "tags": [
+    "type:features",
+    "domain:card"
+  ]
+}

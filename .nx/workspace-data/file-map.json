@@ -2,62 +2,62 @@
   "version": "6.0",
   "nxVersion": "22.4.4",
   "pathMappings": {
-    "@libs/entities/ateria-idle": [
-      "libs/entities/ateria-idle/index.ts"
+    "@projects-center/entities/ateria-idle": [
+      "libs/projects-center/entities/ateria-idle/index.ts"
     ],
-    "@libs/entities/ateria-idle/*": [
-      "libs/entities/ateria-idle/*"
+    "@projects-center/entities/ateria-idle/*": [
+      "libs/projects-center/entities/ateria-idle/*"
     ],
-    "@libs/entities/card": [
-      "libs/entities/card/index.ts"
+    "@projects-center/entities/card": [
+      "libs/projects-center/entities/card/index.ts"
     ],
-    "@libs/entities/card/*": [
-      "libs/entities/card/*"
+    "@projects-center/entities/card/*": [
+      "libs/projects-center/entities/card/*"
     ],
-    "@libs/features/ateria-idle/*": [
-      "libs/features/ateria-idle/*"
+    "@projects-center/features/ateria-idle/*": [
+      "libs/projects-center/features/ateria-idle/*"
     ],
-    "@libs/features/card-delete/*": [
-      "libs/features/card-delete/*"
+    "@projects-center/features/card-delete/*": [
+      "libs/projects-center/features/card-delete/*"
     ],
-    "@libs/features/card-edit/*": [
-      "libs/features/card-edit/*"
+    "@projects-center/features/card-edit/*": [
+      "libs/projects-center/features/card-edit/*"
     ],
-    "@libs/features/card-list/*": [
-      "libs/features/card-list/*"
+    "@projects-center/features/card-list/*": [
+      "libs/projects-center/features/card-list/*"
     ],
-    "@libs/features/card-preview/*": [
-      "libs/features/card-preview/*"
+    "@projects-center/features/card-preview/*": [
+      "libs/projects-center/features/card-preview/*"
     ],
-    "@libs/features/card-print/*": [
-      "libs/features/card-print/*"
+    "@projects-center/features/card-print/*": [
+      "libs/projects-center/features/card-print/*"
     ],
-    "@libs/features/mtg-card-generator/*": [
-      "libs/features/mtg-card-generator/*"
+    "@projects-center/features/mtg-card-generator/*": [
+      "libs/projects-center/features/mtg-card-generator/*"
     ],
-    "@libs/features/rpg-map-generator/*": [
-      "libs/features/rpg-map-generator/*"
+    "@projects-center/features/rpg-map-generator/*": [
+      "libs/projects-center/features/rpg-map-generator/*"
     ],
-    "@libs/features/rpg-world-generator/*": [
-      "libs/features/rpg-world-generator/*"
+    "@projects-center/features/rpg-world-generator/*": [
+      "libs/projects-center/features/rpg-world-generator/*"
     ],
-    "@libs/shared/lib/*": [
-      "libs/shared/lib/*"
+    "@projects-center/shared/lib/*": [
+      "libs/projects-center/shared/lib/*"
     ],
-    "@libs/shared/map-generator/*": [
-      "libs/shared/map-generator/*"
+    "@projects-center/shared/map-generator/*": [
+      "libs/projects-center/shared/map-generator/*"
     ],
-    "@libs/shared/world-generator/*": [
-      "libs/shared/world-generator/*"
+    "@projects-center/shared/world-generator/*": [
+      "libs/projects-center/shared/world-generator/*"
     ],
-    "@libs/shared/types/*": [
-      "libs/shared/types/*"
+    "@projects-center/shared/types/*": [
+      "libs/projects-center/shared/types/*"
     ],
-    "@libs/shared/stores/*": [
-      "libs/shared/stores/*"
+    "@projects-center/shared/stores/*": [
+      "libs/projects-center/shared/stores/*"
     ],
-    "@libs/widgets/card-grid/*": [
-      "libs/widgets/card-grid/*"
+    "@projects-center/widgets/card-grid/*": [
+      "libs/projects-center/widgets/card-grid/*"
     ],
     "@app/*": [
       "apps/projects-center/*"
@@ -70,1248 +70,356 @@
   "fileMap": {
     "nonProjectFiles": [
       {
-        "file": "README.md",
-        "hash": "773233696311197325"
-      },
-      {
-        "file": ".cursor/rules/technical.mdc",
-        "hash": "12614677764543565219"
-      },
-      {
-        "file": "docs/rpg/fabula-ultima-card-generator/cards/quest card.png",
-        "hash": "3349146893311855849"
-      },
-      {
-        "file": "docs/rpg/fabula-ultima-card-generator/cards/spell card.png",
-        "hash": "12148300319712983259"
-      },
-      {
-        "file": "docs/ateria-idle/ROADMAP.md",
-        "hash": "12904457840158828818"
-      },
-      {
-        "file": "docs/ateria-idle/ateria-idle.md",
-        "hash": "9292072908030603905"
-      },
-      {
-        "file": "docs/rpg/map-generator/ROADMAP.md",
-        "hash": "9728525659095636268"
-      },
-      {
-        "file": "docs/rpg/map-generator/PERFORMANCE_OPTIMIZATION.md",
-        "hash": "15189609418150613669"
-      },
-      {
-        "file": "nx.json",
-        "hash": "10006643091657810672"
-      },
-      {
-        "file": "static/environment.js",
-        "hash": "17945177881045382487"
-      },
-      {
-        "file": "docs/rpg/fabula-ultima-card-generator/cards/weapon card.png",
-        "hash": "13338470044068529264"
-      },
-      {
-        "file": ".agent/rules/basic.md",
-        "hash": "7800710424833916422"
+        "file": "docs/rpg/map-generator/GENERATION_STEPS.md",
+        "hash": "11322093998999816818"
       },
       {
         "file": ".cursor/rules/basic.mdc",
         "hash": "17214470408359381575"
       },
       {
-        "file": "docs/rpg/fabula-ultima-card-generator/list page/screen.png",
-        "hash": "17734655751115182897"
-      },
-      {
-        "file": "docs/rpg/map-generator/GENERATION_STEPS.md",
-        "hash": "11322093998999816818"
-      },
-      {
-        "file": "docs/rpg/fabula-ultima-card-generator/cards/reusable item card.png",
-        "hash": "9143297747556869531"
+        "file": "README.md",
+        "hash": "7963014632760613974"
       },
       {
         "file": "docs/rpg/fabula-ultima-card-generator/cards/weapon card design/code.html",
         "hash": "4622128166888184940"
       },
       {
-        "file": "docs/rpg/world-generator/WORLD_GENERATOR_PLAN.md",
-        "hash": "8486382501898008041"
+        "file": "static/styles.css",
+        "hash": "9308009026279305169"
+      },
+      {
+        "file": "docs/rpg/map-generator/PERFORMANCE_OPTIMIZATION.md",
+        "hash": "15189609418150613669"
       },
       {
         "file": "docs/rpg/fabula-ultima-card-generator/list page/code.html",
         "hash": "2411833114205560939"
       },
       {
-        "file": "package.json",
-        "hash": "14633751036762832576"
+        "file": "docs/ateria-idle/ateria-idle.md",
+        "hash": "9292072908030603905"
       },
       {
-        "file": "static/styles.css",
-        "hash": "9308009026279305169"
-      },
-      {
-        "file": ".prettierrc",
-        "hash": "14642311230797495481"
-      },
-      {
-        "file": "static/main.js",
-        "hash": "1507916368719595898"
-      },
-      {
-        "file": "docs/rpg/fabula-ultima-card-generator/cards/skill card.png",
-        "hash": "2942889992339831393"
-      },
-      {
-        "file": "package-lock.json",
-        "hash": "15947456342623445585"
-      },
-      {
-        "file": "static/favicon.ico",
-        "hash": "9303420814833116677"
-      },
-      {
-        "file": "static/runtime.js",
-        "hash": "14980783667260047515"
-      },
-      {
-        "file": "dependency-graph.html",
-        "hash": "6986935609089304540"
-      },
-      {
-        "file": ".gitignore",
-        "hash": "3957308237129789748"
-      },
-      {
-        "file": "docs/rpg/fabula-ultima-card-generator/cards/armor card.png",
-        "hash": "10001084872385245968"
-      },
-      {
-        "file": "static/styles.js",
-        "hash": "7799579906503173929"
-      },
-      {
-        "file": ".agent/rules/code-style-guide.md",
-        "hash": "1715069333700826241"
-      },
-      {
-        "file": ".vscode/settings.json",
-        "hash": "9212040711659501837"
-      },
-      {
-        "file": "yarn.lock",
-        "hash": "7726464953253495261"
+        "file": "docs/rpg/fabula-ultima-card-generator/cards/weapon card.png",
+        "hash": "13338470044068529264"
       },
       {
         "file": "docs/rpg/fabula-ultima-card-generator/cards/weapon card design/screen.png",
         "hash": "3216694339144180783"
       },
       {
-        "file": ".github/workflows/deploy.yml",
-        "hash": "15011972419696443221"
+        "file": ".gitignore",
+        "hash": "3957308237129789748"
+      },
+      {
+        "file": "package-lock.json",
+        "hash": "15947456342623445585"
+      },
+      {
+        "file": ".vscode/settings.json",
+        "hash": "9212040711659501837"
+      },
+      {
+        "file": "static/styles.js",
+        "hash": "7799579906503173929"
+      },
+      {
+        "file": "static/environment.js",
+        "hash": "17945177881045382487"
+      },
+      {
+        "file": "static/runtime.js",
+        "hash": "14980783667260047515"
+      },
+      {
+        "file": ".agent/rules/code-style-guide.md",
+        "hash": "1715069333700826241"
+      },
+      {
+        "file": "static/main.js",
+        "hash": "1507916368719595898"
+      },
+      {
+        "file": "tsconfig.base.json",
+        "hash": "10818475146528724351"
+      },
+      {
+        "file": ".agent/rules/basic.md",
+        "hash": "7800710424833916422"
+      },
+      {
+        "file": "docs/rpg/fabula-ultima-card-generator/cards/spell card.png",
+        "hash": "12148300319712983259"
+      },
+      {
+        "file": ".prettierrc",
+        "hash": "14642311230797495481"
       },
       {
         "file": ".cursorrules",
         "hash": "9943757028316119128"
       },
       {
-        "file": "tsconfig.base.json",
-        "hash": "13835341838022700004"
+        "file": "docs/rpg/fabula-ultima-card-generator/cards/quest card.png",
+        "hash": "3349146893311855849"
+      },
+      {
+        "file": "docs/rpg/fabula-ultima-card-generator/list page/screen.png",
+        "hash": "17734655751115182897"
+      },
+      {
+        "file": ".github/workflows/deploy.yml",
+        "hash": "15011972419696443221"
+      },
+      {
+        "file": "dependency-graph.json",
+        "hash": "8168936371245126466"
+      },
+      {
+        "file": ".cursor/rules/technical.mdc",
+        "hash": "12614677764543565219"
+      },
+      {
+        "file": "docs/rpg/fabula-ultima-card-generator/cards/armor card.png",
+        "hash": "10001084872385245968"
+      },
+      {
+        "file": "docs/ateria-idle/ROADMAP.md",
+        "hash": "12904457840158828818"
+      },
+      {
+        "file": "package.json",
+        "hash": "14633751036762832576"
+      },
+      {
+        "file": "nx.json",
+        "hash": "12927261411284106067"
+      },
+      {
+        "file": "docs/rpg/fabula-ultima-card-generator/cards/reusable item card.png",
+        "hash": "9143297747556869531"
+      },
+      {
+        "file": "dependency-graph.html",
+        "hash": "6986935609089304540"
+      },
+      {
+        "file": "docs/rpg/map-generator/ROADMAP.md",
+        "hash": "9728525659095636268"
+      },
+      {
+        "file": "docs/rpg/world-generator/WORLD_GENERATOR_PLAN.md",
+        "hash": "8486382501898008041"
+      },
+      {
+        "file": "yarn.lock",
+        "hash": "4561427965447944886"
+      },
+      {
+        "file": "docs/rpg/fabula-ultima-card-generator/cards/skill card.png",
+        "hash": "2942889992339831393"
+      },
+      {
+        "file": "static/favicon.ico",
+        "hash": "9303420814833116677"
       }
     ],
     "projectFileMap": {
-      "features-rpg-world-generator": [
+      "projects-center-features-card-list": [
         {
-          "file": "libs/features/rpg-world-generator/hooks/useCosmologyGenerator.ts",
-          "hash": "17574170078570846582",
+          "file": "libs/projects-center/features/card-list/project.json",
+          "hash": "978206691304920284"
+        },
+        {
+          "file": "libs/projects-center/features/card-list/ui/CardList.vue",
+          "hash": "14628098117642035713",
           "deps": [
             "npm:vue",
-            "shared"
-          ]
-        },
-        {
-          "file": "libs/features/rpg-world-generator/hooks/useWorldGenerator.ts",
-          "hash": "1614326024058339929",
-          "deps": [
-            "npm:vue",
-            "shared"
-          ]
-        },
-        {
-          "file": "libs/features/rpg-world-generator/project.json",
-          "hash": "12182275349491028669"
-        },
-        {
-          "file": "libs/features/rpg-world-generator/ui/CosmologyView.vue",
-          "hash": "16897907181895136688",
-          "deps": [
-            "shared"
-          ]
-        },
-        {
-          "file": "libs/features/rpg-world-generator/ui/GodCard.vue",
-          "hash": "10041625461840444940",
-          "deps": [
-            "shared"
-          ]
-        },
-        {
-          "file": "libs/features/rpg-world-generator/ui/MythCard.vue",
-          "hash": "17591683896443113152",
-          "deps": [
-            "npm:vue",
-            "shared"
-          ]
-        },
-        {
-          "file": "libs/features/rpg-world-generator/ui/PantheonCard.vue",
-          "hash": "17847133437478961114",
-          "deps": [
-            "shared"
-          ]
-        },
-        {
-          "file": "libs/features/rpg-world-generator/ui/PlaneCard.vue",
-          "hash": "2029287099654440969",
-          "deps": [
-            "npm:vue",
-            "shared"
+            "projects-center-entities-card"
           ]
         }
       ],
-      "features-card-edit": [
+      "projects-center-entities-ateria-idle": [
         {
-          "file": "libs/features/card-edit/hooks/useCardForm.ts",
-          "hash": "9858844661230088517",
+          "file": "libs/projects-center/entities/ateria-idle/project.json",
+          "hash": "15048705221188710138"
+        }
+      ],
+      "projects-center-features-card-print": [
+        {
+          "file": "libs/projects-center/features/card-print/hooks/usePrintLayout.ts",
+          "hash": "17966177347649765535",
           "deps": [
             "npm:vue",
-            "entities-card"
+            "projects-center-entities-card"
           ]
         },
         {
-          "file": "libs/features/card-edit/project.json",
-          "hash": "6925150106831670118"
+          "file": "libs/projects-center/features/card-print/project.json",
+          "hash": "3779160613769535522"
         },
         {
-          "file": "libs/features/card-edit/ui/CardForm.vue",
-          "hash": "11522739423755611316",
+          "file": "libs/projects-center/features/card-print/ui/PrintLayoutSelector.vue",
+          "hash": "6481261466069582849",
           "deps": [
             "npm:vue",
-            "entities-card"
+            "projects-center-entities-card"
+          ]
+        },
+        {
+          "file": "libs/projects-center/features/card-print/ui/PrintPreview.vue",
+          "hash": "12875694534593991004",
+          "deps": [
+            "npm:vue",
+            "projects-center-entities-card"
           ]
         }
       ],
-      "features-ateria-idle": [
+      "projects-center-features-card-preview": [
         {
-          "file": "libs/features/ateria-idle/alchemist/data/alchemist.data.ts",
-          "hash": "82032919405745051"
+          "file": "libs/projects-center/features/card-preview/project.json",
+          "hash": "1474722373916043936"
         },
         {
-          "file": "libs/features/ateria-idle/alchemist/index.ts",
-          "hash": "12974823214013560712"
-        },
-        {
-          "file": "libs/features/ateria-idle/alchemist/model/alchemist.store.ts",
-          "hash": "2726958985595019252",
+          "file": "libs/projects-center/features/card-preview/ui/CardPreview.vue",
+          "hash": "1326074099059295170",
           "deps": [
-            "npm:pinia",
-            "npm:vue"
+            "projects-center-entities-card"
           ]
-        },
+        }
+      ],
+      "projects-center-features-rpg-world-generator": [
         {
-          "file": "libs/features/ateria-idle/alchemist/ui/AlchemistPanel.vue",
-          "hash": "10956087498709069670",
-          "deps": [
-            "npm:vue"
-          ]
-        },
-        {
-          "file": "libs/features/ateria-idle/architect/data/architect.data.ts",
-          "hash": "9307104325594909875"
-        },
-        {
-          "file": "libs/features/ateria-idle/architect/index.ts",
-          "hash": "4247769941015725216"
-        },
-        {
-          "file": "libs/features/ateria-idle/architect/model/architect.store.ts",
-          "hash": "16906327204531144980",
-          "deps": [
-            "npm:pinia",
-            "npm:vue"
-          ]
-        },
-        {
-          "file": "libs/features/ateria-idle/architect/ui/ArchitectPanel.vue",
-          "hash": "15899804242194373997",
-          "deps": [
-            "npm:vue"
-          ]
-        },
-        {
-          "file": "libs/features/ateria-idle/bard/data/bard.data.ts",
-          "hash": "6357256377556363082"
-        },
-        {
-          "file": "libs/features/ateria-idle/bard/index.ts",
-          "hash": "1019476193547611057"
-        },
-        {
-          "file": "libs/features/ateria-idle/bard/model/bard.store.ts",
-          "hash": "4995857287265930597",
-          "deps": [
-            "npm:pinia",
-            "npm:vue"
-          ]
-        },
-        {
-          "file": "libs/features/ateria-idle/bard/ui/BardPanel.vue",
-          "hash": "17985237256933949494",
-          "deps": [
-            "npm:vue"
-          ]
-        },
-        {
-          "file": "libs/features/ateria-idle/calendar/data/calendar.data.ts",
-          "hash": "4453947985193170866"
-        },
-        {
-          "file": "libs/features/ateria-idle/calendar/index.ts",
-          "hash": "8952480889471693111"
-        },
-        {
-          "file": "libs/features/ateria-idle/calendar/model/calendar.store.ts",
-          "hash": "9009047115449958852",
-          "deps": [
-            "npm:pinia",
-            "npm:vue"
-          ]
-        },
-        {
-          "file": "libs/features/ateria-idle/calendar/ui/CalendarPanel.vue",
-          "hash": "5038348280456670080",
-          "deps": [
-            "npm:vue"
-          ]
-        },
-        {
-          "file": "libs/features/ateria-idle/chef/data/chef.data.ts",
-          "hash": "18104292775149781669"
-        },
-        {
-          "file": "libs/features/ateria-idle/chef/index.ts",
-          "hash": "13657136116302690749"
-        },
-        {
-          "file": "libs/features/ateria-idle/chef/model/chef.store.ts",
-          "hash": "2012425274009603715",
-          "deps": [
-            "npm:pinia",
-            "npm:vue"
-          ]
-        },
-        {
-          "file": "libs/features/ateria-idle/chef/ui/ChefPanel.vue",
-          "hash": "615220094552944302",
-          "deps": [
-            "npm:vue"
-          ]
-        },
-        {
-          "file": "libs/features/ateria-idle/codex/data/codex.data.ts",
-          "hash": "5011608918119422153"
-        },
-        {
-          "file": "libs/features/ateria-idle/codex/index.ts",
-          "hash": "3695673816759123374"
-        },
-        {
-          "file": "libs/features/ateria-idle/codex/model/codex.store.ts",
-          "hash": "3103447496553893344",
-          "deps": [
-            "npm:pinia",
-            "npm:vue"
-          ]
-        },
-        {
-          "file": "libs/features/ateria-idle/codex/ui/CodexPanel.vue",
-          "hash": "14956947174385028070",
-          "deps": [
-            "npm:vue"
-          ]
-        },
-        {
-          "file": "libs/features/ateria-idle/companions/data/companions.data.ts",
-          "hash": "4924208210663417923"
-        },
-        {
-          "file": "libs/features/ateria-idle/companions/index.ts",
-          "hash": "11890590741571055291"
-        },
-        {
-          "file": "libs/features/ateria-idle/companions/model/companions.store.ts",
-          "hash": "12150326215705225689",
-          "deps": [
-            "npm:pinia",
-            "npm:vue"
-          ]
-        },
-        {
-          "file": "libs/features/ateria-idle/companions/ui/CompanionsPanel.vue",
-          "hash": "3604135666457182904",
-          "deps": [
-            "npm:vue"
-          ]
-        },
-        {
-          "file": "libs/features/ateria-idle/core/model/achievements.store.ts",
-          "hash": "11537171848798028605",
-          "deps": [
-            "npm:pinia",
-            "npm:vue",
-            "entities-ateria-idle"
-          ]
-        },
-        {
-          "file": "libs/features/ateria-idle/core/model/events.store.ts",
-          "hash": "992744294102631194",
-          "deps": [
-            "npm:pinia",
-            "npm:vue",
-            "entities-ateria-idle"
-          ]
-        },
-        {
-          "file": "libs/features/ateria-idle/core/model/game.store.ts",
-          "hash": "4305261685011937384",
-          "deps": [
-            "npm:pinia",
-            "npm:vue",
-            "shared",
-            "entities-ateria-idle"
-          ]
-        },
-        {
-          "file": "libs/features/ateria-idle/core/model/index.ts",
-          "hash": "16491436520467664481"
-        },
-        {
-          "file": "libs/features/ateria-idle/core/model/integration.store.ts",
-          "hash": "3288767863290262613",
-          "deps": [
-            "npm:pinia",
-            "npm:vue"
-          ]
-        },
-        {
-          "file": "libs/features/ateria-idle/core/model/prestige.store.ts",
-          "hash": "14574729024878997173",
-          "deps": [
-            "npm:pinia",
-            "npm:vue",
-            "entities-ateria-idle"
-          ]
-        },
-        {
-          "file": "libs/features/ateria-idle/core/model/resources.store.ts",
-          "hash": "12949263381511149130",
-          "deps": [
-            "npm:pinia",
-            "npm:vue",
-            "shared",
-            "entities-ateria-idle"
-          ]
-        },
-        {
-          "file": "libs/features/ateria-idle/core/ui/AchievementsPanel.vue",
-          "hash": "10540669226127821806",
+          "file": "libs/projects-center/features/rpg-world-generator/hooks/useCosmologyGenerator.ts",
+          "hash": "14418936531168609610",
           "deps": [
             "npm:vue",
-            "entities-ateria-idle"
+            "projects-center-shared"
           ]
         },
         {
-          "file": "libs/features/ateria-idle/core/ui/EventsPanel.vue",
-          "hash": "2660636240389221304",
-          "deps": [
-            "npm:vue"
-          ]
-        },
-        {
-          "file": "libs/features/ateria-idle/core/ui/IntegrationPanel.vue",
-          "hash": "3923285959329889269",
-          "deps": [
-            "npm:vue"
-          ]
-        },
-        {
-          "file": "libs/features/ateria-idle/core/ui/Notifications.vue",
-          "hash": "1384439173644671775"
-        },
-        {
-          "file": "libs/features/ateria-idle/core/ui/OfflineProgressModal.vue",
-          "hash": "9545171675135218779",
+          "file": "libs/projects-center/features/rpg-world-generator/hooks/useWorldGenerator.ts",
+          "hash": "8082259113102218518",
           "deps": [
             "npm:vue",
-            "shared",
-            "entities-ateria-idle"
+            "projects-center-shared"
           ]
         },
         {
-          "file": "libs/features/ateria-idle/core/ui/PrestigePanel.vue",
-          "hash": "5538840714610115801",
+          "file": "libs/projects-center/features/rpg-world-generator/project.json",
+          "hash": "794117624340052678"
+        },
+        {
+          "file": "libs/projects-center/features/rpg-world-generator/ui/CosmologyView.vue",
+          "hash": "17232602481482983417",
           "deps": [
-            "npm:vue"
+            "projects-center-shared"
           ]
         },
         {
-          "file": "libs/features/ateria-idle/core/ui/ResourceBar.vue",
-          "hash": "2973595419303873573",
+          "file": "libs/projects-center/features/rpg-world-generator/ui/GodCard.vue",
+          "hash": "14136941030994965849",
           "deps": [
-            "shared"
+            "projects-center-shared"
           ]
         },
         {
-          "file": "libs/features/ateria-idle/core/ui/SettingsPanel.vue",
-          "hash": "4214553549532153447",
-          "deps": [
-            "npm:vue"
-          ]
-        },
-        {
-          "file": "libs/features/ateria-idle/core/ui/StatsPanel.vue",
-          "hash": "3570232476991241183",
+          "file": "libs/projects-center/features/rpg-world-generator/ui/MythCard.vue",
+          "hash": "3348062235304265945",
           "deps": [
             "npm:vue",
-            "shared"
+            "projects-center-shared"
           ]
         },
         {
-          "file": "libs/features/ateria-idle/core/ui/index.ts",
-          "hash": "787401851498195992"
-        },
-        {
-          "file": "libs/features/ateria-idle/crafting/data/crafting.data.ts",
-          "hash": "813328573954417020",
+          "file": "libs/projects-center/features/rpg-world-generator/ui/PantheonCard.vue",
+          "hash": "14975649613630507200",
           "deps": [
-            "entities-ateria-idle"
+            "projects-center-shared"
           ]
         },
         {
-          "file": "libs/features/ateria-idle/crafting/data/orders.data.ts",
-          "hash": "5699968820834446682",
-          "deps": [
-            "entities-ateria-idle"
-          ]
-        },
-        {
-          "file": "libs/features/ateria-idle/crafting/index.ts",
-          "hash": "13250710844053388447"
-        },
-        {
-          "file": "libs/features/ateria-idle/crafting/model/crafting.store.ts",
-          "hash": "8379158088440837222",
-          "deps": [
-            "npm:pinia",
-            "npm:vue"
-          ]
-        },
-        {
-          "file": "libs/features/ateria-idle/crafting/ui/CraftingPanel.vue",
-          "hash": "14931525459347412147",
-          "deps": [
-            "npm:vue"
-          ]
-        },
-        {
-          "file": "libs/features/ateria-idle/data/achievements.data.ts",
-          "hash": "12759455045875657274",
-          "deps": [
-            "entities-ateria-idle"
-          ]
-        },
-        {
-          "file": "libs/features/ateria-idle/data/biomes.data.ts",
-          "hash": "11215741058790515808",
-          "deps": [
-            "entities-ateria-idle"
-          ]
-        },
-        {
-          "file": "libs/features/ateria-idle/data/caravans.data.ts",
-          "hash": "5507877716490246488",
-          "deps": [
-            "entities-ateria-idle"
-          ]
-        },
-        {
-          "file": "libs/features/ateria-idle/data/drops.data.ts",
-          "hash": "2972432220725902857",
-          "deps": [
-            "entities-ateria-idle"
-          ]
-        },
-        {
-          "file": "libs/features/ateria-idle/data/dungeons.data.ts",
-          "hash": "17726386975848217999",
-          "deps": [
-            "entities-ateria-idle"
-          ]
-        },
-        {
-          "file": "libs/features/ateria-idle/data/equipment.data.ts",
-          "hash": "7836643827044314489",
-          "deps": [
-            "entities-ateria-idle"
-          ]
-        },
-        {
-          "file": "libs/features/ateria-idle/data/events.data.ts",
-          "hash": "17897170350036421819",
-          "deps": [
-            "entities-ateria-idle"
-          ]
-        },
-        {
-          "file": "libs/features/ateria-idle/data/food.data.ts",
-          "hash": "9098618862650997840"
-        },
-        {
-          "file": "libs/features/ateria-idle/data/golems.data.ts",
-          "hash": "3683214259831352157",
-          "deps": [
-            "entities-ateria-idle"
-          ]
-        },
-        {
-          "file": "libs/features/ateria-idle/data/index.ts",
-          "hash": "11825697982921876133"
-        },
-        {
-          "file": "libs/features/ateria-idle/data/items.data.ts",
-          "hash": "11198412171291315851",
-          "deps": [
-            "entities-ateria-idle"
-          ]
-        },
-        {
-          "file": "libs/features/ateria-idle/data/loadouts.data.ts",
-          "hash": "1060514343284596739"
-        },
-        {
-          "file": "libs/features/ateria-idle/data/market.data.ts",
-          "hash": "2741752477395213514",
-          "deps": [
-            "entities-ateria-idle"
-          ]
-        },
-        {
-          "file": "libs/features/ateria-idle/data/merchant.data.ts",
-          "hash": "8464655563993428401",
-          "deps": [
-            "entities-ateria-idle"
-          ]
-        },
-        {
-          "file": "libs/features/ateria-idle/data/monsters.data.ts",
-          "hash": "12261615656046378556",
-          "deps": [
-            "entities-ateria-idle"
-          ]
-        },
-        {
-          "file": "libs/features/ateria-idle/data/prestige.data.ts",
-          "hash": "12476312199843455315",
-          "deps": [
-            "entities-ateria-idle"
-          ]
-        },
-        {
-          "file": "libs/features/ateria-idle/data/scientist.data.ts",
-          "hash": "12714713634939929475",
-          "deps": [
-            "entities-ateria-idle"
-          ]
-        },
-        {
-          "file": "libs/features/ateria-idle/data/settings.data.ts",
-          "hash": "13167044605375569302"
-        },
-        {
-          "file": "libs/features/ateria-idle/data/slayer.data.ts",
-          "hash": "11419325663309113273",
-          "deps": [
-            "entities-ateria-idle"
-          ]
-        },
-        {
-          "file": "libs/features/ateria-idle/diplomat/data/diplomat.data.ts",
-          "hash": "8805287052673838102"
-        },
-        {
-          "file": "libs/features/ateria-idle/diplomat/index.ts",
-          "hash": "18321176249756170552"
-        },
-        {
-          "file": "libs/features/ateria-idle/diplomat/model/diplomat.store.ts",
-          "hash": "2310266544009908225",
-          "deps": [
-            "npm:pinia",
-            "npm:vue"
-          ]
-        },
-        {
-          "file": "libs/features/ateria-idle/diplomat/ui/DiplomatPanel.vue",
-          "hash": "9296865309650770131",
-          "deps": [
-            "npm:vue"
-          ]
-        },
-        {
-          "file": "libs/features/ateria-idle/druid/data/druid.data.ts",
-          "hash": "16990816930730977749"
-        },
-        {
-          "file": "libs/features/ateria-idle/druid/index.ts",
-          "hash": "2179637912616502347"
-        },
-        {
-          "file": "libs/features/ateria-idle/druid/model/druid.store.ts",
-          "hash": "15737538387066675649",
-          "deps": [
-            "npm:pinia",
-            "npm:vue"
-          ]
-        },
-        {
-          "file": "libs/features/ateria-idle/druid/ui/DruidPanel.vue",
-          "hash": "9636915223255938423",
-          "deps": [
-            "npm:vue"
-          ]
-        },
-        {
-          "file": "libs/features/ateria-idle/exploration/data/exploration.data.ts",
-          "hash": "256300209718201220"
-        },
-        {
-          "file": "libs/features/ateria-idle/exploration/index.ts",
-          "hash": "2380563014752748233"
-        },
-        {
-          "file": "libs/features/ateria-idle/exploration/model/exploration.store.ts",
-          "hash": "14297401968303924125",
-          "deps": [
-            "npm:pinia",
-            "npm:vue"
-          ]
-        },
-        {
-          "file": "libs/features/ateria-idle/exploration/ui/ExplorationPanel.vue",
-          "hash": "13983313557797407355",
-          "deps": [
-            "npm:vue"
-          ]
-        },
-        {
-          "file": "libs/features/ateria-idle/explorer/data/explorer.data.ts",
-          "hash": "9424279701729268997"
-        },
-        {
-          "file": "libs/features/ateria-idle/explorer/index.ts",
-          "hash": "6745472896219250445"
-        },
-        {
-          "file": "libs/features/ateria-idle/explorer/model/explorer.store.ts",
-          "hash": "10330007704842299546",
-          "deps": [
-            "npm:pinia",
-            "npm:vue"
-          ]
-        },
-        {
-          "file": "libs/features/ateria-idle/explorer/ui/ExplorerPanel.vue",
-          "hash": "13056841695206431586",
-          "deps": [
-            "npm:vue"
-          ]
-        },
-        {
-          "file": "libs/features/ateria-idle/fisherman/data/fisherman.data.ts",
-          "hash": "2754616859031365283"
-        },
-        {
-          "file": "libs/features/ateria-idle/fisherman/index.ts",
-          "hash": "9632799319586563300"
-        },
-        {
-          "file": "libs/features/ateria-idle/fisherman/model/fisherman.store.ts",
-          "hash": "10911048982223724703",
-          "deps": [
-            "npm:pinia",
-            "npm:vue"
-          ]
-        },
-        {
-          "file": "libs/features/ateria-idle/fisherman/ui/FishermanPanel.vue",
-          "hash": "11601845533671918876",
-          "deps": [
-            "npm:vue"
-          ]
-        },
-        {
-          "file": "libs/features/ateria-idle/gathering/data/gathering.data.ts",
-          "hash": "13842566321931367235",
-          "deps": [
-            "entities-ateria-idle"
-          ]
-        },
-        {
-          "file": "libs/features/ateria-idle/gathering/data/tools.data.ts",
-          "hash": "5684380409415253090",
-          "deps": [
-            "entities-ateria-idle"
-          ]
-        },
-        {
-          "file": "libs/features/ateria-idle/gathering/index.ts",
-          "hash": "13294274577798319173"
-        },
-        {
-          "file": "libs/features/ateria-idle/gathering/model/gathering.store.ts",
-          "hash": "16350931476011481708",
-          "deps": [
-            "npm:pinia",
-            "npm:vue",
-            "shared"
-          ]
-        },
-        {
-          "file": "libs/features/ateria-idle/gathering/ui/GatheringPanel.vue",
-          "hash": "4059652748075749699",
-          "deps": [
-            "npm:vue"
-          ]
-        },
-        {
-          "file": "libs/features/ateria-idle/merchant/index.ts",
-          "hash": "8134619679674631117"
-        },
-        {
-          "file": "libs/features/ateria-idle/merchant/model/index.ts",
-          "hash": "221151285971316584"
-        },
-        {
-          "file": "libs/features/ateria-idle/merchant/model/merchant.store.ts",
-          "hash": "10349777720399856654",
-          "deps": [
-            "npm:pinia",
-            "npm:vue",
-            "shared",
-            "entities-ateria-idle"
-          ]
-        },
-        {
-          "file": "libs/features/ateria-idle/merchant/ui/CaravanPanel.vue",
-          "hash": "6995168278511475911",
+          "file": "libs/projects-center/features/rpg-world-generator/ui/PlaneCard.vue",
+          "hash": "17901912406795738199",
           "deps": [
             "npm:vue",
-            "entities-ateria-idle"
+            "projects-center-shared"
           ]
+        }
+      ],
+      "projects-center-shared": [
+        {
+          "file": "libs/projects-center/shared/project.json",
+          "hash": "18412522121748169286"
         },
         {
-          "file": "libs/features/ateria-idle/merchant/ui/HaggleDialog.vue",
-          "hash": "16211007813705161532",
+          "file": "libs/projects-center/shared/stores/map-generator/map-generator.ts",
+          "hash": "7392732114694112848",
           "deps": [
+            "npm:pinia",
             "npm:vue"
           ]
-        },
+        }
+      ],
+      "projects-center-features-card-edit": [
         {
-          "file": "libs/features/ateria-idle/merchant/ui/MarketOverview.vue",
-          "hash": "7514025468661367982",
-          "deps": [
-            "npm:vue"
-          ]
-        },
-        {
-          "file": "libs/features/ateria-idle/merchant/ui/MerchantPanel.vue",
-          "hash": "16634971391600398644",
+          "file": "libs/projects-center/features/card-edit/hooks/useCardForm.ts",
+          "hash": "7156074425396740966",
           "deps": [
             "npm:vue",
-            "shared",
-            "entities-ateria-idle"
+            "projects-center-entities-card"
           ]
         },
         {
-          "file": "libs/features/ateria-idle/merchant/ui/index.ts",
-          "hash": "2791878456700501632"
+          "file": "libs/projects-center/features/card-edit/project.json",
+          "hash": "10067586469442500053"
         },
         {
-          "file": "libs/features/ateria-idle/minigames/data/minigames.data.ts",
-          "hash": "8565849593215713766"
-        },
-        {
-          "file": "libs/features/ateria-idle/minigames/index.ts",
-          "hash": "4577475152738128236"
-        },
-        {
-          "file": "libs/features/ateria-idle/minigames/model/minigames.store.ts",
-          "hash": "13030492454323568930",
-          "deps": [
-            "npm:pinia",
-            "npm:vue"
-          ]
-        },
-        {
-          "file": "libs/features/ateria-idle/minigames/ui/MinigamesPanel.vue",
-          "hash": "15614619358277777602",
-          "deps": [
-            "npm:vue"
-          ]
-        },
-        {
-          "file": "libs/features/ateria-idle/mystic/data/mystic.data.ts",
-          "hash": "12264255836571891303"
-        },
-        {
-          "file": "libs/features/ateria-idle/mystic/index.ts",
-          "hash": "9836990038244269344"
-        },
-        {
-          "file": "libs/features/ateria-idle/mystic/model/mystic.store.ts",
-          "hash": "13098501075002470202",
-          "deps": [
-            "npm:pinia",
-            "npm:vue"
-          ]
-        },
-        {
-          "file": "libs/features/ateria-idle/mystic/ui/MysticPanel.vue",
-          "hash": "8947303499022282525",
-          "deps": [
-            "npm:vue"
-          ]
-        },
-        {
-          "file": "libs/features/ateria-idle/priest/data/priest.data.ts",
-          "hash": "16874791516373859704"
-        },
-        {
-          "file": "libs/features/ateria-idle/priest/index.ts",
-          "hash": "1747859002633428473"
-        },
-        {
-          "file": "libs/features/ateria-idle/priest/model/priest.store.ts",
-          "hash": "13159398773006008700",
-          "deps": [
-            "npm:pinia",
-            "npm:vue"
-          ]
-        },
-        {
-          "file": "libs/features/ateria-idle/priest/ui/PriestPanel.vue",
-          "hash": "10113794235994687987",
-          "deps": [
-            "npm:vue"
-          ]
-        },
-        {
-          "file": "libs/features/ateria-idle/project.json",
-          "hash": "13639371912649676398"
-        },
-        {
-          "file": "libs/features/ateria-idle/quests/data/quests.data.ts",
-          "hash": "18004238566408670145"
-        },
-        {
-          "file": "libs/features/ateria-idle/quests/index.ts",
-          "hash": "13986952617485733907"
-        },
-        {
-          "file": "libs/features/ateria-idle/quests/model/quests.store.ts",
-          "hash": "9881019559772231164",
-          "deps": [
-            "npm:pinia",
-            "npm:vue"
-          ]
-        },
-        {
-          "file": "libs/features/ateria-idle/quests/ui/QuestsPanel.vue",
-          "hash": "7363866217206672413",
-          "deps": [
-            "npm:vue"
-          ]
-        },
-        {
-          "file": "libs/features/ateria-idle/reputation/data/reputation.data.ts",
-          "hash": "16443015701935114602"
-        },
-        {
-          "file": "libs/features/ateria-idle/reputation/index.ts",
-          "hash": "3075875513020546522"
-        },
-        {
-          "file": "libs/features/ateria-idle/reputation/model/reputation.store.ts",
-          "hash": "5278106829778467454",
-          "deps": [
-            "npm:pinia",
-            "npm:vue"
-          ]
-        },
-        {
-          "file": "libs/features/ateria-idle/reputation/ui/ReputationPanel.vue",
-          "hash": "9014306640303720844",
-          "deps": [
-            "npm:vue"
-          ]
-        },
-        {
-          "file": "libs/features/ateria-idle/scientist/index.ts",
-          "hash": "8134619679674631117"
-        },
-        {
-          "file": "libs/features/ateria-idle/scientist/model/index.ts",
-          "hash": "498958622820057914"
-        },
-        {
-          "file": "libs/features/ateria-idle/scientist/model/scientist.store.ts",
-          "hash": "865854025608202529",
-          "deps": [
-            "npm:pinia",
-            "npm:vue",
-            "shared",
-            "entities-ateria-idle"
-          ]
-        },
-        {
-          "file": "libs/features/ateria-idle/scientist/ui/GolemPanel.vue",
-          "hash": "10018735011160454511",
+          "file": "libs/projects-center/features/card-edit/ui/CardForm.vue",
+          "hash": "4184124015987421690",
           "deps": [
             "npm:vue",
-            "entities-ateria-idle"
+            "projects-center-entities-card"
           ]
+        }
+      ],
+      "projects-center-widgets-card-grid": [
+        {
+          "file": "libs/projects-center/widgets/card-grid/project.json",
+          "hash": "1464735986596300301"
         },
         {
-          "file": "libs/features/ateria-idle/scientist/ui/ScientistPanel.vue",
-          "hash": "10045674399787717545",
+          "file": "libs/projects-center/widgets/card-grid/ui/CardGrid.vue",
+          "hash": "17171010502944058660",
           "deps": [
-            "npm:vue",
-            "shared"
+            "projects-center-entities-card"
           ]
-        },
+        }
+      ],
+      "projects-center-features-card-delete": [
         {
-          "file": "libs/features/ateria-idle/scientist/ui/index.ts",
-          "hash": "11915139211475917399"
-        },
+          "file": "libs/projects-center/features/card-delete/project.json",
+          "hash": "11491479068811710422"
+        }
+      ],
+      "projects-center-entities-card": [
         {
-          "file": "libs/features/ateria-idle/spy/data/spy.data.ts",
-          "hash": "2964719609028588791"
-        },
-        {
-          "file": "libs/features/ateria-idle/spy/index.ts",
-          "hash": "584961188678679809"
-        },
-        {
-          "file": "libs/features/ateria-idle/spy/model/spy.store.ts",
-          "hash": "2785590536477046866",
-          "deps": [
-            "npm:pinia",
-            "npm:vue"
-          ]
-        },
-        {
-          "file": "libs/features/ateria-idle/spy/ui/SpyPanel.vue",
-          "hash": "8225132190980971117",
-          "deps": [
-            "npm:vue"
-          ]
-        },
-        {
-          "file": "libs/features/ateria-idle/synergies/data/synergies.data.ts",
-          "hash": "15668006533115895422"
-        },
-        {
-          "file": "libs/features/ateria-idle/synergies/index.ts",
-          "hash": "5266883379789114880"
-        },
-        {
-          "file": "libs/features/ateria-idle/synergies/model/synergies.store.ts",
-          "hash": "12862936454482627041",
+          "file": "libs/projects-center/entities/card/lib/useCardStore.ts",
+          "hash": "2039100290011912427",
           "deps": [
             "npm:pinia",
             "npm:vue"
           ]
         },
         {
-          "file": "libs/features/ateria-idle/synergies/ui/SynergiesPanel.vue",
-          "hash": "1054461894653484865",
-          "deps": [
-            "npm:vue"
-          ]
+          "file": "libs/projects-center/entities/card/project.json",
+          "hash": "18008262612553609104"
         },
         {
-          "file": "libs/features/ateria-idle/tamer/data/tamer.data.ts",
-          "hash": "8312757679166379251"
-        },
-        {
-          "file": "libs/features/ateria-idle/tamer/index.ts",
-          "hash": "3341703637049638463"
-        },
-        {
-          "file": "libs/features/ateria-idle/tamer/model/tamer.store.ts",
-          "hash": "2659497955579241609",
-          "deps": [
-            "npm:pinia",
-            "npm:vue"
-          ]
-        },
-        {
-          "file": "libs/features/ateria-idle/tamer/ui/TamerPanel.vue",
-          "hash": "1602978700482778851",
-          "deps": [
-            "npm:vue"
-          ]
-        },
-        {
-          "file": "libs/features/ateria-idle/township/data/township.data.ts",
-          "hash": "4883573293069285220"
-        },
-        {
-          "file": "libs/features/ateria-idle/township/index.ts",
-          "hash": "9130802111626891187"
-        },
-        {
-          "file": "libs/features/ateria-idle/township/model/township.store.ts",
-          "hash": "10638410257822106931",
-          "deps": [
-            "npm:pinia",
-            "npm:vue"
-          ]
-        },
-        {
-          "file": "libs/features/ateria-idle/township/ui/TownshipPanel.vue",
-          "hash": "2919593127129051601",
-          "deps": [
-            "npm:vue"
-          ]
-        },
-        {
-          "file": "libs/features/ateria-idle/warrior/model/index.ts",
-          "hash": "13620529420874080204"
-        },
-        {
-          "file": "libs/features/ateria-idle/warrior/model/inventory.store.ts",
-          "hash": "4633543632049856843",
-          "deps": [
-            "npm:pinia",
-            "npm:vue",
-            "entities-ateria-idle"
-          ]
-        },
-        {
-          "file": "libs/features/ateria-idle/warrior/model/warrior.store.ts",
-          "hash": "3214445995908466264",
-          "deps": [
-            "npm:pinia",
-            "npm:vue",
-            "shared",
-            "entities-ateria-idle"
-          ]
-        },
-        {
-          "file": "libs/features/ateria-idle/warrior/ui/DungeonPanel.vue",
-          "hash": "12673736439143486890",
-          "deps": [
-            "npm:vue",
-            "shared",
-            "entities-ateria-idle"
-          ]
-        },
-        {
-          "file": "libs/features/ateria-idle/warrior/ui/EquipmentPanel.vue",
-          "hash": "10791663635104018474",
-          "deps": [
-            "npm:vue",
-            "entities-ateria-idle"
-          ]
-        },
-        {
-          "file": "libs/features/ateria-idle/warrior/ui/LoadoutPanel.vue",
-          "hash": "9605732689268399046",
-          "deps": [
-            "npm:vue"
-          ]
-        },
-        {
-          "file": "libs/features/ateria-idle/warrior/ui/SlayerPanel.vue",
-          "hash": "4172730904897708394",
-          "deps": [
-            "npm:vue",
-            "shared",
-            "entities-ateria-idle"
-          ]
-        },
-        {
-          "file": "libs/features/ateria-idle/warrior/ui/WarriorPanel.vue",
-          "hash": "15534594705995924271",
-          "deps": [
-            "npm:vue",
-            "shared",
-            "entities-ateria-idle"
-          ]
-        },
-        {
-          "file": "libs/features/ateria-idle/warrior/ui/index.ts",
-          "hash": "11726144484987704505"
-        },
-        {
-          "file": "libs/features/ateria-idle/wizard/data/wizard.data.ts",
-          "hash": "399873184966186211"
-        },
-        {
-          "file": "libs/features/ateria-idle/wizard/index.ts",
-          "hash": "7317355513491889534"
-        },
-        {
-          "file": "libs/features/ateria-idle/wizard/model/wizard.store.ts",
-          "hash": "16958861758856910779",
-          "deps": [
-            "npm:pinia",
-            "npm:vue"
-          ]
-        },
-        {
-          "file": "libs/features/ateria-idle/wizard/ui/WizardPanel.vue",
-          "hash": "11915129984905181418",
-          "deps": [
-            "npm:vue"
-          ]
-        },
-        {
-          "file": "libs/features/ateria-idle/world-bosses/data/world-bosses.data.ts",
-          "hash": "6445479204978275262"
-        },
-        {
-          "file": "libs/features/ateria-idle/world-bosses/index.ts",
-          "hash": "17237971500158074654"
-        },
-        {
-          "file": "libs/features/ateria-idle/world-bosses/model/world-bosses.store.ts",
-          "hash": "12758607087962503642",
-          "deps": [
-            "npm:pinia",
-            "npm:vue"
-          ]
-        },
-        {
-          "file": "libs/features/ateria-idle/world-bosses/ui/WorldBossesPanel.vue",
-          "hash": "2541398572814477606",
-          "deps": [
-            "npm:vue"
-          ]
+          "file": "libs/projects-center/entities/card/ui/CardItem.vue",
+          "hash": "8003641197961337112"
         }
       ],
       "projects-center": [
@@ -1336,15 +444,15 @@
         },
         {
           "file": "apps/projects-center/nuxt.config.ts",
-          "hash": "2976469737854067633"
+          "hash": "15140491939389012351"
         },
         {
           "file": "apps/projects-center/pages/ateria-idle/index.vue",
-          "hash": "7185946327484249306",
+          "hash": "3740274714370016670",
           "deps": [
             "npm:vue",
-            "features-ateria-idle",
-            "entities-ateria-idle"
+            "projects-center-features-ateria-idle",
+            "projects-center-entities-ateria-idle"
           ]
         },
         {
@@ -1356,86 +464,86 @@
         },
         {
           "file": "apps/projects-center/pages/mtg-card-generator/[id]/edit.vue",
-          "hash": "13182908586449538558",
+          "hash": "8508631256917347658",
           "deps": [
             "npm:vue",
             "npm:vue-router",
-            "features-mtg-card-generator"
+            "projects-center-features-mtg-card-generator"
           ]
         },
         {
           "file": "apps/projects-center/pages/mtg-card-generator/create.vue",
-          "hash": "2045499542471623673",
+          "hash": "6702211456387226121",
           "deps": [
             "npm:vue",
             "npm:vue-router",
-            "features-mtg-card-generator"
+            "projects-center-features-mtg-card-generator"
           ]
         },
         {
           "file": "apps/projects-center/pages/mtg-card-generator/index.vue",
-          "hash": "5623709185614730933",
+          "hash": "3170454609094259126",
           "deps": [
-            "features-mtg-card-generator"
+            "projects-center-features-mtg-card-generator"
           ]
         },
         {
           "file": "apps/projects-center/pages/mtg-card-generator/print.vue",
-          "hash": "14890939040176865245",
+          "hash": "6432588279369095386",
           "deps": [
             "npm:vue",
-            "features-mtg-card-generator"
+            "projects-center-features-mtg-card-generator"
           ]
         },
         {
           "file": "apps/projects-center/pages/rpg/fabula-ultima-card-generator/[id]/edit.vue",
-          "hash": "248587905430032989",
+          "hash": "12509090994358889813",
           "deps": [
             "npm:vue",
-            "entities-card",
-            "features-card-edit"
+            "projects-center-entities-card",
+            "projects-center-features-card-edit"
           ]
         },
         {
           "file": "apps/projects-center/pages/rpg/fabula-ultima-card-generator/index.vue",
-          "hash": "12596927444977162129",
+          "hash": "14269409691197349077",
           "deps": [
             "npm:vue",
-            "entities-card",
-            "widgets-card-grid",
-            "features-card-delete"
+            "projects-center-entities-card",
+            "projects-center-widgets-card-grid",
+            "projects-center-features-card-delete"
           ]
         },
         {
           "file": "apps/projects-center/pages/rpg/fabula-ultima-card-generator/new.vue",
-          "hash": "4726106527838883992",
+          "hash": "13844234801717072380",
           "deps": [
-            "entities-card"
+            "projects-center-entities-card"
           ]
         },
         {
           "file": "apps/projects-center/pages/rpg/fabula-ultima-card-generator/print-layout.vue",
-          "hash": "7531792514167956105",
+          "hash": "15979670178499088149",
           "deps": [
             "npm:vue",
-            "entities-card",
-            "features-card-print"
+            "projects-center-entities-card",
+            "projects-center-features-card-print"
           ]
         },
         {
           "file": "apps/projects-center/pages/rpg/map-generator/index.vue",
-          "hash": "12007810817416536374",
+          "hash": "1876645558506550372",
           "deps": [
             "npm:vue",
-            "features-rpg-map-generator"
+            "projects-center-features-rpg-map-generator"
           ]
         },
         {
           "file": "apps/projects-center/pages/rpg/world-generator/index.vue",
-          "hash": "1934818242952031922",
+          "hash": "229351017266620948",
           "deps": [
             "npm:vue",
-            "features-rpg-world-generator"
+            "projects-center-features-rpg-world-generator"
           ]
         },
         {
@@ -1500,491 +608,371 @@
           "hash": "18389429397201681950"
         }
       ],
-      "features-mtg-card-generator": [
+      "projects-center-features-mtg-card-generator": [
         {
-          "file": "libs/features/mtg-card-generator/project.json",
-          "hash": "397806327964630122"
-        },
-        {
-          "file": "libs/features/mtg-card-generator/stores/mtg-card-store.ts",
-          "hash": "1781764683245772237",
-          "deps": [
-            "npm:pinia"
-          ]
-        },
-        {
-          "file": "libs/features/mtg-card-generator/types.ts",
-          "hash": "16237049795357905889"
-        },
-        {
-          "file": "libs/features/mtg-card-generator/ui/MtgCard.vue",
-          "hash": "12265229319928088053",
-          "deps": [
-            "npm:vue"
-          ]
-        },
-        {
-          "file": "libs/features/mtg-card-generator/ui/MtgCardBack.vue",
-          "hash": "7772671171458972051"
-        },
-        {
-          "file": "libs/features/mtg-card-generator/ui/MtgCardForm.vue",
-          "hash": "18421226176309455761",
-          "deps": [
-            "npm:vue"
-          ]
+          "file": "libs/projects-center/features/mtg-card-generator/project.json",
+          "hash": "5327388178888081233"
         }
       ],
-      "features-card-preview": [
+      "projects-center-features-ateria-idle": [
         {
-          "file": "libs/features/card-preview/project.json",
-          "hash": "14768225716079252593"
-        },
-        {
-          "file": "libs/features/card-preview/ui/CardPreview.vue",
-          "hash": "9498722394544310150",
-          "deps": [
-            "entities-card"
-          ]
-        }
-      ],
-      "features-card-delete": [
-        {
-          "file": "libs/features/card-delete/project.json",
-          "hash": "7441222846239465859"
-        },
-        {
-          "file": "libs/features/card-delete/ui/DeleteCardModal.vue",
-          "hash": "14461951860316129594"
-        }
-      ],
-      "entities-ateria-idle": [
-        {
-          "file": "libs/entities/ateria-idle/game/index.ts",
-          "hash": "11736365957286784171"
-        },
-        {
-          "file": "libs/entities/ateria-idle/game/model/game.types.ts",
-          "hash": "4734400791834576939",
-          "deps": [
-            "npm:break_infinity.js"
-          ]
-        },
-        {
-          "file": "libs/entities/ateria-idle/game/model/index.ts",
-          "hash": "1117380456117589108"
-        },
-        {
-          "file": "libs/entities/ateria-idle/index.ts",
-          "hash": "1816060411442670996"
-        },
-        {
-          "file": "libs/entities/ateria-idle/merchant/index.ts",
-          "hash": "11736365957286784171"
-        },
-        {
-          "file": "libs/entities/ateria-idle/merchant/model/index.ts",
-          "hash": "9567954931586539641"
-        },
-        {
-          "file": "libs/entities/ateria-idle/merchant/model/merchant.types.ts",
-          "hash": "17230049684185893863",
-          "deps": [
-            "npm:break_infinity.js"
-          ]
-        },
-        {
-          "file": "libs/entities/ateria-idle/project.json",
-          "hash": "8275786798494164889"
-        },
-        {
-          "file": "libs/entities/ateria-idle/scientist/index.ts",
-          "hash": "11736365957286784171"
-        },
-        {
-          "file": "libs/entities/ateria-idle/scientist/model/index.ts",
-          "hash": "11393997166744650393"
-        },
-        {
-          "file": "libs/entities/ateria-idle/scientist/model/scientist.types.ts",
-          "hash": "3879672344843978662",
-          "deps": [
-            "projects-center"
-          ]
-        },
-        {
-          "file": "libs/entities/ateria-idle/warrior/index.ts",
-          "hash": "11736365957286784171"
-        },
-        {
-          "file": "libs/entities/ateria-idle/warrior/model/index.ts",
-          "hash": "5203704577360012263"
-        },
-        {
-          "file": "libs/entities/ateria-idle/warrior/model/warrior.types.ts",
-          "hash": "8224486781469471177",
-          "deps": [
-            "npm:break_infinity.js"
-          ]
-        }
-      ],
-      "entities-card": [
-        {
-          "file": "libs/entities/card/index.ts",
-          "hash": "16161717246031081262"
-        },
-        {
-          "file": "libs/entities/card/lib/index.ts",
-          "hash": "15002711875868856690"
-        },
-        {
-          "file": "libs/entities/card/lib/useCardStore.ts",
-          "hash": "13080855129187298963",
+          "file": "libs/projects-center/features/ateria-idle/core/model/achievements.store.ts",
+          "hash": "9463485812724548278",
           "deps": [
             "npm:pinia",
-            "npm:vue"
+            "npm:vue",
+            "projects-center-entities-ateria-idle"
           ]
         },
         {
-          "file": "libs/entities/card/model/card.types.ts",
-          "hash": "18114268985775116677"
+          "file": "libs/projects-center/features/ateria-idle/core/model/events.store.ts",
+          "hash": "12558487818227526203",
+          "deps": [
+            "npm:pinia",
+            "npm:vue",
+            "projects-center-entities-ateria-idle"
+          ]
         },
         {
-          "file": "libs/entities/card/model/index.ts",
-          "hash": "13448534966272314694"
+          "file": "libs/projects-center/features/ateria-idle/core/model/game.store.ts",
+          "hash": "9835138631820591080",
+          "deps": [
+            "npm:pinia",
+            "npm:vue",
+            "projects-center-shared",
+            "projects-center-entities-ateria-idle"
+          ]
         },
         {
-          "file": "libs/entities/card/project.json",
-          "hash": "14931882642191822947"
+          "file": "libs/projects-center/features/ateria-idle/core/model/prestige.store.ts",
+          "hash": "1398174077647257053",
+          "deps": [
+            "npm:pinia",
+            "npm:vue",
+            "projects-center-entities-ateria-idle"
+          ]
         },
         {
-          "file": "libs/entities/card/ui/CardItem.vue",
-          "hash": "2652952612143818991"
+          "file": "libs/projects-center/features/ateria-idle/core/model/resources.store.ts",
+          "hash": "13064790182800196745",
+          "deps": [
+            "npm:pinia",
+            "npm:vue",
+            "projects-center-shared",
+            "projects-center-entities-ateria-idle"
+          ]
         },
         {
-          "file": "libs/entities/card/ui/index.ts",
-          "hash": "9526142897608655453"
+          "file": "libs/projects-center/features/ateria-idle/core/ui/AchievementsPanel.vue",
+          "hash": "11717025470599871715",
+          "deps": [
+            "npm:vue",
+            "projects-center-entities-ateria-idle"
+          ]
+        },
+        {
+          "file": "libs/projects-center/features/ateria-idle/core/ui/OfflineProgressModal.vue",
+          "hash": "5437842973323419567",
+          "deps": [
+            "npm:vue",
+            "projects-center-shared",
+            "projects-center-entities-ateria-idle"
+          ]
+        },
+        {
+          "file": "libs/projects-center/features/ateria-idle/core/ui/ResourceBar.vue",
+          "hash": "6449092644839364165",
+          "deps": [
+            "projects-center-shared"
+          ]
+        },
+        {
+          "file": "libs/projects-center/features/ateria-idle/core/ui/StatsPanel.vue",
+          "hash": "8641376196011073130",
+          "deps": [
+            "npm:vue",
+            "projects-center-shared"
+          ]
+        },
+        {
+          "file": "libs/projects-center/features/ateria-idle/crafting/data/crafting.data.ts",
+          "hash": "9279593657942947394",
+          "deps": [
+            "projects-center-entities-ateria-idle"
+          ]
+        },
+        {
+          "file": "libs/projects-center/features/ateria-idle/crafting/data/orders.data.ts",
+          "hash": "1410178623421643687",
+          "deps": [
+            "projects-center-entities-ateria-idle"
+          ]
+        },
+        {
+          "file": "libs/projects-center/features/ateria-idle/data/achievements.data.ts",
+          "hash": "16231120076671952506",
+          "deps": [
+            "projects-center-entities-ateria-idle"
+          ]
+        },
+        {
+          "file": "libs/projects-center/features/ateria-idle/data/biomes.data.ts",
+          "hash": "15534925733810256529",
+          "deps": [
+            "projects-center-entities-ateria-idle"
+          ]
+        },
+        {
+          "file": "libs/projects-center/features/ateria-idle/data/caravans.data.ts",
+          "hash": "10707811420948744297",
+          "deps": [
+            "projects-center-entities-ateria-idle"
+          ]
+        },
+        {
+          "file": "libs/projects-center/features/ateria-idle/data/drops.data.ts",
+          "hash": "10405379947850475956",
+          "deps": [
+            "projects-center-entities-ateria-idle"
+          ]
+        },
+        {
+          "file": "libs/projects-center/features/ateria-idle/data/dungeons.data.ts",
+          "hash": "1038737533864745097",
+          "deps": [
+            "projects-center-entities-ateria-idle"
+          ]
+        },
+        {
+          "file": "libs/projects-center/features/ateria-idle/data/equipment.data.ts",
+          "hash": "15392364888401821593",
+          "deps": [
+            "projects-center-entities-ateria-idle"
+          ]
+        },
+        {
+          "file": "libs/projects-center/features/ateria-idle/data/events.data.ts",
+          "hash": "7671518216136777021",
+          "deps": [
+            "projects-center-entities-ateria-idle"
+          ]
+        },
+        {
+          "file": "libs/projects-center/features/ateria-idle/data/golems.data.ts",
+          "hash": "9585901259702878505",
+          "deps": [
+            "projects-center-entities-ateria-idle"
+          ]
+        },
+        {
+          "file": "libs/projects-center/features/ateria-idle/data/items.data.ts",
+          "hash": "3916500054910802978",
+          "deps": [
+            "projects-center-entities-ateria-idle"
+          ]
+        },
+        {
+          "file": "libs/projects-center/features/ateria-idle/data/market.data.ts",
+          "hash": "13877795975787504200",
+          "deps": [
+            "projects-center-entities-ateria-idle"
+          ]
+        },
+        {
+          "file": "libs/projects-center/features/ateria-idle/data/merchant.data.ts",
+          "hash": "12640893513338782813",
+          "deps": [
+            "projects-center-entities-ateria-idle"
+          ]
+        },
+        {
+          "file": "libs/projects-center/features/ateria-idle/data/monsters.data.ts",
+          "hash": "18021375847313268641",
+          "deps": [
+            "projects-center-entities-ateria-idle"
+          ]
+        },
+        {
+          "file": "libs/projects-center/features/ateria-idle/data/prestige.data.ts",
+          "hash": "14329850766165269220",
+          "deps": [
+            "projects-center-entities-ateria-idle"
+          ]
+        },
+        {
+          "file": "libs/projects-center/features/ateria-idle/data/scientist.data.ts",
+          "hash": "9880439959105342203",
+          "deps": [
+            "projects-center-entities-ateria-idle"
+          ]
+        },
+        {
+          "file": "libs/projects-center/features/ateria-idle/data/slayer.data.ts",
+          "hash": "1959747310253458531",
+          "deps": [
+            "projects-center-entities-ateria-idle"
+          ]
+        },
+        {
+          "file": "libs/projects-center/features/ateria-idle/gathering/data/gathering.data.ts",
+          "hash": "3766924121899041243",
+          "deps": [
+            "projects-center-entities-ateria-idle"
+          ]
+        },
+        {
+          "file": "libs/projects-center/features/ateria-idle/gathering/data/tools.data.ts",
+          "hash": "2667327937609866475",
+          "deps": [
+            "projects-center-entities-ateria-idle"
+          ]
+        },
+        {
+          "file": "libs/projects-center/features/ateria-idle/gathering/model/gathering.store.ts",
+          "hash": "9642907986988633723",
+          "deps": [
+            "npm:pinia",
+            "npm:vue",
+            "projects-center-shared"
+          ]
+        },
+        {
+          "file": "libs/projects-center/features/ateria-idle/merchant/model/merchant.store.ts",
+          "hash": "3020561859509549391",
+          "deps": [
+            "npm:pinia",
+            "npm:vue",
+            "projects-center-shared",
+            "projects-center-entities-ateria-idle"
+          ]
+        },
+        {
+          "file": "libs/projects-center/features/ateria-idle/merchant/ui/CaravanPanel.vue",
+          "hash": "4997313510076794954",
+          "deps": [
+            "npm:vue",
+            "projects-center-entities-ateria-idle"
+          ]
+        },
+        {
+          "file": "libs/projects-center/features/ateria-idle/merchant/ui/MerchantPanel.vue",
+          "hash": "361107167769732064",
+          "deps": [
+            "npm:vue",
+            "projects-center-shared",
+            "projects-center-entities-ateria-idle"
+          ]
+        },
+        {
+          "file": "libs/projects-center/features/ateria-idle/project.json",
+          "hash": "3125509535412828667"
+        },
+        {
+          "file": "libs/projects-center/features/ateria-idle/scientist/model/scientist.store.ts",
+          "hash": "3635298966695137933",
+          "deps": [
+            "npm:pinia",
+            "npm:vue",
+            "projects-center-shared",
+            "projects-center-entities-ateria-idle"
+          ]
+        },
+        {
+          "file": "libs/projects-center/features/ateria-idle/scientist/ui/GolemPanel.vue",
+          "hash": "3405786727756220926",
+          "deps": [
+            "npm:vue",
+            "projects-center-entities-ateria-idle"
+          ]
+        },
+        {
+          "file": "libs/projects-center/features/ateria-idle/scientist/ui/ScientistPanel.vue",
+          "hash": "12156629643321257506",
+          "deps": [
+            "npm:vue",
+            "projects-center-shared"
+          ]
+        },
+        {
+          "file": "libs/projects-center/features/ateria-idle/warrior/model/inventory.store.ts",
+          "hash": "283110933450816872",
+          "deps": [
+            "npm:pinia",
+            "npm:vue",
+            "projects-center-entities-ateria-idle"
+          ]
+        },
+        {
+          "file": "libs/projects-center/features/ateria-idle/warrior/model/warrior.store.ts",
+          "hash": "13442403229588634452",
+          "deps": [
+            "npm:pinia",
+            "npm:vue",
+            "projects-center-shared",
+            "projects-center-entities-ateria-idle"
+          ]
+        },
+        {
+          "file": "libs/projects-center/features/ateria-idle/warrior/ui/DungeonPanel.vue",
+          "hash": "6649978471903404704",
+          "deps": [
+            "npm:vue",
+            "projects-center-shared",
+            "projects-center-entities-ateria-idle"
+          ]
+        },
+        {
+          "file": "libs/projects-center/features/ateria-idle/warrior/ui/EquipmentPanel.vue",
+          "hash": "8462071334440726901",
+          "deps": [
+            "npm:vue",
+            "projects-center-entities-ateria-idle"
+          ]
+        },
+        {
+          "file": "libs/projects-center/features/ateria-idle/warrior/ui/SlayerPanel.vue",
+          "hash": "6236733764430218899",
+          "deps": [
+            "npm:vue",
+            "projects-center-shared",
+            "projects-center-entities-ateria-idle"
+          ]
+        },
+        {
+          "file": "libs/projects-center/features/ateria-idle/warrior/ui/WarriorPanel.vue",
+          "hash": "12431740054809316978",
+          "deps": [
+            "npm:vue",
+            "projects-center-shared",
+            "projects-center-entities-ateria-idle"
+          ]
         }
       ],
-      "features-card-print": [
+      "projects-center-features-rpg-map-generator": [
         {
-          "file": "libs/features/card-print/hooks/usePrintLayout.ts",
-          "hash": "15769516939751651844",
+          "file": "libs/projects-center/features/rpg-map-generator/hooks/useMapGenerator.ts",
+          "hash": "12078335292880906480",
           "deps": [
             "npm:vue",
-            "entities-card"
+            "projects-center-shared"
           ]
         },
         {
-          "file": "libs/features/card-print/project.json",
-          "hash": "16938163019966267780"
+          "file": "libs/projects-center/features/rpg-map-generator/project.json",
+          "hash": "15344327118106707364"
         },
         {
-          "file": "libs/features/card-print/ui/PrintLayoutSelector.vue",
-          "hash": "8610849275315175762",
-          "deps": [
-            "npm:vue",
-            "entities-card"
-          ]
-        },
-        {
-          "file": "libs/features/card-print/ui/PrintPreview.vue",
-          "hash": "8876160164786075169",
-          "deps": [
-            "npm:vue",
-            "entities-card"
-          ]
-        }
-      ],
-      "features-rpg-map-generator": [
-        {
-          "file": "libs/features/rpg-map-generator/hooks/useMapGenerator.ts",
-          "hash": "4928879760710125379",
-          "deps": [
-            "npm:vue",
-            "shared"
-          ]
-        },
-        {
-          "file": "libs/features/rpg-map-generator/hooks/useSettlements.ts",
-          "hash": "7518236505329312630"
-        },
-        {
-          "file": "libs/features/rpg-map-generator/project.json",
-          "hash": "7660728949364582502"
-        },
-        {
-          "file": "libs/features/rpg-map-generator/ui/MapCanvas.vue",
-          "hash": "1163668491009081963",
+          "file": "libs/projects-center/features/rpg-map-generator/ui/MapCanvas.vue",
+          "hash": "17476876320331182210",
           "deps": [
             "npm:vue",
             "npm:d3-zoom",
             "npm:d3-selection",
-            "shared"
+            "projects-center-shared"
           ]
-        },
-        {
-          "file": "libs/features/rpg-map-generator/ui/MapLegend.vue",
-          "hash": "17597205655561707439"
-        },
-        {
-          "file": "libs/features/rpg-map-generator/ui/MapSettingsPanel.vue",
-          "hash": "14121231672541784027"
-        },
-        {
-          "file": "libs/features/rpg-map-generator/ui/MapViewControls.vue",
-          "hash": "6678380940781813414",
-          "deps": [
-            "npm:vue"
-          ]
-        }
-      ],
-      "features-card-list": [
-        {
-          "file": "libs/features/card-list/project.json",
-          "hash": "13098333030510247632"
-        },
-        {
-          "file": "libs/features/card-list/ui/CardList.vue",
-          "hash": "17589722066975350437",
-          "deps": [
-            "npm:vue",
-            "entities-card"
-          ]
-        }
-      ],
-      "widgets-card-grid": [
-        {
-          "file": "libs/widgets/card-grid/project.json",
-          "hash": "10322010192193169282"
-        },
-        {
-          "file": "libs/widgets/card-grid/ui/CardGrid.vue",
-          "hash": "18396111559914857893",
-          "deps": [
-            "entities-card"
-          ]
-        },
-        {
-          "file": "libs/widgets/card-grid/ui/index.ts",
-          "hash": "1382918216505756801"
-        }
-      ],
-      "shared": [
-        {
-          "file": "libs/shared/lib/big-number.ts",
-          "hash": "6227730296113412982",
-          "deps": [
-            "npm:break_infinity.js"
-          ]
-        },
-        {
-          "file": "libs/shared/lib/logger.ts",
-          "hash": "15164706738081054041"
-        },
-        {
-          "file": "libs/shared/lib/perlin-noise.ts",
-          "hash": "14151116244080672194"
-        },
-        {
-          "file": "libs/shared/lib/throttle.ts",
-          "hash": "17225631842883697330"
-        },
-        {
-          "file": "libs/shared/lib/useWindowSize.ts",
-          "hash": "13473755744097965795",
-          "deps": [
-            "npm:vue"
-          ]
-        },
-        {
-          "file": "libs/shared/lib/voronoi-d3.ts",
-          "hash": "15959884059401245526",
-          "deps": [
-            "npm:d3-delaunay"
-          ]
-        },
-        {
-          "file": "libs/shared/lib/voronoi.ts",
-          "hash": "1956510775034278980"
-        },
-        {
-          "file": "libs/shared/map-generator/config/heightmap-templates.ts",
-          "hash": "10787001082312646693"
-        },
-        {
-          "file": "libs/shared/map-generator/types/features.types.ts",
-          "hash": "8236091495317732547"
-        },
-        {
-          "file": "libs/shared/map-generator/types/grid.types.ts",
-          "hash": "1984206881944660101"
-        },
-        {
-          "file": "libs/shared/map-generator/types/heightmap.types.ts",
-          "hash": "14151676780548322206"
-        },
-        {
-          "file": "libs/shared/map-generator/types/pack.types.ts",
-          "hash": "766222069685444139"
-        },
-        {
-          "file": "libs/shared/map-generator/types/voronoi.types.ts",
-          "hash": "10156087995917079943"
-        },
-        {
-          "file": "libs/shared/map-generator/utils/biomes-generator.ts",
-          "hash": "16598411933827865915",
-          "deps": [
-            "npm:d3"
-          ]
-        },
-        {
-          "file": "libs/shared/map-generator/utils/climate-generator.ts",
-          "hash": "3378738442868554841"
-        },
-        {
-          "file": "libs/shared/map-generator/utils/coastline-renderer.ts",
-          "hash": "14941032320560550177",
-          "deps": [
-            "npm:d3"
-          ]
-        },
-        {
-          "file": "libs/shared/map-generator/utils/color-utils.ts",
-          "hash": "12640081724616065472"
-        },
-        {
-          "file": "libs/shared/map-generator/utils/features-generator.ts",
-          "hash": "16178214724340390822"
-        },
-        {
-          "file": "libs/shared/map-generator/utils/graph-size.ts",
-          "hash": "15871437404102910772"
-        },
-        {
-          "file": "libs/shared/map-generator/utils/grid-generator.ts",
-          "hash": "16645770805100999691"
-        },
-        {
-          "file": "libs/shared/map-generator/utils/grid-helpers.ts",
-          "hash": "10797539320712443546"
-        },
-        {
-          "file": "libs/shared/map-generator/utils/grid-regeneration.ts",
-          "hash": "5301232550978810665"
-        },
-        {
-          "file": "libs/shared/map-generator/utils/heightmap-generator.ts",
-          "hash": "913989006124984250"
-        },
-        {
-          "file": "libs/shared/map-generator/utils/lakes-generator.ts",
-          "hash": "13018351090455236967"
-        },
-        {
-          "file": "libs/shared/map-generator/utils/map-coordinates.ts",
-          "hash": "9108125157592805452"
-        },
-        {
-          "file": "libs/shared/map-generator/utils/map-utils.ts",
-          "hash": "8974982375876698353"
-        },
-        {
-          "file": "libs/shared/map-generator/utils/ocean-layers.ts",
-          "hash": "390355746615056411"
-        },
-        {
-          "file": "libs/shared/map-generator/utils/pack-features.ts",
-          "hash": "8333551868443803633",
-          "deps": [
-            "npm:d3"
-          ]
-        },
-        {
-          "file": "libs/shared/map-generator/utils/pack-generator.ts",
-          "hash": "14314109280098963406",
-          "deps": [
-            "npm:d3"
-          ]
-        },
-        {
-          "file": "libs/shared/map-generator/utils/polygon-smoother.ts",
-          "hash": "14294755500031052383",
-          "deps": [
-            "npm:d3"
-          ]
-        },
-        {
-          "file": "libs/shared/map-generator/utils/randomize-options.ts",
-          "hash": "4744821265772559394"
-        },
-        {
-          "file": "libs/shared/map-generator/utils/rivers-generator.ts",
-          "hash": "3045617967165504816",
-          "deps": [
-            "npm:d3"
-          ]
-        },
-        {
-          "file": "libs/shared/map-generator/utils/ruler-generator.ts",
-          "hash": "5176151649307228119"
-        },
-        {
-          "file": "libs/shared/map-generator/utils/seed-manager.ts",
-          "hash": "338171925815145219",
-          "deps": [
-            "npm:seedrandom"
-          ]
-        },
-        {
-          "file": "libs/shared/map-generator/utils/voronoi-generator.ts",
-          "hash": "13107386109583235483",
-          "deps": [
-            "npm:d3-delaunay"
-          ]
-        },
-        {
-          "file": "libs/shared/map-generator/utils/voronoi-grid-generator.ts",
-          "hash": "2115710028975538211",
-          "deps": [
-            "npm:d3-delaunay"
-          ]
-        },
-        {
-          "file": "libs/shared/project.json",
-          "hash": "5914047881149999803"
-        },
-        {
-          "file": "libs/shared/stores/map-generator/map-generator.ts",
-          "hash": "2016865477769962268",
-          "deps": [
-            "npm:pinia",
-            "npm:vue"
-          ]
-        },
-        {
-          "file": "libs/shared/types/map-generator.types.ts",
-          "hash": "3606716882817433901"
-        },
-        {
-          "file": "libs/shared/world-generator/types/cosmology.types.ts",
-          "hash": "1223258918087766430"
-        },
-        {
-          "file": "libs/shared/world-generator/types/world.types.ts",
-          "hash": "4124156267892737551"
-        },
-        {
-          "file": "libs/shared/world-generator/utils/generators/cosmology-generator.ts",
-          "hash": "10404125967932122648"
-        },
-        {
-          "file": "libs/shared/world-generator/utils/name-generators/fantasy-names.ts",
-          "hash": "5629138195168033371"
         }
       ]
     }
   },
-  "externalNodesHash": "17377119413468178728"
+  "externalNodesHash": "452139089688724404"
 }

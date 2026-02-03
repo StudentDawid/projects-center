@@ -65,12 +65,12 @@
 
 <script setup lang="ts">
 import { ref, computed } from 'vue';
-import type { Card, CardType, PrintLayoutSettings } from '@libs/entities/card';
-import { CardType as CardTypeEnum } from '@libs/entities/card';
-import { useCardStore } from '@libs/entities/card/lib/useCardStore';
-import { usePrintLayout } from '@libs/features/card-print/hooks/usePrintLayout';
-import PrintLayoutSelector from '@libs/features/card-print/ui/PrintLayoutSelector.vue';
-import PrintPreview from '@libs/features/card-print/ui/PrintPreview.vue';
+import type { Card, CardType, PrintLayoutSettings } from '@projects-center/entities/card';
+import { CardType as CardTypeEnum } from '@projects-center/entities/card';
+import { useCardStore } from '@projects-center/entities/card/lib/useCardStore';
+import { usePrintLayout } from '@projects-center/features/card-print/hooks/usePrintLayout';
+import PrintLayoutSelector from '@projects-center/features/card-print/ui/PrintLayoutSelector.vue';
+import PrintPreview from '@projects-center/features/card-print/ui/PrintPreview.vue';
 
 useHead({
   title: 'Układ do druku - Generator Kart Fabula Ultima',

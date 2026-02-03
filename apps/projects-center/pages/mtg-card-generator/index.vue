@@ -92,8 +92,8 @@
 </template>
 
 <script setup lang="ts">
-import { useMtgCardStore } from '@libs/features/mtg-card-generator/stores/mtg-card-store';
-import MtgCard from '@libs/features/mtg-card-generator/ui/MtgCard.vue';
+import { useMtgCardStore } from '@projects-center/features/mtg-card-generator/stores/mtg-card-store';
+import MtgCard from '@projects-center/features/mtg-card-generator/ui/MtgCard.vue';
 
 const cardStore = useMtgCardStore();
 

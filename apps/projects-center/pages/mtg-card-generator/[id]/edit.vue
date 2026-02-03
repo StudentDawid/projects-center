@@ -22,10 +22,10 @@
 <script setup lang="ts">
 import { ref, onMounted } from 'vue';
 import { useRoute, useRouter } from 'vue-router';
-import { useMtgCardStore } from '@libs/features/mtg-card-generator/stores/mtg-card-store';
-import MtgCardForm from '@libs/features/mtg-card-generator/ui/MtgCardForm.vue';
-import MtgCard from '@libs/features/mtg-card-generator/ui/MtgCard.vue';
-import type { RpgCard as MtgCardType } from '@libs/features/mtg-card-generator/types';
+import { useMtgCardStore } from '@projects-center/features/mtg-card-generator/stores/mtg-card-store';
+import MtgCardForm from '@projects-center/features/mtg-card-generator/ui/MtgCardForm.vue';
+import MtgCard from '@projects-center/features/mtg-card-generator/ui/MtgCard.vue';
+import type { RpgCard as MtgCardType } from '@projects-center/features/mtg-card-generator/types';
 
 const route = useRoute();
 const router = useRouter();

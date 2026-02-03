@@ -19,31 +19,31 @@
     "allowJs": true,
     "baseUrl": ".",
     "paths": {
-      "@libs/entities/ateria-idle": ["libs/entities/ateria-idle/index.ts"],
-      "@libs/entities/ateria-idle/*": ["libs/entities/ateria-idle/*"],
-      "@libs/entities/card": ["libs/entities/card/index.ts"],
-      "@libs/entities/card/*": ["libs/entities/card/*"],
-      "@libs/features/ateria-idle/*": ["libs/features/ateria-idle/*"],
-      "@libs/features/card-delete/*": ["libs/features/card-delete/*"],
-      "@libs/features/card-edit/*": ["libs/features/card-edit/*"],
-      "@libs/features/card-list/*": ["libs/features/card-list/*"],
-      "@libs/features/card-preview/*": ["libs/features/card-preview/*"],
-      "@libs/features/card-print/*": ["libs/features/card-print/*"],
-      "@libs/features/mtg-card-generator/*": [
-        "libs/features/mtg-card-generator/*"
+      "@projects-center/entities/ateria-idle": ["libs/projects-center/entities/ateria-idle/index.ts"],
+      "@projects-center/entities/ateria-idle/*": ["libs/projects-center/entities/ateria-idle/*"],
+      "@projects-center/entities/card": ["libs/projects-center/entities/card/index.ts"],
+      "@projects-center/entities/card/*": ["libs/projects-center/entities/card/*"],
+      "@projects-center/features/ateria-idle/*": ["libs/projects-center/features/ateria-idle/*"],
+      "@projects-center/features/card-delete/*": ["libs/projects-center/features/card-delete/*"],
+      "@projects-center/features/card-edit/*": ["libs/projects-center/features/card-edit/*"],
+      "@projects-center/features/card-list/*": ["libs/projects-center/features/card-list/*"],
+      "@projects-center/features/card-preview/*": ["libs/projects-center/features/card-preview/*"],
+      "@projects-center/features/card-print/*": ["libs/projects-center/features/card-print/*"],
+      "@projects-center/features/mtg-card-generator/*": [
+        "libs/projects-center/features/mtg-card-generator/*"
       ],
-      "@libs/features/rpg-map-generator/*": [
-        "libs/features/rpg-map-generator/*"
+      "@projects-center/features/rpg-map-generator/*": [
+        "libs/projects-center/features/rpg-map-generator/*"
       ],
-      "@libs/features/rpg-world-generator/*": [
-        "libs/features/rpg-world-generator/*"
+      "@projects-center/features/rpg-world-generator/*": [
+        "libs/projects-center/features/rpg-world-generator/*"
       ],
-      "@libs/shared/lib/*": ["libs/shared/lib/*"],
-      "@libs/shared/map-generator/*": ["libs/shared/map-generator/*"],
-      "@libs/shared/world-generator/*": ["libs/shared/world-generator/*"],
-      "@libs/shared/types/*": ["libs/shared/types/*"],
-      "@libs/shared/stores/*": ["libs/shared/stores/*"],
-      "@libs/widgets/card-grid/*": ["libs/widgets/card-grid/*"],
+      "@projects-center/shared/lib/*": ["libs/projects-center/shared/lib/*"],
+      "@projects-center/shared/map-generator/*": ["libs/projects-center/shared/map-generator/*"],
+      "@projects-center/shared/world-generator/*": ["libs/projects-center/shared/world-generator/*"],
+      "@projects-center/shared/types/*": ["libs/projects-center/shared/types/*"],
+      "@projects-center/shared/stores/*": ["libs/projects-center/shared/stores/*"],
+      "@projects-center/widgets/card-grid/*": ["libs/projects-center/widgets/card-grid/*"],
       "@app/*": ["apps/projects-center/*"],
       "~/*": ["apps/projects-center/*"]
     }

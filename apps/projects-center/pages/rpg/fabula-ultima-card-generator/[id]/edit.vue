@@ -90,10 +90,10 @@
 
 <script setup lang="ts">
 import { computed, ref, watchEffect } from 'vue';
-import type { Card } from '@libs/entities/card';
-import { useCardStore } from '@libs/entities/card/lib/useCardStore';
-import CardForm from '@libs/features/card-edit/ui/CardForm.vue';
-import { CardItem } from '@libs/entities/card/ui';
+import type { Card } from '@projects-center/entities/card';
+import { useCardStore } from '@projects-center/entities/card/lib/useCardStore';
+import CardForm from '@projects-center/features/card-edit/ui/CardForm.vue';
+import { CardItem } from '@projects-center/entities/card/ui';
 
 const route = useRoute();
 const router = useRouter();
