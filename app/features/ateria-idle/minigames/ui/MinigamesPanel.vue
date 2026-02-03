@@ -14,7 +14,7 @@ const puzzleDifficulty = ref<'easy' | 'normal' | 'hard'>('normal');
 
 const selectedGameData = computed(() => {
   if (!selectedGame.value) return null;
-  return MINIGAMES.find(g => g.id === selectedGame.value);
+  return MINIGAMES.find((g) => g.id === selectedGame.value);
 });
 </script>
 
@@ -45,19 +45,32 @@ const selectedGameData = computed(() => {
             <div class="text-caption">Gier</div>
           </v-col>
           <v-col cols="3" class="text-center">
-            <div class="text-h6" :class="minigamesStore.winRate >= 50 ? 'text-success' : 'text-error'">
+            <div
+              class="text-h6"
+              :class="
+                minigamesStore.winRate >= 50 ? 'text-success' : 'text-error'
+              "
+            >
               {{ minigamesStore.winRate.toFixed(1) }}%
             </div>
             <div class="text-caption">Winrate</div>
           </v-col>
           <v-col cols="3" class="text-center">
-            <div class="text-h6" :class="minigamesStore.netProfit >= 0 ? 'text-success' : 'text-error'">
-              {{ minigamesStore.netProfit >= 0 ? '+' : '' }}{{ minigamesStore.netProfit.toLocaleString() }}
+            <div
+              class="text-h6"
+              :class="
+                minigamesStore.netProfit >= 0 ? 'text-success' : 'text-error'
+              "
+            >
+              {{ minigamesStore.netProfit >= 0 ? '+' : ''
+              }}{{ minigamesStore.netProfit.toLocaleString() }}
             </div>
             <div class="text-caption">Bilans</div>
           </v-col>
           <v-col cols="3" class="text-center">
-            <div class="text-h6 text-amber">{{ minigamesStore.stats.biggestWin.toLocaleString() }}</div>
+            <div class="text-h6 text-amber">
+              {{ minigamesStore.stats.biggestWin.toLocaleString() }}
+            </div>
             <div class="text-caption">Rekord</div>
           </v-col>
         </v-row>
@@ -89,7 +102,10 @@ const selectedGameData = computed(() => {
                   v-for="game in MINIGAMES"
                   :key="game.id"
                   :active="selectedGame === game.id"
-                  @click="selectedGame = game.id; minigamesStore.clearGame(game.type)"
+                  @click="
+                    selectedGame = game.id;
+                    minigamesStore.clearGame(game.type);
+                  "
                 >
                   <template #prepend>
                     <v-avatar :color="game.color" size="40">
@@ -99,7 +115,11 @@ const selectedGameData = computed(() => {
                   <v-list-item-title>{{ game.name }}</v-list-item-title>
                   <v-list-item-subtitle>{{ game.type }}</v-list-item-subtitle>
                   <template #append>
-                    <v-chip v-if="minigamesStore.isOnCooldown(game.id)" size="x-small" color="warning">
+                    <v-chip
+                      v-if="minigamesStore.isOnCooldown(game.id)"
+                      size="x-small"
+                      color="warning"
+                    >
                       CD
                     </v-chip>
                   </template>
@@ -120,7 +140,9 @@ const selectedGameData = computed(() => {
             </v-card-title>
 
             <v-card-text>
-              <div class="text-body-2 mb-4">{{ selectedGameData.description }}</div>
+              <div class="text-body-2 mb-4">
+                {{ selectedGameData.description }}
+              </div>
 
               <!-- Dice Game -->
               <div v-if="selectedGameData.type === 'dice'">
@@ -146,14 +168,25 @@ const selectedGameData = computed(() => {
                   </v-btn>
                 </div>
 
-                <div v-if="minigamesStore.activeDiceGame" class="dice-result text-center pa-4">
+                <div
+                  v-if="minigamesStore.activeDiceGame"
+                  class="dice-result text-center pa-4"
+                >
                   <v-row>
                     <v-col cols="5">
                       <div class="text-h6">Ty</div>
                       <div class="dice-display">
-                        <span v-for="(d, i) in minigamesStore.activeDiceGame.playerDice" :key="i" class="dice">{{ d }}</span>
+                        <span
+                          v-for="(d, i) in minigamesStore.activeDiceGame
+                            .playerDice"
+                          :key="i"
+                          class="dice"
+                          >{{ d }}</span
+                        >
                       </div>
-                      <div class="text-h4 mt-2">{{ minigamesStore.activeDiceGame.playerTotal }}</div>
+                      <div class="text-h4 mt-2">
+                        {{ minigamesStore.activeDiceGame.playerTotal }}
+                      </div>
                     </v-col>
                     <v-col cols="2" class="d-flex align-center justify-center">
                       <v-icon size="48">mdi-sword-cross</v-icon>
@@ -161,24 +194,47 @@ const selectedGameData = computed(() => {
                     <v-col cols="5">
                       <div class="text-h6">NPC</div>
                       <div class="dice-display">
-                        <span v-for="(d, i) in minigamesStore.activeDiceGame.npcDice" :key="i" class="dice">{{ d }}</span>
+                        <span
+                          v-for="(d, i) in minigamesStore.activeDiceGame
+                            .npcDice"
+                          :key="i"
+                          class="dice"
+                          >{{ d }}</span
+                        >
                       </div>
-                      <div class="text-h4 mt-2">{{ minigamesStore.activeDiceGame.npcTotal }}</div>
+                      <div class="text-h4 mt-2">
+                        {{ minigamesStore.activeDiceGame.npcTotal }}
+                      </div>
                     </v-col>
                   </v-row>
                   <v-chip
-                    :color="minigamesStore.activeDiceGame.result === 'win' ? 'success' : minigamesStore.activeDiceGame.result === 'lose' ? 'error' : 'info'"
+                    :color="
+                      minigamesStore.activeDiceGame.result === 'win'
+                        ? 'success'
+                        : minigamesStore.activeDiceGame.result === 'lose'
+                          ? 'error'
+                          : 'info'
+                    "
                     size="large"
                     class="mt-4"
                   >
-                    {{ minigamesStore.activeDiceGame.result === 'win' ? 'WYGRANA!' : minigamesStore.activeDiceGame.result === 'lose' ? 'PRZEGRANA' : 'REMIS' }}
+                    {{
+                      minigamesStore.activeDiceGame.result === 'win'
+                        ? 'WYGRANA!'
+                        : minigamesStore.activeDiceGame.result === 'lose'
+                          ? 'PRZEGRANA'
+                          : 'REMIS'
+                    }}
                   </v-chip>
                 </div>
               </div>
 
               <!-- Blackjack -->
               <div v-else-if="selectedGameData.id === 'blackjack'">
-                <div v-if="!minigamesStore.activeCardGame" class="d-flex align-center gap-4 mb-4">
+                <div
+                  v-if="!minigamesStore.activeCardGame"
+                  class="d-flex align-center gap-4 mb-4"
+                >
                   <v-text-field
                     v-model.number="betAmount"
                     type="number"
@@ -192,7 +248,9 @@ const selectedGameData = computed(() => {
                   />
                   <v-btn
                     color="success"
-                    :disabled="!minigamesStore.canPlayBlackjack(betAmount).canPlay"
+                    :disabled="
+                      !minigamesStore.canPlayBlackjack(betAmount).canPlay
+                    "
                     @click="minigamesStore.startBlackjack(betAmount)"
                   >
                     <v-icon start>mdi-cards-playing</v-icon>
@@ -203,13 +261,22 @@ const selectedGameData = computed(() => {
                 <div v-else class="blackjack-table pa-4">
                   <!-- Dealer -->
                   <div class="mb-4">
-                    <div class="text-subtitle-2 mb-2">Krupier ({{ minigamesStore.activeCardGame.dealerScore }})</div>
+                    <div class="text-subtitle-2 mb-2">
+                      Krupier ({{ minigamesStore.activeCardGame.dealerScore }})
+                    </div>
                     <div class="d-flex gap-2">
                       <v-chip
-                        v-for="(card, i) in minigamesStore.activeCardGame.dealerHand"
+                        v-for="(card, i) in minigamesStore.activeCardGame
+                          .dealerHand"
                         :key="i"
                         size="large"
-                        :color="card.faceUp ? (card.suit === 'hearts' || card.suit === 'diamonds' ? 'red' : 'grey-darken-3') : 'blue-grey'"
+                        :color="
+                          card.faceUp
+                            ? card.suit === 'hearts' || card.suit === 'diamonds'
+                              ? 'red'
+                              : 'grey-darken-3'
+                            : 'blue-grey'
+                        "
                       >
                         {{ card.faceUp ? getCardDisplay(card) : '?' }}
                       </v-chip>
@@ -220,13 +287,20 @@ const selectedGameData = computed(() => {
 
                   <!-- Player -->
                   <div class="mb-4">
-                    <div class="text-subtitle-2 mb-2">Ty ({{ minigamesStore.activeCardGame.playerScore }})</div>
+                    <div class="text-subtitle-2 mb-2">
+                      Ty ({{ minigamesStore.activeCardGame.playerScore }})
+                    </div>
                     <div class="d-flex gap-2">
                       <v-chip
-                        v-for="(card, i) in minigamesStore.activeCardGame.playerHand"
+                        v-for="(card, i) in minigamesStore.activeCardGame
+                          .playerHand"
                         :key="i"
                         size="large"
-                        :color="card.suit === 'hearts' || card.suit === 'diamonds' ? 'red' : 'grey-darken-3'"
+                        :color="
+                          card.suit === 'hearts' || card.suit === 'diamonds'
+                            ? 'red'
+                            : 'grey-darken-3'
+                        "
                       >
                         {{ getCardDisplay(card) }}
                       </v-chip>
@@ -234,29 +308,57 @@ const selectedGameData = computed(() => {
                   </div>
 
                   <!-- Actions -->
-                  <div v-if="minigamesStore.activeCardGame.phase === 'playing'" class="d-flex gap-2">
-                    <v-btn color="primary" @click="minigamesStore.blackjackHit()">
+                  <div
+                    v-if="minigamesStore.activeCardGame.phase === 'playing'"
+                    class="d-flex gap-2"
+                  >
+                    <v-btn
+                      color="primary"
+                      @click="minigamesStore.blackjackHit()"
+                    >
                       <v-icon start>mdi-plus</v-icon>
                       Dobierz
                     </v-btn>
-                    <v-btn color="warning" @click="minigamesStore.blackjackStand()">
+                    <v-btn
+                      color="warning"
+                      @click="minigamesStore.blackjackStand()"
+                    >
                       <v-icon start>mdi-hand-back-right</v-icon>
                       Stój
                     </v-btn>
                   </div>
 
                   <!-- Result -->
-                  <div v-else-if="minigamesStore.activeCardGame.phase === 'result'" class="text-center">
+                  <div
+                    v-else-if="minigamesStore.activeCardGame.phase === 'result'"
+                    class="text-center"
+                  >
                     <v-chip
-                      :color="minigamesStore.activeCardGame.result === 'win' || minigamesStore.activeCardGame.result === 'blackjack' ? 'success' : minigamesStore.activeCardGame.result === 'lose' ? 'error' : 'info'"
+                      :color="
+                        minigamesStore.activeCardGame.result === 'win' ||
+                        minigamesStore.activeCardGame.result === 'blackjack'
+                          ? 'success'
+                          : minigamesStore.activeCardGame.result === 'lose'
+                            ? 'error'
+                            : 'info'
+                      "
                       size="x-large"
                       class="mb-4"
                     >
-                      {{ minigamesStore.activeCardGame.result === 'blackjack' ? 'BLACKJACK! 🎉' : 
-                         minigamesStore.activeCardGame.result === 'win' ? 'WYGRANA!' : 
-                         minigamesStore.activeCardGame.result === 'lose' ? 'PRZEGRANA' : 'REMIS' }}
+                      {{
+                        minigamesStore.activeCardGame.result === 'blackjack'
+                          ? 'BLACKJACK! 🎉'
+                          : minigamesStore.activeCardGame.result === 'win'
+                            ? 'WYGRANA!'
+                            : minigamesStore.activeCardGame.result === 'lose'
+                              ? 'PRZEGRANA'
+                              : 'REMIS'
+                      }}
                     </v-chip>
-                    <v-btn color="primary" @click="minigamesStore.clearGame('cards')">
+                    <v-btn
+                      color="primary"
+                      @click="minigamesStore.clearGame('cards')"
+                    >
                       Nowa gra
                     </v-btn>
                   </div>
@@ -287,10 +389,14 @@ const selectedGameData = computed(() => {
                   </v-btn>
                 </div>
 
-                <div v-if="minigamesStore.activeSlotsGame" class="slots-display text-center pa-4">
+                <div
+                  v-if="minigamesStore.activeSlotsGame"
+                  class="slots-display text-center pa-4"
+                >
                   <div class="slots-reels d-flex justify-center gap-4 mb-4">
                     <div
-                      v-for="(symbol, i) in minigamesStore.activeSlotsGame.currentSpin"
+                      v-for="(symbol, i) in minigamesStore.activeSlotsGame
+                        .currentSpin"
                       :key="i"
                       class="slot-reel"
                     >
@@ -298,15 +404,29 @@ const selectedGameData = computed(() => {
                     </div>
                   </div>
                   <v-chip
-                    :color="minigamesStore.activeSlotsGame.result === 'jackpot' ? 'amber' : 
-                           minigamesStore.activeSlotsGame.result === 'bigwin' ? 'success' :
-                           minigamesStore.activeSlotsGame.result === 'win' ? 'primary' : 'grey'"
+                    :color="
+                      minigamesStore.activeSlotsGame.result === 'jackpot'
+                        ? 'amber'
+                        : minigamesStore.activeSlotsGame.result === 'bigwin'
+                          ? 'success'
+                          : minigamesStore.activeSlotsGame.result === 'win'
+                            ? 'primary'
+                            : 'grey'
+                    "
                     size="large"
                   >
-                    {{ minigamesStore.activeSlotsGame.result === 'jackpot' ? '🎰 JACKPOT! 🎰' :
-                       minigamesStore.activeSlotsGame.result === 'bigwin' ? '💰 DUŻA WYGRANA!' :
-                       minigamesStore.activeSlotsGame.result === 'win' ? '✨ Wygrana!' : 'Spróbuj ponownie' }}
-                    <template v-if="minigamesStore.activeSlotsGame.multiplier > 0">
+                    {{
+                      minigamesStore.activeSlotsGame.result === 'jackpot'
+                        ? '🎰 JACKPOT! 🎰'
+                        : minigamesStore.activeSlotsGame.result === 'bigwin'
+                          ? '💰 DUŻA WYGRANA!'
+                          : minigamesStore.activeSlotsGame.result === 'win'
+                            ? '✨ Wygrana!'
+                            : 'Spróbuj ponownie'
+                    }}
+                    <template
+                      v-if="minigamesStore.activeSlotsGame.multiplier > 0"
+                    >
                       (x{{ minigamesStore.activeSlotsGame.multiplier }})
                     </template>
                   </v-chip>
@@ -315,7 +435,10 @@ const selectedGameData = computed(() => {
 
               <!-- Puzzle -->
               <div v-else-if="selectedGameData.id === 'puzzle_15'">
-                <div v-if="!minigamesStore.activePuzzleGame" class="d-flex align-center gap-4 mb-4">
+                <div
+                  v-if="!minigamesStore.activePuzzleGame"
+                  class="d-flex align-center gap-4 mb-4"
+                >
                   <v-select
                     v-model="puzzleDifficulty"
                     :items="[
@@ -328,7 +451,10 @@ const selectedGameData = computed(() => {
                     variant="outlined"
                     style="max-width: 200px"
                   />
-                  <v-btn color="success" @click="minigamesStore.startPuzzle(puzzleDifficulty)">
+                  <v-btn
+                    color="success"
+                    @click="minigamesStore.startPuzzle(puzzleDifficulty)"
+                  >
                     <v-icon start>mdi-puzzle</v-icon>
                     Start!
                   </v-btn>
@@ -336,26 +462,43 @@ const selectedGameData = computed(() => {
 
                 <div v-else class="puzzle-game">
                   <div class="d-flex justify-space-between mb-2">
-                    <span>Ruchy: {{ minigamesStore.activePuzzleGame.moves }}</span>
-                    <v-chip v-if="minigamesStore.activePuzzleGame.solved" color="success">Ukończone!</v-chip>
+                    <span
+                      >Ruchy: {{ minigamesStore.activePuzzleGame.moves }}</span
+                    >
+                    <v-chip
+                      v-if="minigamesStore.activePuzzleGame.solved"
+                      color="success"
+                      >Ukończone!</v-chip
+                    >
                   </div>
                   <div
                     class="puzzle-grid"
-                    :style="{ gridTemplateColumns: `repeat(${minigamesStore.activePuzzleGame.grid.length}, 1fr)` }"
+                    :style="{
+                      gridTemplateColumns: `repeat(${minigamesStore.activePuzzleGame.grid.length}, 1fr)`,
+                    }"
                   >
                     <div
                       v-for="(row, y) in minigamesStore.activePuzzleGame.grid"
                       :key="y"
-                      v-for="(cell, x) in row"
-                      :key="`${x}-${y}`"
-                      class="puzzle-cell"
-                      :class="{ 'puzzle-empty': cell === 0 }"
-                      @click="minigamesStore.movePuzzleTile(x, y)"
+                      class="puzzle-row"
                     >
-                      {{ cell || '' }}
+                      <div
+                        v-for="(cell, x) in row"
+                        :key="`${x}-${y}`"
+                        class="puzzle-cell"
+                        :class="{ 'puzzle-empty': cell === 0 }"
+                        @click="minigamesStore.movePuzzleTile(x, y)"
+                      >
+                        {{ cell || '' }}
+                      </div>
                     </div>
                   </div>
-                  <v-btn v-if="minigamesStore.activePuzzleGame.solved" color="primary" class="mt-4" @click="minigamesStore.clearGame('puzzle')">
+                  <v-btn
+                    v-if="minigamesStore.activePuzzleGame.solved"
+                    color="primary"
+                    class="mt-4"
+                    @click="minigamesStore.clearGame('puzzle')"
+                  >
                     Nowa gra
                   </v-btn>
                 </div>
@@ -363,7 +506,10 @@ const selectedGameData = computed(() => {
 
               <!-- Memory -->
               <div v-else-if="selectedGameData.id === 'memory_match'">
-                <div v-if="!minigamesStore.activeMemoryGame" class="d-flex align-center gap-4 mb-4">
+                <div
+                  v-if="!minigamesStore.activeMemoryGame"
+                  class="d-flex align-center gap-4 mb-4"
+                >
                   <v-select
                     v-model="puzzleDifficulty"
                     :items="[
@@ -376,7 +522,10 @@ const selectedGameData = computed(() => {
                     variant="outlined"
                     style="max-width: 200px"
                   />
-                  <v-btn color="success" @click="minigamesStore.startMemory(puzzleDifficulty)">
+                  <v-btn
+                    color="success"
+                    @click="minigamesStore.startMemory(puzzleDifficulty)"
+                  >
                     <v-icon start>mdi-cards</v-icon>
                     Start!
                   </v-btn>
@@ -384,22 +533,36 @@ const selectedGameData = computed(() => {
 
                 <div v-else class="memory-game">
                   <div class="d-flex justify-space-between mb-2">
-                    <span>Próby: {{ minigamesStore.activeMemoryGame.attempts }}</span>
-                    <span>Pary: {{ minigamesStore.activeMemoryGame.matches }} / {{ minigamesStore.activeMemoryGame.cards.length / 2 }}</span>
+                    <span
+                      >Próby:
+                      {{ minigamesStore.activeMemoryGame.attempts }}</span
+                    >
+                    <span
+                      >Pary: {{ minigamesStore.activeMemoryGame.matches }} /
+                      {{
+                        minigamesStore.activeMemoryGame.cards.length / 2
+                      }}</span
+                    >
                   </div>
                   <div class="memory-grid">
                     <div
                       v-for="card in minigamesStore.activeMemoryGame.cards"
                       :key="card.id"
                       class="memory-card"
-                      :class="{ 'memory-flipped': card.flipped || card.matched, 'memory-matched': card.matched }"
+                      :class="{
+                        'memory-flipped': card.flipped || card.matched,
+                        'memory-matched': card.matched,
+                      }"
                       @click="minigamesStore.flipMemoryCard(card.id)"
                     >
                       {{ card.flipped || card.matched ? card.symbol : '?' }}
                     </div>
                   </div>
                   <v-btn
-                    v-if="minigamesStore.activeMemoryGame.matches === minigamesStore.activeMemoryGame.cards.length / 2"
+                    v-if="
+                      minigamesStore.activeMemoryGame.matches ===
+                      minigamesStore.activeMemoryGame.cards.length / 2
+                    "
                     color="primary"
                     class="mt-4"
                     @click="minigamesStore.clearGame('memory')"
@@ -413,7 +576,9 @@ const selectedGameData = computed(() => {
               <v-divider class="my-4" />
               <div class="text-subtitle-2 mb-2">Zasady:</div>
               <ul class="text-body-2">
-                <li v-for="(rule, i) in selectedGameData.rules" :key="i">{{ rule }}</li>
+                <li v-for="(rule, i) in selectedGameData.rules" :key="i">
+                  {{ rule }}
+                </li>
               </ul>
             </v-card-text>
           </v-card>
@@ -437,34 +602,64 @@ const selectedGameData = computed(() => {
             <v-card-text>
               <v-list density="compact">
                 <v-list-item>
-                  <template #prepend><v-icon color="primary">mdi-gamepad</v-icon></template>
+                  <template #prepend
+                    ><v-icon color="primary">mdi-gamepad</v-icon></template
+                  >
                   <v-list-item-title>Rozegranych gier</v-list-item-title>
-                  <template #append>{{ minigamesStore.stats.gamesPlayed }}</template>
+                  <template #append>{{
+                    minigamesStore.stats.gamesPlayed
+                  }}</template>
                 </v-list-item>
                 <v-list-item>
-                  <template #prepend><v-icon color="success">mdi-trophy</v-icon></template>
+                  <template #prepend
+                    ><v-icon color="success">mdi-trophy</v-icon></template
+                  >
                   <v-list-item-title>Wygranych</v-list-item-title>
-                  <template #append>{{ minigamesStore.stats.gamesWon }}</template>
+                  <template #append>{{
+                    minigamesStore.stats.gamesWon
+                  }}</template>
                 </v-list-item>
                 <v-list-item>
-                  <template #prepend><v-icon color="amber">mdi-gold</v-icon></template>
+                  <template #prepend
+                    ><v-icon color="amber">mdi-gold</v-icon></template
+                  >
                   <v-list-item-title>Łącznie postawiono</v-list-item-title>
-                  <template #append>{{ minigamesStore.stats.totalBet.toLocaleString() }}g</template>
+                  <template #append
+                    >{{
+                      minigamesStore.stats.totalBet.toLocaleString()
+                    }}g</template
+                  >
                 </v-list-item>
                 <v-list-item>
-                  <template #prepend><v-icon color="success">mdi-cash-plus</v-icon></template>
+                  <template #prepend
+                    ><v-icon color="success">mdi-cash-plus</v-icon></template
+                  >
                   <v-list-item-title>Łącznie wygrano</v-list-item-title>
-                  <template #append>{{ minigamesStore.stats.totalWon.toLocaleString() }}g</template>
+                  <template #append
+                    >{{
+                      minigamesStore.stats.totalWon.toLocaleString()
+                    }}g</template
+                  >
                 </v-list-item>
                 <v-list-item>
-                  <template #prepend><v-icon color="warning">mdi-star</v-icon></template>
+                  <template #prepend
+                    ><v-icon color="warning">mdi-star</v-icon></template
+                  >
                   <v-list-item-title>Największa wygrana</v-list-item-title>
-                  <template #append>{{ minigamesStore.stats.biggestWin.toLocaleString() }}g</template>
+                  <template #append
+                    >{{
+                      minigamesStore.stats.biggestWin.toLocaleString()
+                    }}g</template
+                  >
                 </v-list-item>
                 <v-list-item>
-                  <template #prepend><v-icon color="info">mdi-fire</v-icon></template>
+                  <template #prepend
+                    ><v-icon color="info">mdi-fire</v-icon></template
+                  >
                   <v-list-item-title>Najlepsza seria</v-list-item-title>
-                  <template #append>{{ minigamesStore.stats.bestStreak }}</template>
+                  <template #append>{{
+                    minigamesStore.stats.bestStreak
+                  }}</template>
                 </v-list-item>
               </v-list>
             </v-card-text>
@@ -476,15 +671,29 @@ const selectedGameData = computed(() => {
             <v-card-title>Statystyki Gier</v-card-title>
             <v-card-text>
               <v-list density="compact">
-                <v-list-item v-for="(gameStats, gameId) in minigamesStore.stats.byGame" :key="gameId">
+                <v-list-item
+                  v-for="(gameStats, gameId) in minigamesStore.stats.byGame"
+                  :key="gameId"
+                >
                   <template #prepend>
-                    <v-avatar :color="MINIGAMES.find(g => g.id === gameId)?.color" size="32">
-                      <v-icon size="18" color="white">{{ MINIGAMES.find(g => g.id === gameId)?.icon }}</v-icon>
+                    <v-avatar
+                      :color="MINIGAMES.find((g) => g.id === gameId)?.color"
+                      size="32"
+                    >
+                      <v-icon size="18" color="white">{{
+                        MINIGAMES.find((g) => g.id === gameId)?.icon
+                      }}</v-icon>
                     </v-avatar>
                   </template>
-                  <v-list-item-title>{{ MINIGAMES.find(g => g.id === gameId)?.name }}</v-list-item-title>
+                  <v-list-item-title>{{
+                    MINIGAMES.find((g) => g.id === gameId)?.name
+                  }}</v-list-item-title>
                   <v-list-item-subtitle>
-                    {{ gameStats.won }} / {{ gameStats.played }} ({{ gameStats.played > 0 ? ((gameStats.won / gameStats.played) * 100).toFixed(0) : 0 }}%)
+                    {{ gameStats.won }} / {{ gameStats.played }} ({{
+                      gameStats.played > 0
+                        ? ((gameStats.won / gameStats.played) * 100).toFixed(0)
+                        : 0
+                    }}%)
                   </v-list-item-subtitle>
                 </v-list-item>
               </v-list>
@@ -534,7 +743,7 @@ const selectedGameData = computed(() => {
   display: flex;
   align-items: center;
   justify-content: center;
-  background: #1976D2;
+  background: #1976d2;
   color: white;
   font-size: 1.5rem;
   font-weight: bold;
@@ -565,7 +774,7 @@ const selectedGameData = computed(() => {
   display: flex;
   align-items: center;
   justify-content: center;
-  background: #1976D2;
+  background: #1976d2;
   color: white;
   font-size: 1.5rem;
   border-radius: 8px;
@@ -579,7 +788,7 @@ const selectedGameData = computed(() => {
 }
 
 .memory-matched {
-  background: #4CAF50;
+  background: #4caf50;
   color: white;
 }
 </style>
