@@ -1,31 +1,14 @@
 {
   "nodes": {
-    "projects-center-features-rpg-world-generator": {
-      "name": "projects-center-features-rpg-world-generator",
+    "mtg-generator-features-mtg-card-generator": {
+      "name": "mtg-generator-features-mtg-card-generator",
       "type": "lib",
       "data": {
-        "root": "libs/projects-center/features/rpg-world-generator",
-        "name": "projects-center-features-rpg-world-generator",
+        "root": "libs/mtg-generator/features/mtg-card-generator",
+        "name": "mtg-generator-features-mtg-card-generator",
         "$schema": "../../../../node_modules/nx/schemas/project-schema.json",
         "projectType": "library",
-        "sourceRoot": "libs/projects-center/features/rpg-world-generator",
-        "tags": [
-          "type:features",
-          "domain:rpg"
-        ],
-        "targets": {},
-        "implicitDependencies": []
-      }
-    },
-    "projects-center-features-mtg-card-generator": {
-      "name": "projects-center-features-mtg-card-generator",
-      "type": "lib",
-      "data": {
-        "root": "libs/projects-center/features/mtg-card-generator",
-        "name": "projects-center-features-mtg-card-generator",
-        "$schema": "../../../../node_modules/nx/schemas/project-schema.json",
-        "projectType": "library",
-        "sourceRoot": "libs/projects-center/features/mtg-card-generator",
+        "sourceRoot": "libs/mtg-generator/features/mtg-card-generator",
         "tags": [
           "type:features",
           "domain:card"
@@ -34,15 +17,15 @@
         "implicitDependencies": []
       }
     },
-    "projects-center-features-rpg-map-generator": {
-      "name": "projects-center-features-rpg-map-generator",
+    "rpg-tools-features-rpg-world-generator": {
+      "name": "rpg-tools-features-rpg-world-generator",
       "type": "lib",
       "data": {
-        "root": "libs/projects-center/features/rpg-map-generator",
-        "name": "projects-center-features-rpg-map-generator",
+        "root": "libs/rpg-tools/features/rpg-world-generator",
+        "name": "rpg-tools-features-rpg-world-generator",
         "$schema": "../../../../node_modules/nx/schemas/project-schema.json",
         "projectType": "library",
-        "sourceRoot": "libs/projects-center/features/rpg-map-generator",
+        "sourceRoot": "libs/rpg-tools/features/rpg-world-generator",
         "tags": [
           "type:features",
           "domain:rpg"
@@ -51,32 +34,32 @@
         "implicitDependencies": []
       }
     },
-    "projects-center-features-card-preview": {
-      "name": "projects-center-features-card-preview",
+    "rpg-tools-features-rpg-map-generator": {
+      "name": "rpg-tools-features-rpg-map-generator",
       "type": "lib",
       "data": {
-        "root": "libs/projects-center/features/card-preview",
-        "name": "projects-center-features-card-preview",
+        "root": "libs/rpg-tools/features/rpg-map-generator",
+        "name": "rpg-tools-features-rpg-map-generator",
         "$schema": "../../../../node_modules/nx/schemas/project-schema.json",
         "projectType": "library",
-        "sourceRoot": "libs/projects-center/features/card-preview",
+        "sourceRoot": "libs/rpg-tools/features/rpg-map-generator",
         "tags": [
           "type:features",
-          "domain:card"
+          "domain:rpg"
         ],
         "targets": {},
         "implicitDependencies": []
       }
     },
-    "projects-center-entities-ateria-idle": {
-      "name": "projects-center-entities-ateria-idle",
+    "ateria-idle-entities-ateria-idle": {
+      "name": "ateria-idle-entities-ateria-idle",
       "type": "lib",
       "data": {
-        "root": "libs/projects-center/entities/ateria-idle",
-        "name": "projects-center-entities-ateria-idle",
+        "root": "libs/ateria-idle/entities/ateria-idle",
+        "name": "ateria-idle-entities-ateria-idle",
         "$schema": "../../../../node_modules/nx/schemas/project-schema.json",
         "projectType": "library",
-        "sourceRoot": "libs/projects-center/entities/ateria-idle",
+        "sourceRoot": "libs/ateria-idle/entities/ateria-idle",
         "tags": [
           "type:entities",
           "domain:ateria-idle"
@@ -85,15 +68,15 @@
         "implicitDependencies": []
       }
     },
-    "projects-center-features-ateria-idle": {
-      "name": "projects-center-features-ateria-idle",
+    "ateria-idle-features-ateria-idle": {
+      "name": "ateria-idle-features-ateria-idle",
       "type": "lib",
       "data": {
-        "root": "libs/projects-center/features/ateria-idle",
-        "name": "projects-center-features-ateria-idle",
+        "root": "libs/ateria-idle/features/ateria-idle",
+        "name": "ateria-idle-features-ateria-idle",
         "$schema": "../../../../node_modules/nx/schemas/project-schema.json",
         "projectType": "library",
-        "sourceRoot": "libs/projects-center/features/ateria-idle",
+        "sourceRoot": "libs/ateria-idle/features/ateria-idle",
         "tags": [
           "type:features",
           "domain:ateria-idle"
@@ -102,15 +85,15 @@
         "implicitDependencies": []
       }
     },
-    "projects-center-features-card-delete": {
-      "name": "projects-center-features-card-delete",
+    "shared-features-card-preview": {
+      "name": "shared-features-card-preview",
       "type": "lib",
       "data": {
-        "root": "libs/projects-center/features/card-delete",
-        "name": "projects-center-features-card-delete",
+        "root": "libs/shared/features/card-preview",
+        "name": "shared-features-card-preview",
         "$schema": "../../../../node_modules/nx/schemas/project-schema.json",
         "projectType": "library",
-        "sourceRoot": "libs/projects-center/features/card-delete",
+        "sourceRoot": "libs/shared/features/card-preview",
         "tags": [
           "type:features",
           "domain:card"
@@ -119,15 +102,15 @@
         "implicitDependencies": []
       }
     },
-    "projects-center-features-card-print": {
-      "name": "projects-center-features-card-print",
+    "shared-features-card-delete": {
+      "name": "shared-features-card-delete",
       "type": "lib",
       "data": {
-        "root": "libs/projects-center/features/card-print",
-        "name": "projects-center-features-card-print",
+        "root": "libs/shared/features/card-delete",
+        "name": "shared-features-card-delete",
         "$schema": "../../../../node_modules/nx/schemas/project-schema.json",
         "projectType": "library",
-        "sourceRoot": "libs/projects-center/features/card-print",
+        "sourceRoot": "libs/shared/features/card-delete",
         "tags": [
           "type:features",
           "domain:card"
@@ -136,15 +119,15 @@
         "implicitDependencies": []
       }
     },
-    "projects-center-features-card-edit": {
-      "name": "projects-center-features-card-edit",
+    "shared-features-card-print": {
+      "name": "shared-features-card-print",
       "type": "lib",
       "data": {
-        "root": "libs/projects-center/features/card-edit",
-        "name": "projects-center-features-card-edit",
+        "root": "libs/shared/features/card-print",
+        "name": "shared-features-card-print",
         "$schema": "../../../../node_modules/nx/schemas/project-schema.json",
         "projectType": "library",
-        "sourceRoot": "libs/projects-center/features/card-edit",
+        "sourceRoot": "libs/shared/features/card-print",
         "tags": [
           "type:features",
           "domain:card"
@@ -153,15 +136,15 @@
         "implicitDependencies": []
       }
     },
-    "projects-center-features-card-list": {
-      "name": "projects-center-features-card-list",
+    "shared-features-card-edit": {
+      "name": "shared-features-card-edit",
       "type": "lib",
       "data": {
-        "root": "libs/projects-center/features/card-list",
-        "name": "projects-center-features-card-list",
+        "root": "libs/shared/features/card-edit",
+        "name": "shared-features-card-edit",
         "$schema": "../../../../node_modules/nx/schemas/project-schema.json",
         "projectType": "library",
-        "sourceRoot": "libs/projects-center/features/card-list",
+        "sourceRoot": "libs/shared/features/card-edit",
         "tags": [
           "type:features",
           "domain:card"
@@ -170,15 +153,32 @@
         "implicitDependencies": []
       }
     },
-    "projects-center-widgets-card-grid": {
-      "name": "projects-center-widgets-card-grid",
+    "shared-features-card-list": {
+      "name": "shared-features-card-list",
       "type": "lib",
       "data": {
-        "root": "libs/projects-center/widgets/card-grid",
-        "name": "projects-center-widgets-card-grid",
+        "root": "libs/shared/features/card-list",
+        "name": "shared-features-card-list",
         "$schema": "../../../../node_modules/nx/schemas/project-schema.json",
         "projectType": "library",
-        "sourceRoot": "libs/projects-center/widgets/card-grid",
+        "sourceRoot": "libs/shared/features/card-list",
+        "tags": [
+          "type:features",
+          "domain:card"
+        ],
+        "targets": {},
+        "implicitDependencies": []
+      }
+    },
+    "shared-widgets-card-grid": {
+      "name": "shared-widgets-card-grid",
+      "type": "lib",
+      "data": {
+        "root": "libs/shared/widgets/card-grid",
+        "name": "shared-widgets-card-grid",
+        "$schema": "../../../../node_modules/nx/schemas/project-schema.json",
+        "projectType": "library",
+        "sourceRoot": "libs/shared/widgets/card-grid",
         "tags": [
           "type:widgets",
           "domain:card"
@@ -187,15 +187,15 @@
         "implicitDependencies": []
       }
     },
-    "projects-center-entities-card": {
-      "name": "projects-center-entities-card",
+    "shared-entities-card": {
+      "name": "shared-entities-card",
       "type": "lib",
       "data": {
-        "root": "libs/projects-center/entities/card",
-        "name": "projects-center-entities-card",
+        "root": "libs/shared/entities/card",
+        "name": "shared-entities-card",
         "$schema": "../../../../node_modules/nx/schemas/project-schema.json",
         "projectType": "library",
-        "sourceRoot": "libs/projects-center/entities/card",
+        "sourceRoot": "libs/shared/entities/card",
         "tags": [
           "type:entities",
           "domain:card"
@@ -204,44 +204,28 @@
         "implicitDependencies": []
       }
     },
-    "projects-center-shared": {
-      "name": "projects-center-shared",
-      "type": "lib",
-      "data": {
-        "root": "libs/projects-center/shared",
-        "name": "projects-center-shared",
-        "$schema": "../../../node_modules/nx/schemas/project-schema.json",
-        "projectType": "library",
-        "sourceRoot": "libs/projects-center/shared",
-        "tags": [
-          "type:shared"
-        ],
-        "targets": {},
-        "implicitDependencies": []
-      }
-    },
-    "projects-center": {
-      "name": "projects-center",
+    "mtg-generator": {
+      "name": "mtg-generator",
       "type": "app",
       "data": {
-        "root": "apps/projects-center",
-        "name": "projects-center",
+        "root": "apps/mtg-generator",
+        "name": "mtg-generator",
         "$schema": "../../node_modules/nx/schemas/project-schema.json",
         "projectType": "application",
-        "sourceRoot": "apps/projects-center",
+        "sourceRoot": "apps/mtg-generator",
         "tags": [
-          "type:app"
+          "type:app",
+          "framework:nuxt"
         ],
         "targets": {
           "build": {
             "executor": "nx:run-commands",
             "outputs": [
-              "{workspaceRoot}/.nuxt",
-              "{workspaceRoot}/.output"
+              "{workspaceRoot}/dist/apps/mtg-generator"
             ],
             "options": {
               "command": "nuxt build",
-              "cwd": "apps/projects-center"
+              "cwd": "apps/mtg-generator"
             },
             "configurations": {},
             "parallelism": true,
@@ -257,8 +241,8 @@
           "dev": {
             "executor": "nx:run-commands",
             "options": {
-              "command": "nuxt dev",
-              "cwd": "apps/projects-center"
+              "command": "nuxt dev --port 3002 --host 127.0.0.1",
+              "cwd": "apps/mtg-generator"
             },
             "configurations": {},
             "parallelism": true,
@@ -268,28 +252,216 @@
             "executor": "nx:run-commands",
             "options": {
               "command": "nuxt preview",
-              "cwd": "apps/projects-center"
+              "cwd": "apps/mtg-generator"
             },
             "configurations": {},
             "parallelism": true
           },
-          "lint": {
-            "executor": "@nx/eslint:lint",
+          "prepare": {
+            "executor": "nx:run-commands",
             "options": {
-              "lintFilePatterns": [
-                "apps/projects-center/**/*.{ts,vue,js}"
-              ]
+              "command": "nuxi prepare",
+              "cwd": "apps/mtg-generator"
+            },
+            "configurations": {},
+            "parallelism": true
+          }
+        },
+        "implicitDependencies": []
+      }
+    },
+    "ateria-idle": {
+      "name": "ateria-idle",
+      "type": "app",
+      "data": {
+        "root": "apps/ateria-idle",
+        "name": "ateria-idle",
+        "$schema": "../../node_modules/nx/schemas/project-schema.json",
+        "projectType": "application",
+        "sourceRoot": "apps/ateria-idle",
+        "tags": [
+          "type:app",
+          "framework:nuxt"
+        ],
+        "targets": {
+          "build": {
+            "executor": "nx:run-commands",
+            "outputs": [
+              "{workspaceRoot}/dist/apps/ateria-idle"
+            ],
+            "options": {
+              "command": "nuxt build",
+              "cwd": "apps/ateria-idle"
             },
             "configurations": {},
             "parallelism": true,
+            "dependsOn": [
+              "^build"
+            ],
             "inputs": [
-              "default",
-              "{workspaceRoot}/.eslintrc.json",
-              "{workspaceRoot}/eslint.config.mjs"
+              "production",
+              "^production"
             ],
             "cache": true
+          },
+          "dev": {
+            "executor": "nx:run-commands",
+            "options": {
+              "command": "nuxt dev --port 3001 --host 127.0.0.1",
+              "cwd": "apps/ateria-idle"
+            },
+            "configurations": {},
+            "parallelism": true,
+            "cache": false
+          },
+          "preview": {
+            "executor": "nx:run-commands",
+            "options": {
+              "command": "nuxt preview",
+              "cwd": "apps/ateria-idle"
+            },
+            "configurations": {},
+            "parallelism": true
           }
         },
+        "implicitDependencies": []
+      }
+    },
+    "main-page": {
+      "name": "main-page",
+      "type": "app",
+      "data": {
+        "root": "apps/main-page",
+        "name": "main-page",
+        "$schema": "../../node_modules/nx/schemas/project-schema.json",
+        "projectType": "application",
+        "sourceRoot": "apps/main-page",
+        "tags": [
+          "type:app",
+          "framework:vanilla"
+        ],
+        "targets": {
+          "build": {
+            "executor": "@nx/vite:build",
+            "outputs": [
+              "{options.outputPath}"
+            ],
+            "options": {
+              "outputPath": "dist/apps/main-page",
+              "configFile": "apps/main-page/vite.config.ts"
+            },
+            "configurations": {},
+            "parallelism": true,
+            "dependsOn": [
+              "^build"
+            ],
+            "inputs": [
+              "production",
+              "^production"
+            ],
+            "cache": true
+          },
+          "dev": {
+            "executor": "@nx/vite:dev-server",
+            "options": {
+              "buildTarget": "main-page:build"
+            },
+            "configurations": {},
+            "parallelism": true,
+            "continuous": true,
+            "cache": false
+          },
+          "preview": {
+            "executor": "@nx/vite:preview",
+            "options": {
+              "buildTarget": "main-page:build"
+            },
+            "configurations": {},
+            "parallelism": true
+          }
+        },
+        "implicitDependencies": []
+      }
+    },
+    "rpg-tools": {
+      "name": "rpg-tools",
+      "type": "app",
+      "data": {
+        "root": "apps/rpg-tools",
+        "name": "rpg-tools",
+        "$schema": "../../node_modules/nx/schemas/project-schema.json",
+        "projectType": "application",
+        "sourceRoot": "apps/rpg-tools",
+        "tags": [
+          "type:app",
+          "framework:nuxt"
+        ],
+        "targets": {
+          "build": {
+            "executor": "nx:run-commands",
+            "outputs": [
+              "{workspaceRoot}/dist/apps/rpg-tools"
+            ],
+            "options": {
+              "command": "nuxt build",
+              "cwd": "apps/rpg-tools"
+            },
+            "configurations": {},
+            "parallelism": true,
+            "dependsOn": [
+              "^build"
+            ],
+            "inputs": [
+              "production",
+              "^production"
+            ],
+            "cache": true
+          },
+          "dev": {
+            "executor": "nx:run-commands",
+            "options": {
+              "command": "nuxt dev --port 3003 --host 127.0.0.1",
+              "cwd": "apps/rpg-tools"
+            },
+            "configurations": {},
+            "parallelism": true,
+            "cache": false
+          },
+          "preview": {
+            "executor": "nx:run-commands",
+            "options": {
+              "command": "nuxt preview",
+              "cwd": "apps/rpg-tools"
+            },
+            "configurations": {},
+            "parallelism": true
+          },
+          "prepare": {
+            "executor": "nx:run-commands",
+            "options": {
+              "command": "nuxi prepare",
+              "cwd": "apps/rpg-tools"
+            },
+            "configurations": {},
+            "parallelism": true
+          }
+        },
+        "implicitDependencies": []
+      }
+    },
+    "shared": {
+      "name": "shared",
+      "type": "lib",
+      "data": {
+        "root": "libs/shared",
+        "name": "shared",
+        "$schema": "../../node_modules/nx/schemas/project-schema.json",
+        "projectType": "library",
+        "sourceRoot": "libs/shared",
+        "tags": [
+          "type:shared"
+        ],
+        "targets": {},
         "implicitDependencies": []
       }
     }
@@ -13779,218 +13951,274 @@
     }
   },
   "dependencies": {
-    "projects-center-features-rpg-world-generator": [
+    "mtg-generator-features-mtg-card-generator": [],
+    "rpg-tools-features-rpg-world-generator": [
       {
-        "source": "projects-center-features-rpg-world-generator",
+        "source": "rpg-tools-features-rpg-world-generator",
         "target": "npm:vue",
-        "type": "static"
-      },
-      {
-        "source": "projects-center-features-rpg-world-generator",
-        "target": "projects-center-shared",
         "type": "static"
       }
     ],
-    "projects-center-features-mtg-card-generator": [],
-    "projects-center-features-rpg-map-generator": [
+    "rpg-tools-features-rpg-map-generator": [
       {
-        "source": "projects-center-features-rpg-map-generator",
+        "source": "rpg-tools-features-rpg-map-generator",
         "target": "npm:vue",
         "type": "static"
       },
       {
-        "source": "projects-center-features-rpg-map-generator",
-        "target": "projects-center-shared",
-        "type": "static"
-      },
-      {
-        "source": "projects-center-features-rpg-map-generator",
+        "source": "rpg-tools-features-rpg-map-generator",
         "target": "npm:d3-zoom",
         "type": "static"
       },
       {
-        "source": "projects-center-features-rpg-map-generator",
+        "source": "rpg-tools-features-rpg-map-generator",
         "target": "npm:d3-selection",
         "type": "static"
-      }
-    ],
-    "projects-center-features-card-preview": [
+      },
       {
-        "source": "projects-center-features-card-preview",
-        "target": "projects-center-entities-card",
+        "source": "rpg-tools-features-rpg-map-generator",
+        "target": "shared",
         "type": "static"
       }
     ],
-    "projects-center-entities-ateria-idle": [],
-    "projects-center-features-ateria-idle": [
+    "ateria-idle-entities-ateria-idle": [],
+    "ateria-idle-features-ateria-idle": [
       {
-        "source": "projects-center-features-ateria-idle",
+        "source": "ateria-idle-features-ateria-idle",
         "target": "npm:pinia",
         "type": "static"
       },
       {
-        "source": "projects-center-features-ateria-idle",
+        "source": "ateria-idle-features-ateria-idle",
         "target": "npm:vue",
         "type": "static"
       },
       {
-        "source": "projects-center-features-ateria-idle",
-        "target": "projects-center-entities-ateria-idle",
+        "source": "ateria-idle-features-ateria-idle",
+        "target": "ateria-idle-entities-ateria-idle",
         "type": "static"
       },
       {
-        "source": "projects-center-features-ateria-idle",
-        "target": "projects-center-shared",
+        "source": "ateria-idle-features-ateria-idle",
+        "target": "shared",
         "type": "static"
       }
     ],
-    "projects-center-features-card-delete": [],
-    "projects-center-features-card-print": [
+    "shared-features-card-preview": [
       {
-        "source": "projects-center-features-card-print",
+        "source": "shared-features-card-preview",
+        "target": "shared-entities-card",
+        "type": "static"
+      }
+    ],
+    "shared-features-card-delete": [],
+    "shared-features-card-print": [
+      {
+        "source": "shared-features-card-print",
         "target": "npm:vue",
         "type": "static"
       },
       {
-        "source": "projects-center-features-card-print",
-        "target": "projects-center-entities-card",
+        "source": "shared-features-card-print",
+        "target": "shared-entities-card",
         "type": "static"
       }
     ],
-    "projects-center-features-card-edit": [
+    "shared-features-card-edit": [
       {
-        "source": "projects-center-features-card-edit",
+        "source": "shared-features-card-edit",
         "target": "npm:vue",
         "type": "static"
       },
       {
-        "source": "projects-center-features-card-edit",
-        "target": "projects-center-entities-card",
+        "source": "shared-features-card-edit",
+        "target": "shared-entities-card",
         "type": "static"
       }
     ],
-    "projects-center-features-card-list": [
+    "shared-features-card-list": [
       {
-        "source": "projects-center-features-card-list",
+        "source": "shared-features-card-list",
         "target": "npm:vue",
         "type": "static"
       },
       {
-        "source": "projects-center-features-card-list",
-        "target": "projects-center-entities-card",
+        "source": "shared-features-card-list",
+        "target": "shared-entities-card",
         "type": "static"
       }
     ],
-    "projects-center-widgets-card-grid": [
+    "shared-widgets-card-grid": [
       {
-        "source": "projects-center-widgets-card-grid",
-        "target": "projects-center-entities-card",
+        "source": "shared-widgets-card-grid",
+        "target": "shared-entities-card",
         "type": "static"
       }
     ],
-    "projects-center-entities-card": [
+    "shared-entities-card": [
       {
-        "source": "projects-center-entities-card",
+        "source": "shared-entities-card",
         "target": "npm:pinia",
         "type": "static"
       },
       {
-        "source": "projects-center-entities-card",
+        "source": "shared-entities-card",
         "target": "npm:vue",
         "type": "static"
       }
     ],
-    "projects-center-shared": [
+    "mtg-generator": [
       {
-        "source": "projects-center-shared",
-        "target": "npm:pinia",
-        "type": "static"
-      },
-      {
-        "source": "projects-center-shared",
-        "target": "npm:vue",
-        "type": "static"
-      }
-    ],
-    "projects-center": [
-      {
-        "source": "projects-center",
+        "source": "mtg-generator",
         "target": "npm:vue",
         "type": "static"
       },
       {
-        "source": "projects-center",
-        "target": "projects-center-features-ateria-idle",
-        "type": "static"
-      },
-      {
-        "source": "projects-center",
-        "target": "projects-center-entities-ateria-idle",
-        "type": "static"
-      },
-      {
-        "source": "projects-center",
+        "source": "mtg-generator",
         "target": "npm:vue-router",
         "type": "static"
       },
       {
-        "source": "projects-center",
-        "target": "projects-center-features-mtg-card-generator",
+        "source": "mtg-generator",
+        "target": "mtg-generator-features-mtg-card-generator",
         "type": "static"
       },
       {
-        "source": "projects-center",
-        "target": "projects-center-entities-card",
-        "type": "static"
-      },
-      {
-        "source": "projects-center",
-        "target": "projects-center-features-card-edit",
-        "type": "static"
-      },
-      {
-        "source": "projects-center",
-        "target": "projects-center-widgets-card-grid",
-        "type": "static"
-      },
-      {
-        "source": "projects-center",
-        "target": "projects-center-features-card-delete",
-        "type": "static"
-      },
-      {
-        "source": "projects-center",
-        "target": "projects-center-features-card-print",
-        "type": "static"
-      },
-      {
-        "source": "projects-center",
-        "target": "projects-center-features-rpg-map-generator",
-        "type": "static"
-      },
-      {
-        "source": "projects-center",
-        "target": "projects-center-features-rpg-world-generator",
-        "type": "static"
-      },
-      {
-        "source": "projects-center",
+        "source": "mtg-generator",
         "target": "npm:nuxt",
         "type": "static"
       },
       {
-        "source": "projects-center",
+        "source": "mtg-generator",
         "target": "npm:pinia",
         "type": "static"
       },
       {
-        "source": "projects-center",
+        "source": "mtg-generator",
         "target": "npm:pinia-plugin-persistedstate",
         "type": "static"
       },
       {
-        "source": "projects-center",
+        "source": "mtg-generator",
         "target": "npm:vuetify",
+        "type": "static"
+      }
+    ],
+    "ateria-idle": [
+      {
+        "source": "ateria-idle",
+        "target": "npm:vue",
+        "type": "static"
+      },
+      {
+        "source": "ateria-idle",
+        "target": "ateria-idle-features-ateria-idle",
+        "type": "static"
+      },
+      {
+        "source": "ateria-idle",
+        "target": "ateria-idle-entities-ateria-idle",
+        "type": "static"
+      },
+      {
+        "source": "ateria-idle",
+        "target": "npm:nuxt",
+        "type": "static"
+      },
+      {
+        "source": "ateria-idle",
+        "target": "npm:pinia",
+        "type": "static"
+      },
+      {
+        "source": "ateria-idle",
+        "target": "npm:pinia-plugin-persistedstate",
+        "type": "static"
+      },
+      {
+        "source": "ateria-idle",
+        "target": "npm:vuetify",
+        "type": "static"
+      }
+    ],
+    "main-page": [
+      {
+        "source": "main-page",
+        "target": "npm:vite",
+        "type": "static"
+      }
+    ],
+    "rpg-tools": [
+      {
+        "source": "rpg-tools",
+        "target": "npm:vue",
+        "type": "static"
+      },
+      {
+        "source": "rpg-tools",
+        "target": "shared-entities-card",
+        "type": "static"
+      },
+      {
+        "source": "rpg-tools",
+        "target": "shared-features-card-edit",
+        "type": "static"
+      },
+      {
+        "source": "rpg-tools",
+        "target": "shared-widgets-card-grid",
+        "type": "static"
+      },
+      {
+        "source": "rpg-tools",
+        "target": "shared-features-card-delete",
+        "type": "static"
+      },
+      {
+        "source": "rpg-tools",
+        "target": "shared-features-card-print",
+        "type": "static"
+      },
+      {
+        "source": "rpg-tools",
+        "target": "rpg-tools-features-rpg-map-generator",
+        "type": "static"
+      },
+      {
+        "source": "rpg-tools",
+        "target": "rpg-tools-features-rpg-world-generator",
+        "type": "static"
+      },
+      {
+        "source": "rpg-tools",
+        "target": "npm:nuxt",
+        "type": "static"
+      },
+      {
+        "source": "rpg-tools",
+        "target": "npm:pinia",
+        "type": "static"
+      },
+      {
+        "source": "rpg-tools",
+        "target": "npm:pinia-plugin-persistedstate",
+        "type": "static"
+      },
+      {
+        "source": "rpg-tools",
+        "target": "npm:vuetify",
+        "type": "static"
+      }
+    ],
+    "shared": [
+      {
+        "source": "shared",
+        "target": "npm:pinia",
+        "type": "static"
+      },
+      {
+        "source": "shared",
+        "target": "npm:vue",
         "type": "static"
       }
     ],
@@ -30158,5 +30386,5 @@
   },
   "version": "6.0",
   "errors": [],
-  "computedAt": 1770145701145
+  "computedAt": 1770148838523
 }

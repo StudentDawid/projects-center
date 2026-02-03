@@ -1,0 +1,11 @@
+{
+  "name": "rpg-tools-features-rpg-world-generator",
+  "$schema": "../../../../node_modules/nx/schemas/project-schema.json",
+  "projectType": "library",
+  "sourceRoot": "libs/rpg-tools/features/rpg-world-generator",
+  "targets": {},
+  "tags": [
+    "type:features",
+    "domain:rpg"
+  ]
+}

@@ -1,21 +1,9 @@
 {
   "run": {
-    "command": "nx run projects-center:dev",
-    "startTime": "2026-02-03T18:54:57.893Z",
-    "endTime": "2026-02-03T19:05:58.920Z",
+    "command": "nx run-many --target=dev --all --parallel=10",
+    "startTime": "2026-02-03T19:44:16.807Z",
+    "endTime": "2026-02-03T19:56:26.905Z",
     "inner": false
   },
-  "tasks": [
-    {
-      "taskId": "projects-center:dev",
-      "target": "dev",
-      "projectName": "projects-center",
-      "hash": "16640914568094583164",
-      "startTime": "2026-02-03T18:54:57.949Z",
-      "endTime": "2026-02-03T19:05:58.918Z",
-      "params": "",
-      "cacheStatus": "cache-miss",
-      "status": 0
-    }
-  ]
+  "tasks": []
 }

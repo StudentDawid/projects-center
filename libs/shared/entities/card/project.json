@@ -1,0 +1,11 @@
+{
+  "name": "shared-entities-card",
+  "$schema": "../../../../node_modules/nx/schemas/project-schema.json",
+  "projectType": "library",
+  "sourceRoot": "libs/shared/entities/card",
+  "targets": {},
+  "tags": [
+    "type:entities",
+    "domain:card"
+  ]
+}

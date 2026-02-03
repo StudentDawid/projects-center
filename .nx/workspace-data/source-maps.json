@@ -1,115 +1,103 @@
 {
-  "apps/projects-center": {
+  "apps/ateria-idle": {
     "root": [
-      "apps/projects-center/project.json",
+      "apps/ateria-idle/project.json",
       "nx/core/project-json"
     ],
     "name": [
-      "apps/projects-center/project.json",
+      "apps/ateria-idle/project.json",
       "nx/core/project-json"
     ],
     "$schema": [
-      "apps/projects-center/project.json",
+      "apps/ateria-idle/project.json",
       "nx/core/project-json"
     ],
     "projectType": [
-      "apps/projects-center/project.json",
+      "apps/ateria-idle/project.json",
       "nx/core/project-json"
     ],
     "sourceRoot": [
-      "apps/projects-center/project.json",
+      "apps/ateria-idle/project.json",
       "nx/core/project-json"
     ],
     "tags": [
-      "apps/projects-center/project.json",
+      "apps/ateria-idle/project.json",
       "nx/core/project-json"
     ],
     "tags.type:app": [
-      "apps/projects-center/project.json",
+      "apps/ateria-idle/project.json",
+      "nx/core/project-json"
+    ],
+    "tags.framework:nuxt": [
+      "apps/ateria-idle/project.json",
       "nx/core/project-json"
     ],
     "targets": [
-      "apps/projects-center/project.json",
+      "apps/ateria-idle/project.json",
       "nx/core/project-json"
     ],
     "targets.build": [
-      "apps/projects-center/project.json",
+      "apps/ateria-idle/project.json",
       "nx/core/project-json"
     ],
     "targets.build.executor": [
-      "apps/projects-center/project.json",
+      "apps/ateria-idle/project.json",
       "nx/core/project-json"
     ],
     "targets.build.outputs": [
-      "apps/projects-center/project.json",
+      "apps/ateria-idle/project.json",
       "nx/core/project-json"
     ],
     "targets.build.options": [
-      "apps/projects-center/project.json",
+      "apps/ateria-idle/project.json",
       "nx/core/project-json"
     ],
     "targets.build.options.command": [
-      "apps/projects-center/project.json",
+      "apps/ateria-idle/project.json",
       "nx/core/project-json"
     ],
     "targets.build.options.cwd": [
-      "apps/projects-center/project.json",
+      "apps/ateria-idle/project.json",
       "nx/core/project-json"
     ],
     "targets.dev": [
-      "apps/projects-center/project.json",
+      "apps/ateria-idle/project.json",
       "nx/core/project-json"
     ],
     "targets.dev.executor": [
-      "apps/projects-center/project.json",
+      "apps/ateria-idle/project.json",
       "nx/core/project-json"
     ],
     "targets.dev.options": [
-      "apps/projects-center/project.json",
+      "apps/ateria-idle/project.json",
       "nx/core/project-json"
     ],
     "targets.dev.options.command": [
-      "apps/projects-center/project.json",
+      "apps/ateria-idle/project.json",
       "nx/core/project-json"
     ],
     "targets.dev.options.cwd": [
-      "apps/projects-center/project.json",
+      "apps/ateria-idle/project.json",
       "nx/core/project-json"
     ],
     "targets.preview": [
-      "apps/projects-center/project.json",
+      "apps/ateria-idle/project.json",
       "nx/core/project-json"
     ],
     "targets.preview.executor": [
-      "apps/projects-center/project.json",
+      "apps/ateria-idle/project.json",
       "nx/core/project-json"
     ],
     "targets.preview.options": [
-      "apps/projects-center/project.json",
+      "apps/ateria-idle/project.json",
       "nx/core/project-json"
     ],
     "targets.preview.options.command": [
-      "apps/projects-center/project.json",
+      "apps/ateria-idle/project.json",
       "nx/core/project-json"
     ],
     "targets.preview.options.cwd": [
-      "apps/projects-center/project.json",
-      "nx/core/project-json"
-    ],
-    "targets.lint": [
-      "apps/projects-center/project.json",
-      "nx/core/project-json"
-    ],
-    "targets.lint.executor": [
-      "apps/projects-center/project.json",
-      "nx/core/project-json"
-    ],
-    "targets.lint.options": [
-      "apps/projects-center/project.json",
-      "nx/core/project-json"
-    ],
-    "targets.lint.options.lintFilePatterns": [
-      "apps/projects-center/project.json",
+      "apps/ateria-idle/project.json",
       "nx/core/project-json"
     ],
     "targets.build.dependsOn": [
@@ -135,507 +123,905 @@
     "targets.dev.parallelism": [
       "nx.json",
       "nx/target-defaults"
+    ]
+  },
+  "apps/main-page": {
+    "root": [
+      "apps/main-page/project.json",
+      "nx/core/project-json"
     ],
-    "targets.lint.inputs": [
+    "name": [
+      "apps/main-page/project.json",
+      "nx/core/project-json"
+    ],
+    "$schema": [
+      "apps/main-page/project.json",
+      "nx/core/project-json"
+    ],
+    "projectType": [
+      "apps/main-page/project.json",
+      "nx/core/project-json"
+    ],
+    "sourceRoot": [
+      "apps/main-page/project.json",
+      "nx/core/project-json"
+    ],
+    "tags": [
+      "apps/main-page/project.json",
+      "nx/core/project-json"
+    ],
+    "tags.type:app": [
+      "apps/main-page/project.json",
+      "nx/core/project-json"
+    ],
+    "tags.framework:vanilla": [
+      "apps/main-page/project.json",
+      "nx/core/project-json"
+    ],
+    "targets": [
+      "apps/main-page/project.json",
+      "nx/core/project-json"
+    ],
+    "targets.build": [
+      "apps/main-page/project.json",
+      "nx/core/project-json"
+    ],
+    "targets.build.executor": [
+      "apps/main-page/project.json",
+      "nx/core/project-json"
+    ],
+    "targets.build.outputs": [
+      "apps/main-page/project.json",
+      "nx/core/project-json"
+    ],
+    "targets.build.options": [
+      "apps/main-page/project.json",
+      "nx/core/project-json"
+    ],
+    "targets.build.options.outputPath": [
+      "apps/main-page/project.json",
+      "nx/core/project-json"
+    ],
+    "targets.build.options.configFile": [
+      "apps/main-page/project.json",
+      "nx/core/project-json"
+    ],
+    "targets.dev": [
+      "apps/main-page/project.json",
+      "nx/core/project-json"
+    ],
+    "targets.dev.executor": [
+      "apps/main-page/project.json",
+      "nx/core/project-json"
+    ],
+    "targets.dev.options": [
+      "apps/main-page/project.json",
+      "nx/core/project-json"
+    ],
+    "targets.dev.options.buildTarget": [
+      "apps/main-page/project.json",
+      "nx/core/project-json"
+    ],
+    "targets.preview": [
+      "apps/main-page/project.json",
+      "nx/core/project-json"
+    ],
+    "targets.preview.executor": [
+      "apps/main-page/project.json",
+      "nx/core/project-json"
+    ],
+    "targets.preview.options": [
+      "apps/main-page/project.json",
+      "nx/core/project-json"
+    ],
+    "targets.preview.options.buildTarget": [
+      "apps/main-page/project.json",
+      "nx/core/project-json"
+    ],
+    "targets.build.dependsOn": [
       "nx.json",
       "nx/target-defaults"
     ],
-    "targets.lint.cache": [
+    "targets.build.inputs": [
       "nx.json",
       "nx/target-defaults"
     ],
-    "targets.lint.parallelism": [
+    "targets.build.cache": [
+      "nx.json",
+      "nx/target-defaults"
+    ],
+    "targets.build.parallelism": [
+      "nx.json",
+      "nx/target-defaults"
+    ],
+    "targets.dev.cache": [
+      "nx.json",
+      "nx/target-defaults"
+    ],
+    "targets.dev.parallelism": [
       "nx.json",
       "nx/target-defaults"
     ]
   },
-  "libs/projects-center/entities/ateria-idle": {
+  "apps/mtg-generator": {
     "root": [
-      "libs/projects-center/entities/ateria-idle/project.json",
+      "apps/mtg-generator/project.json",
       "nx/core/project-json"
     ],
     "name": [
-      "libs/projects-center/entities/ateria-idle/project.json",
+      "apps/mtg-generator/project.json",
       "nx/core/project-json"
     ],
     "$schema": [
-      "libs/projects-center/entities/ateria-idle/project.json",
+      "apps/mtg-generator/project.json",
       "nx/core/project-json"
     ],
     "projectType": [
-      "libs/projects-center/entities/ateria-idle/project.json",
+      "apps/mtg-generator/project.json",
       "nx/core/project-json"
     ],
     "sourceRoot": [
-      "libs/projects-center/entities/ateria-idle/project.json",
+      "apps/mtg-generator/project.json",
       "nx/core/project-json"
     ],
     "tags": [
-      "libs/projects-center/entities/ateria-idle/project.json",
+      "apps/mtg-generator/project.json",
+      "nx/core/project-json"
+    ],
+    "tags.type:app": [
+      "apps/mtg-generator/project.json",
+      "nx/core/project-json"
+    ],
+    "tags.framework:nuxt": [
+      "apps/mtg-generator/project.json",
+      "nx/core/project-json"
+    ],
+    "targets": [
+      "apps/mtg-generator/project.json",
+      "nx/core/project-json"
+    ],
+    "targets.build": [
+      "apps/mtg-generator/project.json",
+      "nx/core/project-json"
+    ],
+    "targets.build.executor": [
+      "apps/mtg-generator/project.json",
+      "nx/core/project-json"
+    ],
+    "targets.build.outputs": [
+      "apps/mtg-generator/project.json",
+      "nx/core/project-json"
+    ],
+    "targets.build.options": [
+      "apps/mtg-generator/project.json",
+      "nx/core/project-json"
+    ],
+    "targets.build.options.command": [
+      "apps/mtg-generator/project.json",
+      "nx/core/project-json"
+    ],
+    "targets.build.options.cwd": [
+      "apps/mtg-generator/project.json",
+      "nx/core/project-json"
+    ],
+    "targets.dev": [
+      "apps/mtg-generator/project.json",
+      "nx/core/project-json"
+    ],
+    "targets.dev.executor": [
+      "apps/mtg-generator/project.json",
+      "nx/core/project-json"
+    ],
+    "targets.dev.options": [
+      "apps/mtg-generator/project.json",
+      "nx/core/project-json"
+    ],
+    "targets.dev.options.command": [
+      "apps/mtg-generator/project.json",
+      "nx/core/project-json"
+    ],
+    "targets.dev.options.cwd": [
+      "apps/mtg-generator/project.json",
+      "nx/core/project-json"
+    ],
+    "targets.preview": [
+      "apps/mtg-generator/project.json",
+      "nx/core/project-json"
+    ],
+    "targets.preview.executor": [
+      "apps/mtg-generator/project.json",
+      "nx/core/project-json"
+    ],
+    "targets.preview.options": [
+      "apps/mtg-generator/project.json",
+      "nx/core/project-json"
+    ],
+    "targets.preview.options.command": [
+      "apps/mtg-generator/project.json",
+      "nx/core/project-json"
+    ],
+    "targets.preview.options.cwd": [
+      "apps/mtg-generator/project.json",
+      "nx/core/project-json"
+    ],
+    "targets.prepare": [
+      "apps/mtg-generator/project.json",
+      "nx/core/project-json"
+    ],
+    "targets.prepare.executor": [
+      "apps/mtg-generator/project.json",
+      "nx/core/project-json"
+    ],
+    "targets.prepare.options": [
+      "apps/mtg-generator/project.json",
+      "nx/core/project-json"
+    ],
+    "targets.prepare.options.command": [
+      "apps/mtg-generator/project.json",
+      "nx/core/project-json"
+    ],
+    "targets.prepare.options.cwd": [
+      "apps/mtg-generator/project.json",
+      "nx/core/project-json"
+    ],
+    "targets.build.dependsOn": [
+      "nx.json",
+      "nx/target-defaults"
+    ],
+    "targets.build.inputs": [
+      "nx.json",
+      "nx/target-defaults"
+    ],
+    "targets.build.cache": [
+      "nx.json",
+      "nx/target-defaults"
+    ],
+    "targets.build.parallelism": [
+      "nx.json",
+      "nx/target-defaults"
+    ],
+    "targets.dev.cache": [
+      "nx.json",
+      "nx/target-defaults"
+    ],
+    "targets.dev.parallelism": [
+      "nx.json",
+      "nx/target-defaults"
+    ]
+  },
+  "apps/rpg-tools": {
+    "root": [
+      "apps/rpg-tools/project.json",
+      "nx/core/project-json"
+    ],
+    "name": [
+      "apps/rpg-tools/project.json",
+      "nx/core/project-json"
+    ],
+    "$schema": [
+      "apps/rpg-tools/project.json",
+      "nx/core/project-json"
+    ],
+    "projectType": [
+      "apps/rpg-tools/project.json",
+      "nx/core/project-json"
+    ],
+    "sourceRoot": [
+      "apps/rpg-tools/project.json",
+      "nx/core/project-json"
+    ],
+    "tags": [
+      "apps/rpg-tools/project.json",
+      "nx/core/project-json"
+    ],
+    "tags.type:app": [
+      "apps/rpg-tools/project.json",
+      "nx/core/project-json"
+    ],
+    "tags.framework:nuxt": [
+      "apps/rpg-tools/project.json",
+      "nx/core/project-json"
+    ],
+    "targets": [
+      "apps/rpg-tools/project.json",
+      "nx/core/project-json"
+    ],
+    "targets.build": [
+      "apps/rpg-tools/project.json",
+      "nx/core/project-json"
+    ],
+    "targets.build.executor": [
+      "apps/rpg-tools/project.json",
+      "nx/core/project-json"
+    ],
+    "targets.build.outputs": [
+      "apps/rpg-tools/project.json",
+      "nx/core/project-json"
+    ],
+    "targets.build.options": [
+      "apps/rpg-tools/project.json",
+      "nx/core/project-json"
+    ],
+    "targets.build.options.command": [
+      "apps/rpg-tools/project.json",
+      "nx/core/project-json"
+    ],
+    "targets.build.options.cwd": [
+      "apps/rpg-tools/project.json",
+      "nx/core/project-json"
+    ],
+    "targets.dev": [
+      "apps/rpg-tools/project.json",
+      "nx/core/project-json"
+    ],
+    "targets.dev.executor": [
+      "apps/rpg-tools/project.json",
+      "nx/core/project-json"
+    ],
+    "targets.dev.options": [
+      "apps/rpg-tools/project.json",
+      "nx/core/project-json"
+    ],
+    "targets.dev.options.command": [
+      "apps/rpg-tools/project.json",
+      "nx/core/project-json"
+    ],
+    "targets.dev.options.cwd": [
+      "apps/rpg-tools/project.json",
+      "nx/core/project-json"
+    ],
+    "targets.preview": [
+      "apps/rpg-tools/project.json",
+      "nx/core/project-json"
+    ],
+    "targets.preview.executor": [
+      "apps/rpg-tools/project.json",
+      "nx/core/project-json"
+    ],
+    "targets.preview.options": [
+      "apps/rpg-tools/project.json",
+      "nx/core/project-json"
+    ],
+    "targets.preview.options.command": [
+      "apps/rpg-tools/project.json",
+      "nx/core/project-json"
+    ],
+    "targets.preview.options.cwd": [
+      "apps/rpg-tools/project.json",
+      "nx/core/project-json"
+    ],
+    "targets.prepare": [
+      "apps/rpg-tools/project.json",
+      "nx/core/project-json"
+    ],
+    "targets.prepare.executor": [
+      "apps/rpg-tools/project.json",
+      "nx/core/project-json"
+    ],
+    "targets.prepare.options": [
+      "apps/rpg-tools/project.json",
+      "nx/core/project-json"
+    ],
+    "targets.prepare.options.command": [
+      "apps/rpg-tools/project.json",
+      "nx/core/project-json"
+    ],
+    "targets.prepare.options.cwd": [
+      "apps/rpg-tools/project.json",
+      "nx/core/project-json"
+    ],
+    "targets.build.dependsOn": [
+      "nx.json",
+      "nx/target-defaults"
+    ],
+    "targets.build.inputs": [
+      "nx.json",
+      "nx/target-defaults"
+    ],
+    "targets.build.cache": [
+      "nx.json",
+      "nx/target-defaults"
+    ],
+    "targets.build.parallelism": [
+      "nx.json",
+      "nx/target-defaults"
+    ],
+    "targets.dev.cache": [
+      "nx.json",
+      "nx/target-defaults"
+    ],
+    "targets.dev.parallelism": [
+      "nx.json",
+      "nx/target-defaults"
+    ]
+  },
+  "libs/ateria-idle/entities/ateria-idle": {
+    "root": [
+      "libs/ateria-idle/entities/ateria-idle/project.json",
+      "nx/core/project-json"
+    ],
+    "name": [
+      "libs/ateria-idle/entities/ateria-idle/project.json",
+      "nx/core/project-json"
+    ],
+    "$schema": [
+      "libs/ateria-idle/entities/ateria-idle/project.json",
+      "nx/core/project-json"
+    ],
+    "projectType": [
+      "libs/ateria-idle/entities/ateria-idle/project.json",
+      "nx/core/project-json"
+    ],
+    "sourceRoot": [
+      "libs/ateria-idle/entities/ateria-idle/project.json",
+      "nx/core/project-json"
+    ],
+    "tags": [
+      "libs/ateria-idle/entities/ateria-idle/project.json",
       "nx/core/project-json"
     ],
     "tags.type:entities": [
-      "libs/projects-center/entities/ateria-idle/project.json",
+      "libs/ateria-idle/entities/ateria-idle/project.json",
       "nx/core/project-json"
     ],
     "tags.domain:ateria-idle": [
-      "libs/projects-center/entities/ateria-idle/project.json",
+      "libs/ateria-idle/entities/ateria-idle/project.json",
       "nx/core/project-json"
     ],
     "targets": [
-      "libs/projects-center/entities/ateria-idle/project.json",
+      "libs/ateria-idle/entities/ateria-idle/project.json",
       "nx/core/project-json"
     ]
   },
-  "libs/projects-center/entities/card": {
+  "libs/ateria-idle/features/ateria-idle": {
     "root": [
-      "libs/projects-center/entities/card/project.json",
+      "libs/ateria-idle/features/ateria-idle/project.json",
       "nx/core/project-json"
     ],
     "name": [
-      "libs/projects-center/entities/card/project.json",
+      "libs/ateria-idle/features/ateria-idle/project.json",
       "nx/core/project-json"
     ],
     "$schema": [
-      "libs/projects-center/entities/card/project.json",
+      "libs/ateria-idle/features/ateria-idle/project.json",
       "nx/core/project-json"
     ],
     "projectType": [
-      "libs/projects-center/entities/card/project.json",
+      "libs/ateria-idle/features/ateria-idle/project.json",
       "nx/core/project-json"
     ],
     "sourceRoot": [
-      "libs/projects-center/entities/card/project.json",
+      "libs/ateria-idle/features/ateria-idle/project.json",
       "nx/core/project-json"
     ],
     "tags": [
-      "libs/projects-center/entities/card/project.json",
+      "libs/ateria-idle/features/ateria-idle/project.json",
+      "nx/core/project-json"
+    ],
+    "tags.type:features": [
+      "libs/ateria-idle/features/ateria-idle/project.json",
+      "nx/core/project-json"
+    ],
+    "tags.domain:ateria-idle": [
+      "libs/ateria-idle/features/ateria-idle/project.json",
+      "nx/core/project-json"
+    ],
+    "targets": [
+      "libs/ateria-idle/features/ateria-idle/project.json",
+      "nx/core/project-json"
+    ]
+  },
+  "libs/mtg-generator/features/mtg-card-generator": {
+    "root": [
+      "libs/mtg-generator/features/mtg-card-generator/project.json",
+      "nx/core/project-json"
+    ],
+    "name": [
+      "libs/mtg-generator/features/mtg-card-generator/project.json",
+      "nx/core/project-json"
+    ],
+    "$schema": [
+      "libs/mtg-generator/features/mtg-card-generator/project.json",
+      "nx/core/project-json"
+    ],
+    "projectType": [
+      "libs/mtg-generator/features/mtg-card-generator/project.json",
+      "nx/core/project-json"
+    ],
+    "sourceRoot": [
+      "libs/mtg-generator/features/mtg-card-generator/project.json",
+      "nx/core/project-json"
+    ],
+    "tags": [
+      "libs/mtg-generator/features/mtg-card-generator/project.json",
+      "nx/core/project-json"
+    ],
+    "tags.type:features": [
+      "libs/mtg-generator/features/mtg-card-generator/project.json",
+      "nx/core/project-json"
+    ],
+    "tags.domain:card": [
+      "libs/mtg-generator/features/mtg-card-generator/project.json",
+      "nx/core/project-json"
+    ],
+    "targets": [
+      "libs/mtg-generator/features/mtg-card-generator/project.json",
+      "nx/core/project-json"
+    ]
+  },
+  "libs/rpg-tools/features/rpg-map-generator": {
+    "root": [
+      "libs/rpg-tools/features/rpg-map-generator/project.json",
+      "nx/core/project-json"
+    ],
+    "name": [
+      "libs/rpg-tools/features/rpg-map-generator/project.json",
+      "nx/core/project-json"
+    ],
+    "$schema": [
+      "libs/rpg-tools/features/rpg-map-generator/project.json",
+      "nx/core/project-json"
+    ],
+    "projectType": [
+      "libs/rpg-tools/features/rpg-map-generator/project.json",
+      "nx/core/project-json"
+    ],
+    "sourceRoot": [
+      "libs/rpg-tools/features/rpg-map-generator/project.json",
+      "nx/core/project-json"
+    ],
+    "tags": [
+      "libs/rpg-tools/features/rpg-map-generator/project.json",
+      "nx/core/project-json"
+    ],
+    "tags.type:features": [
+      "libs/rpg-tools/features/rpg-map-generator/project.json",
+      "nx/core/project-json"
+    ],
+    "tags.domain:rpg": [
+      "libs/rpg-tools/features/rpg-map-generator/project.json",
+      "nx/core/project-json"
+    ],
+    "targets": [
+      "libs/rpg-tools/features/rpg-map-generator/project.json",
+      "nx/core/project-json"
+    ]
+  },
+  "libs/rpg-tools/features/rpg-world-generator": {
+    "root": [
+      "libs/rpg-tools/features/rpg-world-generator/project.json",
+      "nx/core/project-json"
+    ],
+    "name": [
+      "libs/rpg-tools/features/rpg-world-generator/project.json",
+      "nx/core/project-json"
+    ],
+    "$schema": [
+      "libs/rpg-tools/features/rpg-world-generator/project.json",
+      "nx/core/project-json"
+    ],
+    "projectType": [
+      "libs/rpg-tools/features/rpg-world-generator/project.json",
+      "nx/core/project-json"
+    ],
+    "sourceRoot": [
+      "libs/rpg-tools/features/rpg-world-generator/project.json",
+      "nx/core/project-json"
+    ],
+    "tags": [
+      "libs/rpg-tools/features/rpg-world-generator/project.json",
+      "nx/core/project-json"
+    ],
+    "tags.type:features": [
+      "libs/rpg-tools/features/rpg-world-generator/project.json",
+      "nx/core/project-json"
+    ],
+    "tags.domain:rpg": [
+      "libs/rpg-tools/features/rpg-world-generator/project.json",
+      "nx/core/project-json"
+    ],
+    "targets": [
+      "libs/rpg-tools/features/rpg-world-generator/project.json",
+      "nx/core/project-json"
+    ]
+  },
+  "libs/shared/entities/card": {
+    "root": [
+      "libs/shared/entities/card/project.json",
+      "nx/core/project-json"
+    ],
+    "name": [
+      "libs/shared/entities/card/project.json",
+      "nx/core/project-json"
+    ],
+    "$schema": [
+      "libs/shared/entities/card/project.json",
+      "nx/core/project-json"
+    ],
+    "projectType": [
+      "libs/shared/entities/card/project.json",
+      "nx/core/project-json"
+    ],
+    "sourceRoot": [
+      "libs/shared/entities/card/project.json",
+      "nx/core/project-json"
+    ],
+    "tags": [
+      "libs/shared/entities/card/project.json",
       "nx/core/project-json"
     ],
     "tags.type:entities": [
-      "libs/projects-center/entities/card/project.json",
+      "libs/shared/entities/card/project.json",
       "nx/core/project-json"
     ],
     "tags.domain:card": [
-      "libs/projects-center/entities/card/project.json",
+      "libs/shared/entities/card/project.json",
       "nx/core/project-json"
     ],
     "targets": [
-      "libs/projects-center/entities/card/project.json",
+      "libs/shared/entities/card/project.json",
       "nx/core/project-json"
     ]
   },
-  "libs/projects-center/features/ateria-idle": {
+  "libs/shared/features/card-delete": {
     "root": [
-      "libs/projects-center/features/ateria-idle/project.json",
+      "libs/shared/features/card-delete/project.json",
       "nx/core/project-json"
     ],
     "name": [
-      "libs/projects-center/features/ateria-idle/project.json",
+      "libs/shared/features/card-delete/project.json",
       "nx/core/project-json"
     ],
     "$schema": [
-      "libs/projects-center/features/ateria-idle/project.json",
+      "libs/shared/features/card-delete/project.json",
       "nx/core/project-json"
     ],
     "projectType": [
-      "libs/projects-center/features/ateria-idle/project.json",
+      "libs/shared/features/card-delete/project.json",
       "nx/core/project-json"
     ],
     "sourceRoot": [
-      "libs/projects-center/features/ateria-idle/project.json",
+      "libs/shared/features/card-delete/project.json",
       "nx/core/project-json"
     ],
     "tags": [
-      "libs/projects-center/features/ateria-idle/project.json",
+      "libs/shared/features/card-delete/project.json",
       "nx/core/project-json"
     ],
     "tags.type:features": [
-      "libs/projects-center/features/ateria-idle/project.json",
-      "nx/core/project-json"
-    ],
-    "tags.domain:ateria-idle": [
-      "libs/projects-center/features/ateria-idle/project.json",
-      "nx/core/project-json"
-    ],
-    "targets": [
-      "libs/projects-center/features/ateria-idle/project.json",
-      "nx/core/project-json"
-    ]
-  },
-  "libs/projects-center/features/card-delete": {
-    "root": [
-      "libs/projects-center/features/card-delete/project.json",
-      "nx/core/project-json"
-    ],
-    "name": [
-      "libs/projects-center/features/card-delete/project.json",
-      "nx/core/project-json"
-    ],
-    "$schema": [
-      "libs/projects-center/features/card-delete/project.json",
-      "nx/core/project-json"
-    ],
-    "projectType": [
-      "libs/projects-center/features/card-delete/project.json",
-      "nx/core/project-json"
-    ],
-    "sourceRoot": [
-      "libs/projects-center/features/card-delete/project.json",
-      "nx/core/project-json"
-    ],
-    "tags": [
-      "libs/projects-center/features/card-delete/project.json",
-      "nx/core/project-json"
-    ],
-    "tags.type:features": [
-      "libs/projects-center/features/card-delete/project.json",
+      "libs/shared/features/card-delete/project.json",
       "nx/core/project-json"
     ],
     "tags.domain:card": [
-      "libs/projects-center/features/card-delete/project.json",
+      "libs/shared/features/card-delete/project.json",
       "nx/core/project-json"
     ],
     "targets": [
-      "libs/projects-center/features/card-delete/project.json",
+      "libs/shared/features/card-delete/project.json",
       "nx/core/project-json"
     ]
   },
-  "libs/projects-center/features/card-edit": {
+  "libs/shared/features/card-edit": {
     "root": [
-      "libs/projects-center/features/card-edit/project.json",
+      "libs/shared/features/card-edit/project.json",
       "nx/core/project-json"
     ],
     "name": [
-      "libs/projects-center/features/card-edit/project.json",
+      "libs/shared/features/card-edit/project.json",
       "nx/core/project-json"
     ],
     "$schema": [
-      "libs/projects-center/features/card-edit/project.json",
+      "libs/shared/features/card-edit/project.json",
       "nx/core/project-json"
     ],
     "projectType": [
-      "libs/projects-center/features/card-edit/project.json",
+      "libs/shared/features/card-edit/project.json",
       "nx/core/project-json"
     ],
     "sourceRoot": [
-      "libs/projects-center/features/card-edit/project.json",
+      "libs/shared/features/card-edit/project.json",
       "nx/core/project-json"
     ],
     "tags": [
-      "libs/projects-center/features/card-edit/project.json",
+      "libs/shared/features/card-edit/project.json",
       "nx/core/project-json"
     ],
     "tags.type:features": [
-      "libs/projects-center/features/card-edit/project.json",
+      "libs/shared/features/card-edit/project.json",
       "nx/core/project-json"
     ],
     "tags.domain:card": [
-      "libs/projects-center/features/card-edit/project.json",
+      "libs/shared/features/card-edit/project.json",
       "nx/core/project-json"
     ],
     "targets": [
-      "libs/projects-center/features/card-edit/project.json",
+      "libs/shared/features/card-edit/project.json",
       "nx/core/project-json"
     ]
   },
-  "libs/projects-center/features/card-list": {
+  "libs/shared/features/card-list": {
     "root": [
-      "libs/projects-center/features/card-list/project.json",
+      "libs/shared/features/card-list/project.json",
       "nx/core/project-json"
     ],
     "name": [
-      "libs/projects-center/features/card-list/project.json",
+      "libs/shared/features/card-list/project.json",
       "nx/core/project-json"
     ],
     "$schema": [
-      "libs/projects-center/features/card-list/project.json",
+      "libs/shared/features/card-list/project.json",
       "nx/core/project-json"
     ],
     "projectType": [
-      "libs/projects-center/features/card-list/project.json",
+      "libs/shared/features/card-list/project.json",
       "nx/core/project-json"
     ],
     "sourceRoot": [
-      "libs/projects-center/features/card-list/project.json",
+      "libs/shared/features/card-list/project.json",
       "nx/core/project-json"
     ],
     "tags": [
-      "libs/projects-center/features/card-list/project.json",
+      "libs/shared/features/card-list/project.json",
       "nx/core/project-json"
     ],
     "tags.type:features": [
-      "libs/projects-center/features/card-list/project.json",
+      "libs/shared/features/card-list/project.json",
       "nx/core/project-json"
     ],
     "tags.domain:card": [
-      "libs/projects-center/features/card-list/project.json",
+      "libs/shared/features/card-list/project.json",
       "nx/core/project-json"
     ],
     "targets": [
-      "libs/projects-center/features/card-list/project.json",
+      "libs/shared/features/card-list/project.json",
       "nx/core/project-json"
     ]
   },
-  "libs/projects-center/features/card-preview": {
+  "libs/shared/features/card-preview": {
     "root": [
-      "libs/projects-center/features/card-preview/project.json",
+      "libs/shared/features/card-preview/project.json",
       "nx/core/project-json"
     ],
     "name": [
-      "libs/projects-center/features/card-preview/project.json",
+      "libs/shared/features/card-preview/project.json",
       "nx/core/project-json"
     ],
     "$schema": [
-      "libs/projects-center/features/card-preview/project.json",
+      "libs/shared/features/card-preview/project.json",
       "nx/core/project-json"
     ],
     "projectType": [
-      "libs/projects-center/features/card-preview/project.json",
+      "libs/shared/features/card-preview/project.json",
       "nx/core/project-json"
     ],
     "sourceRoot": [
-      "libs/projects-center/features/card-preview/project.json",
+      "libs/shared/features/card-preview/project.json",
       "nx/core/project-json"
     ],
     "tags": [
-      "libs/projects-center/features/card-preview/project.json",
+      "libs/shared/features/card-preview/project.json",
       "nx/core/project-json"
     ],
     "tags.type:features": [
-      "libs/projects-center/features/card-preview/project.json",
+      "libs/shared/features/card-preview/project.json",
       "nx/core/project-json"
     ],
     "tags.domain:card": [
-      "libs/projects-center/features/card-preview/project.json",
+      "libs/shared/features/card-preview/project.json",
       "nx/core/project-json"
     ],
     "targets": [
-      "libs/projects-center/features/card-preview/project.json",
+      "libs/shared/features/card-preview/project.json",
       "nx/core/project-json"
     ]
   },
-  "libs/projects-center/features/card-print": {
+  "libs/shared/features/card-print": {
     "root": [
-      "libs/projects-center/features/card-print/project.json",
+      "libs/shared/features/card-print/project.json",
       "nx/core/project-json"
     ],
     "name": [
-      "libs/projects-center/features/card-print/project.json",
+      "libs/shared/features/card-print/project.json",
       "nx/core/project-json"
     ],
     "$schema": [
-      "libs/projects-center/features/card-print/project.json",
+      "libs/shared/features/card-print/project.json",
       "nx/core/project-json"
     ],
     "projectType": [
-      "libs/projects-center/features/card-print/project.json",
+      "libs/shared/features/card-print/project.json",
       "nx/core/project-json"
     ],
     "sourceRoot": [
-      "libs/projects-center/features/card-print/project.json",
+      "libs/shared/features/card-print/project.json",
       "nx/core/project-json"
     ],
     "tags": [
-      "libs/projects-center/features/card-print/project.json",
+      "libs/shared/features/card-print/project.json",
       "nx/core/project-json"
     ],
     "tags.type:features": [
-      "libs/projects-center/features/card-print/project.json",
+      "libs/shared/features/card-print/project.json",
       "nx/core/project-json"
     ],
     "tags.domain:card": [
-      "libs/projects-center/features/card-print/project.json",
+      "libs/shared/features/card-print/project.json",
       "nx/core/project-json"
     ],
     "targets": [
-      "libs/projects-center/features/card-print/project.json",
+      "libs/shared/features/card-print/project.json",
       "nx/core/project-json"
     ]
   },
-  "libs/projects-center/features/mtg-card-generator": {
+  "libs/shared": {
     "root": [
-      "libs/projects-center/features/mtg-card-generator/project.json",
+      "libs/shared/project.json",
       "nx/core/project-json"
     ],
     "name": [
-      "libs/projects-center/features/mtg-card-generator/project.json",
+      "libs/shared/project.json",
       "nx/core/project-json"
     ],
     "$schema": [
-      "libs/projects-center/features/mtg-card-generator/project.json",
+      "libs/shared/project.json",
       "nx/core/project-json"
     ],
     "projectType": [
-      "libs/projects-center/features/mtg-card-generator/project.json",
+      "libs/shared/project.json",
       "nx/core/project-json"
     ],
     "sourceRoot": [
-      "libs/projects-center/features/mtg-card-generator/project.json",
+      "libs/shared/project.json",
       "nx/core/project-json"
     ],
     "tags": [
-      "libs/projects-center/features/mtg-card-generator/project.json",
-      "nx/core/project-json"
-    ],
-    "tags.type:features": [
-      "libs/projects-center/features/mtg-card-generator/project.json",
-      "nx/core/project-json"
-    ],
-    "tags.domain:card": [
-      "libs/projects-center/features/mtg-card-generator/project.json",
-      "nx/core/project-json"
-    ],
-    "targets": [
-      "libs/projects-center/features/mtg-card-generator/project.json",
-      "nx/core/project-json"
-    ]
-  },
-  "libs/projects-center/features/rpg-map-generator": {
-    "root": [
-      "libs/projects-center/features/rpg-map-generator/project.json",
-      "nx/core/project-json"
-    ],
-    "name": [
-      "libs/projects-center/features/rpg-map-generator/project.json",
-      "nx/core/project-json"
-    ],
-    "$schema": [
-      "libs/projects-center/features/rpg-map-generator/project.json",
-      "nx/core/project-json"
-    ],
-    "projectType": [
-      "libs/projects-center/features/rpg-map-generator/project.json",
-      "nx/core/project-json"
-    ],
-    "sourceRoot": [
-      "libs/projects-center/features/rpg-map-generator/project.json",
-      "nx/core/project-json"
-    ],
-    "tags": [
-      "libs/projects-center/features/rpg-map-generator/project.json",
-      "nx/core/project-json"
-    ],
-    "tags.type:features": [
-      "libs/projects-center/features/rpg-map-generator/project.json",
-      "nx/core/project-json"
-    ],
-    "tags.domain:rpg": [
-      "libs/projects-center/features/rpg-map-generator/project.json",
-      "nx/core/project-json"
-    ],
-    "targets": [
-      "libs/projects-center/features/rpg-map-generator/project.json",
-      "nx/core/project-json"
-    ]
-  },
-  "libs/projects-center/features/rpg-world-generator": {
-    "root": [
-      "libs/projects-center/features/rpg-world-generator/project.json",
-      "nx/core/project-json"
-    ],
-    "name": [
-      "libs/projects-center/features/rpg-world-generator/project.json",
-      "nx/core/project-json"
-    ],
-    "$schema": [
-      "libs/projects-center/features/rpg-world-generator/project.json",
-      "nx/core/project-json"
-    ],
-    "projectType": [
-      "libs/projects-center/features/rpg-world-generator/project.json",
-      "nx/core/project-json"
-    ],
-    "sourceRoot": [
-      "libs/projects-center/features/rpg-world-generator/project.json",
-      "nx/core/project-json"
-    ],
-    "tags": [
-      "libs/projects-center/features/rpg-world-generator/project.json",
-      "nx/core/project-json"
-    ],
-    "tags.type:features": [
-      "libs/projects-center/features/rpg-world-generator/project.json",
-      "nx/core/project-json"
-    ],
-    "tags.domain:rpg": [
-      "libs/projects-center/features/rpg-world-generator/project.json",
-      "nx/core/project-json"
-    ],
-    "targets": [
-      "libs/projects-center/features/rpg-world-generator/project.json",
-      "nx/core/project-json"
-    ]
-  },
-  "libs/projects-center/shared": {
-    "root": [
-      "libs/projects-center/shared/project.json",
-      "nx/core/project-json"
-    ],
-    "name": [
-      "libs/projects-center/shared/project.json",
-      "nx/core/project-json"
-    ],
-    "$schema": [
-      "libs/projects-center/shared/project.json",
-      "nx/core/project-json"
-    ],
-    "projectType": [
-      "libs/projects-center/shared/project.json",
-      "nx/core/project-json"
-    ],
-    "sourceRoot": [
-      "libs/projects-center/shared/project.json",
-      "nx/core/project-json"
-    ],
-    "tags": [
-      "libs/projects-center/shared/project.json",
+      "libs/shared/project.json",
       "nx/core/project-json"
     ],
     "tags.type:shared": [
-      "libs/projects-center/shared/project.json",
+      "libs/shared/project.json",
       "nx/core/project-json"
     ],
     "targets": [
-      "libs/projects-center/shared/project.json",
+      "libs/shared/project.json",
       "nx/core/project-json"
     ]
   },
-  "libs/projects-center/widgets/card-grid": {
+  "libs/shared/widgets/card-grid": {
     "root": [
-      "libs/projects-center/widgets/card-grid/project.json",
+      "libs/shared/widgets/card-grid/project.json",
       "nx/core/project-json"
     ],
     "name": [
-      "libs/projects-center/widgets/card-grid/project.json",
+      "libs/shared/widgets/card-grid/project.json",
       "nx/core/project-json"
     ],
     "$schema": [
-      "libs/projects-center/widgets/card-grid/project.json",
+      "libs/shared/widgets/card-grid/project.json",
       "nx/core/project-json"
     ],
     "projectType": [
-      "libs/projects-center/widgets/card-grid/project.json",
+      "libs/shared/widgets/card-grid/project.json",
       "nx/core/project-json"
     ],
     "sourceRoot": [
-      "libs/projects-center/widgets/card-grid/project.json",
+      "libs/shared/widgets/card-grid/project.json",
       "nx/core/project-json"
     ],
     "tags": [
-      "libs/projects-center/widgets/card-grid/project.json",
+      "libs/shared/widgets/card-grid/project.json",
       "nx/core/project-json"
     ],
     "tags.type:widgets": [
-      "libs/projects-center/widgets/card-grid/project.json",
+      "libs/shared/widgets/card-grid/project.json",
       "nx/core/project-json"
     ],
     "tags.domain:card": [
-      "libs/projects-center/widgets/card-grid/project.json",
+      "libs/shared/widgets/card-grid/project.json",
       "nx/core/project-json"
     ],
     "targets": [
-      "libs/projects-center/widgets/card-grid/project.json",
+      "libs/shared/widgets/card-grid/project.json",
       "nx/core/project-json"
     ]
   }

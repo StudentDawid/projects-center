@@ -10,7 +10,11 @@
     "importHelpers": true,
     "target": "ES2022",
     "module": "ESNext",
-    "lib": ["ES2023", "DOM", "DOM.Iterable"],
+    "lib": [
+      "ES2023",
+      "DOM",
+      "DOM.Iterable"
+    ],
     "skipLibCheck": true,
     "skipDefaultLibCheck": true,
     "strict": true,
@@ -19,34 +23,67 @@
     "allowJs": true,
     "baseUrl": ".",
     "paths": {
-      "@projects-center/entities/ateria-idle": ["libs/projects-center/entities/ateria-idle/index.ts"],
-      "@projects-center/entities/ateria-idle/*": ["libs/projects-center/entities/ateria-idle/*"],
-      "@projects-center/entities/card": ["libs/projects-center/entities/card/index.ts"],
-      "@projects-center/entities/card/*": ["libs/projects-center/entities/card/*"],
-      "@projects-center/features/ateria-idle/*": ["libs/projects-center/features/ateria-idle/*"],
-      "@projects-center/features/card-delete/*": ["libs/projects-center/features/card-delete/*"],
-      "@projects-center/features/card-edit/*": ["libs/projects-center/features/card-edit/*"],
-      "@projects-center/features/card-list/*": ["libs/projects-center/features/card-list/*"],
-      "@projects-center/features/card-preview/*": ["libs/projects-center/features/card-preview/*"],
-      "@projects-center/features/card-print/*": ["libs/projects-center/features/card-print/*"],
-      "@projects-center/features/mtg-card-generator/*": [
-        "libs/projects-center/features/mtg-card-generator/*"
+      "@ateria-idle/features/ateria-idle/*": [
+        "libs/ateria-idle/features/ateria-idle/*"
       ],
-      "@projects-center/features/rpg-map-generator/*": [
-        "libs/projects-center/features/rpg-map-generator/*"
+      "@ateria-idle/entities/ateria-idle": [
+        "libs/ateria-idle/entities/ateria-idle/index.ts"
       ],
-      "@projects-center/features/rpg-world-generator/*": [
-        "libs/projects-center/features/rpg-world-generator/*"
+      "@ateria-idle/entities/ateria-idle/*": [
+        "libs/ateria-idle/entities/ateria-idle/*"
       ],
-      "@projects-center/shared/lib/*": ["libs/projects-center/shared/lib/*"],
-      "@projects-center/shared/map-generator/*": ["libs/projects-center/shared/map-generator/*"],
-      "@projects-center/shared/world-generator/*": ["libs/projects-center/shared/world-generator/*"],
-      "@projects-center/shared/types/*": ["libs/projects-center/shared/types/*"],
-      "@projects-center/shared/stores/*": ["libs/projects-center/shared/stores/*"],
-      "@projects-center/widgets/card-grid/*": ["libs/projects-center/widgets/card-grid/*"],
-      "@app/*": ["apps/projects-center/*"],
-      "~/*": ["apps/projects-center/*"]
+      "@mtg-generator/features/mtg-card-generator/*": [
+        "libs/mtg-generator/features/mtg-card-generator/*"
+      ],
+      "@rpg-tools/features/rpg-map-generator/*": [
+        "libs/rpg-tools/features/rpg-map-generator/*"
+      ],
+      "@rpg-tools/features/rpg-world-generator/*": [
+        "libs/rpg-tools/features/rpg-world-generator/*"
+      ],
+      "@rpg-tools/shared/map-generator/*": [
+        "libs/rpg-tools/shared/map-generator/*"
+      ],
+      "@rpg-tools/shared/world-generator/*": [
+        "libs/rpg-tools/shared/world-generator/*"
+      ],
+      "@shared/features/card-preview/*": [
+        "libs/shared/features/card-preview/*"
+      ],
+      "@shared/features/card-print/*": [
+        "libs/shared/features/card-print/*"
+      ],
+      "@shared/features/card-edit/*": [
+        "libs/shared/features/card-edit/*"
+      ],
+      "@shared/features/card-list/*": [
+        "libs/shared/features/card-list/*"
+      ],
+      "@shared/features/card-delete/*": [
+        "libs/shared/features/card-delete/*"
+      ],
+      "@shared/entities/card": [
+        "libs/shared/entities/card/index.ts"
+      ],
+      "@shared/entities/card/*": [
+        "libs/shared/entities/card/*"
+      ],
+      "@shared/widgets/card-grid/*": [
+        "libs/shared/widgets/card-grid/*"
+      ],
+      "@shared/lib/*": [
+        "libs/shared/lib/*"
+      ],
+      "@shared/stores/*": [
+        "libs/shared/stores/*"
+      ],
+      "@shared/types/*": [
+        "libs/shared/types/*"
+      ]
     }
   },
-  "exclude": ["node_modules", "tmp"]
+  "exclude": [
+    "node_modules",
+    "tmp"
+  ]
 }
