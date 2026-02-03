@@ -1,0 +1,21 @@
+{
+  "run": {
+    "command": "nx run projects-center:dev",
+    "startTime": "2026-02-03T12:07:22.092Z",
+    "endTime": "2026-02-03T12:10:59.534Z",
+    "inner": false
+  },
+  "tasks": [
+    {
+      "taskId": "projects-center:dev",
+      "target": "dev",
+      "projectName": "projects-center",
+      "hash": "6959457854953470918",
+      "startTime": "2026-02-03T12:07:22.164Z",
+      "endTime": "2026-02-03T12:10:59.531Z",
+      "params": "",
+      "cacheStatus": "cache-miss",
+      "status": 0
+    }
+  ]
+}

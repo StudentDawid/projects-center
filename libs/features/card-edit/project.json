@@ -1,0 +1,10 @@
+{
+  "name": "features-card-edit",
+  "$schema": "../../../node_modules/nx/schemas/project-schema.json",
+  "projectType": "library",
+  "sourceRoot": "libs/features/card-edit",
+  "targets": {
+    }
+  },
+  "tags": ["type:features", "domain:card"]
+}

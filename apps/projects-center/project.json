@@ -1,0 +1,37 @@
+{
+  "name": "projects-center",
+  "$schema": "../../node_modules/nx/schemas/project-schema.json",
+  "projectType": "application",
+  "sourceRoot": "apps/projects-center",
+  "targets": {
+    "build": {
+      "executor": "nx:run-commands",
+      "outputs": ["{workspaceRoot}/.nuxt", "{workspaceRoot}/.output"],
+      "options": {
+        "command": "nuxt build",
+        "cwd": "apps/projects-center"
+      }
+    },
+    "dev": {
+      "executor": "nx:run-commands",
+      "options": {
+        "command": "nuxt dev",
+        "cwd": "apps/projects-center"
+      }
+    },
+    "preview": {
+      "executor": "nx:run-commands",
+      "options": {
+        "command": "nuxt preview",
+        "cwd": "apps/projects-center"
+      }
+    },
+    "lint": {
+      "executor": "@nx/eslint:lint",
+      "options": {
+        "lintFilePatterns": ["apps/projects-center/**/*.{ts,vue,js}"]
+      }
+    }
+  },
+  "tags": ["type:app"]
+}

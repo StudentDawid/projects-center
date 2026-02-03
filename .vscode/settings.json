@@ -29,5 +29,16 @@
   "files.eol": "\n",
   "files.trimTrailingWhitespace": true,
   "files.insertFinalNewline": true,
-  "cSpell.words": ["ateria", "Nuxt", "vuetify"]
+  "cSpell.words": ["ateria", "Nuxt", "vuetify"],
+  "chat.tools.terminal.autoApprove": {
+    "git checkout": true,
+    "/^mkdir -p libs/\\{entities,features,shared,widgets\\} apps && mv app apps/projects-center$/": {
+      "approve": true,
+      "matchCommandLine": true
+    },
+    "/^mv apps/projects-center/entities/\\* libs/entities/ && mv apps/projects-center/features/\\* libs/features/ && mv apps/projects-center/shared/\\* libs/shared/ && mv apps/projects-center/widgets/\\* libs/widgets/ && mv apps/projects-center/stores libs/shared/stores$/": {
+      "approve": true,
+      "matchCommandLine": true
+    }
+  }
 }

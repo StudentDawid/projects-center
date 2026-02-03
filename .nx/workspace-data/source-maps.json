@@ -1,0 +1,902 @@
+{
+  "apps/projects-center": {
+    "root": [
+      "apps/projects-center/project.json",
+      "nx/core/project-json"
+    ],
+    "name": [
+      "apps/projects-center/project.json",
+      "nx/core/project-json"
+    ],
+    "$schema": [
+      "apps/projects-center/project.json",
+      "nx/core/project-json"
+    ],
+    "projectType": [
+      "apps/projects-center/project.json",
+      "nx/core/project-json"
+    ],
+    "sourceRoot": [
+      "apps/projects-center/project.json",
+      "nx/core/project-json"
+    ],
+    "tags": [
+      "apps/projects-center/project.json",
+      "nx/core/project-json"
+    ],
+    "tags.type:app": [
+      "apps/projects-center/project.json",
+      "nx/core/project-json"
+    ],
+    "targets": [
+      "apps/projects-center/project.json",
+      "nx/core/project-json"
+    ],
+    "targets.build": [
+      "apps/projects-center/project.json",
+      "nx/core/project-json"
+    ],
+    "targets.build.executor": [
+      "apps/projects-center/project.json",
+      "nx/core/project-json"
+    ],
+    "targets.build.outputs": [
+      "apps/projects-center/project.json",
+      "nx/core/project-json"
+    ],
+    "targets.build.options": [
+      "apps/projects-center/project.json",
+      "nx/core/project-json"
+    ],
+    "targets.build.options.command": [
+      "apps/projects-center/project.json",
+      "nx/core/project-json"
+    ],
+    "targets.build.options.cwd": [
+      "apps/projects-center/project.json",
+      "nx/core/project-json"
+    ],
+    "targets.dev": [
+      "apps/projects-center/project.json",
+      "nx/core/project-json"
+    ],
+    "targets.dev.executor": [
+      "apps/projects-center/project.json",
+      "nx/core/project-json"
+    ],
+    "targets.dev.options": [
+      "apps/projects-center/project.json",
+      "nx/core/project-json"
+    ],
+    "targets.dev.options.command": [
+      "apps/projects-center/project.json",
+      "nx/core/project-json"
+    ],
+    "targets.dev.options.cwd": [
+      "apps/projects-center/project.json",
+      "nx/core/project-json"
+    ],
+    "targets.preview": [
+      "apps/projects-center/project.json",
+      "nx/core/project-json"
+    ],
+    "targets.preview.executor": [
+      "apps/projects-center/project.json",
+      "nx/core/project-json"
+    ],
+    "targets.preview.options": [
+      "apps/projects-center/project.json",
+      "nx/core/project-json"
+    ],
+    "targets.preview.options.command": [
+      "apps/projects-center/project.json",
+      "nx/core/project-json"
+    ],
+    "targets.preview.options.cwd": [
+      "apps/projects-center/project.json",
+      "nx/core/project-json"
+    ],
+    "targets.lint": [
+      "apps/projects-center/project.json",
+      "nx/core/project-json"
+    ],
+    "targets.lint.executor": [
+      "apps/projects-center/project.json",
+      "nx/core/project-json"
+    ],
+    "targets.lint.options": [
+      "apps/projects-center/project.json",
+      "nx/core/project-json"
+    ],
+    "targets.lint.options.lintFilePatterns": [
+      "apps/projects-center/project.json",
+      "nx/core/project-json"
+    ],
+    "targets.build.dependsOn": [
+      "nx.json",
+      "nx/target-defaults"
+    ],
+    "targets.build.inputs": [
+      "nx.json",
+      "nx/target-defaults"
+    ],
+    "targets.build.cache": [
+      "nx.json",
+      "nx/target-defaults"
+    ],
+    "targets.build.parallelism": [
+      "nx.json",
+      "nx/target-defaults"
+    ],
+    "targets.dev.cache": [
+      "nx.json",
+      "nx/target-defaults"
+    ],
+    "targets.dev.parallelism": [
+      "nx.json",
+      "nx/target-defaults"
+    ],
+    "targets.lint.inputs": [
+      "nx.json",
+      "nx/target-defaults"
+    ],
+    "targets.lint.cache": [
+      "nx.json",
+      "nx/target-defaults"
+    ],
+    "targets.lint.parallelism": [
+      "nx.json",
+      "nx/target-defaults"
+    ]
+  },
+  "libs/entities/ateria-idle": {
+    "root": [
+      "libs/entities/ateria-idle/project.json",
+      "nx/core/project-json"
+    ],
+    "name": [
+      "libs/entities/ateria-idle/project.json",
+      "nx/core/project-json"
+    ],
+    "$schema": [
+      "libs/entities/ateria-idle/project.json",
+      "nx/core/project-json"
+    ],
+    "projectType": [
+      "libs/entities/ateria-idle/project.json",
+      "nx/core/project-json"
+    ],
+    "sourceRoot": [
+      "libs/entities/ateria-idle/project.json",
+      "nx/core/project-json"
+    ],
+    "tags": [
+      "libs/entities/ateria-idle/project.json",
+      "nx/core/project-json"
+    ],
+    "tags.type:entities": [
+      "libs/entities/ateria-idle/project.json",
+      "nx/core/project-json"
+    ],
+    "tags.domain:ateria-idle": [
+      "libs/entities/ateria-idle/project.json",
+      "nx/core/project-json"
+    ],
+    "targets": [
+      "libs/entities/ateria-idle/project.json",
+      "nx/core/project-json"
+    ],
+    "targets.lint": [
+      "libs/entities/ateria-idle/project.json",
+      "nx/core/project-json"
+    ],
+    "targets.lint.executor": [
+      "libs/entities/ateria-idle/project.json",
+      "nx/core/project-json"
+    ],
+    "targets.lint.inputs": [
+      "nx.json",
+      "nx/target-defaults"
+    ],
+    "targets.lint.cache": [
+      "nx.json",
+      "nx/target-defaults"
+    ],
+    "targets.lint.parallelism": [
+      "nx.json",
+      "nx/target-defaults"
+    ]
+  },
+  "libs/entities/card": {
+    "root": [
+      "libs/entities/card/project.json",
+      "nx/core/project-json"
+    ],
+    "name": [
+      "libs/entities/card/project.json",
+      "nx/core/project-json"
+    ],
+    "$schema": [
+      "libs/entities/card/project.json",
+      "nx/core/project-json"
+    ],
+    "projectType": [
+      "libs/entities/card/project.json",
+      "nx/core/project-json"
+    ],
+    "sourceRoot": [
+      "libs/entities/card/project.json",
+      "nx/core/project-json"
+    ],
+    "tags": [
+      "libs/entities/card/project.json",
+      "nx/core/project-json"
+    ],
+    "tags.type:entities": [
+      "libs/entities/card/project.json",
+      "nx/core/project-json"
+    ],
+    "tags.domain:card": [
+      "libs/entities/card/project.json",
+      "nx/core/project-json"
+    ],
+    "targets": [
+      "libs/entities/card/project.json",
+      "nx/core/project-json"
+    ],
+    "targets.lint": [
+      "libs/entities/card/project.json",
+      "nx/core/project-json"
+    ],
+    "targets.lint.executor": [
+      "libs/entities/card/project.json",
+      "nx/core/project-json"
+    ],
+    "targets.lint.inputs": [
+      "nx.json",
+      "nx/target-defaults"
+    ],
+    "targets.lint.cache": [
+      "nx.json",
+      "nx/target-defaults"
+    ],
+    "targets.lint.parallelism": [
+      "nx.json",
+      "nx/target-defaults"
+    ]
+  },
+  "libs/features/ateria-idle": {
+    "root": [
+      "libs/features/ateria-idle/project.json",
+      "nx/core/project-json"
+    ],
+    "name": [
+      "libs/features/ateria-idle/project.json",
+      "nx/core/project-json"
+    ],
+    "$schema": [
+      "libs/features/ateria-idle/project.json",
+      "nx/core/project-json"
+    ],
+    "projectType": [
+      "libs/features/ateria-idle/project.json",
+      "nx/core/project-json"
+    ],
+    "sourceRoot": [
+      "libs/features/ateria-idle/project.json",
+      "nx/core/project-json"
+    ],
+    "tags": [
+      "libs/features/ateria-idle/project.json",
+      "nx/core/project-json"
+    ],
+    "tags.type:features": [
+      "libs/features/ateria-idle/project.json",
+      "nx/core/project-json"
+    ],
+    "tags.domain:ateria-idle": [
+      "libs/features/ateria-idle/project.json",
+      "nx/core/project-json"
+    ],
+    "targets": [
+      "libs/features/ateria-idle/project.json",
+      "nx/core/project-json"
+    ],
+    "targets.lint": [
+      "libs/features/ateria-idle/project.json",
+      "nx/core/project-json"
+    ],
+    "targets.lint.executor": [
+      "libs/features/ateria-idle/project.json",
+      "nx/core/project-json"
+    ],
+    "targets.lint.inputs": [
+      "nx.json",
+      "nx/target-defaults"
+    ],
+    "targets.lint.cache": [
+      "nx.json",
+      "nx/target-defaults"
+    ],
+    "targets.lint.parallelism": [
+      "nx.json",
+      "nx/target-defaults"
+    ]
+  },
+  "libs/features/card-delete": {
+    "root": [
+      "libs/features/card-delete/project.json",
+      "nx/core/project-json"
+    ],
+    "name": [
+      "libs/features/card-delete/project.json",
+      "nx/core/project-json"
+    ],
+    "$schema": [
+      "libs/features/card-delete/project.json",
+      "nx/core/project-json"
+    ],
+    "projectType": [
+      "libs/features/card-delete/project.json",
+      "nx/core/project-json"
+    ],
+    "sourceRoot": [
+      "libs/features/card-delete/project.json",
+      "nx/core/project-json"
+    ],
+    "tags": [
+      "libs/features/card-delete/project.json",
+      "nx/core/project-json"
+    ],
+    "tags.type:features": [
+      "libs/features/card-delete/project.json",
+      "nx/core/project-json"
+    ],
+    "tags.domain:card": [
+      "libs/features/card-delete/project.json",
+      "nx/core/project-json"
+    ],
+    "targets": [
+      "libs/features/card-delete/project.json",
+      "nx/core/project-json"
+    ],
+    "targets.lint": [
+      "libs/features/card-delete/project.json",
+      "nx/core/project-json"
+    ],
+    "targets.lint.executor": [
+      "libs/features/card-delete/project.json",
+      "nx/core/project-json"
+    ],
+    "targets.lint.inputs": [
+      "nx.json",
+      "nx/target-defaults"
+    ],
+    "targets.lint.cache": [
+      "nx.json",
+      "nx/target-defaults"
+    ],
+    "targets.lint.parallelism": [
+      "nx.json",
+      "nx/target-defaults"
+    ]
+  },
+  "libs/features/card-edit": {
+    "root": [
+      "libs/features/card-edit/project.json",
+      "nx/core/project-json"
+    ],
+    "name": [
+      "libs/features/card-edit/project.json",
+      "nx/core/project-json"
+    ],
+    "$schema": [
+      "libs/features/card-edit/project.json",
+      "nx/core/project-json"
+    ],
+    "projectType": [
+      "libs/features/card-edit/project.json",
+      "nx/core/project-json"
+    ],
+    "sourceRoot": [
+      "libs/features/card-edit/project.json",
+      "nx/core/project-json"
+    ],
+    "tags": [
+      "libs/features/card-edit/project.json",
+      "nx/core/project-json"
+    ],
+    "tags.type:features": [
+      "libs/features/card-edit/project.json",
+      "nx/core/project-json"
+    ],
+    "tags.domain:card": [
+      "libs/features/card-edit/project.json",
+      "nx/core/project-json"
+    ],
+    "targets": [
+      "libs/features/card-edit/project.json",
+      "nx/core/project-json"
+    ],
+    "targets.lint": [
+      "libs/features/card-edit/project.json",
+      "nx/core/project-json"
+    ],
+    "targets.lint.executor": [
+      "libs/features/card-edit/project.json",
+      "nx/core/project-json"
+    ],
+    "targets.lint.inputs": [
+      "nx.json",
+      "nx/target-defaults"
+    ],
+    "targets.lint.cache": [
+      "nx.json",
+      "nx/target-defaults"
+    ],
+    "targets.lint.parallelism": [
+      "nx.json",
+      "nx/target-defaults"
+    ]
+  },
+  "libs/features/card-list": {
+    "root": [
+      "libs/features/card-list/project.json",
+      "nx/core/project-json"
+    ],
+    "name": [
+      "libs/features/card-list/project.json",
+      "nx/core/project-json"
+    ],
+    "$schema": [
+      "libs/features/card-list/project.json",
+      "nx/core/project-json"
+    ],
+    "projectType": [
+      "libs/features/card-list/project.json",
+      "nx/core/project-json"
+    ],
+    "sourceRoot": [
+      "libs/features/card-list/project.json",
+      "nx/core/project-json"
+    ],
+    "tags": [
+      "libs/features/card-list/project.json",
+      "nx/core/project-json"
+    ],
+    "tags.type:features": [
+      "libs/features/card-list/project.json",
+      "nx/core/project-json"
+    ],
+    "tags.domain:card": [
+      "libs/features/card-list/project.json",
+      "nx/core/project-json"
+    ],
+    "targets": [
+      "libs/features/card-list/project.json",
+      "nx/core/project-json"
+    ],
+    "targets.lint": [
+      "libs/features/card-list/project.json",
+      "nx/core/project-json"
+    ],
+    "targets.lint.executor": [
+      "libs/features/card-list/project.json",
+      "nx/core/project-json"
+    ],
+    "targets.lint.inputs": [
+      "nx.json",
+      "nx/target-defaults"
+    ],
+    "targets.lint.cache": [
+      "nx.json",
+      "nx/target-defaults"
+    ],
+    "targets.lint.parallelism": [
+      "nx.json",
+      "nx/target-defaults"
+    ]
+  },
+  "libs/features/card-preview": {
+    "root": [
+      "libs/features/card-preview/project.json",
+      "nx/core/project-json"
+    ],
+    "name": [
+      "libs/features/card-preview/project.json",
+      "nx/core/project-json"
+    ],
+    "$schema": [
+      "libs/features/card-preview/project.json",
+      "nx/core/project-json"
+    ],
+    "projectType": [
+      "libs/features/card-preview/project.json",
+      "nx/core/project-json"
+    ],
+    "sourceRoot": [
+      "libs/features/card-preview/project.json",
+      "nx/core/project-json"
+    ],
+    "tags": [
+      "libs/features/card-preview/project.json",
+      "nx/core/project-json"
+    ],
+    "tags.type:features": [
+      "libs/features/card-preview/project.json",
+      "nx/core/project-json"
+    ],
+    "tags.domain:card": [
+      "libs/features/card-preview/project.json",
+      "nx/core/project-json"
+    ],
+    "targets": [
+      "libs/features/card-preview/project.json",
+      "nx/core/project-json"
+    ],
+    "targets.lint": [
+      "libs/features/card-preview/project.json",
+      "nx/core/project-json"
+    ],
+    "targets.lint.executor": [
+      "libs/features/card-preview/project.json",
+      "nx/core/project-json"
+    ],
+    "targets.lint.inputs": [
+      "nx.json",
+      "nx/target-defaults"
+    ],
+    "targets.lint.cache": [
+      "nx.json",
+      "nx/target-defaults"
+    ],
+    "targets.lint.parallelism": [
+      "nx.json",
+      "nx/target-defaults"
+    ]
+  },
+  "libs/features/card-print": {
+    "root": [
+      "libs/features/card-print/project.json",
+      "nx/core/project-json"
+    ],
+    "name": [
+      "libs/features/card-print/project.json",
+      "nx/core/project-json"
+    ],
+    "$schema": [
+      "libs/features/card-print/project.json",
+      "nx/core/project-json"
+    ],
+    "projectType": [
+      "libs/features/card-print/project.json",
+      "nx/core/project-json"
+    ],
+    "sourceRoot": [
+      "libs/features/card-print/project.json",
+      "nx/core/project-json"
+    ],
+    "tags": [
+      "libs/features/card-print/project.json",
+      "nx/core/project-json"
+    ],
+    "tags.type:features": [
+      "libs/features/card-print/project.json",
+      "nx/core/project-json"
+    ],
+    "tags.domain:card": [
+      "libs/features/card-print/project.json",
+      "nx/core/project-json"
+    ],
+    "targets": [
+      "libs/features/card-print/project.json",
+      "nx/core/project-json"
+    ],
+    "targets.lint": [
+      "libs/features/card-print/project.json",
+      "nx/core/project-json"
+    ],
+    "targets.lint.executor": [
+      "libs/features/card-print/project.json",
+      "nx/core/project-json"
+    ],
+    "targets.lint.inputs": [
+      "nx.json",
+      "nx/target-defaults"
+    ],
+    "targets.lint.cache": [
+      "nx.json",
+      "nx/target-defaults"
+    ],
+    "targets.lint.parallelism": [
+      "nx.json",
+      "nx/target-defaults"
+    ]
+  },
+  "libs/features/mtg-card-generator": {
+    "root": [
+      "libs/features/mtg-card-generator/project.json",
+      "nx/core/project-json"
+    ],
+    "name": [
+      "libs/features/mtg-card-generator/project.json",
+      "nx/core/project-json"
+    ],
+    "$schema": [
+      "libs/features/mtg-card-generator/project.json",
+      "nx/core/project-json"
+    ],
+    "projectType": [
+      "libs/features/mtg-card-generator/project.json",
+      "nx/core/project-json"
+    ],
+    "sourceRoot": [
+      "libs/features/mtg-card-generator/project.json",
+      "nx/core/project-json"
+    ],
+    "tags": [
+      "libs/features/mtg-card-generator/project.json",
+      "nx/core/project-json"
+    ],
+    "tags.type:features": [
+      "libs/features/mtg-card-generator/project.json",
+      "nx/core/project-json"
+    ],
+    "tags.domain:card": [
+      "libs/features/mtg-card-generator/project.json",
+      "nx/core/project-json"
+    ],
+    "targets": [
+      "libs/features/mtg-card-generator/project.json",
+      "nx/core/project-json"
+    ],
+    "targets.lint": [
+      "libs/features/mtg-card-generator/project.json",
+      "nx/core/project-json"
+    ],
+    "targets.lint.executor": [
+      "libs/features/mtg-card-generator/project.json",
+      "nx/core/project-json"
+    ],
+    "targets.lint.inputs": [
+      "nx.json",
+      "nx/target-defaults"
+    ],
+    "targets.lint.cache": [
+      "nx.json",
+      "nx/target-defaults"
+    ],
+    "targets.lint.parallelism": [
+      "nx.json",
+      "nx/target-defaults"
+    ]
+  },
+  "libs/features/rpg-map-generator": {
+    "root": [
+      "libs/features/rpg-map-generator/project.json",
+      "nx/core/project-json"
+    ],
+    "name": [
+      "libs/features/rpg-map-generator/project.json",
+      "nx/core/project-json"
+    ],
+    "$schema": [
+      "libs/features/rpg-map-generator/project.json",
+      "nx/core/project-json"
+    ],
+    "projectType": [
+      "libs/features/rpg-map-generator/project.json",
+      "nx/core/project-json"
+    ],
+    "sourceRoot": [
+      "libs/features/rpg-map-generator/project.json",
+      "nx/core/project-json"
+    ],
+    "tags": [
+      "libs/features/rpg-map-generator/project.json",
+      "nx/core/project-json"
+    ],
+    "tags.type:features": [
+      "libs/features/rpg-map-generator/project.json",
+      "nx/core/project-json"
+    ],
+    "tags.domain:rpg": [
+      "libs/features/rpg-map-generator/project.json",
+      "nx/core/project-json"
+    ],
+    "targets": [
+      "libs/features/rpg-map-generator/project.json",
+      "nx/core/project-json"
+    ],
+    "targets.lint": [
+      "libs/features/rpg-map-generator/project.json",
+      "nx/core/project-json"
+    ],
+    "targets.lint.executor": [
+      "libs/features/rpg-map-generator/project.json",
+      "nx/core/project-json"
+    ],
+    "targets.lint.inputs": [
+      "nx.json",
+      "nx/target-defaults"
+    ],
+    "targets.lint.cache": [
+      "nx.json",
+      "nx/target-defaults"
+    ],
+    "targets.lint.parallelism": [
+      "nx.json",
+      "nx/target-defaults"
+    ]
+  },
+  "libs/features/rpg-world-generator": {
+    "root": [
+      "libs/features/rpg-world-generator/project.json",
+      "nx/core/project-json"
+    ],
+    "name": [
+      "libs/features/rpg-world-generator/project.json",
+      "nx/core/project-json"
+    ],
+    "$schema": [
+      "libs/features/rpg-world-generator/project.json",
+      "nx/core/project-json"
+    ],
+    "projectType": [
+      "libs/features/rpg-world-generator/project.json",
+      "nx/core/project-json"
+    ],
+    "sourceRoot": [
+      "libs/features/rpg-world-generator/project.json",
+      "nx/core/project-json"
+    ],
+    "tags": [
+      "libs/features/rpg-world-generator/project.json",
+      "nx/core/project-json"
+    ],
+    "tags.type:features": [
+      "libs/features/rpg-world-generator/project.json",
+      "nx/core/project-json"
+    ],
+    "tags.domain:rpg": [
+      "libs/features/rpg-world-generator/project.json",
+      "nx/core/project-json"
+    ],
+    "targets": [
+      "libs/features/rpg-world-generator/project.json",
+      "nx/core/project-json"
+    ],
+    "targets.lint": [
+      "libs/features/rpg-world-generator/project.json",
+      "nx/core/project-json"
+    ],
+    "targets.lint.executor": [
+      "libs/features/rpg-world-generator/project.json",
+      "nx/core/project-json"
+    ],
+    "targets.lint.inputs": [
+      "nx.json",
+      "nx/target-defaults"
+    ],
+    "targets.lint.cache": [
+      "nx.json",
+      "nx/target-defaults"
+    ],
+    "targets.lint.parallelism": [
+      "nx.json",
+      "nx/target-defaults"
+    ]
+  },
+  "libs/shared": {
+    "root": [
+      "libs/shared/project.json",
+      "nx/core/project-json"
+    ],
+    "name": [
+      "libs/shared/project.json",
+      "nx/core/project-json"
+    ],
+    "$schema": [
+      "libs/shared/project.json",
+      "nx/core/project-json"
+    ],
+    "projectType": [
+      "libs/shared/project.json",
+      "nx/core/project-json"
+    ],
+    "sourceRoot": [
+      "libs/shared/project.json",
+      "nx/core/project-json"
+    ],
+    "tags": [
+      "libs/shared/project.json",
+      "nx/core/project-json"
+    ],
+    "tags.type:shared": [
+      "libs/shared/project.json",
+      "nx/core/project-json"
+    ],
+    "targets": [
+      "libs/shared/project.json",
+      "nx/core/project-json"
+    ],
+    "targets.lint": [
+      "libs/shared/project.json",
+      "nx/core/project-json"
+    ],
+    "targets.lint.executor": [
+      "libs/shared/project.json",
+      "nx/core/project-json"
+    ],
+    "targets.lint.inputs": [
+      "nx.json",
+      "nx/target-defaults"
+    ],
+    "targets.lint.cache": [
+      "nx.json",
+      "nx/target-defaults"
+    ],
+    "targets.lint.parallelism": [
+      "nx.json",
+      "nx/target-defaults"
+    ]
+  },
+  "libs/widgets/card-grid": {
+    "root": [
+      "libs/widgets/card-grid/project.json",
+      "nx/core/project-json"
+    ],
+    "name": [
+      "libs/widgets/card-grid/project.json",
+      "nx/core/project-json"
+    ],
+    "$schema": [
+      "libs/widgets/card-grid/project.json",
+      "nx/core/project-json"
+    ],
+    "projectType": [
+      "libs/widgets/card-grid/project.json",
+      "nx/core/project-json"
+    ],
+    "sourceRoot": [
+      "libs/widgets/card-grid/project.json",
+      "nx/core/project-json"
+    ],
+    "tags": [
+      "libs/widgets/card-grid/project.json",
+      "nx/core/project-json"
+    ],
+    "tags.type:widgets": [
+      "libs/widgets/card-grid/project.json",
+      "nx/core/project-json"
+    ],
+    "tags.domain:card": [
+      "libs/widgets/card-grid/project.json",
+      "nx/core/project-json"
+    ],
+    "targets": [
+      "libs/widgets/card-grid/project.json",
+      "nx/core/project-json"
+    ],
+    "targets.lint": [
+      "libs/widgets/card-grid/project.json",
+      "nx/core/project-json"
+    ],
+    "targets.lint.executor": [
+      "libs/widgets/card-grid/project.json",
+      "nx/core/project-json"
+    ],
+    "targets.lint.inputs": [
+      "nx.json",
+      "nx/target-defaults"
+    ],
+    "targets.lint.cache": [
+      "nx.json",
+      "nx/target-defaults"
+    ],
+    "targets.lint.parallelism": [
+      "nx.json",
+      "nx/target-defaults"
+    ]
+  }
+}

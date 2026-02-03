@@ -1,0 +1,10 @@
+{
+  "name": "entities-ateria-idle",
+  "$schema": "../../../node_modules/nx/schemas/project-schema.json",
+  "projectType": "library",
+  "sourceRoot": "libs/entities/ateria-idle",
+  "targets": {
+    }
+  },
+  "tags": ["type:entities", "domain:ateria-idle"]
+}

@@ -1,0 +1,52 @@
+{
+  "compileOnSave": false,
+  "compilerOptions": {
+    "rootDir": ".",
+    "sourceMap": true,
+    "declaration": false,
+    "moduleResolution": "bundler",
+    "emitDecoratorMetadata": true,
+    "experimentalDecorators": true,
+    "importHelpers": true,
+    "target": "ES2022",
+    "module": "ESNext",
+    "lib": ["ES2023", "DOM", "DOM.Iterable"],
+    "skipLibCheck": true,
+    "skipDefaultLibCheck": true,
+    "strict": true,
+    "esModuleInterop": true,
+    "resolveJsonModule": true,
+    "allowJs": true,
+    "baseUrl": ".",
+    "paths": {
+      "@libs/entities/ateria-idle": ["libs/entities/ateria-idle/index.ts"],
+      "@libs/entities/ateria-idle/*": ["libs/entities/ateria-idle/*"],
+      "@libs/entities/card": ["libs/entities/card/index.ts"],
+      "@libs/entities/card/*": ["libs/entities/card/*"],
+      "@libs/features/ateria-idle/*": ["libs/features/ateria-idle/*"],
+      "@libs/features/card-delete/*": ["libs/features/card-delete/*"],
+      "@libs/features/card-edit/*": ["libs/features/card-edit/*"],
+      "@libs/features/card-list/*": ["libs/features/card-list/*"],
+      "@libs/features/card-preview/*": ["libs/features/card-preview/*"],
+      "@libs/features/card-print/*": ["libs/features/card-print/*"],
+      "@libs/features/mtg-card-generator/*": [
+        "libs/features/mtg-card-generator/*"
+      ],
+      "@libs/features/rpg-map-generator/*": [
+        "libs/features/rpg-map-generator/*"
+      ],
+      "@libs/features/rpg-world-generator/*": [
+        "libs/features/rpg-world-generator/*"
+      ],
+      "@libs/shared/lib/*": ["libs/shared/lib/*"],
+      "@libs/shared/map-generator/*": ["libs/shared/map-generator/*"],
+      "@libs/shared/world-generator/*": ["libs/shared/world-generator/*"],
+      "@libs/shared/types/*": ["libs/shared/types/*"],
+      "@libs/shared/stores/*": ["libs/shared/stores/*"],
+      "@libs/widgets/card-grid/*": ["libs/widgets/card-grid/*"],
+      "@app/*": ["apps/projects-center/*"],
+      "~/*": ["apps/projects-center/*"]
+    }
+  },
+  "exclude": ["node_modules", "tmp"]
+}
