@@ -27,6 +27,7 @@ export default defineNuxtConfig({
     global: true,
     dirs: ['~/components'],
   },
+  ssr: false,
   devServer: {
     host: '127.0.0.1',
     port: 3002,

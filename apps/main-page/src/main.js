@@ -28,7 +28,7 @@ const projects = [
     tags: ['React 19', 'Vite', 'Idle Game'],
     status: 'development',
     featured: true,
-    visible: true,
+    visible: false,
   },
   {
     id: 'ateria-idle',

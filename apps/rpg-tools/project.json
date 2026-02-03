@@ -8,7 +8,7 @@
       "executor": "nx:run-commands",
       "outputs": ["{workspaceRoot}/dist/apps/rpg-tools"],
       "options": {
-        "command": "nuxt build",
+        "command": "nuxt generate && mkdir -p ../../dist/apps/rpg-tools && cp -R .output/public/. ../../dist/apps/rpg-tools/",
         "cwd": "apps/rpg-tools"
       }
     },

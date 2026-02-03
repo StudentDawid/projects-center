@@ -8,6 +8,7 @@ export default defineNuxtConfig({
   alias: {
     '@rpg-tools/entities': join(__dirname, '../../libs/rpg-tools/entities'),
     '@rpg-tools/features': join(__dirname, '../../libs/rpg-tools/features'),
+    '@rpg-tools/shared': join(__dirname, '../../libs/rpg-tools/shared'),
     '@shared': join(__dirname, '../../libs/shared'),
   },
   compatibilityDate: '2026-02-03',

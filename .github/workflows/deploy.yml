@@ -37,13 +37,26 @@ jobs:
       - name: Install dependencies
         run: yarn install --frozen-lockfile
 
-      - name: Generate static files
-        run: yarn generate
+      - name: Build all apps
+        run: |
+          yarn build:all
+          mkdir -p public_html
+          # Main page goes to root
+          if [ -d "dist/apps/main-page" ]; then cp -r dist/apps/main-page/. public_html/; fi
+          # Sub-apps go to subdirectories
+          for app in ateria-idle mtg-generator rpg-tools yarn-chaos; do
+            if [ -d "dist/apps/$app" ]; then
+              mkdir -p "public_html/$app"
+              cp -r "dist/apps/$app/." "public_html/$app/"
+            fi
+          done
+          # Prevent GitHub Pages from ignoring _nuxt folders
+          touch public_html/.nojekyll
 
       - name: Upload artifact
         uses: actions/upload-pages-artifact@v3
         with:
-          path: .output/public
+          path: public_html
 
   # Deployment job
   deploy:
@@ -56,4 +69,3 @@ jobs:
       - name: Deploy to GitHub Pages
         id: deployment
         uses: actions/deploy-pages@v4
-
