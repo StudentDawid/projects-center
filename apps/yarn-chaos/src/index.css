@@ -1,0 +1,23 @@
+@import 'tailwindcss';
+@config "../tailwind.config.js";
+
+@layer base {
+  body {
+    @apply bg-background-light dark:bg-background-dark text-[#181311] dark:text-white font-display;
+  }
+}
+
+/* Custom Scrollbar for a cleaner look */
+::-webkit-scrollbar {
+  width: 8px;
+}
+::-webkit-scrollbar-track {
+  background: #f1f1f1;
+}
+::-webkit-scrollbar-thumb {
+  background: #ccc;
+  border-radius: 4px;
+}
+::-webkit-scrollbar-thumb:hover {
+  background: #aaa;
+}

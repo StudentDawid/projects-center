@@ -535,6 +535,124 @@
       "nx/target-defaults"
     ]
   },
+  "apps/yarn-chaos": {
+    "root": [
+      "apps/yarn-chaos/project.json",
+      "nx/core/project-json"
+    ],
+    "name": [
+      "apps/yarn-chaos/project.json",
+      "nx/core/project-json"
+    ],
+    "$schema": [
+      "apps/yarn-chaos/project.json",
+      "nx/core/project-json"
+    ],
+    "projectType": [
+      "apps/yarn-chaos/project.json",
+      "nx/core/project-json"
+    ],
+    "sourceRoot": [
+      "apps/yarn-chaos/project.json",
+      "nx/core/project-json"
+    ],
+    "tags": [
+      "apps/yarn-chaos/project.json",
+      "nx/core/project-json"
+    ],
+    "tags.type:app": [
+      "apps/yarn-chaos/project.json",
+      "nx/core/project-json"
+    ],
+    "tags.framework:react": [
+      "apps/yarn-chaos/project.json",
+      "nx/core/project-json"
+    ],
+    "targets": [
+      "apps/yarn-chaos/project.json",
+      "nx/core/project-json"
+    ],
+    "targets.build": [
+      "apps/yarn-chaos/project.json",
+      "nx/core/project-json"
+    ],
+    "targets.build.executor": [
+      "apps/yarn-chaos/project.json",
+      "nx/core/project-json"
+    ],
+    "targets.build.outputs": [
+      "apps/yarn-chaos/project.json",
+      "nx/core/project-json"
+    ],
+    "targets.build.options": [
+      "apps/yarn-chaos/project.json",
+      "nx/core/project-json"
+    ],
+    "targets.build.options.outputPath": [
+      "apps/yarn-chaos/project.json",
+      "nx/core/project-json"
+    ],
+    "targets.build.options.configFile": [
+      "apps/yarn-chaos/project.json",
+      "nx/core/project-json"
+    ],
+    "targets.dev": [
+      "apps/yarn-chaos/project.json",
+      "nx/core/project-json"
+    ],
+    "targets.dev.executor": [
+      "apps/yarn-chaos/project.json",
+      "nx/core/project-json"
+    ],
+    "targets.dev.options": [
+      "apps/yarn-chaos/project.json",
+      "nx/core/project-json"
+    ],
+    "targets.dev.options.buildTarget": [
+      "apps/yarn-chaos/project.json",
+      "nx/core/project-json"
+    ],
+    "targets.preview": [
+      "apps/yarn-chaos/project.json",
+      "nx/core/project-json"
+    ],
+    "targets.preview.executor": [
+      "apps/yarn-chaos/project.json",
+      "nx/core/project-json"
+    ],
+    "targets.preview.options": [
+      "apps/yarn-chaos/project.json",
+      "nx/core/project-json"
+    ],
+    "targets.preview.options.buildTarget": [
+      "apps/yarn-chaos/project.json",
+      "nx/core/project-json"
+    ],
+    "targets.build.dependsOn": [
+      "nx.json",
+      "nx/target-defaults"
+    ],
+    "targets.build.inputs": [
+      "nx.json",
+      "nx/target-defaults"
+    ],
+    "targets.build.cache": [
+      "nx.json",
+      "nx/target-defaults"
+    ],
+    "targets.build.parallelism": [
+      "nx.json",
+      "nx/target-defaults"
+    ],
+    "targets.dev.cache": [
+      "nx.json",
+      "nx/target-defaults"
+    ],
+    "targets.dev.parallelism": [
+      "nx.json",
+      "nx/target-defaults"
+    ]
+  },
   "libs/ateria-idle/entities/ateria-idle": {
     "root": [
       "libs/ateria-idle/entities/ateria-idle/project.json",

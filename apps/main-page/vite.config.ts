@@ -29,6 +29,11 @@ export default defineConfig({
         changeOrigin: true,
         ws: true,
       },
+      '/projects-center/yarn-chaos': {
+        target: 'http://127.0.0.1:3004',
+        changeOrigin: true,
+        ws: true,
+      },
     },
   },
 

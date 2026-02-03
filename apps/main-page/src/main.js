@@ -16,6 +16,21 @@ const projects = [
     visible: true,
   },
   {
+    id: 'yarn-chaos',
+    title: 'Włóczkowy Chaos',
+    description:
+      'Wkręcaj się w wir kolorowych nici! Relaksująca gra typu clicker, w której zarządzasz chaosem włóczek i tworzysz niesamowite sploty.',
+    category: 'Gra IDLE',
+    filterType: 'game',
+    icon: 'mdi-zodiac-cancer',
+    color: '#ff9ed2',
+    link: '/projects-center/yarn-chaos/',
+    tags: ['React 19', 'Vite', 'Idle Game'],
+    status: 'development',
+    featured: true,
+    visible: true,
+  },
+  {
     id: 'ateria-idle',
     title: 'Echa Aterii',
     description:

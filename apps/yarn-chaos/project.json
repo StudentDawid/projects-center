@@ -1,0 +1,29 @@
+{
+  "name": "yarn-chaos",
+  "$schema": "../../node_modules/nx/schemas/project-schema.json",
+  "projectType": "application",
+  "sourceRoot": "apps/yarn-chaos",
+  "targets": {
+    "build": {
+      "executor": "@nx/vite:build",
+      "outputs": ["{options.outputPath}"],
+      "options": {
+        "outputPath": "dist/apps/yarn-chaos",
+        "configFile": "apps/yarn-chaos/vite.config.ts"
+      }
+    },
+    "dev": {
+      "executor": "@nx/vite:dev-server",
+      "options": {
+        "buildTarget": "yarn-chaos:build"
+      }
+    },
+    "preview": {
+      "executor": "@nx/vite:preview",
+      "options": {
+        "buildTarget": "yarn-chaos:build"
+      }
+    }
+  },
+  "tags": ["type:app", "framework:react"]
+}
