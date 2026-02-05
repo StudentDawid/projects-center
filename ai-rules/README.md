@@ -22,16 +22,16 @@ This directory contains consolidated AI rules and guidelines organized by topic 
 
 | Topic | Vue 3 | React |
 |-------|-------|-------|
-| **Architecture** | [architecture-vue.md](rules/architecture-vue.md) | [architecture-react.md](rules/architecture-react.md) |
-| **Coding Standards** | [coding-standards-vue.md](rules/coding-standards-vue.md) | [coding-standards-react.md](rules/coding-standards-react.md) |
+| **Architecture** | [rules/vue/architecture-vue.md](rules/vue/architecture-vue.md) | [rules/react/architecture-react.md](rules/react/architecture-react.md) |
+| **Coding Standards** | [rules/vue/coding-standards-vue.md](rules/vue/coding-standards-vue.md) | [rules/react/coding-standards-react.md](rules/react/coding-standards-react.md) |
 
 ## 🎯 How to Use These Rules
 
 ### For Vue Development
 
 1. **Starting a new task** → Read [general.md](rules/general.md) for communication rules
-2. **Understanding project structure** → Read [architecture-general.md](rules/architecture-general.md), then [architecture-vue.md](rules/architecture-vue.md)
-3. **Code standards** → Read [coding-standards-general.md](rules/coding-standards-general.md), then [coding-standards-vue.md](rules/coding-standards-vue.md)
+2. **Understanding project structure** → Read [rules/architecture-general.md](rules/architecture-general.md), then [rules/vue/architecture-vue.md](rules/vue/architecture-vue.md)
+3. **Code standards** → Read [rules/coding-standards-general.md](rules/coding-standards-general.md), then [rules/vue/coding-standards-vue.md](rules/vue/coding-standards-vue.md)
 4. **Creating new libraries** → Follow [library-creation.md](rules/library-creation.md)
 5. **Before committing** → Use [validation-checklist.md](rules/validation-checklist.md)
 6. **Understanding tech stack** → See [technical-stack.md](rules/technical-stack.md)
@@ -39,8 +39,8 @@ This directory contains consolidated AI rules and guidelines organized by topic 
 ### For React Development (Future)
 
 1. **Starting a new task** → Read [general.md](rules/general.md) for communication rules
-2. **Understanding project structure** → Read [architecture-general.md](rules/architecture-general.md), then [architecture-react.md](rules/architecture-react.md)
-3. **Code standards** → Read [coding-standards-general.md](rules/coding-standards-general.md), then [coding-standards-react.md](rules/coding-standards-react.md)
+2. **Understanding project structure** → Read [rules/architecture-general.md](rules/architecture-general.md), then [rules/react/architecture-react.md](rules/react/architecture-react.md)
+3. **Code standards** → Read [rules/coding-standards-general.md](rules/coding-standards-general.md), then [rules/react/coding-standards-react.md](rules/react/coding-standards-react.md)
 4. **Creating new libraries** → Follow [library-creation.md](rules/library-creation.md)
 5. **Before committing** → Use [validation-checklist.md](rules/validation-checklist.md)
 6. **Understanding tech stack** → See [technical-stack.md](rules/technical-stack.md)

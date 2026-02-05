@@ -10,11 +10,11 @@ This folder contains detailed AI rules and guidelines, organized by topic and fr
 |-------|-------------|
 | [general.md](general.md) | Communication rules, verification requirements, task planning |
 | [architecture-general.md](architecture-general.md) | FSD architecture concepts, library types, universal patterns |
-| [architecture-vue.md](architecture-vue.md) | Vue 3 & Nuxt specific architecture, library examples |
-| [architecture-react.md](architecture-react.md) | React specific architecture, hook patterns, store setup |
+| [vue/architecture-vue.md](vue/architecture-vue.md) | Vue 3 & Nuxt specific architecture, library examples |
+| [react/architecture-react.md](react/architecture-react.md) | React specific architecture, hook patterns, store setup |
 | [coding-standards-general.md](coding-standards-general.md) | TypeScript standards, naming, testing, universal code review |
-| [coding-standards-vue.md](coding-standards-vue.md) | Vue 3 components, composables, lifecycle, scoped styles |
-| [coding-standards-react.md](coding-standards-react.md) | React hooks, functional components, JSX, CSS approaches |
+| [vue/coding-standards-vue.md](vue/coding-standards-vue.md) | Vue 3 components, composables, lifecycle, scoped styles |
+| [react/coding-standards-react.md](react/coding-standards-react.md) | React hooks, functional components, JSX, CSS approaches |
 | [library-creation.md](library-creation.md) | Step-by-step guide for creating features, entities, widgets, stores |
 | [technical-stack.md](technical-stack.md) | Tech versions, build tools, development commands |
 | [validation-checklist.md](validation-checklist.md) | Pre-commit checks, testing, performance, accessibility |
@@ -27,9 +27,9 @@ Start here for Vue projects:
 
 1. [general.md](general.md) - Communication rules
 2. [architecture-general.md](architecture-general.md) - Understand FSD
-3. [architecture-vue.md](architecture-vue.md) - Vue library structure
+3. [vue/architecture-vue.md](vue/architecture-vue.md) - Vue library structure
 4. [coding-standards-general.md](coding-standards-general.md) - Universal standards
-5. [coding-standards-vue.md](coding-standards-vue.md) - Vue patterns
+5. [vue/coding-standards-vue.md](vue/coding-standards-vue.md) - Vue patterns
 6. [library-creation.md](library-creation.md) - Create new features
 7. [validation-checklist.md](validation-checklist.md) - Before commit
 
@@ -39,9 +39,9 @@ Prepare for React projects:
 
 1. [general.md](general.md) - Communication rules
 2. [architecture-general.md](architecture-general.md) - Understand FSD
-3. [architecture-react.md](architecture-react.md) - React library structure
+3. [react/architecture-react.md](react/architecture-react.md) - React library structure
 4. [coding-standards-general.md](coding-standards-general.md) - Universal standards
-5. [coding-standards-react.md](coding-standards-react.md) - React patterns
+5. [react/coding-standards-react.md](react/coding-standards-react.md) - React patterns
 6. [library-creation.md](library-creation.md) - Create new features
 7. [validation-checklist.md](validation-checklist.md) - Before commit
 
@@ -51,9 +51,9 @@ Prepare for React projects:
 |-----------|------|
 | Starting a new task | [general.md](general.md) |
 | Creating a feature library | [library-creation.md](library-creation.md) |
-| Need component examples | [architecture-vue.md](architecture-vue.md) or [architecture-react.md](architecture-react.md) |
-| Writing Vue code | [coding-standards-vue.md](coding-standards-vue.md) |
-| Writing React code | [coding-standards-react.md](coding-standards-react.md) |
+| Need component examples | [vue/architecture-vue.md](vue/architecture-vue.md) or [react/architecture-react.md](react/architecture-react.md) |
+| Writing Vue code | [vue/coding-standards-vue.md](vue/coding-standards-vue.md) |
+| Writing React code | [react/coding-standards-react.md](react/coding-standards-react.md) |
 | Understanding architecture | [architecture-general.md](architecture-general.md) |
 | Before committing code | [validation-checklist.md](validation-checklist.md) |
 | Learning the tech stack | [technical-stack.md](technical-stack.md) |
