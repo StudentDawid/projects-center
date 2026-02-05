@@ -24,7 +24,11 @@
     "format": "prettier --write .",
     "format:check": "prettier --check .",
     "graph": "nx graph",
-    "affected": "nx affected"
+    "affected": "nx affected",
+    "rules:sync": "./scripts/copy-rules.sh",
+    "rules:sync:cursor": "./scripts/copy-rules.sh cursor",
+    "rules:sync:copilot": "./scripts/copy-rules.sh copilot",
+    "rules:sync:antigravity": "./scripts/copy-rules.sh antigravity"
   },
   "dependencies": {
     "@mdi/font": "^7.4.47",
