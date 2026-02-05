@@ -121,7 +121,24 @@ This three-tier structure ensures:
 - **Follow cross-references** to understand full context
 - **Come back to validation-checklist.md** before every commit
 
+## � What Changed? (Migration Guide)
+
+The AI rules have been reorganized for clarity by splitting monolithic files into **universal** and **framework-specific** versions.
+
+**Old → New:**
+- `coding-standards.md` → `coding-standards-general.md` + `coding-standards-vue.md` + `coding-standards-react.md`
+- `architecture.md` → `architecture-general.md` + `architecture-vue.md` + `architecture-react.md`
+
+**Old files removed:** `coding-standards.md`, `architecture.md` (content moved to -general/-vue/-react variants)
+
+**Benefits:**
+✅ Vue developers only read `*-vue.md` files (reduced cognitive load)  
+✅ Change universal rules once, all frameworks benefit  
+✅ New frameworks (React, Svelte) can be added without duplication  
+✅ Clear navigation - know exactly which file for your situation  
+✅ Matches monorepo's framework-tiered structure (libs/*/vue/, libs/*/react/)  
+
 ## 📝 Version History
 
-- **v2.0** (Feb 5, 2026) - Framework-specific organization (general, vue, react)
+- **v2.0** (Feb 5, 2026) - Framework-specific organization (general, vue, react), consolidated README
 - **v1.0** (Earlier) - Consolidated from 3 source files (.cursorrules, .cursor, .agent)
