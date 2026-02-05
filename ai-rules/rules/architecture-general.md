@@ -1,12 +1,22 @@
-# 🏗️ Architecture & Project Structure
+# 🏗️ Architecture (Universal)
 
-This document outlines the monorepo architecture and structure following Feature-Sliced Design (FSD).
+Universal architecture concepts and FSD principles applicable to all frameworks.
 
 ## Overview
 
 The project uses a **monorepo** structure managed by **Nx** with **Feature-Sliced Design (FSD)** architecture. This enables scalability, code reusability, and clear separation of concerns.
 
-## Directory Structure
+Reference: https://feature-sliced.design/
+
+## Feature-Sliced Design (FSD)
+
+FSD organizes code by **business logic slices** rather than technical layers. This improves:
+- **Code discoverability** - Feature logic grouped together
+- **Feature independence** - Minimal cross-feature dependencies
+- **Parallel development** - Teams work on separate features simultaneously
+- **Easier refactoring** - Move/rename features without breaking dependencies
+
+## Monorepo Structure
 
 ```
 project-root/
@@ -17,53 +27,25 @@ project-root/
 │   └── projects-center/    # Landing page
 │
 ├── libs/                    # Reusable libraries
-│   ├── features/vue/       # Feature components
-│   ├── entities/vue/       # Entity models & UI
-│   ├── widgets/vue/        # Reusable widgets
-│   ├── stores/vue/         # Pinia stores
-│   └── shared/             # Utilities & helpers
+│   ├── features/           # Feature components (framework-tiered)
+│   │   ├── vue/
+│   │   └── react/
+│   ├── entities/           # Entity models & UI (framework-tiered)
+│   │   ├── vue/
+│   │   └── react/
+│   ├── widgets/            # Reusable widgets (framework-tiered)
+│   │   ├── vue/
+│   │   └── react/
+│   ├── stores/             # State management (framework-tiered)
+│   │   ├── vue/
+│   │   └── react/
+│   └── shared/             # Framework-agnostic utilities
 │
 ├── ai-rules/               # AI guidelines (this folder)
 ├── .agent/                 # Agent AI rules
 ├── .cursor/                # Cursor IDE rules
 ├── .cursorrules            # Root cursor rules
 └── docs/                   # Documentation
-```
-
-## Feature-Sliced Design (FSD)
-
-FSD organizes code by **business logic slices** rather than technical layers. This improves:
-- Code discoverability
-- Feature independence
-- Parallel development
-- Easier refactoring
-
-Reference: https://feature-sliced.design/
-
-## Monorepo Libraries Structure
-
-All libraries follow a framework-tiered structure:
-
-```
-libs/
-├── features/
-│   └── vue/                # Vue-specific features
-│       ├── feature-1/
-│       ├── feature-2/
-│       └── ...
-├── entities/
-│   └── vue/                # Vue-specific entities
-│       ├── entity-1/
-│       └── ...
-├── widgets/
-│   └── vue/                # Vue-specific widgets
-│       └── ...
-├── stores/
-│   └── vue/                # Vue-specific stores
-│       └── ...
-└── shared/                 # Framework-agnostic
-    ├── utility-folder/
-    └── utility.ts
 ```
 
 ## Path Mapping (tsconfig.base.json)
@@ -92,13 +74,13 @@ All imports use alias paths instead of relative paths:
 
 ## Five Types of Libraries
 
-### 1. **Features** (`libs/features/vue/[name]/`)
+### 1. **Features** (`libs/{framework}/features/[name]/`)
 
 Business logic and feature-specific UI components.
 
 **Contents:**
-- `ui/` - Vue components
-- `hooks/` - Composables for feature logic
+- `ui/` - Framework components (Vue/React)
+- `hooks/` - Composables/Custom hooks for feature logic
 - `model/` - Types and constants
 - `project.json` - Nx configuration
 - `index.ts` - Public exports
@@ -108,13 +90,13 @@ Business logic and feature-specific UI components.
 import { MyFeature, useMyFeature } from '@shared/features/my-feature';
 ```
 
-### 2. **Entities** (`libs/entities/vue/[name]/`)
+### 2. **Entities** (`libs/{framework}/entities/[name]/`)
 
 Business entity models, types, and related UI components.
 
 **Contents:**
 - `ui/` - Entity display components
-- `lib/` - Pinia stores for entity state
+- `lib/` or `store.ts` - State management for the entity
 - `model/` - Entity type definitions
 - `project.json` - Nx configuration
 - `index.ts` - Public exports
@@ -125,7 +107,7 @@ import type { Card } from '@shared/entities/card';
 import { useCardStore } from '@shared/entities/card';
 ```
 
-### 3. **Widgets** (`libs/widgets/vue/[name]/`)
+### 3. **Widgets** (`libs/{framework}/widgets/[name]/`)
 
 Reusable, generic UI components without business logic.
 
@@ -140,18 +122,23 @@ Reusable, generic UI components without business logic.
 import { Grid } from '@shared/widgets/grid';
 ```
 
-### 4. **Stores** (`libs/stores/vue/[name]/`)
+### 4. **Stores** (`libs/{framework}/stores/[name]/`)
 
-Pinia stores and related composables for state management.
+State management (Pinia for Vue, Redux/Zustand for React, etc.).
 
 **Contents:**
-- `store.ts` - Pinia store definition
+- `store.ts` or `store/` - State management definition
 - `types.ts` - Store state types
-- `composables.ts` - Related composables
+- `composables.ts` or `hooks.ts` - Related composables/hooks
 - `project.json` - Nx configuration
 - `index.ts` - Public exports
 
-**Example:**
+**Example (Vue):**
+```typescript
+import { useAuthStore } from '@shared/stores/auth';
+```
+
+**Example (React):**
 ```typescript
 import { useAuthStore } from '@shared/stores/auth';
 ```
@@ -173,12 +160,12 @@ import { throttle } from '@shared/throttle';
 import { initGddb } from '@shared/gddb';
 ```
 
-## Important Architectural Rules
+## Important Architectural Rules (Universal)
 
 ### ✅ DO
 
-- ✅ Put Vue components in `libs/{scope}/vue/`
-- ✅ Put React components in `libs/{scope}/react/`
+- ✅ Put Vue components in `libs/features/vue/`, `libs/entities/vue/`, etc.
+- ✅ Put React components in `libs/features/react/`, `libs/entities/react/`, etc.
 - ✅ Put utilities in `libs/shared/`
 - ✅ Use `@shared/*` imports
 - ✅ Create `project.json` in each library
@@ -189,13 +176,13 @@ import { initGddb } from '@shared/gddb';
 
 ### ❌ DON'T
 
-- ❌ Put Vue, React etc. components in `libs/shared/`, only pure JS/TS or universal libs.
+- ❌ Put Vue, React, or other framework components in `libs/shared/` - only pure JS/TS
 - ❌ Use relative paths (../../../)
 - ❌ Create cyclic dependencies
-- ❌ Import features into other features
+- ❌ Import features into other features directly
 - ❌ Skip `project.json` files
 - ❌ Leave internal files in barrel exports
-- ❌ Mix framework-specific and agnostic code
+- ❌ Mix framework-specific and framework-agnostic code in same directory
 - ❌ Create nested features within features
 
 ## Code Layering Example
@@ -214,15 +201,15 @@ Widgets (UI components)
 Shared Utilities
 ```
 
-## Moving Forward
+## Multi-Framework Architecture
 
-When the codebase expands to support multiple frameworks (React, Svelte, etc.), the structure is prepared:
+The structure supports multiple frameworks with zero conflicts:
 
 ```
 libs/
 ├── features/
-│   ├── vue/
-│   └── react/
+│   ├── vue/              # Vue components
+│   └── react/            # React components (same naming patterns)
 ├── entities/
 │   ├── vue/
 │   └── react/
@@ -230,9 +217,20 @@ libs/
 │   ├── vue/
 │   └── react/
 ├── stores/
-│   ├── vue/
-│   └── react/
-└── shared/
+│   ├── vue/              # Pinia stores
+│   └── react/            # Redux/Zustand stores
+└── shared/               # Shared across all frameworks
 ```
 
-This separation ensures Vue and React libraries can coexist without conflicts.
+This separation ensures Vue and React libraries can coexist without conflicts, allowing:
+- Vue apps to import from `@shared/features/*` pointing to `libs/features/vue/`
+- React apps to import from `@shared/features/*` pointing to `libs/features/react/`
+- All apps to import shared utilities from `libs/shared/`
+
+---
+
+## Framework-Specific Architecture
+
+For **Vue 3** specific architecture patterns, see: **[architecture-vue.md](architecture-vue.md)**
+
+For **React** specific architecture patterns, see: **[architecture-react.md](architecture-react.md)**

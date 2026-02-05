@@ -5,6 +5,7 @@ All developers and AI assistants should follow these fundamental rules.
 ## Communication Language
 
 - **Always communicate in Polish.** This is the primary language for all documentation, comments, and discussions.
+- **AI Assistants (Copilot, Cursor, etc.) must ALWAYS respond in Polish** - no exceptions, regardless of the user's input language.
 - Keep messages concise and action-oriented.
 - When explaining technical concepts, use Polish terms where established (e.g., "feature", "store", "komponent").
 
