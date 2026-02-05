@@ -9,15 +9,15 @@ This folder contains detailed AI rules and guidelines, organized by topic and fr
 | Topic | Description |
 |-------|-------------|
 | [general.md](general.md) | Communication rules, verification requirements, task planning |
-| [architecture-general.md](architecture-general.md) | FSD architecture concepts, library types, universal patterns |
+| [general-rules/architecture-general.md](general-rules/architecture-general.md) | FSD architecture concepts, library types, universal patterns |
 | [vue/architecture-vue.md](vue/architecture-vue.md) | Vue 3 & Nuxt specific architecture, library examples |
 | [react/architecture-react.md](react/architecture-react.md) | React specific architecture, hook patterns, store setup |
-| [coding-standards-general.md](coding-standards-general.md) | TypeScript standards, naming, testing, universal code review |
+| [general-rules/coding-standards-general.md](general-rules/coding-standards-general.md) | TypeScript standards, naming, testing, universal code review |
 | [vue/coding-standards-vue.md](vue/coding-standards-vue.md) | Vue 3 components, composables, lifecycle, scoped styles |
 | [react/coding-standards-react.md](react/coding-standards-react.md) | React hooks, functional components, JSX, CSS approaches |
-| [library-creation.md](library-creation.md) | Step-by-step guide for creating features, entities, widgets, stores |
-| [technical-stack.md](technical-stack.md) | Tech versions, build tools, development commands |
-| [validation-checklist.md](validation-checklist.md) | Pre-commit checks, testing, performance, accessibility |
+| [general-rules/library-creation.md](general-rules/library-creation.md) | Step-by-step guide for creating features, entities, widgets, stores |
+| [general-rules/technical-stack.md](general-rules/technical-stack.md) | Tech versions, build tools, development commands |
+| [general-rules/validation-checklist.md](general-rules/validation-checklist.md) | Pre-commit checks, testing, performance, accessibility |
 
 ### By Framework
 
@@ -26,37 +26,37 @@ This folder contains detailed AI rules and guidelines, organized by topic and fr
 Start here for Vue projects:
 
 1. [general.md](general.md) - Communication rules
-2. [architecture-general.md](architecture-general.md) - Understand FSD
+2. [general-rules/architecture-general.md](general-rules/architecture-general.md) - Understand FSD
 3. [vue/architecture-vue.md](vue/architecture-vue.md) - Vue library structure
-4. [coding-standards-general.md](coding-standards-general.md) - Universal standards
+4. [general-rules/coding-standards-general.md](general-rules/coding-standards-general.md) - Universal standards
 5. [vue/coding-standards-vue.md](vue/coding-standards-vue.md) - Vue patterns
-6. [library-creation.md](library-creation.md) - Create new features
-7. [validation-checklist.md](validation-checklist.md) - Before commit
+6. [general-rules/library-creation.md](general-rules/library-creation.md) - Create new features
+7. [general-rules/validation-checklist.md](general-rules/validation-checklist.md) - Before commit
 
 #### ⚛️ React Development (Future)
 
 Prepare for React projects:
 
 1. [general.md](general.md) - Communication rules
-2. [architecture-general.md](architecture-general.md) - Understand FSD
+2. [general-rules/architecture-general.md](general-rules/architecture-general.md) - Understand FSD
 3. [react/architecture-react.md](react/architecture-react.md) - React library structure
-4. [coding-standards-general.md](coding-standards-general.md) - Universal standards
+4. [general-rules/coding-standards-general.md](general-rules/coding-standards-general.md) - Universal standards
 5. [react/coding-standards-react.md](react/coding-standards-react.md) - React patterns
-6. [library-creation.md](library-creation.md) - Create new features
-7. [validation-checklist.md](validation-checklist.md) - Before commit
+6. [general-rules/library-creation.md](general-rules/library-creation.md) - Create new features
+7. [general-rules/validation-checklist.md](general-rules/validation-checklist.md) - Before commit
 
 ## 📋 When to Use Which File
 
 | Situation | File |
 |-----------|------|
 | Starting a new task | [general.md](general.md) |
-| Creating a feature library | [library-creation.md](library-creation.md) |
+| Creating a feature library | [general-rules/library-creation.md](general-rules/library-creation.md) |
 | Need component examples | [vue/architecture-vue.md](vue/architecture-vue.md) or [react/architecture-react.md](react/architecture-react.md) |
 | Writing Vue code | [vue/coding-standards-vue.md](vue/coding-standards-vue.md) |
 | Writing React code | [react/coding-standards-react.md](react/coding-standards-react.md) |
-| Understanding architecture | [architecture-general.md](architecture-general.md) |
-| Before committing code | [validation-checklist.md](validation-checklist.md) |
-| Learning the tech stack | [technical-stack.md](technical-stack.md) |
+| Understanding architecture | [general-rules/architecture-general.md](general-rules/architecture-general.md) |
+| Before committing code | [general-rules/validation-checklist.md](general-rules/validation-checklist.md) |
+| Learning the tech stack | [general-rules/technical-stack.md](general-rules/technical-stack.md) |
 
 ## 🔗 Cross-References
 
@@ -72,21 +72,21 @@ Each file contains links to related rules:
 ### For First-Time Setup (30 min read)
 
 1. **[general.md](general.md)** (5 min) - Understand communication style
-2. **[architecture-general.md](architecture-general.md)** (10 min) - Learn FSD principles
-3. **[architecture-vue.md](architecture-vue.md)** (10 min) - Understand Vue structure
-4. **[library-creation.md](library-creation.md)** (5 min) - See library structure
+2. **[general-rules/architecture-general.md](general-rules/architecture-general.md)** (10 min) - Learn FSD principles
+3. **[vue/architecture-vue.md](vue/architecture-vue.md)** (10 min) - Understand Vue structure
+4. **[general-rules/library-creation.md](general-rules/library-creation.md)** (5 min) - See library structure
 
 ### For Creating Your First Feature (15 min read)
 
-1. **[library-creation.md](library-creation.md)** (5 min) - Step-by-step creation
-2. **[architecture-vue.md](architecture-vue.md)** (5 min) - Feature structure example
-3. **[coding-standards-vue.md](coding-standards-vue.md)** (5 min) - Vue code patterns
+1. **[general-rules/library-creation.md](general-rules/library-creation.md)** (5 min) - Step-by-step creation
+2. **[vue/architecture-vue.md](vue/architecture-vue.md)** (5 min) - Feature structure example
+3. **[vue/coding-standards-vue.md](vue/coding-standards-vue.md)** (5 min) - Vue code patterns
 
 ### Before Committing Code (10 min read)
 
-1. **[validation-checklist.md](validation-checklist.md)** (5 min) - Full checklist
-2. **[coding-standards-general.md](coding-standards-general.md)** (3 min) - Quick review
-3. **[coding-standards-vue.md](coding-standards-vue.md)** (2 min) - Vue-specific check
+1. **[general-rules/validation-checklist.md](general-rules/validation-checklist.md)** (5 min) - Full checklist
+2. **[general-rules/coding-standards-general.md](general-rules/coding-standards-general.md)** (3 min) - Quick review
+3. **[vue/coding-standards-vue.md](vue/coding-standards-vue.md)** (2 min) - Vue-specific check
 
 ## 🎨 File Organization Philosophy
 

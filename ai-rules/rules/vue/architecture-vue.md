@@ -256,6 +256,6 @@ Shared Utilities
 
 ## General Architecture
 
-For universal architecture concepts, see: **[architecture-general.md](architecture-general.md)**
+For universal architecture concepts, see: **[../general-rules/architecture-general.md](../general-rules/architecture-general.md)**
 
-For **React** specific architecture patterns, see: **[architecture-react.md](architecture-react.md)**
+For **React** specific architecture patterns, see: **[../react/architecture-react.md](../react/architecture-react.md)**

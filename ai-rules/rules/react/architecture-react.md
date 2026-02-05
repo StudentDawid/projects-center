@@ -317,6 +317,6 @@ import { MyFeature } from '../../../libs/features/react/my-feature';
 
 ## General Architecture
 
-For universal architecture concepts, see: **[architecture-general.md](architecture-general.md)**
+For universal architecture concepts, see: **[../general-rules/architecture-general.md](../general-rules/architecture-general.md)**
 
-For **Vue** specific architecture patterns, see: **[architecture-vue.md](architecture-vue.md)**
+For **Vue** specific architecture patterns, see: **[../vue/architecture-vue.md](../vue/architecture-vue.md)**

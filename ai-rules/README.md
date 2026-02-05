@@ -12,11 +12,11 @@ This directory contains consolidated AI rules and guidelines organized by topic 
 ### Core Rules (Applicable to All Frameworks)
 
 - **general.md** - General communication and verification rules
-- **architecture-general.md** - FSD architecture and universal project structure
-- **coding-standards-general.md** - Universal code quality and style standards
-- **library-creation.md** - Step-by-step guide for creating new libraries
-- **technical-stack.md** - Technology stack and build tools
-- **validation-checklist.md** - Checklist before committing changes
+- **rules/general-rules/architecture-general.md** - FSD architecture and universal project structure
+- **rules/general-rules/coding-standards-general.md** - Universal code quality and style standards
+- **rules/general-rules/library-creation.md** - Step-by-step guide for creating new libraries
+- **rules/general-rules/technical-stack.md** - Technology stack and build tools
+- **rules/general-rules/validation-checklist.md** - Checklist before committing changes
 
 ### Framework-Specific Rules
 
@@ -30,20 +30,20 @@ This directory contains consolidated AI rules and guidelines organized by topic 
 ### For Vue Development
 
 1. **Starting a new task** → Read [general.md](rules/general.md) for communication rules
-2. **Understanding project structure** → Read [rules/architecture-general.md](rules/architecture-general.md), then [rules/vue/architecture-vue.md](rules/vue/architecture-vue.md)
-3. **Code standards** → Read [rules/coding-standards-general.md](rules/coding-standards-general.md), then [rules/vue/coding-standards-vue.md](rules/vue/coding-standards-vue.md)
-4. **Creating new libraries** → Follow [library-creation.md](rules/library-creation.md)
-5. **Before committing** → Use [validation-checklist.md](rules/validation-checklist.md)
-6. **Understanding tech stack** → See [technical-stack.md](rules/technical-stack.md)
+2. **Understanding project structure** → Read [rules/general-rules/architecture-general.md](rules/general-rules/architecture-general.md), then [rules/vue/architecture-vue.md](rules/vue/architecture-vue.md)
+3. **Code standards** → Read [rules/general-rules/coding-standards-general.md](rules/general-rules/coding-standards-general.md), then [rules/vue/coding-standards-vue.md](rules/vue/coding-standards-vue.md)
+4. **Creating new libraries** → Follow [rules/general-rules/library-creation.md](rules/general-rules/library-creation.md)
+5. **Before committing** → Use [rules/general-rules/validation-checklist.md](rules/general-rules/validation-checklist.md)
+6. **Understanding tech stack** → See [rules/general-rules/technical-stack.md](rules/general-rules/technical-stack.md)
 
 ### For React Development (Future)
 
 1. **Starting a new task** → Read [general.md](rules/general.md) for communication rules
-2. **Understanding project structure** → Read [rules/architecture-general.md](rules/architecture-general.md), then [rules/react/architecture-react.md](rules/react/architecture-react.md)
-3. **Code standards** → Read [rules/coding-standards-general.md](rules/coding-standards-general.md), then [rules/react/coding-standards-react.md](rules/react/coding-standards-react.md)
-4. **Creating new libraries** → Follow [library-creation.md](rules/library-creation.md)
-5. **Before committing** → Use [validation-checklist.md](rules/validation-checklist.md)
-6. **Understanding tech stack** → See [technical-stack.md](rules/technical-stack.md)
+2. **Understanding project structure** → Read [rules/general-rules/architecture-general.md](rules/general-rules/architecture-general.md), then [rules/react/architecture-react.md](rules/react/architecture-react.md)
+3. **Code standards** → Read [rules/general-rules/coding-standards-general.md](rules/general-rules/coding-standards-general.md), then [rules/react/coding-standards-react.md](rules/react/coding-standards-react.md)
+4. **Creating new libraries** → Follow [rules/general-rules/library-creation.md](rules/general-rules/library-creation.md)
+5. **Before committing** → Use [rules/general-rules/validation-checklist.md](rules/general-rules/validation-checklist.md)
+6. **Understanding tech stack** → See [rules/general-rules/technical-stack.md](rules/general-rules/technical-stack.md)
 
 ## 📂 Directory Structure
 

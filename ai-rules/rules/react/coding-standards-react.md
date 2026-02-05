@@ -354,4 +354,4 @@ Before submitting React code, additionally verify:
 
 ## General Standards
 
-For universal standards applicable to all frameworks, see: **[coding-standards-general.md](coding-standards-general.md)**
+For universal standards applicable to all frameworks, see: **[../general-rules/coding-standards-general.md](../general-rules/coding-standards-general.md)**
