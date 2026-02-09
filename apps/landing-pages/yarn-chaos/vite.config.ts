@@ -21,7 +21,7 @@ export default defineConfig({
     },
   },
   build: {
-    outDir: '../../dist/apps/yarn-chaos',
+    outDir: '../../../dist/apps/yarn-chaos',
     emptyOutDir: true,
     rollupOptions: {
       input: resolve(__dirname, 'index.html'),

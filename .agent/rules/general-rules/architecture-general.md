@@ -26,9 +26,11 @@ FSD organizes code by **business logic slices** rather than technical layers. Th
 ```
 project-root/
 ├── apps/                    # Applications
+│   ├── landing-pages/      # Landing pages
+│   │   ├── yarn-chaos/     # React app
+│   │   └── religion-community/  # Vue/Nuxt landing page
 │   ├── rpg-tools/          # Nuxt app for RPG tools
 │   ├── main-page/          # Vite app for homepage
-│   ├── yarn-chaos/         # React app
 │   └── projects-center/    # Landing page
 │
 ├── libs/                    # Reusable libraries

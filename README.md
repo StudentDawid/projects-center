@@ -22,7 +22,7 @@ Projekt zorganizowany jest jako monorepo **Nx** z nowoczesną strukturą **FSD (
 
 ### Główne Katalogi
 
-- **`apps/`** - Aplikacje (rpg-tools, main-page, yarn-chaos)
+- **`apps/`** - Aplikacje (rpg-tools, main-page, landing-pages/yarn-chaos, landing-pages/religion-community)
 - **`libs/`** - Biblioteki i moduły, zorganizowane według FSD
 
 ### Struktura libs/ (FSD)

@@ -1,0 +1,235 @@
+<!DOCTYPE html>
+<html class="light" lang="en"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>Youth Retreat 2023 - Sacred Heart</title>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<link href="https://fonts.googleapis.com/css2?family=Public+Sans:wght@300;400;500;600;700;800;900&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@700;900&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<script id="tailwind-config">
+        tailwind.config = {
+            darkMode: "class",
+            theme: {
+                extend: {
+                    colors: {
+                        "primary": "#135bec",
+                        "accent-gold": "#C5A059",
+                        "background-light": "#f6f6f8",
+                        "background-dark": "#101622",
+                        "serene-beige": "#F9F7F2",
+                    },
+                    fontFamily: {
+                        "display": ["Public Sans", "sans-serif"],
+                        "serif": ["Playfair Display", "serif"]
+                    },
+                    borderRadius: {
+                        "DEFAULT": "0.5rem",
+                        "lg": "1rem",
+                        "xl": "1.5rem",
+                        "full": "9999px"
+                    },
+                },
+            },
+        }
+    </script>
+<style type="text/tailwindcss">
+        body {
+            font-family: 'Public Sans', sans-serif;
+        }
+        #lightbox-toggle:checked ~ #lightbox {
+            display: flex;
+        }
+        #lightbox-toggle:checked ~ .relative {
+            filter: blur(8px) brightness(0.7);
+            pointer-events: none;
+        }
+        .masonry-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+            grid-auto-rows: 200px;
+            gap: 1.5rem;
+        }
+        .masonry-tall {
+            grid-row: span 2;
+        }
+        .masonry-wide {
+            grid-column: span 2;
+        }
+        @media (max-width: 640px) {
+            .masonry-wide {
+                grid-column: span 1;
+            }
+        }
+    </style>
+</head>
+<body class="bg-serene-beige dark:bg-background-dark text-slate-900 dark:text-slate-100 transition-colors duration-300">
+<input class="hidden peer" id="lightbox-toggle" type="checkbox"/>
+<div class="relative flex min-h-screen w-full flex-col overflow-x-hidden">
+<header class="sticky top-0 z-50 w-full bg-white/80 dark:bg-background-dark/80 backdrop-blur-md border-b border-slate-200 dark:border-slate-800">
+<div class="max-w-7xl mx-auto px-6 h-20 flex items-center justify-between">
+<div class="flex items-center gap-3">
+<div class="bg-primary p-2 rounded-lg text-white">
+<span class="material-symbols-outlined text-2xl">church</span>
+</div>
+<div class="flex flex-col">
+<h2 class="text-lg font-bold leading-tight tracking-tight">Sacred Heart</h2>
+<span class="text-[10px] uppercase tracking-[0.2em] text-accent-gold font-bold">Community</span>
+</div>
+</div>
+<nav class="hidden md:flex items-center gap-8">
+<a class="text-sm font-semibold hover:text-primary transition-colors" href="#">Home</a>
+<a class="text-sm font-semibold hover:text-primary transition-colors" href="#">Announcements</a>
+<a class="text-sm font-semibold hover:text-primary transition-colors" href="#">About Us</a>
+<a class="text-sm font-bold text-primary" href="#">Gallery</a>
+<a class="text-sm font-semibold hover:text-primary transition-colors" href="#">Contact</a>
+</nav>
+<button class="bg-primary text-white px-6 py-2.5 rounded-full text-sm font-bold hover:bg-primary/90 transition-all shadow-md">
+                Join Us
+            </button>
+</div>
+</header>
+<main class="flex-grow">
+<section class="pt-12 pb-16 px-6">
+<div class="max-w-7xl mx-auto">
+<a class="inline-flex items-center gap-2 text-primary font-bold mb-8 hover:-translate-x-1 transition-transform group" href="#">
+<span class="material-symbols-outlined text-xl">arrow_back</span>
+                    Back to Gallery
+                </a>
+<div class="space-y-4">
+<span class="text-accent-gold font-bold tracking-[0.3em] uppercase text-xs">August 12-14, 2023</span>
+<h1 class="text-5xl md:text-7xl font-black font-serif text-slate-900 dark:text-white leading-tight">Youth Retreat 2023</h1>
+<p class="text-slate-600 dark:text-slate-400 max-w-3xl text-xl leading-relaxed">
+                        A weekend of reflection, team building, and spiritual renewal at the mountain campsite. Our community's youth explored their faith amidst the beauty of nature and the warmth of fellowship.
+                    </p>
+</div>
+</div>
+</section>
+<section class="pb-24 px-6">
+<div class="max-w-7xl mx-auto">
+<div class="masonry-grid">
+<label class="cursor-zoom-in masonry-tall overflow-hidden rounded-2xl shadow-sm hover:shadow-xl transition-all duration-500" for="lightbox-toggle">
+<img alt="Campfire gathering" class="w-full h-full object-cover hover:scale-105 transition-transform duration-700" src="https://lh3.googleusercontent.com/aida-public/AB6AXuD4xT6Nw6RIx1hcOcRxySY2RZjZoVq02oJOA-MLg4xW3KDaQ8_nXwYFfKMO4B7f4wX1EQ6SUPqeVmIjXMfGWb8VUVh_VKwHaJD6eh9YEfcmX4cCLmreoos62zw3ebeTao_6gHb4VPRxy5WKXAxrUuyCrAHxqFmRAa1Y9nhEWlOhO2bhWH7G7sTfYYxkrjpEBPYsNQRJqUBNx3J8du4LGLZlEFvMkEFFBLEV6mtD9Zzx179sdUFoZkk_gFoOPwHpD7O15S6JP36Hx6nV"/>
+</label>
+<label class="cursor-zoom-in overflow-hidden rounded-2xl shadow-sm hover:shadow-xl transition-all duration-500" for="lightbox-toggle">
+<img alt="Mountain hiking" class="w-full h-full object-cover hover:scale-105 transition-transform duration-700" src="https://lh3.googleusercontent.com/aida-public/AB6AXuD_RRvjazX3j1c8d-EC4bfBb21aXwv4oGLdzc1UQvbgzVR9uGPuttXUnpG9kWqTpMkJSYOe5ECHgMDhkqdnhqpInWOdirTAKH9sZKdLNoF6Tjxuv3uOTBfTECmTMOo-kgR20oZDywlJ9HWC0VX3dv4Ii05W7Jb_dFcaD9NMID-VBg0u4Bce5bpkXha8uBcmQRUpo0mUEM_fBSqpQwpW4MlEsigrkD9o-9V_6nJZpXO7dXdzJfUgOWir6DgaBX6YlztlcAKaOILG9tHZ"/>
+</label>
+<label class="cursor-zoom-in overflow-hidden rounded-2xl shadow-sm hover:shadow-xl transition-all duration-500" for="lightbox-toggle">
+<img alt="Starlit prayer" class="w-full h-full object-cover hover:scale-105 transition-transform duration-700" src="https://lh3.googleusercontent.com/aida-public/AB6AXuB05OLbyQKju26CN474KAUqmnn3yZpsWZ7XWrYNRC0AcNmw6g11ZmVGJU6ziOY6DGmq8SfXtCK-EKXGB6qxpB8ccFvYL58KNvQ3-I1-XUC5wOrBs1eBxPaydJfh0goPK363WGybdPEkwV3AbgrBWniaY7ax_ClG9sNSmQxSVmj-9iOmq2pG8t1ExiyAOMJWHd3fBj98a7upDAvDTIZLm-EYLYJkstHnj0uzH_YlekOM1p_M1LsV1qYIxQcn-DcztPeHHDXyVMNuOd-z"/>
+</label>
+<label class="cursor-zoom-in masonry-wide overflow-hidden rounded-2xl shadow-sm hover:shadow-xl transition-all duration-500" for="lightbox-toggle">
+<img alt="Group breakfast" class="w-full h-full object-cover hover:scale-105 transition-transform duration-700" src="https://lh3.googleusercontent.com/aida-public/AB6AXuD1pnFw5N0nVJZw-qeXqgqQ8219I2K9OjJvjXvKlZFPEcEnok4wjA5tdOAEhr8E4iaQFbArZFS9jp6wsKsBeYJml8PG07avWsbVjWoYg6F4kICTpC5pwpZw2taU2uoKDEvJIg19bpqqMb1eUjl-MROYGRhrvHs-QyYV7tqIS5fGueqIIPUnHMQD9b74Ptx8cSM3rODSeoExQqdgNJU2eGfOHKKGqQBDrT19oyDDJJTSEuBzoPEpWtanK5cJBwomvj46q704qFfPr3-p"/>
+</label>
+<label class="cursor-zoom-in overflow-hidden rounded-2xl shadow-sm hover:shadow-xl transition-all duration-500" for="lightbox-toggle">
+<img alt="Morning service" class="w-full h-full object-cover hover:scale-105 transition-transform duration-700" src="https://lh3.googleusercontent.com/aida-public/AB6AXuBtrxp3Jdo15sPAqG5UbT9xMYQbaABkhIcN9TDnr168DuT7_LClZ5gvKSTMdhCX6_oNtP8U2nYw7q9Hjfx2Rk5RXdy31irYGFS6CzY5GIvaw_8_phfTZEMDV2uDEgiju-eSfI0AFz1N_A1F5vjqZYenbpIjeF6b7DPLovLAFEpzHjEU9gAIm5D8H_xZrqyd7Wprc238f-Cw7Z7PcvI8GCPWw6VkXX04vCA8CksIONQX8MGVkO5ELGmszlhRlk6FCKjfbG9i40SvytmD"/>
+</label>
+<label class="cursor-zoom-in masonry-tall overflow-hidden rounded-2xl shadow-sm hover:shadow-xl transition-all duration-500" for="lightbox-toggle">
+<img alt="Singing workshop" class="w-full h-full object-cover hover:scale-105 transition-transform duration-700" src="https://lh3.googleusercontent.com/aida-public/AB6AXuALZBlPzNWSJ2ya2gMqr_4lsEE7JkrlpJt1joNFb4KjSsojSVMvsNEpNIpbgHMyqCpiCWX119OlvFwzi6uB3hS5qrt2zGIh73kA5aq7fC-6WVhsaCZAJv9SRQnqGuvGejcVs6tKLZbr6e4IYdYsxArEkLzPWO3eqzREngL7kNDfLe8O_fPKWwH-krJ7xVQZ8E_JJotE53hgukKY7i0Y5giNLT7-5sRk67ZPFdsWDX5cu1IExhi6saFn3j_Efccu7Uy0hZhVANgNuUNC"/>
+</label>
+<label class="cursor-zoom-in overflow-hidden rounded-2xl shadow-sm hover:shadow-xl transition-all duration-500" for="lightbox-toggle">
+<img alt="Wildflowers on trail" class="w-full h-full object-cover hover:scale-105 transition-transform duration-700" src="https://lh3.googleusercontent.com/aida-public/AB6AXuB05OLbyQKju26CN474KAUqmnn3yZpsWZ7XWrYNRC0AcNmw6g11ZmVGJU6ziOY6DGmq8SfXtCK-EKXGB6qxpB8ccFvYL58KNvQ3-I1-XUC5wOrBs1eBxPaydJfh0goPK363WGybdPEkwV3AbgrBWniaY7ax_ClG9sNSmQxSVmj-9iOmq2pG8t1ExiyAOMJWHd3fBj98a7upDAvDTIZLm-EYLYJkstHnj0uzH_YlekOM1p_M1LsV1qYIxQcn-DcztPeHHDXyVMNuOd-z"/>
+</label>
+<label class="cursor-zoom-in overflow-hidden rounded-2xl shadow-sm hover:shadow-xl transition-all duration-500" for="lightbox-toggle">
+<img alt="Closing circle" class="w-full h-full object-cover hover:scale-105 transition-transform duration-700" src="https://lh3.googleusercontent.com/aida-public/AB6AXuD4xT6Nw6RIx1hcOcRxySY2RZjZoVq02oJOA-MLg4xW3KDaQ8_nXwYFfKMO4B7f4wX1EQ6SUPqeVmIjXMfGWb8VUVh_VKwHaJD6eh9YEfcmX4cCLmreoos62zw3ebeTao_6gHb4VPRxy5WKXAxrUuyCrAHxqFmRAa1Y9nhEWlOhO2bhWH7G7sTfYYxkrjpEBPYsNQRJqUBNx3J8du4LGLZlEFvMkEFFBLEV6mtD9Zzx179sdUFoZkk_gFoOPwHpD7O15S6JP36Hx6nV"/>
+</label>
+<label class="cursor-zoom-in overflow-hidden rounded-2xl shadow-sm hover:shadow-xl transition-all duration-500" for="lightbox-toggle">
+<img alt="Shared meal" class="w-full h-full object-cover hover:scale-105 transition-transform duration-700" src="https://lh3.googleusercontent.com/aida-public/AB6AXuD1pnFw5N0nVJZw-qeXqgqQ8219I2K9OjJvjXvKlZFPEcEnok4wjA5tdOAEhr8E4iaQFbArZFS9jp6wsKsBeYJml8PG07avWsbVjWoYg6F4kICTpC5pwpZw2taU2uoKDEvJIg19bpqqMb1eUjl-MROYGRhrvHs-QyYV7tqIS5fGueqIIPUnHMQD9b74Ptx8cSM3rODSeoExQqdgNJU2eGfOHKKGqQBDrT19oyDDJJTSEuBzoPEpWtanK5cJBwomvj46q704qFfPr3-p"/>
+</label>
+<label class="cursor-zoom-in masonry-tall overflow-hidden rounded-2xl shadow-sm hover:shadow-xl transition-all duration-500" for="lightbox-toggle">
+<img alt="Volunteer session" class="w-full h-full object-cover hover:scale-105 transition-transform duration-700" src="https://lh3.googleusercontent.com/aida-public/AB6AXuD4xT6Nw6RIx1hcOcRxySY2RZjZoVq02oJOA-MLg4xW3KDaQ8_nXwYFfKMO4B7f4wX1EQ6SUPqeVmIjXMfGWb8VUVh_VKwHaJD6eh9YEfcmX4cCLmreoos62zw3ebeTao_6gHb4VPRxy5WKXAxrUuyCrAHxqFmRAa1Y9nhEWlOhO2bhWH7G7sTfYYxkrjpEBPYsNQRJqUBNx3J8du4LGLZlEFvMkEFFBLEV6mtD9Zzx179sdUFoZkk_gFoOPwHpD7O15S6JP36Hx6nV"/>
+</label>
+<label class="cursor-zoom-in overflow-hidden rounded-2xl shadow-sm hover:shadow-xl transition-all duration-500" for="lightbox-toggle">
+<img alt="Craft workshop" class="w-full h-full object-cover hover:scale-105 transition-transform duration-700" src="https://lh3.googleusercontent.com/aida-public/AB6AXuD1pnFw5N0nVJZw-qeXqgqQ8219I2K9OjJvjXvKlZFPEcEnok4wjA5tdOAEhr8E4iaQFbArZFS9jp6wsKsBeYJml8PG07avWsbVjWoYg6F4kICTpC5pwpZw2taU2uoKDEvJIg19bpqqMb1eUjl-MROYGRhrvHs-QyYV7tqIS5fGueqIIPUnHMQD9b74Ptx8cSM3rODSeoExQqdgNJU2eGfOHKKGqQBDrT19oyDDJJTSEuBzoPEpWtanK5cJBwomvj46q704qFfPr3-p"/>
+</label>
+<label class="cursor-zoom-in masonry-wide overflow-hidden rounded-2xl shadow-sm hover:shadow-xl transition-all duration-500" for="lightbox-toggle">
+<img alt="Group photo" class="w-full h-full object-cover hover:scale-105 transition-transform duration-700" src="https://lh3.googleusercontent.com/aida-public/AB6AXuBtrxp3Jdo15sPAqG5UbT9xMYQbaABkhIcN9TDnr168DuT7_LClZ5gvKSTMdhCX6_oNtP8U2nYw7q9Hjfx2Rk5RXdy31irYGFS6CzY5GIvaw_8_phfTZEMDV2uDEgiju-eSfI0AFz1N_A1F5vjqZYenbpIjeF6b7DPLovLAFEpzHjEU9gAIm5D8H_xZrqyd7Wprc238f-Cw7Z7PcvI8GCPWw6VkXX04vCA8CksIONQX8MGVkO5ELGmszlhRlk6FCKjfbG9i40SvytmD"/>
+</label>
+</div>
+</div>
+</section>
+</main>
+<footer class="bg-slate-900 text-slate-300 pt-20 pb-10 px-6">
+<div class="max-w-7xl mx-auto">
+<div class="grid grid-cols-1 lg:grid-cols-12 gap-12 pb-16 border-b border-slate-800">
+<div class="lg:col-span-4 flex flex-col gap-6">
+<div class="flex items-center gap-3">
+<div class="bg-primary p-2 rounded-lg text-white">
+<span class="material-symbols-outlined text-2xl">church</span>
+</div>
+<div class="flex flex-col">
+<h2 class="text-lg font-bold leading-tight tracking-tight text-white">Sacred Heart</h2>
+<span class="text-[10px] uppercase tracking-[0.2em] text-accent-gold font-bold">Community</span>
+</div>
+</div>
+<p class="text-sm leading-relaxed max-w-xs">
+                        Thank you for being part of our journey. We are a community dedicated to faith, hope, and the transformative power of love.
+                    </p>
+<div class="flex gap-4">
+<a class="size-10 rounded-full bg-slate-800 flex items-center justify-center hover:bg-primary transition-colors" href="#">
+<svg class="size-5 fill-current" viewBox="0 0 24 24"><path d="M24 12.073c0-6.627-5.373-12-12-12s-12 5.373-12 12c0 5.99 4.388 10.954 10.125 11.854v-8.385H7.078v-3.47h3.047V9.43c0-3.007 1.792-4.669 4.533-4.669 1.312 0 2.686.235 2.686.235v2.953H15.83c-1.491 0-1.956.925-1.956 1.874v2.25h3.328l-.532 3.47h-2.796v8.385C19.612 23.027 24 18.062 24 12.073z"></path></svg>
+</a>
+<a class="size-10 rounded-full bg-slate-800 flex items-center justify-center hover:bg-primary transition-colors" href="#">
+<svg class="size-5 fill-current" viewBox="0 0 24 24"><path d="M23.953 4.57a10 10 0 01-2.825.775 4.958 4.958 0 002.163-2.723c-.951.555-2.005.959-3.127 1.184a4.92 4.92 0 00-8.384 4.482C7.69 8.095 4.067 6.13 1.64 3.162a4.822 4.822 0 00-.666 2.475c0 1.71.87 3.213 2.188 4.096a4.904 4.904 0 01-2.228-.616v.06a4.923 4.923 0 003.946 4.84 4.996 4.996 0 01-2.212.085 4.936 4.936 0 004.604 3.417 9.867 9.867 0 01-6.102 2.105c-.39 0-.779-.023-1.17-.067a13.995 13.995 0 007.557 2.209c9.053 0 13.998-7.496 13.998-13.985 0-.21 0-.42-.015-.63A9.935 9.935 0 0024 4.59z"></path></svg>
+</a>
+</div>
+</div>
+<div class="lg:col-span-3 flex flex-col gap-6">
+<h3 class="text-white font-bold text-lg">Contact Us</h3>
+<div class="flex flex-col gap-4 text-sm">
+<div class="flex items-start gap-3">
+<span class="material-symbols-outlined text-accent-gold">location_on</span>
+<span>123 Serenity Way, <br/>Harmony City, HC 54321</span>
+</div>
+<div class="flex items-center gap-3">
+<span class="material-symbols-outlined text-accent-gold">call</span>
+<span>+1 (555) 123-4567</span>
+</div>
+<div class="flex items-center gap-3">
+<span class="material-symbols-outlined text-accent-gold">mail</span>
+<span>hello@sacredheart.org</span>
+</div>
+</div>
+</div>
+<div class="lg:col-span-5">
+<div class="w-full h-52 bg-slate-800 rounded-xl overflow-hidden relative border border-slate-700">
+<img alt="Map" class="w-full h-full object-cover opacity-50" src="https://lh3.googleusercontent.com/aida-public/AB6AXuALZBlPzNWSJ2ya2gMqr_4lsEE7JkrlpJt1joNFb4KjSsojSVMvsNEpNIpbgHMyqCpiCWX119OlvFwzi6uB3hS5qrt2zGIh73kA5aq7fC-6WVhsaCZAJv9SRQnqGuvGejcVs6tKLZbr6e4IYdYsxArEkLzPWO3eqzREngL7kNDfLe8O_fPKWwH-krJ7xVQZ8E_JJotE53hgukKY7i0Y5giNLT7-5sRk67ZPFdsWDX5cu1IExhi6saFn3j_Efccu7Uy0hZhVANgNuUNC"/>
+<div class="absolute inset-0 flex items-center justify-center">
+<div class="bg-primary text-white p-3 rounded-full">
+<span class="material-symbols-outlined">location_on</span>
+</div>
+</div>
+</div>
+</div>
+</div>
+<div class="flex flex-col md:flex-row items-center justify-between pt-10 gap-4 text-xs font-medium text-slate-500 uppercase tracking-widest">
+<p>© 2023 Sacred Heart Community. All rights reserved.</p>
+<div class="flex gap-8">
+<a class="hover:text-white" href="#">Privacy Policy</a>
+<a class="hover:text-white" href="#">Terms of Service</a>
+</div>
+</div>
+</div>
+</footer>
+</div>
+<div class="fixed inset-0 z-[100] hidden flex-col items-center justify-center bg-black/90 backdrop-blur-md" id="lightbox">
+<label class="absolute top-6 right-8 text-white/70 hover:text-white cursor-pointer p-2 transition-colors" for="lightbox-toggle">
+<span class="material-symbols-outlined text-4xl">close</span>
+</label>
+<button class="absolute left-6 top-1/2 -translate-y-1/2 text-white/50 hover:text-white transition-all hover:scale-110 p-4">
+<span class="material-symbols-outlined text-6xl">chevron_left</span>
+</button>
+<button class="absolute right-6 top-1/2 -translate-y-1/2 text-white/50 hover:text-white transition-all hover:scale-110 p-4">
+<span class="material-symbols-outlined text-6xl">chevron_right</span>
+</button>
+<div class="relative max-w-6xl w-full px-24">
+<img alt="Enlarged gallery photo" class="w-full h-auto max-h-[80vh] object-contain rounded shadow-2xl mx-auto" src="https://lh3.googleusercontent.com/aida-public/AB6AXuD4xT6Nw6RIx1hcOcRxySY2RZjZoVq02oJOA-MLg4xW3KDaQ8_nXwYFfKMO4B7f4wX1EQ6SUPqeVmIjXMfGWb8VUVh_VKwHaJD6eh9YEfcmX4cCLmreoos62zw3ebeTao_6gHb4VPRxy5WKXAxrUuyCrAHxqFmRAa1Y9nhEWlOhO2bhWH7G7sTfYYxkrjpEBPYsNQRJqUBNx3J8du4LGLZlEFvMkEFFBLEV6mtD9Zzx179sdUFoZkk_gFoOPwHpD7O15S6JP36Hx6nV"/>
+<div class="mt-8 text-center text-white">
+<h4 class="text-2xl font-serif font-bold mb-2">Youth Retreat 2023</h4>
+<div class="inline-flex items-center gap-2 px-4 py-1.5 bg-white/10 rounded-full border border-white/20">
+<span class="text-sm font-medium tracking-widest uppercase">Image 1 of 12</span>
+</div>
+</div>
+</div>
+</div>
+
+</body></html>
