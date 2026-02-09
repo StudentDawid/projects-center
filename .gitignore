@@ -1,5 +1,8 @@
 docs/rpg/map-generator/files/*
 
+# AI Rules backup folder
+rules-ai/backups
+
 # Logs
 logs
 *.log

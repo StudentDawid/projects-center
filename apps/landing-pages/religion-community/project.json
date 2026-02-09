@@ -1,0 +1,38 @@
+{
+  "name": "religion-community",
+  "$schema": "../../../node_modules/nx/schemas/project-schema.json",
+  "projectType": "application",
+  "sourceRoot": "apps/landing-pages/religion-community",
+  "targets": {
+    "build": {
+      "executor": "nx:run-commands",
+      "outputs": ["{workspaceRoot}/dist/apps/religion-community"],
+      "options": {
+        "command": "nuxt generate && mkdir -p ../../../dist/apps/religion-community && cp -R .output/public/. ../../../dist/apps/religion-community/",
+        "cwd": "apps/landing-pages/religion-community"
+      }
+    },
+    "dev": {
+      "executor": "nx:run-commands",
+      "options": {
+        "command": "nuxt dev --port 3005 --host 127.0.0.1",
+        "cwd": "apps/landing-pages/religion-community"
+      }
+    },
+    "preview": {
+      "executor": "nx:run-commands",
+      "options": {
+        "command": "nuxt preview",
+        "cwd": "apps/landing-pages/religion-community"
+      }
+    },
+    "prepare": {
+      "executor": "nx:run-commands",
+      "options": {
+        "command": "nuxi prepare",
+        "cwd": "apps/landing-pages/religion-community"
+      }
+    }
+  },
+  "tags": ["type:app", "framework:nuxt", "category:landing-page"]
+}

@@ -1,0 +1,8 @@
+{
+  "name": "gddb",
+  "$schema": "../../../../node_modules/nx/schemas/project-schema.json",
+  "sourceRoot": "libs/shared/lib/gddb",
+  "projectType": "library",
+  "tags": ["type:lib", "scope:shared"],
+  "targets": {}
+}

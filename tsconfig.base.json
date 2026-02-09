@@ -23,59 +23,47 @@
     "allowJs": true,
     "baseUrl": ".",
     "paths": {
-      "@ateria-idle/features/ateria-idle/*": [
-        "libs/ateria-idle/features/ateria-idle/*"
-      ],
-      "@ateria-idle/entities/ateria-idle": [
-        "libs/ateria-idle/entities/ateria-idle/index.ts"
-      ],
-      "@ateria-idle/entities/ateria-idle/*": [
-        "libs/ateria-idle/entities/ateria-idle/*"
-      ],
-      "@mtg-generator/features/mtg-card-generator/*": [
-        "libs/mtg-generator/features/mtg-card-generator/*"
-      ],
       "@rpg-tools/features/rpg-map-generator/*": [
-        "libs/rpg-tools/features/rpg-map-generator/*"
+        "libs/features/vue/rpg-map-generator/*"
       ],
       "@rpg-tools/features/rpg-world-generator/*": [
-        "libs/rpg-tools/features/rpg-world-generator/*"
+        "libs/features/vue/rpg-world-generator/*"
       ],
       "@rpg-tools/shared/map-generator/*": [
-        "libs/rpg-tools/shared/map-generator/*"
+        "libs/shared/map-generator/*"
       ],
       "@rpg-tools/shared/world-generator/*": [
-        "libs/rpg-tools/shared/world-generator/*"
+        "libs/shared/world-generator/*"
       ],
       "@shared/features/card-preview/*": [
-        "libs/shared/features/card-preview/*"
+        "libs/features/vue/card-preview/*"
       ],
       "@shared/features/card-print/*": [
-        "libs/shared/features/card-print/*"
+        "libs/features/vue/card-print/*"
       ],
       "@shared/features/card-edit/*": [
-        "libs/shared/features/card-edit/*"
+        "libs/features/vue/card-edit/*"
       ],
       "@shared/features/card-list/*": [
-        "libs/shared/features/card-list/*"
+        "libs/features/vue/card-list/*"
       ],
       "@shared/features/card-delete/*": [
-        "libs/shared/features/card-delete/*"
+        "libs/features/vue/card-delete/*"
       ],
       "@shared/entities/card": [
-        "libs/shared/entities/card/index.ts"
+        "libs/entities/vue/card/index.ts"
       ],
       "@shared/entities/card/*": [
-        "libs/shared/entities/card/*"
+        "libs/entities/vue/card/*"
       ],
       "@shared/widgets/card-grid/*": [
-        "libs/shared/widgets/card-grid/*"
+        "libs/widgets/vue/card-grid/*"
       ],
-      "@shared/lib/*": [
-        "libs/shared/lib/*"
+      "@shared/lib/gddb": [
+        "libs/shared/gddb/index.ts"
       ],
       "@shared/stores/*": [
-        "libs/shared/stores/*"
+        "libs/stores/vue/*"
       ],
       "@shared/types/*": [
         "libs/shared/types/*"

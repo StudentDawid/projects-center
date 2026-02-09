@@ -1,0 +1,42 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@layer base {
+  * {
+    @apply box-border;
+  }
+
+  html {
+    @apply overflow-y-auto;
+    scroll-behavior: smooth;
+  }
+
+  body {
+    font-family: 'Public Sans', sans-serif;
+    @apply antialiased;
+  }
+}
+
+/* Custom animations */
+@keyframes bounce {
+  0%, 100% {
+    transform: translateY(0);
+  }
+  50% {
+    transform: translateY(-10px);
+  }
+}
+
+.animate-bounce {
+  animation: bounce 2s infinite;
+}
+
+/* Utilities */
+.h-100 {
+  height: 100%;
+}
+
+.w-100 {
+  width: 100%;
+}

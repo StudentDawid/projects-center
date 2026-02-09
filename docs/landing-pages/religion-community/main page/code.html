@@ -1,0 +1,288 @@
+<!DOCTYPE html>
+
+<html class="light" lang="en"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>Religious Community Home Page</title>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<link href="https://fonts.googleapis.com/css2?family=Public+Sans:wght@300;400;500;600;700;800;900&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<script id="tailwind-config">
+        tailwind.config = {
+            darkMode: "class",
+            theme: {
+                extend: {
+                    colors: {
+                        "primary": "#135bec",
+                        "accent-gold": "#C5A059",
+                        "background-light": "#f6f6f8",
+                        "background-dark": "#101622",
+                        "serene-beige": "#F9F7F2",
+                    },
+                    fontFamily: {
+                        "display": ["Public Sans", "sans-serif"]
+                    },
+                    borderRadius: {
+                        "DEFAULT": "0.5rem",
+                        "lg": "1rem",
+                        "xl": "1.5rem",
+                        "full": "9999px"
+                    },
+                },
+            },
+        }
+    </script>
+<style>
+        body {
+            font-family: 'Public Sans', sans-serif;
+        }
+    </style>
+</head>
+<body class="bg-background-light dark:bg-background-dark text-slate-900 dark:text-slate-100 transition-colors duration-300">
+<div class="relative flex min-h-screen w-full flex-col overflow-x-hidden">
+<!-- Navigation Bar -->
+<header class="sticky top-0 z-50 w-full bg-white/80 dark:bg-background-dark/80 backdrop-blur-md border-b border-slate-200 dark:border-slate-800">
+<div class="max-w-7xl mx-auto px-6 h-20 flex items-center justify-between">
+<div class="flex items-center gap-3">
+<div class="bg-primary p-2 rounded-lg text-white">
+<span class="material-symbols-outlined text-2xl">church</span>
+</div>
+<div class="flex flex-col">
+<h2 class="text-lg font-bold leading-tight tracking-tight">Sacred Heart</h2>
+<span class="text-[10px] uppercase tracking-[0.2em] text-accent-gold font-bold">Community</span>
+</div>
+</div>
+<nav class="hidden md:flex items-center gap-8">
+<a class="text-sm font-semibold hover:text-primary transition-colors" href="#">Home</a>
+<a class="text-sm font-semibold hover:text-primary transition-colors" href="#">Announcements</a>
+<a class="text-sm font-semibold hover:text-primary transition-colors" href="#">About Us</a>
+<a class="text-sm font-semibold hover:text-primary transition-colors" href="#">Gallery</a>
+<a class="text-sm font-semibold hover:text-primary transition-colors" href="#">Contact</a>
+</nav>
+<button class="bg-primary text-white px-6 py-2.5 rounded-full text-sm font-bold hover:bg-primary/90 transition-all shadow-md">
+                    Join Us
+                </button>
+</div>
+</header>
+<main class="flex-grow">
+<!-- Hero Section -->
+<section class="relative w-full h-[600px] flex items-center justify-center overflow-hidden">
+<div class="absolute inset-0 z-0">
+<div class="absolute inset-0 bg-black/40 z-10"></div>
+<img alt="Community gathering" class="w-full h-full object-cover" data-alt="Sunlight streaming through tall church windows" src="https://lh3.googleusercontent.com/aida-public/AB6AXuD_RRvjazX3j1c8d-EC4bfBb21aXwv4oGLdzc1UQvbgzVR9uGPuttXUnpG9kWqTpMkJSYOe5ECHgMDhkqdnhqpInWOdirTAKH9sZKdLNoF6Tjxuv3uOTBfTECmTMOo-kgR20oZDywlJ9HWC0VX3dv4Ii05W7Jb_dFcaD9NMID-VBg0u4Bce5bpkXha8uBcmQRUpo0mUEM_fBSqpQwpW4MlEsigrkD9o-9V_6nJZpXO7dXdzJfUgOWir6DgaBX6YlztlcAKaOILG9tHZ"/>
+</div>
+<div class="relative z-20 text-center px-4 max-w-4xl">
+<span class="inline-block text-accent-gold font-bold tracking-[0.3em] uppercase mb-4 text-sm">Welcome Home</span>
+<h1 class="text-white text-5xl md:text-7xl font-black mb-6 leading-tight">
+                        Finding Peace, Purpose, and Fellowship
+                    </h1>
+<p class="text-white/90 text-lg md:text-xl mb-10 max-w-2xl mx-auto leading-relaxed">
+                        A modern sanctuary for seekers of truth, rooted in tradition and growing together in love.
+                    </p>
+<div class="flex flex-col sm:flex-row gap-4 justify-center">
+<button class="bg-primary text-white px-8 py-4 rounded-xl font-bold text-lg hover:translate-y-[-2px] transition-transform">
+                            Our Service Times
+                        </button>
+<button class="bg-white/10 backdrop-blur-md border border-white/30 text-white px-8 py-4 rounded-xl font-bold text-lg hover:bg-white/20 transition-all">
+                            Watch Online
+                        </button>
+</div>
+</div>
+</section>
+<!-- Latest Announcements -->
+<section class="py-20 px-6 bg-serene-beige dark:bg-background-dark/50">
+<div class="max-w-7xl mx-auto">
+<div class="flex items-end justify-between mb-12">
+<div>
+<div class="w-12 h-1 bg-accent-gold mb-4"></div>
+<h2 class="text-3xl md:text-4xl font-black">Latest Announcements</h2>
+</div>
+<a class="text-primary font-bold flex items-center gap-2 hover:gap-3 transition-all" href="#">
+                            View All <span class="material-symbols-outlined">arrow_forward</span>
+</a>
+</div>
+<div class="grid grid-cols-1 md:grid-cols-3 gap-8">
+<!-- Announcement Card 1 -->
+<div class="bg-white dark:bg-slate-800 rounded-xl overflow-hidden shadow-sm hover:shadow-xl transition-shadow border border-slate-100 dark:border-slate-700 group">
+<div class="h-52 overflow-hidden relative">
+<img class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500" data-alt="A group of smiling young people outdoors" src="https://lh3.googleusercontent.com/aida-public/AB6AXuD4xT6Nw6RIx1hcOcRxySY2RZjZoVq02oJOA-MLg4xW3KDaQ8_nXwYFfKMO4B7f4wX1EQ6SUPqeVmIjXMfGWb8VUVh_VKwHaJD6eh9YEfcmX4cCLmreoos62zw3ebeTao_6gHb4VPRxy5WKXAxrUuyCrAHxqFmRAa1Y9nhEWlOhO2bhWH7G7sTfYYxkrjpEBPYsNQRJqUBNx3J8du4LGLZlEFvMkEFFBLEV6mtD9Zzx179sdUFoZkk_gFoOPwHpD7O15S6JP36Hx6nV"/>
+<div class="absolute top-4 left-4 bg-primary text-white px-3 py-1 rounded text-xs font-bold">EVENTS</div>
+</div>
+<div class="p-6">
+<div class="flex items-center gap-2 text-slate-400 text-xs font-semibold mb-3 uppercase tracking-wider">
+<span class="material-symbols-outlined text-sm">calendar_today</span>
+                                    October 15, 2023
+                                </div>
+<h3 class="text-xl font-bold mb-3 group-hover:text-primary transition-colors">Weekly Youth Service</h3>
+<p class="text-slate-600 dark:text-slate-400 text-sm leading-relaxed mb-6">
+                                    Join us this Friday evening for an uplifting service tailored specifically for our young adults.
+                                </p>
+<button class="text-primary font-bold text-sm uppercase tracking-widest flex items-center gap-1">
+                                    Read More <span class="material-symbols-outlined text-sm">chevron_right</span>
+</button>
+</div>
+</div>
+<!-- Announcement Card 2 -->
+<div class="bg-white dark:bg-slate-800 rounded-xl overflow-hidden shadow-sm hover:shadow-xl transition-shadow border border-slate-100 dark:border-slate-700 group">
+<div class="h-52 overflow-hidden relative">
+<img class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500" data-alt="Volunteers serving food to others" src="https://lh3.googleusercontent.com/aida-public/AB6AXuD1pnFw5N0nVJZw-qeXqgqQ8219I2K9OjJvjXvKlZFPEcEnok4wjA5tdOAEhr8E4iaQFbArZFS9jp6wsKsBeYJml8PG07avWsbVjWoYg6F4kICTpC5pwpZw2taU2uoKDEvJIg19bpqqMb1eUjl-MROYGRhrvHs-QyYV7tqIS5fGueqIIPUnHMQD9b74Ptx8cSM3rODSeoExQqdgNJU2eGfOHKKGqQBDrT19oyDDJJTSEuBzoPEpWtanK5cJBwomvj46q704qFfPr3-p"/>
+<div class="absolute top-4 left-4 bg-primary text-white px-3 py-1 rounded text-xs font-bold">OUTREACH</div>
+</div>
+<div class="p-6">
+<div class="flex items-center gap-2 text-slate-400 text-xs font-semibold mb-3 uppercase tracking-wider">
+<span class="material-symbols-outlined text-sm">calendar_today</span>
+                                    October 22, 2023
+                                </div>
+<h3 class="text-xl font-bold mb-3 group-hover:text-primary transition-colors">Community Outreach</h3>
+<p class="text-slate-600 dark:text-slate-400 text-sm leading-relaxed mb-6">
+                                    Our monthly initiative to support local families. Volunteers are welcome to join us starting at 8 AM.
+                                </p>
+<button class="text-primary font-bold text-sm uppercase tracking-widest flex items-center gap-1">
+                                    Read More <span class="material-symbols-outlined text-sm">chevron_right</span>
+</button>
+</div>
+</div>
+<!-- Announcement Card 3 -->
+<div class="bg-white dark:bg-slate-800 rounded-xl overflow-hidden shadow-sm hover:shadow-xl transition-shadow border border-slate-100 dark:border-slate-700 group">
+<div class="h-52 overflow-hidden relative">
+<img class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500" data-alt="Peaceful sunset over a quiet landscape" src="https://lh3.googleusercontent.com/aida-public/AB6AXuB05OLbyQKju26CN474KAUqmnn3yZpsWZ7XWrYNRC0AcNmw6g11ZmVGJU6ziOY6DGmq8SfXtCK-EKXGB6qxpB8ccFvYL58KNvQ3-I1-XUC5wOrBs1eBxPaydJfh0goPK363WGybdPEkwV3AbgrBWniaY7ax_ClG9sNSmQxSVmj-9iOmq2pG8t1ExiyAOMJWHd3fBj98a7upDAvDTIZLm-EYLYJkstHnj0uzH_YlekOM1p_M1LsV1qYIxQcn-DcztPeHHDXyVMNuOd-z"/>
+<div class="absolute top-4 left-4 bg-primary text-white px-3 py-1 rounded text-xs font-bold">SPIRITUAL</div>
+</div>
+<div class="p-6">
+<div class="flex items-center gap-2 text-slate-400 text-xs font-semibold mb-3 uppercase tracking-wider">
+<span class="material-symbols-outlined text-sm">calendar_today</span>
+                                    October 28, 2023
+                                </div>
+<h3 class="text-xl font-bold mb-3 group-hover:text-primary transition-colors">Interfaith Dialogue</h3>
+<p class="text-slate-600 dark:text-slate-400 text-sm leading-relaxed mb-6">
+                                    Sharing wisdom across traditions. An open forum for community members to discuss shared values.
+                                </p>
+<button class="text-primary font-bold text-sm uppercase tracking-widest flex items-center gap-1">
+                                    Read More <span class="material-symbols-outlined text-sm">chevron_right</span>
+</button>
+</div>
+</div>
+</div>
+</div>
+</section>
+<!-- About Us Section -->
+<section class="py-24 px-6 overflow-hidden">
+<div class="max-w-7xl mx-auto grid grid-cols-1 lg:grid-cols-2 gap-16 items-center">
+<div class="relative">
+<div class="absolute -top-10 -left-10 w-40 h-40 bg-accent-gold/10 rounded-full blur-3xl"></div>
+<div class="relative z-10 rounded-2xl overflow-hidden shadow-2xl">
+<img class="w-full aspect-[4/5] object-cover" data-alt="Interior of a beautifully lit sanctuary" src="https://lh3.googleusercontent.com/aida-public/AB6AXuBtrxp3Jdo15sPAqG5UbT9xMYQbaABkhIcN9TDnr168DuT7_LClZ5gvKSTMdhCX6_oNtP8U2nYw7q9Hjfx2Rk5RXdy31irYGFS6CzY5GIvaw_8_phfTZEMDV2uDEgiju-eSfI0AFz1N_A1F5vjqZYenbpIjeF6b7DPLovLAFEpzHjEU9gAIm5D8H_xZrqyd7Wprc238f-Cw7Z7PcvI8GCPWw6VkXX04vCA8CksIONQX8MGVkO5ELGmszlhRlk6FCKjfbG9i40SvytmD"/>
+</div>
+<div class="absolute -bottom-6 -right-6 bg-white dark:bg-slate-800 p-8 rounded-xl shadow-xl max-w-xs border-l-4 border-accent-gold">
+<p class="italic text-slate-600 dark:text-slate-300">"A community where everyone is valued and the spirit of love resides in every corner."</p>
+<p class="mt-4 font-bold text-sm text-primary">— Community Vision</p>
+</div>
+</div>
+<div class="flex flex-col gap-8">
+<div>
+<span class="text-accent-gold font-bold tracking-widest uppercase text-sm">Our Roots</span>
+<h2 class="text-4xl md:text-5xl font-black mt-2 mb-6">About Our Sanctuary</h2>
+<p class="text-slate-600 dark:text-slate-400 text-lg leading-relaxed">
+                                Rooted in tradition, growing in love. Our community has been a sanctuary for seekers for over fifty years. What started as a small gathering of faithful individuals has flourished into a vibrant, inclusive home for all.
+                            </p>
+</div>
+<div class="grid grid-cols-1 sm:grid-cols-2 gap-8">
+<div class="p-6 rounded-xl bg-background-light dark:bg-slate-800/50 border border-slate-200 dark:border-slate-700">
+<div class="size-10 bg-primary/10 text-primary rounded-lg flex items-center justify-center mb-4">
+<span class="material-symbols-outlined">history_edu</span>
+</div>
+<h4 class="font-bold text-lg mb-2">Our History</h4>
+<p class="text-sm text-slate-500">Founded in 1974 with a vision of radical inclusivity and spiritual growth.</p>
+</div>
+<div class="p-6 rounded-xl bg-background-light dark:bg-slate-800/50 border border-slate-200 dark:border-slate-700">
+<div class="size-10 bg-primary/10 text-primary rounded-lg flex items-center justify-center mb-4">
+<span class="material-symbols-outlined">auto_awesome</span>
+</div>
+<h4 class="font-bold text-lg mb-2">Our Mission</h4>
+<p class="text-sm text-slate-500">To provide a spiritual home that nurtures the soul and serves those in need.</p>
+</div>
+</div>
+<button class="bg-primary text-white w-fit px-8 py-3 rounded-xl font-bold hover:shadow-lg transition-all">
+                            Learn More About Us
+                        </button>
+</div>
+</div>
+</section>
+</main>
+<!-- Footer / Contact & Map -->
+<footer class="bg-slate-900 text-slate-300 pt-20 pb-10 px-6">
+<div class="max-w-7xl mx-auto">
+<div class="grid grid-cols-1 lg:grid-cols-12 gap-12 pb-16 border-b border-slate-800">
+<!-- Community Info -->
+<div class="lg:col-span-4 flex flex-col gap-6">
+<div class="flex items-center gap-3">
+<div class="bg-primary p-2 rounded-lg text-white">
+<span class="material-symbols-outlined text-2xl">church</span>
+</div>
+<div class="flex flex-col">
+<h2 class="text-lg font-bold leading-tight tracking-tight text-white">Sacred Heart</h2>
+<span class="text-[10px] uppercase tracking-[0.2em] text-accent-gold font-bold">Community</span>
+</div>
+</div>
+<p class="text-sm leading-relaxed max-w-xs">
+                            Thank you for being part of our journey. We are a community dedicated to faith, hope, and the transformative power of love.
+                        </p>
+<div class="flex gap-4">
+<a class="size-10 rounded-full bg-slate-800 flex items-center justify-center hover:bg-primary transition-colors" href="#">
+<svg class="size-5 fill-current" viewbox="0 0 24 24"><path d="M24 12.073c0-6.627-5.373-12-12-12s-12 5.373-12 12c0 5.99 4.388 10.954 10.125 11.854v-8.385H7.078v-3.47h3.047V9.43c0-3.007 1.792-4.669 4.533-4.669 1.312 0 2.686.235 2.686.235v2.953H15.83c-1.491 0-1.956.925-1.956 1.874v2.25h3.328l-.532 3.47h-2.796v8.385C19.612 23.027 24 18.062 24 12.073z"></path></svg>
+</a>
+<a class="size-10 rounded-full bg-slate-800 flex items-center justify-center hover:bg-primary transition-colors" href="#">
+<svg class="size-5 fill-current" viewbox="0 0 24 24"><path d="M23.953 4.57a10 10 0 01-2.825.775 4.958 4.958 0 002.163-2.723c-.951.555-2.005.959-3.127 1.184a4.92 4.92 0 00-8.384 4.482C7.69 8.095 4.067 6.13 1.64 3.162a4.822 4.822 0 00-.666 2.475c0 1.71.87 3.213 2.188 4.096a4.904 4.904 0 01-2.228-.616v.06a4.923 4.923 0 003.946 4.84 4.996 4.996 0 01-2.212.085 4.936 4.936 0 004.604 3.417 9.867 9.867 0 01-6.102 2.105c-.39 0-.779-.023-1.17-.067a13.995 13.995 0 007.557 2.209c9.053 0 13.998-7.496 13.998-13.985 0-.21 0-.42-.015-.63A9.935 9.935 0 0024 4.59z"></path></svg>
+</a>
+</div>
+</div>
+<!-- Quick Contact -->
+<div class="lg:col-span-3 flex flex-col gap-6">
+<h3 class="text-white font-bold text-lg">Contact Us</h3>
+<div class="flex flex-col gap-4 text-sm">
+<div class="flex items-start gap-3">
+<span class="material-symbols-outlined text-accent-gold">location_on</span>
+<span>123 Serenity Way, <br/>Harmony City, HC 54321</span>
+</div>
+<div class="flex items-center gap-3">
+<span class="material-symbols-outlined text-accent-gold">call</span>
+<span>+1 (555) 123-4567</span>
+</div>
+<div class="flex items-center gap-3">
+<span class="material-symbols-outlined text-accent-gold">mail</span>
+<span>hello@sacredheart.org</span>
+</div>
+<div class="flex items-center gap-3">
+<span class="material-symbols-outlined text-accent-gold">schedule</span>
+<span>Mon - Fri: 9am - 5pm</span>
+</div>
+</div>
+</div>
+<!-- Map Integration -->
+<div class="lg:col-span-5">
+<div class="w-full h-52 bg-slate-800 rounded-xl overflow-hidden relative border border-slate-700">
+<img class="w-full h-full object-cover opacity-50" data-alt="Map showing community location" data-location="Harmony City" src="https://lh3.googleusercontent.com/aida-public/AB6AXuALZBlPzNWSJ2ya2gMqr_4lsEE7JkrlpJt1joNFb4KjSsojSVMvsNEpNIpbgHMyqCpiCWX119OlvFwzi6uB3hS5qrt2zGIh73kA5aq7fC-6WVhsaCZAJv9SRQnqGuvGejcVs6tKLZbr6e4IYdYsxArEkLzPWO3eqzREngL7kNDfLe8O_fPKWwH-krJ7xVQZ8E_JJotE53hgukKY7i0Y5giNLT7-5sRk67ZPFdsWDX5cu1IExhi6saFn3j_Efccu7Uy0hZhVANgNuUNC"/>
+<div class="absolute inset-0 flex items-center justify-center">
+<div class="bg-primary text-white p-3 rounded-full animate-bounce">
+<span class="material-symbols-outlined">location_on</span>
+</div>
+</div>
+<div class="absolute bottom-2 right-2 bg-slate-900/80 backdrop-blur-sm px-3 py-1 rounded text-[10px] text-white">
+                                View Full Map
+                            </div>
+</div>
+<p class="mt-4 text-xs text-slate-500 italic text-center">Parking is available on the north side of the campus.</p>
+</div>
+</div>
+<div class="flex flex-col md:flex-row items-center justify-between pt-10 gap-4 text-xs font-medium text-slate-500 uppercase tracking-widest">
+<p>© 2023 Sacred Heart Community. All rights reserved.</p>
+<div class="flex gap-8">
+<a class="hover:text-white" href="#">Privacy Policy</a>
+<a class="hover:text-white" href="#">Terms of Service</a>
+</div>
+</div>
+</div>
+</footer>
+</div>
+</body></html>

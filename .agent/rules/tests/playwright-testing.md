@@ -1,0 +1,863 @@
+---
+name: Tests Rule
+description: Standardy dla testów
+globs: "**/*.test.*"
+---
+# Playwright Testing Standards
+
+## 🎯 Cel tego dokumentu
+
+Definicja zasad i best practices dla testów E2E z użyciem Playwright w kontekście FSD architecture i TypeScript strict mode.
+
+---
+
+## 📁 Struktura i Organizacja
+
+### 1. Lokalizacja testów w FSD
+
+```
+apps/
+  {app-name}/
+    e2e/                          # Testy E2E dla aplikacji
+      fixtures/                   # Reusable fixtures
+        base-page.ts
+        test-data.ts
+      helpers/                    # Helper functions
+        auth.ts
+        navigation.ts
+      pages/                      # Page Object Models
+        login-page.ts
+        dashboard-page.ts
+      tests/                      # Faktyczne testy
+        auth/
+          login.spec.ts
+          logout.spec.ts
+        features/
+          feature-name.spec.ts
+      playwright.config.ts        # Config dla tej aplikacji
+```
+
+### 2. Konwencje nazewnictwa
+
+**✅ DOBRE:**
+```typescript
+// Pliki testowe
+login.spec.ts
+user-registration.spec.ts
+cart-checkout-flow.spec.ts
+
+// Page Objects
+login-page.ts
+product-list-page.ts
+checkout-page.ts
+
+// Fixtures
+authenticated-user.fixture.ts
+test-database.fixture.ts
+```
+
+**❌ ZŁE:**
+```typescript
+// Niejasne nazwy
+test1.spec.ts
+page.ts
+utils.ts
+
+// Brak konwencji spec.ts
+loginTests.ts
+myTest.ts
+```
+
+---
+
+## 🧪 Pisanie Testów
+
+### 1. Struktura testu
+
+**✅ WZORZEC:**
+```typescript
+import { test, expect } from '@playwright/test';
+import { LoginPage } from '../pages/login-page';
+
+test.describe('Login Feature', () => {
+  let loginPage: LoginPage;
+
+  test.beforeEach(async ({ page }) => {
+    loginPage = new LoginPage(page);
+    await loginPage.goto();
+  });
+
+  test('should successfully login with valid credentials', async () => {
+    // Arrange - przygotowanie danych
+    const credentials = {
+      email: 'user@example.com',
+      password: 'SecurePass123!',
+    };
+
+    // Act - wykonanie akcji
+    await loginPage.fillEmail(credentials.email);
+    await loginPage.fillPassword(credentials.password);
+    await loginPage.clickLoginButton();
+
+    // Assert - weryfikacja wyniku
+    await expect(loginPage.page).toHaveURL(/.*dashboard/);
+    await expect(loginPage.getWelcomeMessage()).toBeVisible();
+  });
+
+  test('should show error for invalid credentials', async () => {
+    // Arrange
+    const invalidCredentials = {
+      email: 'wrong@example.com',
+      password: 'WrongPass',
+    };
+
+    // Act
+    await loginPage.login(invalidCredentials);
+
+    // Assert
+    await expect(loginPage.getErrorMessage()).toBeVisible();
+    await expect(loginPage.getErrorMessage()).toContainText(
+      'Invalid credentials'
+    );
+  });
+});
+```
+
+### 2. Nazewnictwo testów
+
+**✅ DOBRE - Opisowe i czytelne:**
+```typescript
+test('should display validation error when email format is invalid', async () => {});
+test('should redirect to dashboard after successful login', async () => {});
+test('should preserve cart items after page refresh', async () => {});
+test('should disable submit button while form is being validated', async () => {});
+```
+
+**❌ ZŁE - Niejasne lub za krótkie:**
+```typescript
+test('login test', async () => {});
+test('it works', async () => {});
+test('test1', async () => {});
+test('check validation', async () => {});
+```
+
+### 3. Test Independence
+
+**✅ ZASADA: Każdy test MUSI być niezależny**
+
+```typescript
+// ✅ DOBRE - każdy test ma własny setup
+test.describe('User Profile', () => {
+  test('should update user name', async ({ page }) => {
+    await authenticateAs('user@test.com');
+    await navigateToProfile();
+    // test logic...
+  });
+
+  test('should update user avatar', async ({ page }) => {
+    await authenticateAs('user@test.com');
+    await navigateToProfile();
+    // test logic...
+  });
+});
+
+// ❌ ZŁE - testy zależne od siebie
+test.describe('User Profile', () => {
+  test('should login', async ({ page }) => {
+    // state zostaje
+  });
+
+  test('should update name', async ({ page }) => {
+    // zakłada że jesteś zalogowany z poprzedniego testu
+  });
+});
+```
+
+---
+
+## 📄 Page Object Model (POM)
+
+### 1. Wzorzec Page Object
+
+**✅ DOBRE:**
+```typescript
+// pages/login-page.ts
+import { Page, Locator } from '@playwright/test';
+
+export class LoginPage {
+  readonly page: Page;
+  readonly emailInput: Locator;
+  readonly passwordInput: Locator;
+  readonly loginButton: Locator;
+  readonly errorMessage: Locator;
+
+  constructor(page: Page) {
+    this.page = page;
+    
+    // Selektory oparte na data-testid
+    this.emailInput = page.getByTestId('login-email-input');
+    this.passwordInput = page.getByTestId('login-password-input');
+    this.loginButton = page.getByTestId('login-submit-button');
+    this.errorMessage = page.getByTestId('login-error-message');
+  }
+
+  async goto() {
+    await this.page.goto('/login');
+  }
+
+  async fillEmail(email: string) {
+    await this.emailInput.fill(email);
+  }
+
+  async fillPassword(password: string) {
+    await this.passwordInput.fill(password);
+  }
+
+  async clickLoginButton() {
+    await this.loginButton.click();
+  }
+
+  // High-level metoda łącząca akcje
+  async login(credentials: { email: string; password: string }) {
+    await this.fillEmail(credentials.email);
+    await this.fillPassword(credentials.password);
+    await this.clickLoginButton();
+  }
+
+  getErrorMessage(): Locator {
+    return this.errorMessage;
+  }
+
+  getWelcomeMessage(): Locator {
+    return this.page.getByTestId('welcome-message');
+  }
+}
+```
+
+### 2. Zasady POM
+
+1. **Jeden Page Object = jedna logiczna strona/komponent**
+2. **Enkapsulacja selektorów** - nigdy nie używaj selektorów bezpośrednio w testach
+3. **Metody akcji** - fillEmail(), clickButton()
+4. **Metody getterów** - getErrorMessage() zwraca Locator, nie Promise
+5. **High-level API** - login() łączy wiele akcji w jedną metodę
+6. **TypeScript strict** - wszystkie typy zdefiniowane
+
+---
+
+## 🎯 Selektory
+
+### 1. Priorytet selektorów (od najlepszego do najgorszego)
+
+```typescript
+// 1. ✅ NAJLEPSZE - data-testid (dedykowane dla testów)
+page.getByTestId('user-profile-button')
+
+// 2. ✅ DOBRE - role + name (semantyczne)
+page.getByRole('button', { name: 'Submit' })
+page.getByRole('textbox', { name: 'Email' })
+
+// 3. ✅ AKCEPTOWALNE - label (dla formularzy)
+page.getByLabel('Email address')
+
+// 4. ⚠️ UŻYJ TYLKO JEŚLI MUSISZ - text
+page.getByText('Welcome back')
+
+// 5. ❌ UNIKAJ - CSS/XPath selektory
+page.locator('.btn-primary')  // Może się zmienić przy restyle
+page.locator('//div[@class="user"]')  // Kruche i trudne w maintenance
+```
+
+### 2. Dodawanie data-testid w komponentach
+
+**Vue 3 przykład:**
+```vue
+<template>
+  <button
+    data-testid="login-submit-button"
+    @click="handleLogin"
+    class="btn-primary"
+  >
+    Login
+  </button>
+  
+  <input
+    data-testid="email-input"
+    v-model="email"
+    type="email"
+  />
+</template>
+```
+
+**React przykład:**
+```tsx
+<button
+  data-testid="login-submit-button"
+  onClick={handleLogin}
+  className="btn-primary"
+>
+  Login
+</button>
+
+<input
+  data-testid="email-input"
+  value={email}
+  onChange={(e) => setEmail(e.target.value)}
+  type="email"
+/>
+```
+
+---
+
+## 🔧 Fixtures i Helpers
+
+### 1. Custom Fixtures
+
+**✅ Reusable authentication fixture:**
+```typescript
+// fixtures/authenticated-user.fixture.ts
+import { test as base } from '@playwright/test';
+import { LoginPage } from '../pages/login-page';
+
+type AuthenticatedFixtures = {
+  authenticatedPage: Page;
+};
+
+export const test = base.extend<AuthenticatedFixtures>({
+  authenticatedPage: async ({ page }, use) => {
+    // Setup - login
+    const loginPage = new LoginPage(page);
+    await loginPage.goto();
+    await loginPage.login({
+      email: 'test@example.com',
+      password: 'TestPass123!',
+    });
+
+    // Użyj authenticated page w teście
+    await use(page);
+
+    // Teardown - logout (opcjonalnie)
+    await page.goto('/logout');
+  },
+});
+```
+
+**Użycie:**
+```typescript
+import { test } from '../fixtures/authenticated-user.fixture';
+import { expect } from '@playwright/test';
+
+test('should access protected dashboard', async ({ authenticatedPage }) => {
+  await authenticatedPage.goto('/dashboard');
+  await expect(authenticatedPage.getByTestId('dashboard-content')).toBeVisible();
+});
+```
+
+### 2. Helper Functions
+
+**✅ Helper dla nawigacji:**
+```typescript
+// helpers/navigation.ts
+import { Page } from '@playwright/test';
+
+export async function navigateToFeature(page: Page, featureName: string) {
+  await page.goto('/features');
+  await page.getByRole('link', { name: featureName }).click();
+  await page.waitForURL(new RegExp(`/features/${featureName}`));
+}
+
+export async function waitForPageLoad(page: Page) {
+  await page.waitForLoadState('networkidle');
+  await page.waitForLoadState('domcontentloaded');
+}
+```
+
+---
+
+## ⏱️ Timeouts i Waity
+
+### 1. Zasady czekania
+
+**✅ DOBRE - Auto-waiting Playwright:**
+```typescript
+// Playwright automatycznie czeka na element
+await page.getByTestId('button').click();
+await expect(page.getByTestId('message')).toBeVisible();
+
+// Jawne czekanie na określony stan
+await page.waitForSelector('[data-testid="content"]', { state: 'visible' });
+await page.waitForURL(/.*dashboard/);
+await page.waitForLoadState('networkidle');
+```
+
+**❌ ZŁE - Hardcoded delays:**
+```typescript
+// ❌ NIGDY nie używaj stałych opóźnień
+await page.waitForTimeout(3000);  // ZŁE!
+await new Promise(resolve => setTimeout(resolve, 2000));  // ZŁE!
+```
+
+### 2. Custom timeouts
+
+**✅ Gdy potrzebne są dłuższe timeouty:**
+```typescript
+// Dla długich operacji (np. upload pliku)
+await expect(page.getByTestId('upload-success')).toBeVisible({
+  timeout: 30000,  // 30 sekund
+});
+
+// Dla specyficznych akcji
+await page.getByTestId('submit').click({ timeout: 10000 });
+```
+
+---
+
+## ✅ Assertions
+
+### 1. Playwright assertions (preferowane)
+
+**✅ DOBRE - async/auto-retry:**
+```typescript
+// Visibility
+await expect(page.getByTestId('message')).toBeVisible();
+await expect(page.getByTestId('spinner')).toBeHidden();
+
+// Text content
+await expect(page.getByTestId('title')).toHaveText('Welcome');
+await expect(page.getByTestId('error')).toContainText('Invalid');
+
+// URL
+await expect(page).toHaveURL(/.*dashboard/);
+await expect(page).toHaveURL('https://example.com/dashboard');
+
+// Attributes
+await expect(page.getByTestId('button')).toBeDisabled();
+await expect(page.getByTestId('input')).toHaveValue('test@example.com');
+
+// Count
+await expect(page.getByTestId('list-item')).toHaveCount(5);
+```
+
+### 2. Negative assertions
+
+**✅ Używaj not dla negatywnych asercji:**
+```typescript
+await expect(page.getByTestId('error')).not.toBeVisible();
+await expect(page.getByTestId('button')).not.toBeDisabled();
+await expect(page).not.toHaveURL(/.*error/);
+```
+
+---
+
+## 🐛 Debugging
+
+### 1. Screenshots i traces
+
+**✅ Konfiguracja automatycznych screenshots:**
+```typescript
+// playwright.config.ts
+import { defineConfig } from '@playwright/test';
+
+export default defineConfig({
+  use: {
+    screenshot: 'only-on-failure',  // Screenshot tylko przy błędzie
+    video: 'retain-on-failure',     // Video tylko przy błędzie
+    trace: 'on-first-retry',        // Trace przy pierwszym retry
+  },
+});
+```
+
+**✅ Manualne screenshots w teście:**
+```typescript
+test('complex flow', async ({ page }) => {
+  await page.goto('/dashboard');
+  
+  // Screenshot konkretnego elementu
+  await page.getByTestId('chart').screenshot({
+    path: 'screenshots/chart.png',
+  });
+  
+  // Screenshot całej strony
+  await page.screenshot({
+    path: 'screenshots/dashboard.png',
+    fullPage: true,
+  });
+});
+```
+
+### 2. Debug mode
+
+**✅ Uruchomienie testów w debug mode:**
+```bash
+# Inspector + headed browser
+npx playwright test --debug
+
+# Tylko konkretny test
+npx playwright test login.spec.ts --debug
+
+# Z breakpointem w kodzie
+await page.pause();  # Dodaj w teście
+```
+
+---
+
+## 🚀 Performance i Optymalizacja
+
+### 1. Parallel execution
+
+**✅ Konfiguracja:**
+```typescript
+// playwright.config.ts
+export default defineConfig({
+  workers: process.env.CI ? 2 : 4,  // Mniej workerów na CI
+  fullyParallel: true,               // Testy w describe runs in parallel
+});
+```
+
+### 2. Test isolation
+
+**✅ Każdy test w własnym kontekście:**
+```typescript
+test.describe('Feature Tests', () => {
+  // Każdy test dostaje fresh browser context
+  test('test 1', async ({ page }) => {
+    // Isolated context
+  });
+  
+  test('test 2', async ({ page }) => {
+    // Inny isolated context
+  });
+});
+```
+
+### 3. Reuse authentication state
+
+**✅ Zapisz stan autentykacji:**
+```typescript
+// global-setup.ts
+import { chromium, FullConfig } from '@playwright/test';
+
+async function globalSetup(config: FullConfig) {
+  const browser = await chromium.launch();
+  const page = await browser.newPage();
+  
+  await page.goto('https://example.com/login');
+  await page.fill('[data-testid="email"]', 'user@test.com');
+  await page.fill('[data-testid="password"]', 'password');
+  await page.click('[data-testid="submit"]');
+  
+  // Zapisz storage state
+  await page.context().storageState({ path: 'auth.json' });
+  await browser.close();
+}
+
+export default globalSetup;
+```
+
+**✅ Użyj zapisanego stanu:**
+```typescript
+// playwright.config.ts
+export default defineConfig({
+  use: {
+    storageState: 'auth.json',
+  },
+});
+```
+
+---
+
+## 🧩 Integracja z FSD Architecture
+
+### 1. Testowanie Features
+
+**✅ Test features w izolacji:**
+```typescript
+// e2e/tests/features/user-profile/update-avatar.spec.ts
+import { test, expect } from '@playwright/test';
+import { ProfilePage } from '../../pages/profile-page';
+
+test.describe('Feature: Update Avatar', () => {
+  test('should successfully upload new avatar', async ({ page }) => {
+    const profilePage = new ProfilePage(page);
+    await profilePage.goto();
+    
+    // Test konkretnego feature
+    await profilePage.uploadAvatar('test-avatar.png');
+    
+    await expect(profilePage.getAvatarImage()).toBeVisible();
+    await expect(profilePage.getSuccessMessage()).toContainText(
+      'Avatar updated'
+    );
+  });
+});
+```
+
+### 2. Testowanie Widgets
+
+**✅ Widget jako Page Object:**
+```typescript
+// pages/components/header-widget.ts
+import { Page, Locator } from '@playwright/test';
+
+export class HeaderWidget {
+  readonly page: Page;
+  readonly container: Locator;
+  readonly userMenu: Locator;
+  readonly logoutButton: Locator;
+
+  constructor(page: Page) {
+    this.page = page;
+    this.container = page.getByTestId('header-widget');
+    this.userMenu = this.container.getByTestId('user-menu');
+    this.logoutButton = this.container.getByTestId('logout-button');
+  }
+
+  async openUserMenu() {
+    await this.userMenu.click();
+  }
+
+  async logout() {
+    await this.openUserMenu();
+    await this.logoutButton.click();
+  }
+}
+```
+
+---
+
+## 📦 Test Data Management
+
+### 1. Test data separation
+
+**✅ WZORZEC:**
+```typescript
+// e2e/data/users.ts
+export const TEST_USERS = {
+  validUser: {
+    email: 'valid@test.com',
+    password: 'ValidPass123!',
+    name: 'Valid User',
+  },
+  adminUser: {
+    email: 'admin@test.com',
+    password: 'AdminPass123!',
+    role: 'admin',
+  },
+  invalidUser: {
+    email: 'invalid@test.com',
+    password: 'wrong',
+  },
+} as const;
+
+// Użycie w teście
+import { TEST_USERS } from '../../data/users';
+
+test('login with valid user', async ({ page }) => {
+  await loginPage.login(TEST_USERS.validUser);
+});
+```
+
+### 2. Dynamic test data
+
+**✅ Generator test data:**
+```typescript
+// helpers/test-data-generator.ts
+export function generateUser(overrides: Partial<User> = {}): User {
+  return {
+    email: `user-${Date.now()}@test.com`,
+    password: 'Test123!',
+    name: 'Test User',
+    ...overrides,
+  };
+}
+
+// Użycie
+const newUser = generateUser({ name: 'Custom Name' });
+await registerPage.register(newUser);
+```
+
+---
+
+## 🔄 CI/CD Integration
+
+### 1. Konfiguracja dla CI
+
+**✅ playwright.config.ts dla CI:**
+```typescript
+export default defineConfig({
+  use: {
+    baseURL: process.env.BASE_URL || 'http://localhost:3000',
+    screenshot: 'only-on-failure',
+    video: 'retain-on-failure',
+    trace: 'retain-on-failure',
+  },
+  
+  // CI-specific settings
+  ...(process.env.CI && {
+    workers: 2,
+    retries: 2,
+    reporter: [['html'], ['junit', { outputFile: 'test-results/junit.xml' }]],
+  }),
+});
+```
+
+### 2. GitHub Actions example
+
+**✅ .github/workflows/e2e.yml:**
+```yaml
+name: E2E Tests
+on: [push, pull_request]
+
+jobs:
+  test:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v3
+      - uses: actions/setup-node@v3
+        with:
+          node-version: '18'
+      
+      - name: Install dependencies
+        run: npm ci
+      
+      - name: Install Playwright Browsers
+        run: npx playwright install --with-deps
+      
+      - name: Run E2E tests
+        run: npm run test:e2e
+        env:
+          BASE_URL: ${{ secrets.TEST_BASE_URL }}
+      
+      - name: Upload test results
+        if: always()
+        uses: actions/upload-artifact@v3
+        with:
+          name: playwright-report
+          path: playwright-report/
+```
+
+---
+
+## 📋 Checklist przed commitem
+
+Przed zacommitowaniem testów sprawdź:
+
+- [ ] Każdy test jest niezależny i może być uruchomiony osobno
+- [ ] Używane są `data-testid` selektory (lub role/label)
+- [ ] Brak hardcoded delays (`waitForTimeout`)
+- [ ] Page Objects używane dla interakcji ze stronami
+- [ ] Async assertions z `expect()` zamiast sync checks
+- [ ] Test names są opisowe i zrozumiałe
+- [ ] Dodane odpowiednie fixtures dla common setup
+- [ ] Brak zduplikowanego kodu - wyciągnięto helpers
+- [ ] TypeScript strict mode - wszystkie typy defined
+- [ ] Testy przechodzą lokalnie: `npm run test:e2e`
+- [ ] Screenshot/trace config ustawiony dla CI
+
+---
+
+## 🎓 Przykład kompleksowego testu
+
+**✅ WZORCOWY TEST:**
+```typescript
+// e2e/tests/features/cart/checkout-flow.spec.ts
+import { test, expect } from '@playwright/test';
+import { ProductPage } from '../../pages/product-page';
+import { CartPage } from '../../pages/cart-page';
+import { CheckoutPage } from '../../pages/checkout-page';
+import { TEST_USERS } from '../../data/users';
+import { generateTestProduct } from '../../helpers/test-data-generator';
+
+test.describe('Checkout Flow', () => {
+  let productPage: ProductPage;
+  let cartPage: CartPage;
+  let checkoutPage: CheckoutPage;
+
+  test.beforeEach(async ({ page }) => {
+    productPage = new ProductPage(page);
+    cartPage = new CartPage(page);
+    checkoutPage = new CheckoutPage(page);
+    
+    // Zaloguj użytkownika
+    await page.goto('/login');
+    await page.getByTestId('email').fill(TEST_USERS.validUser.email);
+    await page.getByTestId('password').fill(TEST_USERS.validUser.password);
+    await page.getByTestId('submit').click();
+    await expect(page).toHaveURL(/.*dashboard/);
+  });
+
+  test('should complete full checkout flow with single product', async ({ page }) => {
+    // Arrange
+    const product = generateTestProduct({ price: 29.99 });
+    
+    // Act - Dodaj produkt do koszyka
+    await productPage.goto(product.id);
+    await productPage.addToCart();
+    
+    // Verify cart
+    await cartPage.goto();
+    await expect(cartPage.getProductItem(product.id)).toBeVisible();
+    await expect(cartPage.getTotalPrice()).toContainText('$29.99');
+    
+    // Proceed to checkout
+    await cartPage.proceedToCheckout();
+    
+    // Fill checkout form
+    await checkoutPage.fillShippingAddress({
+      street: '123 Test St',
+      city: 'Test City',
+      postalCode: '12345',
+      country: 'Test Country',
+    });
+    
+    await checkoutPage.selectPaymentMethod('credit_card');
+    await checkoutPage.fillPaymentDetails({
+      cardNumber: '4242424242424242',
+      expiryDate: '12/25',
+      cvv: '123',
+    });
+    
+    // Submit order
+    await checkoutPage.submitOrder();
+    
+    // Assert - Verify success
+    await expect(page).toHaveURL(/.*order-confirmation/);
+    await expect(page.getByTestId('order-success-message')).toBeVisible();
+    await expect(page.getByTestId('order-number')).toBeVisible();
+  });
+
+  test('should show validation errors for incomplete checkout form', async ({ page }) => {
+    // Arrange - przejdź do checkout z produktem
+    await cartPage.goto();
+    await cartPage.addSampleProduct();
+    await cartPage.proceedToCheckout();
+    
+    // Act - Submit without filling required fields
+    await checkoutPage.submitOrder();
+    
+    // Assert - Verify validation errors
+    await expect(checkoutPage.getFieldError('street')).toBeVisible();
+    await expect(checkoutPage.getFieldError('city')).toBeVisible();
+    await expect(checkoutPage.getFieldError('postalCode')).toBeVisible();
+    
+    // Submit button should remain enabled for retry
+    await expect(checkoutPage.submitButton).toBeEnabled();
+  });
+});
+```
+
+---
+
+## 📚 Dodatkowe Zasoby
+
+- [Playwright Documentation](https://playwright.dev/)
+- [Best Practices Guide](https://playwright.dev/docs/best-practices)
+- [Page Object Model Pattern](https://playwright.dev/docs/pom)
+- [Test Fixtures](https://playwright.dev/docs/test-fixtures)
+
+---
+
+**Związane dokumenty:**
+- [../general-rules/coding-standards-general.md](../general-rules/coding-standards-general.md)
+- [../general-rules/technical-stack.md](../general-rules/technical-stack.md)
+- [../general-rules/validation-checklist.md](../general-rules/validation-checklist.md)

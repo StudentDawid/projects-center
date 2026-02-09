@@ -1,0 +1,37 @@
+{
+  "name": "@dkz/gddb",
+  "version": "0.1.0",
+  "description": "Easy data fetching from public Google Sheets using Google Visualization API",
+  "type": "module",
+  "main": "./index.ts",
+  "types": "./index.ts",
+  "exports": {
+    ".": {
+      "types": "./index.ts",
+      "import": "./index.ts"
+    }
+  },
+  "keywords": [
+    "google-sheets",
+    "google-drive",
+    "spreadsheet",
+    "database",
+    "api",
+    "visualization",
+    "data-fetching"
+  ],
+  "author": "dkz",
+  "license": "MIT",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/yourusername/gddb"
+  },
+  "peerDependencies": {
+    "axios": "^1.0.0"
+  },
+  "files": [
+    "*.ts",
+    "!*.spec.ts",
+    "!*.test.ts"
+  ]
+}
