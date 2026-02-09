@@ -11,11 +11,11 @@
         </div>
       </div>
       <nav class="hidden md:flex items-center gap-8">
-        <a class="text-sm font-semibold hover:text-primary transition-colors" href="#">Home</a>
-        <a class="text-sm font-semibold hover:text-primary transition-colors" href="#">Announcements</a>
-        <a class="text-sm font-semibold hover:text-primary transition-colors" href="#">About Us</a>
-        <a class="text-sm font-semibold hover:text-primary transition-colors" href="#">Gallery</a>
-        <a class="text-sm font-semibold hover:text-primary transition-colors" href="#">Contact</a>
+        <a class="text-sm font-semibold hover:text-primary transition-colors" href="/">Home</a>
+        <a class="text-sm font-semibold hover:text-primary transition-colors" href="/announcements">Announcements</a>
+        <a class="text-sm font-semibold hover:text-primary transition-colors" href="/about">About Us</a>
+        <a class="text-sm font-semibold hover:text-primary transition-colors" href="/gallery">Gallery</a>
+        <a class="text-sm font-semibold hover:text-primary transition-colors" href="/contact">Contact</a>
       </nav>
       <button class="bg-primary text-white px-6 py-2.5 rounded-full text-sm font-bold hover:bg-primary/90 transition-all shadow-md">
         Join Us
