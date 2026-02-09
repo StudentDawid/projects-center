@@ -1,105 +1,26 @@
 <template>
-  <v-container fluid>
-    <!-- Hero Section -->
-    <v-row class="hero-section" align="center" justify="center">
-      <v-col cols="12" md="8" class="text-center">
-        <h1 class="text-h2 font-weight-bold mb-4">
-          Welcome to Religion Community
-        </h1>
-        <p class="text-h5 mb-6">
-          A place to connect, share, and grow together in faith
-        </p>
-        <v-btn
-          color="primary"
-          size="x-large"
-          class="mr-4"
-        >
-          Get Started
-        </v-btn>
-        <v-btn
-          variant="outlined"
-          size="x-large"
-        >
-          Learn More
-        </v-btn>
-      </v-col>
-    </v-row>
-
-    <!-- Features Section -->
-    <v-row class="my-12">
-      <v-col cols="12" class="text-center mb-8">
-        <h2 class="text-h3 font-weight-bold">Our Features</h2>
-      </v-col>
-
-      <v-col
-        v-for="(feature, index) in features"
-        :key="index"
-        cols="12"
-        md="4"
-      >
-        <v-card class="pa-6 h-100" hover>
-          <v-icon
-            :icon="feature.icon"
-            size="64"
-            color="primary"
-            class="mb-4"
-          />
-          <h3 class="text-h5 mb-3">{{ feature.title }}</h3>
-          <p class="text-body-1">{{ feature.description }}</p>
-        </v-card>
-      </v-col>
-    </v-row>
-
-    <!-- Call to Action -->
-    <v-row class="cta-section my-12" justify="center">
-      <v-col cols="12" md="8" class="text-center">
-        <v-card class="pa-8" color="primary">
-          <h2 class="text-h4 font-weight-bold mb-4 text-white">
-            Join Our Community Today
-          </h2>
-          <p class="text-h6 mb-6 text-white">
-            Be part of something greater. Connect with others who share your values.
-          </p>
-          <v-btn
-            size="large"
-            color="white"
-            variant="flat"
-          >
-            Sign Up Now
-          </v-btn>
-        </v-card>
-      </v-col>
-    </v-row>
-  </v-container>
+    <div class="relative flex min-h-screen w-full flex-col overflow-x-hidden">
+      <main class="flex-grow">
+        <Hero />
+        <Announcements>
+          <AnnouncementCard img="https://lh3.googleusercontent.com/aida-public/AB6AXuD4xT6Nw6RIx1hcOcRxySY2RZjZoVq02oJOA-MLg4xW3KDaQ8_nXwYFfKMO4B7f4wX1EQ6SUPqeVmIjXMfGWb8VUVh_VKwHaJD6eh9YEfcmX4cCLmreoos62zw3ebeTao_6gHb4VPRxy5WKXAxrUuyCrAHxqFmRAa1Y9nhEWlOhO2bhWH7G7sTfYYxkrjpEBPYsNQRJqUBNx3J8du4LGLZlEFvMkEFFBLEV6mtD9Zzx179sdUFoZkk_gFoOPwHpD7O15S6JP36Hx6nV" tag="EVENTS" date="October 15, 2023" title="Weekly Youth Service" excerpt="Join us this Friday evening for an uplifting service tailored specifically for our young adults." />
+          <AnnouncementCard img="https://lh3.googleusercontent.com/aida-public/AB6AXuD1pnFw5N0nVJZw-qeXqgqQ8219I2K9OjJvjXvKlZFPEcEnok4wjA5tdOAEhr8E4iaQFbArZFS9jp6wsKsBeYJml8PG07avWsbVjWoYg6F4kICTpC5pwpZw2taU2uoKDEvJIg19bpqqMb1eUjl-MROYGRhrvHs-QyYV7tqIS5fGueqIIPUnHMQD9b74Ptx8cSM3rODSeoExQqdgNJU2eGfOHKKGqQBDrT19oyDDJJTSEuBzoPEpWtanK5cJBwomvj46q704qFfPr3-p" tag="OUTREACH" date="October 22, 2023" title="Community Outreach" excerpt="Our monthly initiative to support local families. Volunteers are welcome to join us starting at 8 AM." />
+          <AnnouncementCard img="https://lh3.googleusercontent.com/aida-public/AB6AXuB05OLbyQKju26CN474KAUqmnn3yZpsWZ7XWrYNRC0AcNmw6g11ZmVGJU6ziOY6DGmq8SfXtCK-EKXGB6qxpB8ccFvYL58KNvQ3-I1-XUC5wOrBs1eBxPaydJfh0goPK363WGybdPEkwV3AbgrBWniaY7ax_ClG9sNSmQxSVmj-9iOmq2pG8t1ExiyAOMJWHd3fBj98a7upDAvDTIZLm-EYLYJkstHnj0uzH_YlekOM1p_M1LsV1qYIxQcn-DcztPeHHDXyVMNuOd-z" tag="SPIRITUAL" date="October 28, 2023" title="Interfaith Dialogue" excerpt="Sharing wisdom across traditions. An open forum for community members to discuss shared values." />
+        </Announcements>
+        <About />
+      </main>
+    </div>
 </template>
 
 <script setup lang="ts">
-const features = [
-  {
-    icon: 'mdi-account-group',
-    title: 'Community',
-    description: 'Connect with like-minded individuals and build lasting relationships in a supportive environment.',
-  },
-  {
-    icon: 'mdi-book-open-variant',
-    title: 'Resources',
-    description: 'Access a wealth of spiritual resources, study materials, and guidance for your faith journey.',
-  },
-  {
-    icon: 'mdi-calendar-star',
-    title: 'Events',
-    description: 'Participate in meaningful events, gatherings, and activities that strengthen our community.',
-  },
-];
+import Hero from '@features/religion-community/ui/Hero.vue'
+import Announcements from '@features/religion-community/ui/Announcements.vue'
+import AnnouncementCard from '@features/religion-community/ui/cards/AnnouncementCard.vue'
+import About from '@features/religion-community/ui/About.vue'
+
+// Page component
 </script>
 
 <style scoped lang="scss">
-.hero-section {
-  min-height: 60vh;
-  padding: 4rem 0;
-}
-
-.cta-section {
-  padding: 2rem 0;
-}
+// Page styles
 </style>

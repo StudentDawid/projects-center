@@ -1,47 +1,23 @@
 <template>
-  <v-app :theme="currentTheme">
-    <v-app-bar color="primary" prominent>
-      <v-app-bar-title>Religion Community</v-app-bar-title>
-      
-      <template #append>
-        <v-btn 
-          :icon="currentTheme === 'light' ? 'mdi-weather-night' : 'mdi-weather-sunny'"
-          @click="toggleTheme"
-        />
-      </template>
-    </v-app-bar>
+    <div class="bg-background-light dark:bg-background-dark text-slate-900 dark:text-slate-100 transition-colors duration-300 min-h-screen flex flex-col">
+      <!-- Header -->
+      <Header />
 
-    <v-main>
-      <slot />
-    </v-main>
+      <!-- Page slot -->
+      <main class="flex-grow">
+        <slot />
+      </main>
 
-    <v-footer class="text-center" color="primary">
-      <div class="w-100 py-4">
-        {{ new Date().getFullYear() }} — <strong>Religion Community</strong>
-      </div>
-    </v-footer>
-  </v-app>
-</template>
+      <!-- Footer -->
+      <Footer />
+    </div>
+  </template>
 
-<script setup lang="ts">
-import { ref } from 'vue';
+  <script setup lang="ts">
+  import Header from '@features/religion-community/ui/Header.vue'
+  import Footer from '@features/religion-community/ui/Footer.vue'
+  </script>
 
-// Default theme
-const currentTheme = ref('light');
-
-const toggleTheme = () => {
-  currentTheme.value = currentTheme.value === 'light' ? 'dark' : 'light';
-};
-
-// Provide theme switching capability
-provide('currentTheme', currentTheme);
-provide('setTheme', (theme: string) => {
-  currentTheme.value = theme;
-});
-</script>
-
-<style scoped lang="scss">
-.v-main {
-  min-height: calc(100vh - 64px - 64px); // viewport - appbar - footer
-}
-</style>
+  <style scoped lang="scss">
+  /* Layout-specific styles (if needed) */
+  </style>
