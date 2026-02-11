@@ -14,7 +14,7 @@ export default defineNuxtConfig({
       __dirname,
       '../../libs/mtg-generator/features'
     ),
-    '@shared': join(__dirname, '../../libs/shared'),
+    '@shared': join(__dirname, '../../libs'),
   },
   compatibilityDate: '2026-02-03',
   devtools: { enabled: true },

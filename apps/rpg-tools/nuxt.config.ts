@@ -6,10 +6,15 @@ const __dirname = dirname(fileURLToPath(import.meta.url));
 // https://nuxt.com/docs/api/configuration/nuxt-config
 export default defineNuxtConfig({
   alias: {
-    '@rpg-tools/entities': join(__dirname, '../../libs/rpg-tools/entities'),
-    '@rpg-tools/features': join(__dirname, '../../libs/rpg-tools/features'),
-    '@rpg-tools/shared': join(__dirname, '../../libs/rpg-tools/shared'),
-    '@shared': join(__dirname, '../../libs/shared'),
+    '@rpg-tools/entities': join(__dirname, '../../libs/entities/vue'),
+    '@rpg-tools/features': join(__dirname, '../../libs/features/vue'),
+    '@rpg-tools/shared': join(__dirname, '../../libs/shared'),
+    '@shared/entities': join(__dirname, '../../libs/entities/vue'),
+    '@shared/features': join(__dirname, '../../libs/features/vue'),
+    '@shared/widgets': join(__dirname, '../../libs/widgets/vue'),
+    '@shared/stores': join(__dirname, '../../libs/stores/vue'),
+    '@shared/lib': join(__dirname, '../../libs/shared'),
+    '@shared/types': join(__dirname, '../../libs/shared/types'),
   },
   compatibilityDate: '2026-02-03',
   devtools: { enabled: true },
