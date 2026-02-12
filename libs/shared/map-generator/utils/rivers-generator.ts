@@ -6,6 +6,7 @@
 import type { Pack, River } from '../types/pack.types';
 import type { Grid } from '../types/grid.types';
 import { rn } from './map-utils';
+import { RoundingContext } from './polygon-smoother';
 import * as d3 from 'd3';
 
 /**
@@ -528,10 +529,19 @@ export function getRiverPolygonPath(
 ): string {
   if (meanderedPoints.length < 2) return '';
 
+  const contextRight = new RoundingContext();
+  const contextLeft = new RoundingContext();
+
   // Użyj krzywej Catmull-Rom do wygładzenia
-  const lineGen = d3
+  const lineGenRight = d3
     .line<[number, number]>()
-    .curve(d3.curveCatmullRom.alpha(0.1));
+    .curve(d3.curveCatmullRom.alpha(0.1))
+    .context(contextRight);
+
+  const lineGenLeft = d3
+    .line<[number, number]>()
+    .curve(d3.curveCatmullRom.alpha(0.1))
+    .context(contextLeft);
 
   const riverPointsLeft: Array<[number, number]> = [];
   const riverPointsRight: Array<[number, number]> = [];
@@ -561,9 +571,12 @@ export function getRiverPolygonPath(
   }
 
   // Generuj ścieżki - prawa strona odwrócona, lewa strona normalna
-  const right = lineGen(riverPointsRight.reverse());
+  lineGenRight(riverPointsRight.reverse());
+  const right = contextRight.toString();
   if (!right) return '';
-  let left = lineGen(riverPointsLeft);
+
+  lineGenLeft(riverPointsLeft);
+  let left = contextLeft.toString();
   if (!left) return '';
 
   // Wyciągnij komendy krzywej z lewej ścieżki (zaczyna się od "C")
@@ -572,12 +585,6 @@ export function getRiverPolygonPath(
     left = left.substring(curveStart);
   }
 
-  // Zaokrąglij współrzędne do 1 miejsca po przecinku
-  function roundPath(path: string): string {
-    return path.replace(/(\d+\.\d+)/g, (match) => {
-      return rn(parseFloat(match), 1).toString();
-    });
-  }
-
-  return roundPath(right + left);
+  // Ścieżki są już zaokrąglone przez context
+  return right + left;
 }

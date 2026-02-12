@@ -59,13 +59,42 @@ export function generateVoronoiSites(
   const cellWidth = width / cols;
   const cellHeight = height / rows;
 
-  const placedPoints: Array<{ x: number; y: number }> = [];
+  // Grid for spatial hashing optimization
+  // Cell size is equal to minDistance to guarantee we only need to check neighbors
+  const gridSize = minDistance;
+  const gridCols = Math.ceil(width / gridSize);
+  const gridRows = Math.ceil(height / gridSize);
+  const grid: Array<Array<{ x: number; y: number }>> = new Array(
+    gridCols * gridRows
+  )
+    .fill(null)
+    .map(() => []);
 
-  // Helper to check minimum distance
+  // Helper to check minimum distance using spatial hashing
   function isTooClose(x: number, y: number, minDist: number): boolean {
-    return placedPoints.some(
-      (p) => Math.sqrt(Math.pow(p.x - x, 2) + Math.pow(p.y - y, 2)) < minDist
-    );
+    const gx = Math.floor(x / gridSize);
+    const gy = Math.floor(y / gridSize);
+    const minDistSq = minDist * minDist;
+
+    // Check cells in 3x3 neighborhood
+    // Since gridSize >= minDist, points in further cells are guaranteed to be far enough
+    for (let dy = -1; dy <= 1; dy++) {
+      for (let dx = -1; dx <= 1; dx++) {
+        const nx = gx + dx;
+        const ny = gy + dy;
+
+        if (nx >= 0 && nx < gridCols && ny >= 0 && ny < gridRows) {
+          const cell = grid[ny * gridCols + nx];
+          if (!cell) continue;
+
+          for (const p of cell) {
+            const dSq = (p.x - x) ** 2 + (p.y - y) ** 2;
+            if (dSq < minDistSq) return true;
+          }
+        }
+      }
+    }
+    return false;
   }
 
   // Use a more randomized approach - mix of grid-based and random placement
@@ -143,7 +172,13 @@ export function generateVoronoiSites(
       y,
       id: i,
     });
-    placedPoints.push({ x, y });
+
+    // Add to spatial grid
+    const gx = Math.floor(x / gridSize);
+    const gy = Math.floor(y / gridSize);
+    if (gx >= 0 && gx < gridCols && gy >= 0 && gy < gridRows) {
+      grid[gy * gridCols + gx]?.push({ x, y });
+    }
   }
 
   return sites;
