@@ -221,10 +221,25 @@ const cellsRefs = ref<SVGPathElement[]>([]);
 const riversRefs = ref<SVGPathElement[]>([]);
 let rafId: number | null = null; // ID dla requestAnimationFrame throttling
 
-// Stan zoomowania
+// Stan zoomowania (wizualny - natychmiastowy)
 const zoomScale = ref(1);
 const zoomX = ref(0);
 const zoomY = ref(0);
+
+// Stan zoomowania (logiczny - opóźniony dla culling)
+const cullingZoomScale = ref(1);
+const cullingZoomX = ref(0);
+const cullingZoomY = ref(0);
+let cullingDebounceTimer: ReturnType<typeof setTimeout> | null = null;
+
+function updateCullingZoom(k: number, x: number, y: number) {
+  if (cullingDebounceTimer) clearTimeout(cullingDebounceTimer);
+  cullingDebounceTimer = setTimeout(() => {
+    cullingZoomScale.value = k;
+    cullingZoomX.value = x;
+    cullingZoomY.value = y;
+  }, 100);
+}
 
 // Obliczona transformacja dla viewbox (atrybut transform SVG)
 const viewboxTransform = computed(() => {
@@ -426,17 +441,23 @@ function isPolygonVisible(
 
   // Sprawdź przecięcie z viewport
   // Polygon jest widoczny jeśli przecina się z viewport
+  // Dodajemy margines (margin) aby renderować więcej niż tylko widoczny obszar
+  // To zapobiega "miganiu" pustych obszarów podczas szybkiego przesuwania (gdy culling jest opóźniony)
+  const marginX = viewBox.width * 0.5;
+  const marginY = viewBox.height * 0.5;
+
   return !(
-    transformedMaxX < 0 ||
-    transformedMinX > viewBox.width ||
-    transformedMaxY < 0 ||
-    transformedMinY > viewBox.height
+    transformedMaxX < -marginX ||
+    transformedMinX > viewBox.width + marginX ||
+    transformedMaxY < -marginY ||
+    transformedMinY > viewBox.height + marginY
   );
 }
 
 /**
  * Oblicza widoczne komórki na podstawie viewport i transformacji
  * Optymalizacja: renderuje tylko widoczne komórki zamiast wszystkich
+ * Używa opóźnionego (debounced) stanu zoomu dla lepszej wydajności podczas interakcji
  */
 const visibleCellIndices = computed(() => {
   if (!cellPolygons.value.length) return [];
@@ -448,10 +469,11 @@ const visibleCellIndices = computed(() => {
     height: svgHeight.value,
   };
 
+  // Użyj opóźnionego stanu zoomu dla obliczeń widoczności
   const transform = {
-    x: zoomX.value,
-    y: zoomY.value,
-    scale: zoomScale.value,
+    x: cullingZoomX.value,
+    y: cullingZoomY.value,
+    scale: cullingZoomScale.value,
   };
 
   const visible: number[] = [];
@@ -491,12 +513,7 @@ function getCellPath(cellId: number): string {
   const polygon = cellPolygons.value[cellId];
   if (!polygon || polygon.length === 0) return '';
 
-  let path = `M ${polygon[0]![0]} ${polygon[0]![1]}`;
-  for (let i = 1; i < polygon.length; i++) {
-    path += ` L ${polygon[i]![0]} ${polygon[i]![1]}`;
-  }
-  path += ' Z';
-  return path;
+  return `M${polygon.map((p) => `${p[0]},${p[1]}`).join('L')}Z`;
 }
 
 /**
@@ -517,12 +534,7 @@ function getCellPathForPolygon(polygon: Array<[number, number]>, index: number):
   // Fallback: generuj path na żądanie
   if (polygon.length === 0) return '';
 
-  let path = `M ${polygon[0]![0]} ${polygon[0]![1]}`;
-  for (let i = 1; i < polygon.length; i++) {
-    path += ` L ${polygon[i]![0]} ${polygon[i]![1]}`;
-  }
-  path += ' Z';
-  return path;
+  return `M${polygon.map((p) => `${p[0]},${p[1]}`).join('L')}Z`;
 }
 
 /**
@@ -534,12 +546,7 @@ function polygonToPath(polygon: Array<[number, number]>): string {
   if (polygon.length === 0) return '';
 
   // Surowe polygony - nie wygładzamy pojedynczych komórek
-  let path = `M ${polygon[0]![0]} ${polygon[0]![1]}`;
-  for (let i = 1; i < polygon.length; i++) {
-    path += ` L ${polygon[i]![0]} ${polygon[i]![1]}`;
-  }
-  path += ' Z';
-  return path;
+  return `M${polygon.map((p) => `${p[0]},${p[1]}`).join('L')}Z`;
 }
 
 /**
@@ -790,6 +797,9 @@ function setupZoom(): void {
       zoomScale.value = k;
       zoomX.value = x;
       zoomY.value = y;
+
+      // Aktualizuj zoom logiczny z opóźnieniem
+      updateCullingZoom(k, x, y);
 
       // Wywołaj dostosowania aktywnego zoomowania (wywoływane przy każdym zdarzeniu zoom)
       invokeActiveZooming(k);
