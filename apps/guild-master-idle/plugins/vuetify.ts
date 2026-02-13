@@ -21,12 +21,23 @@ export default defineNuxtPlugin({
         defaultTheme: 'light',
         themes: {
           light: {
+            dark: false,
             colors: {
               primary: '#1e88e5',
               secondary: '#f59e0b',
               accent: '#3b82f6',
               surface: '#ffffff',
               background: '#ffffff',
+            },
+          },
+          dark: {
+            dark: true,
+            colors: {
+              primary: '#60a5fa',
+              secondary: '#fbbf24',
+              accent: '#3b82f6',
+              surface: '#171923',
+              background: '#0f1117',
             },
           },
         },

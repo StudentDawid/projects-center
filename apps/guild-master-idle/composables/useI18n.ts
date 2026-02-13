@@ -1,5 +1,6 @@
 import en from '~/i18n/en';
 import pl from '~/i18n/pl';
+import { useSettings } from './useSettings';
 
 export type Locale = 'en' | 'pl';
 
@@ -11,11 +12,6 @@ type Translations = DeepStringify<typeof en>;
 
 const locales: Record<Locale, Translations> = { en, pl };
 
-const currentLocale = ref<Locale>('pl');
-
-/**
- * Get a nested value from an object by dot-separated path
- */
 function getNestedValue(obj: Record<string, unknown>, path: string): string {
   const keys = path.split('.');
   let result: unknown = obj;
@@ -23,15 +19,12 @@ function getNestedValue(obj: Record<string, unknown>, path: string): string {
     if (result && typeof result === 'object' && key in result) {
       result = (result as Record<string, unknown>)[key];
     } else {
-      return path; // fallback: return the key itself
+      return path;
     }
   }
   return typeof result === 'string' ? result : path;
 }
 
-/**
- * Replace {placeholder} tokens in a string with provided values
- */
 function interpolate(template: string, params?: Record<string, string | number>): string {
   if (!params) return template;
   return template.replace(/\{(\w+)\}/g, (_, key) => {
@@ -40,20 +33,18 @@ function interpolate(template: string, params?: Record<string, string | number>)
 }
 
 export function useI18n() {
-  const locale = currentLocale;
+  const { settings, updateSetting } = useSettings();
 
-  /**
-   * Translate a key, optionally with interpolation params
-   * Usage: t('nav.grandHall') or t('log.novicesCompleted', { count: 5 })
-   */
+  const locale = computed(() => settings.locale);
+
   function t(key: string, params?: Record<string, string | number>): string {
-    const translations = locales[locale.value];
+    const translations = locales[settings.locale];
     const value = getNestedValue(translations as unknown as Record<string, unknown>, key);
     return interpolate(value, params);
   }
 
   function setLocale(newLocale: Locale) {
-    locale.value = newLocale;
+    updateSetting('locale', newLocale);
   }
 
   return {
