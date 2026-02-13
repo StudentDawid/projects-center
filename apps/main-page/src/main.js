@@ -97,7 +97,22 @@ const projects = [
     status: 'development',
     featured: false,
     visible: true,
-  }
+  },
+  {
+    id: 'guild-master-idle',
+    title: 'Guild Master Idle',
+    description:
+      'Zarządzaj gildią bohaterów! Rekrutuj wojowników, magów i łowców, wysyłaj ich na epickie misje i rozwijaj swoje imperium w tej grze idle.',
+    category: 'Gra IDLE',
+    filterType: 'game',
+    icon: 'mdi-shield-sword',
+    color: '#7C4DFF',
+    link: '/projects-center/guild-master-idle/',
+    tags: ['Vue 3', 'Vuetify', 'Nuxt', 'Idle Game'],
+    status: 'development',
+    featured: false,
+    visible: true,
+  },
 ];
 
 // Wersja 1: Kompaktowe karty (jak obecne projekty)

@@ -34,6 +34,11 @@ export default defineConfig({
         changeOrigin: true,
         ws: true,
       },
+      '/projects-center/guild-master-idle': {
+        target: 'http://127.0.0.1:3006',
+        changeOrigin: true,
+        ws: true,
+      },
     },
   },
 

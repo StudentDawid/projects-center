@@ -44,7 +44,7 @@ jobs:
           # Main page goes to root
           if [ -d "dist/apps/main-page" ]; then cp -r dist/apps/main-page/. public_html/; fi
           # Sub-apps go to subdirectories
-          for app in ateria-idle mtg-generator rpg-tools yarn-chaos religion-community; do
+          for app in ateria-idle mtg-generator rpg-tools yarn-chaos religion-community guild-master-idle; do
             if [ -d "dist/apps/$app" ]; then
               mkdir -p "public_html/$app"
               cp -r "dist/apps/$app/." "public_html/$app/"

@@ -1,0 +1,38 @@
+{
+  "name": "guild-master-idle",
+  "$schema": "../../node_modules/nx/schemas/project-schema.json",
+  "projectType": "application",
+  "sourceRoot": "apps/guild-master-idle",
+  "targets": {
+    "build": {
+      "executor": "nx:run-commands",
+      "outputs": ["{workspaceRoot}/dist/apps/guild-master-idle"],
+      "options": {
+        "command": "nuxt generate && mkdir -p ../../dist/apps/guild-master-idle && cp -R .output/public/. ../../dist/apps/guild-master-idle/",
+        "cwd": "apps/guild-master-idle"
+      }
+    },
+    "dev": {
+      "executor": "nx:run-commands",
+      "options": {
+        "command": "nuxt dev --port 3006 --host 127.0.0.1",
+        "cwd": "apps/guild-master-idle"
+      }
+    },
+    "preview": {
+      "executor": "nx:run-commands",
+      "options": {
+        "command": "nuxt preview",
+        "cwd": "apps/guild-master-idle"
+      }
+    },
+    "prepare": {
+      "executor": "nx:run-commands",
+      "options": {
+        "command": "nuxi prepare",
+        "cwd": "apps/guild-master-idle"
+      }
+    }
+  },
+  "tags": ["type:app", "framework:nuxt"]
+}
