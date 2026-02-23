@@ -6,7 +6,8 @@ import { nxCopyAssetsPlugin } from '@nx/vite/plugins/nx-copy-assets.plugin';
 
 export default defineConfig(() => ({
   root: import.meta.dirname,
-  cacheDir: '../../node_modules/.vite/apps/wh40k-polish-league-landing-page',
+  cacheDir:
+    '../../../node_modules/.vite/apps/landing-pages/wh40k-polish-league-landing-page',
   plugins: [vue(), nxViteTsPaths(), nxCopyAssetsPlugin(['*.md'])],
   // Uncomment this if you are using workers.
   // worker: {
@@ -20,7 +21,8 @@ export default defineConfig(() => ({
     include: ['{src,tests}/**/*.{test,spec}.{js,mjs,cjs,ts,mts,cts,jsx,tsx}'],
     reporters: ['default'],
     coverage: {
-      reportsDirectory: '../../coverage/apps/wh40k-polish-league-landing-page',
+      reportsDirectory:
+        '../../../coverage/apps/landing-pages/wh40k-polish-league-landing-page',
       provider: 'v8' as const,
     },
   },

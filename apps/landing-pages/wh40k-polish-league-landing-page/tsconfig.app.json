@@ -2,7 +2,10 @@
   "extends": "./tsconfig.json",
   "compilerOptions": {
     "composite": true,
-    "rootDir": "app"
+    "rootDir": "app",
+    "declaration": true,
+    "emitDeclarationOnly": true,
+    "noEmit": false
   },
   "include": [".nuxt/nuxt.d.ts", "app/**/*", "server/**/*"],
   "exclude": [

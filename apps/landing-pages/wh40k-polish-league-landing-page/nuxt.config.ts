@@ -3,7 +3,7 @@ import { defineNuxtConfig } from 'nuxt/config';
 
 // https://nuxt.com/docs/api/configuration/nuxt-config
 export default defineNuxtConfig({
-  workspaceDir: '../../',
+  workspaceDir: '../../../',
   devtools: { enabled: true },
   devServer: {
     host: '127.0.0.1',
@@ -11,7 +11,7 @@ export default defineNuxtConfig({
   },
   typescript: {
     tsConfig: {
-      extends: '../../../tsconfig.base.json',
+      extends: '../../../../tsconfig.base.json',
     },
   },
   imports: {
@@ -19,13 +19,13 @@ export default defineNuxtConfig({
   },
   css: [
     'vuetify/lib/styles/main.sass',
-    '@mdi/font/css/materialdesignicons.css'
+    '@mdi/font/css/materialdesignicons.css',
   ],
   modules: ['@pinia/nuxt', '@nuxt/eslint', '@nuxtjs/i18n'],
   i18n: {
     locales: [
       { code: 'pl', file: 'pl.json', name: 'Polski' },
-      { code: 'en', file: 'en.json', name: 'English' }
+      { code: 'en', file: 'en.json', name: 'English' },
     ],
     langDir: 'locales',
     defaultLocale: 'pl',
@@ -35,7 +35,7 @@ export default defineNuxtConfig({
       useCookie: true,
       cookieKey: 'i18n_redirected',
       redirectOn: 'root',
-    }
+    },
   },
   plugins: ['~/plugins/vuetify.ts', '~/plugins/pinia-persist.ts'],
   build: {
@@ -69,5 +69,5 @@ export default defineNuxtConfig({
         },
       ],
     },
-  }
+  },
 });
