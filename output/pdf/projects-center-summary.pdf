@@ -1,0 +1,62 @@
+%PDF-1.4
+1 0 obj
+<< /Type /Catalog /Pages 2 0 R >>
+endobj
+2 0 obj
+<< /Type /Pages /Kids [3 0 R] /Count 1 >>
+endobj
+3 0 obj
+<< /Type /Page /Parent 2 0 R /MediaBox [0 0 612 792] /Contents 5 0 R /Resources << /Font << /F1 4 0 R /F2 6 0 R >> >> >>
+endobj
+4 0 obj
+<< /Type /Font /Subtype /Type1 /BaseFont /Helvetica >>
+endobj
+6 0 obj
+<< /Type /Font /Subtype /Type1 /BaseFont /Helvetica-Bold >>
+endobj
+5 0 obj
+<< /Length 2380 >>
+stream
+BT /F2 16 Tf 1 0 0 1 48 748 Tm (Projects Center - App Summary) Tj ET
+BT /F2 12 Tf 1 0 0 1 48 728 Tm (What it is) Tj ET
+BT /F1 10 Tf 1 0 0 1 48 714 Tm (A GitHub Pages projects hub built as an Nx monorepo using Nuxt/Vue and a Feature-Sliced Design) Tj ET
+BT /F1 10 Tf 1 0 0 1 48 700 Tm (structure.) Tj ET
+BT /F1 10 Tf 1 0 0 1 48 686 Tm (It hosts multiple apps and shared libraries, including RPG tools and landing pages.) Tj ET
+BT /F2 12 Tf 1 0 0 1 48 666 Tm (Who it's for) Tj ET
+BT /F1 10 Tf 1 0 0 1 48 652 Tm (A developer or creator maintaining multiple GitHub Pages apps with shared UI and feature) Tj ET
+BT /F1 10 Tf 1 0 0 1 48 638 Tm (libraries.) Tj ET
+BT /F2 12 Tf 1 0 0 1 48 618 Tm (What it does) Tj ET
+BT /F1 10 Tf 1 0 0 1 48 604 Tm (- Hosts multiple apps such as main-page, rpg-tools, and landing pages (yarn-chaos,) Tj ET
+BT /F1 10 Tf 1 0 0 1 48 590 Tm (  religion-community).) Tj ET
+BT /F1 10 Tf 1 0 0 1 48 576 Tm (- Provides shared FSD libraries for features, entities, widgets, stores, and shared) Tj ET
+BT /F1 10 Tf 1 0 0 1 48 562 Tm (  utilities.) Tj ET
+BT /F1 10 Tf 1 0 0 1 48 548 Tm (- Includes RPG tools like map generator, world generator, and Fabula Ultima card manager.) Tj ET
+BT /F1 10 Tf 1 0 0 1 48 534 Tm (- Offers a Google Sheets data client (GDDB) for reading public sheets via Google) Tj ET
+BT /F1 10 Tf 1 0 0 1 48 520 Tm (  Visualization API.) Tj ET
+BT /F1 10 Tf 1 0 0 1 48 506 Tm (- Uses Pinia stores for state management in shared stores.) Tj ET
+BT /F1 10 Tf 1 0 0 1 48 492 Tm (- Runs Nuxt/Vue frontends within an Nx monorepo for consistent build and dev workflows.) Tj ET
+BT /F2 12 Tf 1 0 0 1 48 472 Tm (How it works) Tj ET
+BT /F1 10 Tf 1 0 0 1 48 458 Tm (- Nx monorepo: apps live in apps/, shared code in libs/ organized by FSD layers.) Tj ET
+BT /F1 10 Tf 1 0 0 1 48 444 Tm (- Nuxt/Vue apps import shared libraries via @shared/* path mappings.) Tj ET
+BT /F1 10 Tf 1 0 0 1 48 430 Tm (- UI components in features/widgets/entities connect to Pinia stores in libs/stores.) Tj ET
+BT /F1 10 Tf 1 0 0 1 48 416 Tm (- Data access uses Axios plus the shared GDDB library to query public Google Sheets.) Tj ET
+BT /F2 12 Tf 1 0 0 1 48 396 Tm (How to run) Tj ET
+BT /F1 10 Tf 1 0 0 1 48 382 Tm (- yarn install) Tj ET
+BT /F1 10 Tf 1 0 0 1 48 368 Tm (- yarn dev (or nx serve projects-center)) Tj ET
+BT /F1 10 Tf 1 0 0 1 48 354 Tm (- Open http://localhost:3000) Tj ET
+endstream
+endobj
+xref
+0 7
+0000000000 65535 f 
+0000000009 00000 n 
+0000000058 00000 n 
+0000000115 00000 n 
+0000000251 00000 n 
+0000000321 00000 n 
+0000000396 00000 n 
+trailer
+<< /Size 7 /Root 1 0 R >>
+startxref
+2828
+%%EOF

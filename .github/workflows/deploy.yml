@@ -50,6 +50,11 @@ jobs:
               cp -r "dist/apps/$app/." "public_html/$app/"
             fi
           done
+          # Landing pages
+          if [ -d "dist/apps/landing-pages/wh40k-polish-league-landing-page" ]; then
+            mkdir -p "public_html/wh40k-polish-league-landing-page"
+            cp -r "dist/apps/landing-pages/wh40k-polish-league-landing-page/." "public_html/wh40k-polish-league-landing-page/"
+          fi
           # Prevent GitHub Pages from ignoring _nuxt folders
           touch public_html/.nojekyll
 

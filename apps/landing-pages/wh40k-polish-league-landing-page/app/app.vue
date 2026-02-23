@@ -3,10 +3,7 @@
 <template>
   <main>
     <header>
-      <nav>
-        <NuxtLink to="/"> Home </NuxtLink>
-        <NuxtLink to="/about"> About </NuxtLink>
-      </nav>
+      <nav></nav>
     </header>
     <nuxt-page />
   </main>
