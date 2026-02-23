@@ -1,0 +1,65 @@
+{
+  "nav": {
+    "about": "About",
+    "events": "Events",
+    "resources": "Resources",
+    "rules": "Rules"
+  },
+  "hero": {
+    "season": "Season 2026",
+    "title": "Polish Warhammer 40,000 League",
+    "subtitle": "Join the community of top players. Compete in championship-tier tournaments.",
+    "cta_calendar": "Check Calendar",
+    "cta_learn": "Learn More"
+  },
+  "about": {
+    "mission_title": "Our Mission",
+    "mission_subtitle": "\"Promoting professional gaming and building community.\"",
+    "mission_text": "We create a space for Warhammer 40,000 enthusiasts in Poland, organizing a league that prioritizes clear rules, fair play, and a high level of competition.",
+    "community_title": "Community",
+    "community_subtitle": "\"Connecting fans across the country.\"",
+    "community_text": "Whether you are a tournament veteran or just starting your journey, in PLW you will find a place for yourself and support from experienced players."
+  },
+  "events": {
+    "title": "Upcoming Events",
+    "subtitle": "Tournaments and league meetings in the coming weeks",
+    "details": "Details",
+    "grand_warsaw": "Grand Tournament Warsaw",
+    "grand_warsaw_loc": "Warsaw, \"Strateg\" Club",
+    "silesian_open": "Silesian Open 2024",
+    "silesian_open_loc": "Katowice, MDK",
+    "pomerania_cup": "Pomerania Cup III",
+    "pomerania_cup_loc": "Gdańsk, \"Gracz\" Pub",
+    "full_schedule": "View Full Schedule",
+    "calendar_title": "Google Calendar Integration",
+    "calendar_text": "The full league calendar is available online. View it directly on our dedicated schedule page or add it to your Google Calendar."
+  },
+  "resources": {
+    "title": "Useful Links",
+    "subtitle": "Tools and community platforms essential for every league player.",
+    "bcp_desc": "Results & Rankings",
+    "discord_desc": "Chat & Discussions",
+    "fb_desc": "Community Group",
+    "tk_desc": "Tournament System"
+  },
+  "rules": {
+    "title_league": "League Rules",
+    "fair_play_title": "Fair Play:",
+    "fair_play_text": "All players are required to adhere to fair play principles and respect their opponents.",
+    "format_title": "Format:",
+    "format_text": "Tournaments are played in Strike Force format (2000 pts) according to the current Chapter Approved.",
+    "painting_title": "Painting:",
+    "painting_text": "All models must be painted to a Battle Ready standard.",
+    "download_pdf": "Download full rules (PDF)",
+    "title_website": "Website Terms",
+    "website_text_1": "By using this service, you accept our privacy policy and terms of use. Data is collected solely for league organization purposes."
+  },
+  "footer": {
+    "description": "Professional e-sports league for tabletop gaming. Combining passion with competition.",
+    "league": "League",
+    "contact": "Contact",
+    "poland": "Poland",
+    "rights": "© 2024 Polish Warhammer League. All rights reserved.",
+    "disclaimer": "Disclaimer: This website is unofficial and is not endorsed by Games Workshop Limited."
+  }
+}

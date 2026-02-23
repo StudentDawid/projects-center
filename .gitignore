@@ -50,3 +50,5 @@ logs
 .vscode/settings.json
 package-lock.json
 tmp
+
+vitest.config.*.timestamp*
