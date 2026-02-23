@@ -1,0 +1,65 @@
+{
+  "nav": {
+    "about": "O Lidze",
+    "events": "Wydarzenia",
+    "resources": "Zasoby",
+    "rules": "Zasady"
+  },
+  "hero": {
+    "season": "Sezon 2026",
+    "title": "Polska Liga Warhammera 40,000",
+    "subtitle": "Dołącz do społeczności najlepszych graczy. Rywalizuj w turniejach rangi mistrzowskiej.",
+    "cta_calendar": "Sprawdź kalendarz",
+    "cta_learn": "Więcej o lidze"
+  },
+  "about": {
+    "mission_title": "Nasza Misja",
+    "mission_subtitle": "\"Promowanie profesjonalnego gamingu i budowanie społeczności.\"",
+    "mission_text": "Tworzymy przestrzeń dla pasjonatów Warhammera 40,000 w Polsce, organizując ligę, która stawia na jasne zasady, fair play i wysoki poziom rywalizacji.",
+    "community_title": "Społeczność",
+    "community_subtitle": "\"Łączymy fanów z całego kraju.\"",
+    "community_text": "Niezależnie od tego, czy jesteś weteranem turniejowym, czy dopiero zaczynasz swoją przygodę, w PLW znajdziesz miejsce dla siebie i wsparcie doświadczonych graczy."
+  },
+  "events": {
+    "title": "Najbliższe Wydarzenia",
+    "subtitle": "Turnieje i spotkania ligowe w nadchodzących tygodniach",
+    "details": "Szczegóły",
+    "grand_warsaw": "Grand Tournament Warsaw",
+    "grand_warsaw_loc": "Warszawa, Klub \"Strateg\"",
+    "silesian_open": "Silesian Open 2024",
+    "silesian_open_loc": "Katowice, MDK",
+    "pomerania_cup": "Pomerania Cup III",
+    "pomerania_cup_loc": "Gdańsk, Pub \"Gracz\"",
+    "full_schedule": "Zobacz pełny harmonogram",
+    "calendar_title": "Integracja z Kalendarzem Google",
+    "calendar_text": "Pełny kalendarz ligowy jest dostępny online. Możesz go przeglądać bezpośrednio na naszej dedykowanej stronie harmonogramu lub dodać do swojego kalendarza Google."
+  },
+  "resources": {
+    "title": "Przydatne Linki",
+    "subtitle": "Narzędzia i platformy społecznościowe niezbędne dla każdego gracza ligowego.",
+    "bcp_desc": "Wyniki i rankingi",
+    "discord_desc": "Czat i dyskusje",
+    "fb_desc": "Społeczność",
+    "tk_desc": "System turniejowy"
+  },
+  "rules": {
+    "title_league": "Regulamin Ligi",
+    "fair_play_title": "Fair Play:",
+    "fair_play_text": "Wszyscy gracze zobowiązani są do przestrzegania zasad fair play i szacunku wobec przeciwników.",
+    "format_title": "Format:",
+    "format_text": "Turnieje rozgrywane są w formacie Strike Force (2000 pkt) zgodnie z aktualnym Chapter Approved.",
+    "painting_title": "Malowanie:",
+    "painting_text": "Wszystkie modele muszą być pomalowane w standardzie Battle Ready.",
+    "download_pdf": "Pobierz pełny regulamin (PDF)",
+    "title_website": "Regulamin Strony",
+    "website_text_1": "Korzystając z serwisu akceptujesz naszą politykę prywatności i zasady użytkowania. Dane zbierane są wyłącznie w celach organizacji ligi."
+  },
+  "footer": {
+    "description": "Profesjonalna liga e-sportowa dla gier bitewnych. Łączymy pasję z rywalizacją.",
+    "league": "Liga",
+    "contact": "Kontakt",
+    "poland": "Polska",
+    "rights": "© 2024 Polska Liga Warhammera. Wszelkie prawa zastrzeżone.",
+    "disclaimer": "Disclaimer: This website is unofficial and is not endorsed by Games Workshop Limited."
+  }
+}

@@ -34,6 +34,11 @@ export default defineConfig({
         changeOrigin: true,
         ws: true,
       },
+      '/projects-center/wh40k-polish-league-landing-page': {
+        target: 'http://127.0.0.1:3005',
+        changeOrigin: true,
+        ws: true,
+      },
     },
   },
 

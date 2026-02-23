@@ -1,0 +1,410 @@
+<!DOCTYPE html>
+<html lang="pl"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>Polska Liga Warhammera 40,000</title>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;700;900&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<script id="tailwind-config">
+        tailwind.config = {
+            darkMode: "class",
+            theme: {
+                extend: {
+                    colors: {
+                        "primary": "#8b0000", // Deep red from logo
+                        "primary-hover": "#660000", // Darker red for hover
+                        "accent": "#d4af37", // Gold/Yellow from eagle
+                        "background-light": "#ffffff",
+                        "background-alt": "#f3f4f6",
+                        "text-main": "#0d141b",
+                        "text-muted": "#4c739a",
+                    },
+                    fontFamily: {
+                        "display": ["Inter", "sans-serif"],
+                        "body": ["Inter", "sans-serif"]
+                    },
+                    borderRadius: {
+                        "DEFAULT": "0.25rem", 
+                        "lg": "0.5rem", 
+                        "xl": "0.75rem", 
+                        "2xl": "1rem"
+                    },
+                },
+            },
+        }
+    </script>
+<style>
+        body {
+            font-family: 'Inter', sans-serif;
+        }::-webkit-scrollbar {
+            width: 8px;
+        }
+        ::-webkit-scrollbar-track {
+            background: #f1f1f1; 
+        }
+        ::-webkit-scrollbar-thumb {
+            background: #c1c1c1; 
+            border-radius: 4px;
+        }
+        ::-webkit-scrollbar-thumb:hover {
+            background: #a8a8a8; 
+        }
+    </style>
+</head>
+<body class="bg-background-light text-text-main flex flex-col min-h-screen overflow-x-hidden">
+<header class="sticky top-0 z-50 w-full bg-white/90 backdrop-blur-md border-b border-gray-100 shadow-sm transition-all duration-300">
+<div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+<div class="flex items-center justify-between h-16 sm:h-20">
+<div class="flex items-center gap-3">
+<img alt="PLW 40k Logo" class="h-12 md:h-14 w-auto object-contain" src="https://lh3.googleusercontent.com/aida-public/AB6AXuBgNCAAMTsKhrIE4XrxN-L68kraN_cUVGtSnNHCCX5yaijte-pwKHvmOWWO0GzOmnVIWgoXsAQoOgxZkjUWyM-swN4OZTi86vCoHeHkIT625AUy3jWnMoWtGkyXSJ8rviQO3Dms9WIayCrBI9N6CxldfluS009WZL9AFBA3LNxdX7ZJJKdzUC5SaUgMm-Jj2-vFkUWNbpz88WtWTXW57b3zwc9ODz2qQ0pAItjsVCoWMrYy6g5C1sEu2IxPtyqXlWvpBEmPHyTjql8"/>
+</div>
+<nav class="hidden md:flex items-center gap-8">
+<a class="text-text-main hover:text-primary text-sm font-medium transition-colors" href="#about">O Lidze / About</a>
+<a class="text-text-main hover:text-primary text-sm font-medium transition-colors" href="#events">Wydarzenia / Events</a>
+<a class="text-text-main hover:text-primary text-sm font-medium transition-colors" href="#resources">Zasoby / Resources</a>
+<a class="text-text-main hover:text-primary text-sm font-medium transition-colors" href="#rules">Zasady / Rules</a>
+</nav>
+<div class="flex items-center gap-4">
+<button class="flex items-center justify-center h-9 px-4 rounded-lg bg-background-alt hover:bg-primary/10 text-text-main hover:text-primary text-xs font-bold transition-all border border-transparent hover:border-primary/20">
+                    PL / EN
+                </button>
+<button class="md:hidden p-2 text-text-main hover:bg-gray-100 rounded-lg">
+<span class="material-symbols-outlined">menu</span>
+</button>
+</div>
+</div>
+</div>
+</header>
+<main class="flex-grow">
+<section class="relative w-full py-20 lg:py-32 flex flex-col items-center justify-center text-center px-4 overflow-hidden">
+<div class="absolute inset-0 z-0 opacity-40 pointer-events-none" data-alt="Abstract topographic map pattern in light gray tones" style="background-image: radial-gradient(#e5e7eb 1px, transparent 1px); background-size: 32px 32px;">
+</div>
+<div class="relative z-10 max-w-4xl mx-auto flex flex-col gap-8 items-center">
+<div class="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-primary/10 text-primary text-xs font-bold uppercase tracking-wider">
+<span class="w-2 h-2 rounded-full bg-primary animate-pulse"></span>
+                Sezon 2024 / Season 2024
+            </div>
+<h1 class="text-4xl md:text-6xl font-black tracking-tight text-text-main leading-[1.1]">
+                Polska Liga Warhammera 40,000 <br/>
+<span class="text-primary block mt-2 opacity-90 text-2xl md:text-4xl font-bold tracking-normal text-gray-500">Polish Warhammer 40,000 League</span>
+</h1>
+<p class="text-lg md:text-xl text-text-muted max-w-2xl font-light">
+                Dołącz do społeczności najlepszych graczy. Rywalizuj w turniejach rangi mistrzowskiej.
+                <br class="hidden sm:block"/>
+<span class="text-sm opacity-80 block mt-1">Join the community of top players. Compete in championship-tier tournaments.</span>
+</p>
+<div class="flex flex-col sm:flex-row gap-4 w-full justify-center pt-4">
+<a class="inline-flex h-12 items-center justify-center rounded-lg bg-primary px-8 text-white font-bold transition-all hover:bg-primary-hover hover:shadow-lg hover:shadow-primary/30 focus:outline-none focus:ring-2 focus:ring-primary focus:ring-offset-2" href="#events">
+                    Sprawdź kalendarz / Check Calendar
+                </a>
+<a class="inline-flex h-12 items-center justify-center rounded-lg border border-gray-200 bg-white px-8 text-text-main font-medium transition-all hover:bg-gray-50 hover:border-gray-300 focus:outline-none focus:ring-2 focus:ring-gray-200" href="#about">
+                    Więcej o lidze / Learn More
+                </a>
+</div>
+</div>
+</section>
+<section class="py-20 bg-background-alt border-y border-gray-100" id="about">
+<div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+<div class="grid md:grid-cols-2 gap-12 items-start">
+<div class="flex flex-col gap-6">
+<div class="flex items-center gap-3 mb-2">
+<span class="material-symbols-outlined text-accent text-3xl">trophy</span>
+<h2 class="text-2xl font-bold text-text-main">Nasza Misja / Our Mission</h2>
+</div>
+<div class="bg-white p-8 rounded-2xl shadow-sm border border-gray-100 h-full flex flex-col justify-center">
+<p class="text-text-main font-medium text-lg mb-4">
+                            "Promowanie profesjonalnego gamingu i budowanie społeczności."
+                        </p>
+<p class="text-text-muted leading-relaxed">
+                            Tworzymy przestrzeń dla pasjonatów Warhammera 40,000 w Polsce, organizując ligę, która stawia na jasne zasady, fair play i wysoki poziom rywalizacji.
+                        </p>
+<div class="w-full h-px bg-gray-100 my-4"></div>
+<p class="text-text-muted text-sm leading-relaxed italic">
+                            We create a space for Warhammer 40,000 enthusiasts in Poland, organizing a league that prioritizes clear rules, fair play, and a high level of competition.
+                        </p>
+</div>
+</div>
+<div class="flex flex-col gap-6">
+<div class="flex items-center gap-3 mb-2">
+<span class="material-symbols-outlined text-accent text-3xl">groups</span>
+<h2 class="text-2xl font-bold text-text-main">Społeczność / Community</h2>
+</div>
+<div class="bg-white p-8 rounded-2xl shadow-sm border border-gray-100 h-full flex flex-col justify-center">
+<p class="text-text-main font-medium text-lg mb-4">
+                            "Łączymy fanów z całego kraju."
+                        </p>
+<p class="text-text-muted leading-relaxed">
+                            Niezależnie od tego, czy jesteś weteranem turniejowym, czy dopiero zaczynasz swoją przygodę, w PLW znajdziesz miejsce dla siebie i wsparcie doświadczonych graczy.
+                        </p>
+<div class="w-full h-px bg-gray-100 my-4"></div>
+<p class="text-text-muted text-sm leading-relaxed italic">
+                            Whether you are a tournament veteran or just starting your journey, in PLW you will find a place for yourself and support from experienced players.
+                        </p>
+</div>
+</div>
+</div>
+</div>
+</section>
+<section class="py-24 bg-white relative" id="events">
+<div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+<div class="mb-12 text-center md:text-left">
+<h2 class="text-3xl font-black tracking-tight text-text-main mb-2">Najbliższe Wydarzenia / Upcoming Events</h2>
+<p class="text-text-muted">Turnieje i spotkania ligowe w nadchodzących tygodniach / Tournaments and league meetings in the coming weeks</p>
+</div>
+<div class="grid grid-cols-1 md:grid-cols-3 gap-8">
+<div class="group bg-white rounded-xl border border-gray-200 shadow-sm hover:shadow-md hover:border-primary/30 transition-all duration-300 flex flex-col overflow-hidden">
+<div class="h-2 bg-primary w-full"></div>
+<div class="p-6 flex flex-col h-full">
+<div class="flex items-start justify-between mb-4">
+<div class="px-3 py-1 bg-gray-100 rounded text-xs font-bold text-gray-600 uppercase tracking-wide">
+                                14.09.2024
+                            </div>
+<span class="material-symbols-outlined text-accent">emoji_events</span>
+</div>
+<h3 class="text-xl font-bold text-text-main mb-2 group-hover:text-primary transition-colors">Grand Tournament Warsaw</h3>
+<div class="flex items-center gap-2 text-text-muted text-sm mb-6">
+<span class="material-symbols-outlined text-lg">location_on</span>
+                            Warszawa, Klub "Strateg"
+                        </div>
+<div class="mt-auto pt-4 border-t border-gray-100">
+<a class="inline-flex items-center text-primary font-bold text-sm hover:underline" href="#">
+                                Szczegóły / Details <span class="material-symbols-outlined text-base ml-1">arrow_forward</span>
+</a>
+</div>
+</div>
+</div>
+<div class="group bg-white rounded-xl border border-gray-200 shadow-sm hover:shadow-md hover:border-primary/30 transition-all duration-300 flex flex-col overflow-hidden">
+<div class="h-2 bg-accent w-full"></div>
+<div class="p-6 flex flex-col h-full">
+<div class="flex items-start justify-between mb-4">
+<div class="px-3 py-1 bg-gray-100 rounded text-xs font-bold text-gray-600 uppercase tracking-wide">
+                                28.09.2024
+                            </div>
+<span class="material-symbols-outlined text-gray-400">swords</span>
+</div>
+<h3 class="text-xl font-bold text-text-main mb-2 group-hover:text-primary transition-colors">Silesian Open 2024</h3>
+<div class="flex items-center gap-2 text-text-muted text-sm mb-6">
+<span class="material-symbols-outlined text-lg">location_on</span>
+                            Katowice, MDK
+                        </div>
+<div class="mt-auto pt-4 border-t border-gray-100">
+<a class="inline-flex items-center text-primary font-bold text-sm hover:underline" href="#">
+                                Szczegóły / Details <span class="material-symbols-outlined text-base ml-1">arrow_forward</span>
+</a>
+</div>
+</div>
+</div>
+<div class="group bg-white rounded-xl border border-gray-200 shadow-sm hover:shadow-md hover:border-primary/30 transition-all duration-300 flex flex-col overflow-hidden">
+<div class="h-2 bg-gray-800 w-full"></div>
+<div class="p-6 flex flex-col h-full">
+<div class="flex items-start justify-between mb-4">
+<div class="px-3 py-1 bg-gray-100 rounded text-xs font-bold text-gray-600 uppercase tracking-wide">
+                                12.10.2024
+                            </div>
+<span class="material-symbols-outlined text-gray-400">flag</span>
+</div>
+<h3 class="text-xl font-bold text-text-main mb-2 group-hover:text-primary transition-colors">Pomerania Cup III</h3>
+<div class="flex items-center gap-2 text-text-muted text-sm mb-6">
+<span class="material-symbols-outlined text-lg">location_on</span>
+                            Gdańsk, Pub "Gracz"
+                        </div>
+<div class="mt-auto pt-4 border-t border-gray-100">
+<a class="inline-flex items-center text-primary font-bold text-sm hover:underline" href="#">
+                                Szczegóły / Details <span class="material-symbols-outlined text-base ml-1">arrow_forward</span>
+</a>
+</div>
+</div>
+</div>
+</div>
+<div class="mt-12 text-center">
+<a class="inline-flex h-12 items-center justify-center rounded-lg bg-white border border-gray-300 px-8 text-text-main font-bold transition-all hover:bg-gray-50 hover:border-primary hover:text-primary focus:outline-none focus:ring-2 focus:ring-primary focus:ring-offset-2 shadow-sm" href="#">
+                    Zobacz pełny harmonogram / View Full Schedule
+                </a>
+</div>
+<div class="mt-16 max-w-3xl mx-auto">
+<div class="bg-background-alt rounded-2xl border border-gray-200 p-8 flex flex-col md:flex-row items-center gap-8 text-center md:text-left">
+<div class="shrink-0 size-20 rounded-full bg-white shadow-sm flex items-center justify-center border border-gray-100">
+<span class="material-symbols-outlined text-primary text-4xl">calendar_month</span>
+</div>
+<div>
+<h3 class="text-lg font-bold text-text-main mb-2">Integracja z Kalendarzem Google / Google Calendar Integration</h3>
+<p class="text-text-muted text-sm mb-4">
+                            Pełny kalendarz ligowy jest dostępny online. Możesz go przeglądać bezpośrednio na naszej dedykowanej stronie harmonogramu lub dodać do swojego kalendarza Google.
+                            <br class="mb-2 block"/>
+<span class="italic opacity-80">The full league calendar is available online. View it directly on our dedicated schedule page or add it to your Google Calendar.</span>
+</p>
+</div>
+</div>
+</div>
+</div>
+</section>
+<section class="py-24 bg-background-alt border-t border-gray-100" id="resources">
+<div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+<div class="text-center mb-16">
+<h2 class="text-3xl font-black tracking-tight text-text-main mb-4">Przydatne Linki / Useful Links</h2>
+<p class="text-text-muted max-w-2xl mx-auto">
+                    Narzędzia i platformy społecznościowe niezbędne dla każdego gracza ligowego.
+                    <br/>
+<span class="text-sm opacity-80">Tools and community platforms essential for every league player.</span>
+</p>
+</div>
+<div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
+<a class="group flex flex-col gap-4 p-6 bg-white rounded-xl shadow-sm hover:shadow-lg hover:-translate-y-1 transition-all duration-300 border border-gray-100" href="#">
+<div class="size-12 rounded-lg bg-red-50 text-primary flex items-center justify-center group-hover:bg-primary group-hover:text-white transition-colors">
+<span class="material-symbols-outlined text-2xl">leaderboard</span>
+</div>
+<div>
+<h3 class="font-bold text-text-main mb-1">Best Coast Pairings</h3>
+<p class="text-sm text-text-muted">Wyniki i rankingi / Results &amp; Rankings</p>
+</div>
+<div class="mt-auto pt-4 flex justify-end">
+<span class="material-symbols-outlined text-gray-300 group-hover:text-primary transition-colors">arrow_outward</span>
+</div>
+</a>
+<a class="group flex flex-col gap-4 p-6 bg-white rounded-xl shadow-sm hover:shadow-lg hover:-translate-y-1 transition-all duration-300 border border-gray-100" href="#">
+<div class="size-12 rounded-lg bg-yellow-50 text-accent flex items-center justify-center group-hover:bg-accent group-hover:text-white transition-colors">
+<span class="material-symbols-outlined text-2xl">forum</span>
+</div>
+<div>
+<h3 class="font-bold text-text-main mb-1">Discord</h3>
+<p class="text-sm text-text-muted">Czat i dyskusje / Chat &amp; Discussions</p>
+</div>
+<div class="mt-auto pt-4 flex justify-end">
+<span class="material-symbols-outlined text-gray-300 group-hover:text-accent transition-colors">arrow_outward</span>
+</div>
+</a>
+<a class="group flex flex-col gap-4 p-6 bg-white rounded-xl shadow-sm hover:shadow-lg hover:-translate-y-1 transition-all duration-300 border border-gray-100" href="#">
+<div class="size-12 rounded-lg bg-red-50 text-primary flex items-center justify-center group-hover:bg-primary group-hover:text-white transition-colors">
+<span class="material-symbols-outlined text-2xl">public</span>
+</div>
+<div>
+<h3 class="font-bold text-text-main mb-1">Facebook Group</h3>
+<p class="text-sm text-text-muted">Społeczność / Community Group</p>
+</div>
+<div class="mt-auto pt-4 flex justify-end">
+<span class="material-symbols-outlined text-gray-300 group-hover:text-primary transition-colors">arrow_outward</span>
+</div>
+</a>
+<a class="group flex flex-col gap-4 p-6 bg-white rounded-xl shadow-sm hover:shadow-lg hover:-translate-y-1 transition-all duration-300 border border-gray-100" href="#">
+<div class="size-12 rounded-lg bg-gray-100 text-gray-600 flex items-center justify-center group-hover:bg-gray-800 group-hover:text-white transition-colors">
+<span class="material-symbols-outlined text-2xl">gavel</span>
+</div>
+<div>
+<h3 class="font-bold text-text-main mb-1">TourneyKeeper</h3>
+<p class="text-sm text-text-muted">System turniejowy / Tournament System</p>
+</div>
+<div class="mt-auto pt-4 flex justify-end">
+<span class="material-symbols-outlined text-gray-300 group-hover:text-gray-800 transition-colors">arrow_outward</span>
+</div>
+</a>
+</div>
+</div>
+</section>
+<section class="py-24 bg-white" id="rules">
+<div class="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8">
+<div class="flex flex-col gap-16">
+<div>
+<div class="flex items-center gap-3 mb-6 border-b border-gray-100 pb-4">
+<span class="material-symbols-outlined text-accent text-2xl">policy</span>
+<h2 class="text-2xl font-bold text-text-main">Regulamin Ligi / League Rules</h2>
+</div>
+<div class="prose prose-slate max-w-none text-text-muted">
+<ul class="list-none space-y-4 pl-0">
+<li class="flex items-start gap-3">
+<span class="font-bold text-text-main min-w-[20px]">1.</span>
+<span>
+<strong class="text-text-main">Fair Play:</strong> Wszyscy gracze zobowiązani są do przestrzegania zasad fair play i szacunku wobec przeciwników. <br/>
+<span class="text-sm italic opacity-80">All players are required to adhere to fair play principles and respect their opponents.</span>
+</span>
+</li>
+<li class="flex items-start gap-3">
+<span class="font-bold text-text-main min-w-[20px]">2.</span>
+<span>
+<strong class="text-text-main">Format:</strong> Turnieje rozgrywane są w formacie Strike Force (2000 pkt) zgodnie z aktualnym Chapter Approved. <br/>
+<span class="text-sm italic opacity-80">Tournaments are played in Strike Force format (2000 pts) according to the current Chapter Approved.</span>
+</span>
+</li>
+<li class="flex items-start gap-3">
+<span class="font-bold text-text-main min-w-[20px]">3.</span>
+<span>
+<strong class="text-text-main">Malowanie / Painting:</strong> Wszystkie modele muszą być pomalowane w standardzie Battle Ready. <br/>
+<span class="text-sm italic opacity-80">All models must be painted to a Battle Ready standard.</span>
+</span>
+</li>
+</ul>
+<button class="mt-6 text-primary font-bold text-sm hover:underline">Pobierz pełny regulamin (PDF) / Download full rules (PDF)</button>
+</div>
+</div>
+<div>
+<div class="flex items-center gap-3 mb-6 border-b border-gray-100 pb-4">
+<span class="material-symbols-outlined text-gray-400 text-2xl">description</span>
+<h2 class="text-2xl font-bold text-text-main">Regulamin Strony / Website Terms</h2>
+</div>
+<p class="text-text-muted mb-4">
+                        Korzystając z serwisu akceptujesz naszą politykę prywatności i zasady użytkowania. Dane zbierane są wyłącznie w celach organizacji ligi.
+                    </p>
+<p class="text-text-muted text-sm italic">
+                        By using this service, you accept our privacy policy and terms of use. Data is collected solely for league organization purposes.
+                    </p>
+</div>
+</div>
+</div>
+</section>
+</main>
+<footer class="bg-gray-900 text-gray-400 py-12 border-t border-gray-800">
+<div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+<div class="grid grid-cols-1 md:grid-cols-4 gap-10">
+<div class="col-span-1 md:col-span-2">
+<div class="flex items-center gap-2 mb-4 text-white">
+<img alt="PLW 40k Logo" class="h-8 w-auto object-contain bg-white rounded-full p-0.5" src="https://lh3.googleusercontent.com/aida-public/AB6AXuDLBlbSwwAjq0GoCK8FsiPJ88qbUj8HYTqI0yuv-pIFRVUNSZVLAHJxlSYBxeszUs0t_TtkIBBnTKGrk3HJjzXuGHi1FQ70Qpf3zAHCXSbR-yky2gzFxQXcsQ3HfO0flKgBTQj-y5zm8ClvkLOQxd9IlYA73fav43ROqgnNrffKvFY8Xl9se47gr68ahLJQGWqd5gfCM3dNyHaHWkTsMnrz_M0LXDfLQff6o-f5d_GeaQWXo7LmDw2BY2CBPFD4dmwGp2YEs87aihQ"/>
+</div>
+<p class="text-sm mb-6 max-w-sm">
+                    Profesjonalna liga e-sportowa dla gier bitewnych. Łączymy pasję z rywalizacją.
+                    <br/><br/>
+                    Professional e-sports league for tabletop gaming. Combining passion with competition.
+                </p>
+<div class="flex gap-4">
+<a class="size-10 rounded bg-gray-800 flex items-center justify-center hover:bg-primary hover:text-white transition-colors" href="#">
+<svg aria-hidden="true" class="h-5 w-5" fill="currentColor" viewBox="0 0 24 24">
+<path clip-rule="evenodd" d="M22 12c0-5.523-4.477-10-10-10S2 6.477 2 12c0 4.991 3.657 9.128 8.438 9.878v-6.987h-2.54V12h2.54V9.797c0-2.506 1.492-3.89 3.777-3.89 1.094 0 2.238.195 2.238.195v2.46h-1.26c-1.243 0-1.63.771-1.63 1.562V12h2.773l-.443 2.89h-2.33v6.988C18.343 21.128 22 16.991 22 12z" fill-rule="evenodd"></path>
+</svg>
+</a>
+<a class="size-10 rounded bg-gray-800 flex items-center justify-center hover:bg-primary hover:text-white transition-colors" href="#">
+<svg aria-hidden="true" class="h-5 w-5" fill="currentColor" viewBox="0 0 24 24">
+<path d="M8.29 20.251c7.547 0 11.675-6.253 11.675-11.675 0-.178 0-.355-.012-.53A8.348 8.348 0 0022 5.92a8.19 8.19 0 01-2.357.646 4.118 4.118 0 001.804-2.27 8.224 8.224 0 01-2.605.996 4.107 4.107 0 00-6.993 3.743 11.65 11.65 0 01-8.457-4.287 4.106 4.106 0 001.27 5.477A4.072 4.072 0 012.8 9.713v.052a4.105 4.105 0 003.292 4.022 4.095 4.095 0 01-1.853.07 4.108 4.108 0 003.834 2.85A8.233 8.233 0 012 18.407a11.616 11.616 0 006.29 1.84"></path>
+</svg>
+</a>
+</div>
+</div>
+<div>
+<h3 class="text-white font-bold mb-4 uppercase text-sm tracking-wider">Liga / League</h3>
+<ul class="space-y-3 text-sm">
+<li><a class="hover:text-primary transition-colors" href="#about">O nas / About</a></li>
+<li><a class="hover:text-primary transition-colors" href="#events">Kalendarz / Calendar</a></li>
+<li><a class="hover:text-primary transition-colors" href="#rules">Zasady / Rules</a></li>
+<li><a class="hover:text-primary transition-colors" href="#">Kontakt / Contact</a></li>
+</ul>
+</div>
+<div>
+<h3 class="text-white font-bold mb-4 uppercase text-sm tracking-wider">Kontakt / Contact</h3>
+<ul class="space-y-3 text-sm">
+<li class="flex items-center gap-2">
+<span class="material-symbols-outlined text-sm">mail</span>
+<a class="hover:text-primary transition-colors" href="mailto:kontakt@plw40k.pl">kontakt@plw40k.pl</a>
+</li>
+<li class="flex items-center gap-2">
+<span class="material-symbols-outlined text-sm">location_on</span>
+<span>Polska / Poland</span>
+</li>
+</ul>
+</div>
+</div>
+<div class="mt-12 pt-8 border-t border-gray-800 text-sm text-center md:text-left flex flex-col md:flex-row justify-between items-center gap-4">
+<p>© 2024 Polska Liga Warhammera. Wszelkie prawa zastrzeżone.</p>
+<p class="text-xs text-gray-600">Disclaimer: This website is unofficial and is not endorsed by Games Workshop Limited.</p>
+</div>
+</div>
+</footer>
+
+</body></html>
