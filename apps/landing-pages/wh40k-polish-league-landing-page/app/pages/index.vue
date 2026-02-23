@@ -22,6 +22,16 @@ import EventsWidget from '../widgets/events/ui/EventsWidget.vue';
 import ResourcesWidget from '../widgets/resources/ui/ResourcesWidget.vue';
 import RulesWidget from '../widgets/rules/ui/RulesWidget.vue';
 import FooterWidget from '../widgets/footer/ui/FooterWidget.vue';
+import { useDataStore } from '../stores/useDataStore';
+import { useAsyncData } from 'nuxt/app';
+
+const dataStore = useDataStore();
+
+// Używamy useAsyncData by uniknąć problemów na styku Hydration i SSR
+await useAsyncData('gddb-data', () => dataStore.fetchAllInitialData());
+
+console.log('Translations loaded:', dataStore.translations.length);
+console.log('Events loaded:', dataStore.events.length);
 </script>
 
 <style>

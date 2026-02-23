@@ -2,9 +2,6 @@
 
 <template>
   <main>
-    <header>
-      <nav></nav>
-    </header>
     <nuxt-page />
   </main>
 </template>

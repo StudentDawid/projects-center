@@ -21,7 +21,7 @@
           </v-chip>
 
           <h1 class="text-h3 text-md-h2 font-weight-black mb-6 mt-2">
-            {{ $t('event_page.hero_title') }}
+            {{ currentEvent?.title || $t('event_page.hero_title') }}
           </h1>
 
           <div
@@ -35,7 +35,9 @@
                 class="mr-2"
                 size="20"
               />
-              <span>{{ $t('event_page.date') }}</span>
+              <span>{{
+                formatDate(currentEvent?.event_date) || $t('event_page.date')
+              }}</span>
             </div>
             <v-icon
               icon="mdi-circle-small"
@@ -49,7 +51,9 @@
                 class="mr-2"
                 size="20"
               />
-              <span>{{ $t('event_page.location_short') }}</span>
+              <span>{{
+                currentEvent?.location_short || $t('event_page.location_short')
+              }}</span>
             </div>
           </div>
         </section>
@@ -76,7 +80,13 @@
             <div>
               <v-row justify="center">
                 <!-- Map Images -->
-                <v-col v-for="i in 5" :key="i" cols="12" md="10" lg="8">
+                <v-col
+                  v-for="map in eventMapsList"
+                  :key="map.map_index"
+                  cols="12"
+                  md="10"
+                  lg="8"
+                >
                   <v-card
                     class="rounded-xl border border-opacity-100 overflow-hidden mb-8"
                     elevation="0"
@@ -86,12 +96,13 @@
                       class="pa-4 bg-surface border-b pb-3 font-weight-bold text-center"
                       style="border-color: #f3f4f6 !important"
                     >
-                      {{ $t(`event_page.map_${i}`) }}
+                      {{ map.map_title }}
                     </div>
                     <div style="aspect-ratio: 16 / 9; width: 100%">
                       <v-img
-                        :src="getMapImage(i)"
+                        :src="map.map_image"
                         class="w-100 h-100 bg-background-light"
+                        cover
                         eager
                       >
                         <template #placeholder>
@@ -144,13 +155,42 @@
 </template>
 
 <script setup lang="ts">
-import { ref, onMounted } from 'vue';
+import { ref, onMounted, computed } from 'vue';
 import { useRoute } from 'vue-router';
+import { useAsyncData } from 'nuxt/app';
+import { useDataStore } from '../../../stores/useDataStore';
 import QrcodeVue from 'qrcode.vue';
 import HeaderWidget from '../../../widgets/header/ui/HeaderWidget.vue';
 import FooterWidget from '../../../widgets/footer/ui/FooterWidget.vue';
 
 const route = useRoute();
+const dataStore = useDataStore();
+
+// SSR safe hydracja
+await useAsyncData('gddb-data-event-maps-' + route.params.id, () =>
+  dataStore.fetchAllInitialData()
+);
+
+const currentEvent = computed(() => {
+  return dataStore.events.find((e) => e.id === route.params.id) || null;
+});
+
+const eventMapsList = computed(() => {
+  return dataStore.getMapsForEvent(route.params.id as string);
+});
+
+const formatDate = (dateStr: string | null | undefined) => {
+  if (!dateStr) return '';
+  const match = dateStr.match(/Date\((\d+),(\d+),(\d+)\)/);
+  if (match) {
+    const year = match[1];
+    const month = parseInt(match[2], 10) + 1;
+    const day = match[3];
+    return `${day.padStart(2, '0')}.${month.toString().padStart(2, '0')}.${year}`;
+  }
+  return dateStr;
+};
+
 const pageUrl = ref('');
 
 onMounted(() => {
@@ -158,19 +198,6 @@ onMounted(() => {
     pageUrl.value = window.location.href;
   }
 });
-
-// Dynamic image loading for Vite
-const mapImages: Record<string, string> = import.meta.glob(
-  '~/assets/img/test-map-img/*.png',
-  { eager: true, import: 'default' }
-);
-
-const getMapImage = (index: number): string => {
-  // import.meta.glob usually returns absolute paths from project root depending on alias configuration
-  // Let's find the matching key by suffix
-  const key = Object.keys(mapImages).find((k) => k.endsWith(`/${index}.png`));
-  return (key ? mapImages[key] : '') as string;
-};
 </script>
 
 <style scoped>

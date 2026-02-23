@@ -76,8 +76,10 @@ export interface QueryOptions {
   headers?: number; // Number of header rows (default: 1)
 }
 
-export interface GddbInstance {
-  config: GddbConfig;
-  metadata: Map<string, SheetMetadata>;
-  initialized: boolean;
+export interface GetDataConfig {
+  tabNameOrGid: string | number;
+  orientation?: 'horizontal' | 'vertical'; // Domyślnie 'horizontal'
+  startFrom?: number; // Początkowy wiersz/kolumna z danymi (0-indexed, po pominięciu nagłówków)
+  limit?: number | '*'; // Domyślnie 100, '*' oznacza brak limitu
+  headers?: number; // Liczba wierszy/kolumn nagłówkowych (domyślnie 1)
 }

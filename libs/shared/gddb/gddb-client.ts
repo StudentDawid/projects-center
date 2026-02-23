@@ -28,8 +28,8 @@ export function parseSheetUrl(url: string): { sheetId: string; gid?: number } {
   }
 
   return {
-    sheetId: sheetIdMatch[1],
-    gid: gidMatch ? parseInt(gidMatch[1], 10) : undefined,
+    sheetId: sheetIdMatch[1] as string,
+    gid: gidMatch && gidMatch[1] ? parseInt(gidMatch[1], 10) : undefined,
   };
 }
 
@@ -69,7 +69,7 @@ export function buildQuery(options?: QueryOptions): string {
  */
 export async function fetchSheetData(
   sheetId: string,
-  gid?: number,
+  tabNameOrGid?: number | string,
   query?: string,
   headers: number = 1
 ): Promise<GVizResponse> {
@@ -79,8 +79,10 @@ export async function fetchSheetData(
     headers: headers.toString(),
   };
 
-  if (gid !== undefined) {
-    params.gid = gid.toString();
+  if (typeof tabNameOrGid === 'number') {
+    params.gid = tabNameOrGid.toString();
+  } else if (typeof tabNameOrGid === 'string') {
+    params.sheet = tabNameOrGid;
   }
 
   if (query) {
@@ -92,7 +94,9 @@ export async function fetchSheetData(
 
     // Google returns JSONP, need to extract JSON
     const jsonpData = response.data;
-    const jsonMatch = jsonpData.match(/google\.visualization\.Query\.setResponse\((.*)\);?\s*$/);
+    const jsonMatch = jsonpData.match(
+      /google\.visualization\.Query\.setResponse\((.*)\);?\s*$/
+    );
 
     if (!jsonMatch) {
       throw new Error('Invalid response format from Google Sheets API');
@@ -128,6 +132,7 @@ export function parseSheetData(response: GVizResponse): SheetData {
     const obj: Record<string, any> = {};
     row.c.forEach((cell, index) => {
       const col = cols[index];
+      if (!col) return;
       obj[col.label || col.id] = cell?.v ?? null;
     });
     return obj;

@@ -11,8 +11,13 @@
       </div>
 
       <v-row class="px-4 px-sm-6 px-lg-8" style="row-gap: 32px">
-        <!-- Event 1 -->
-        <v-col cols="12" md="4" class="px-md-4">
+        <v-col
+          v-for="event in storedEvents"
+          :key="event.id"
+          cols="12"
+          md="4"
+          class="px-md-4"
+        >
           <v-hover v-slot="{ isHovering, props }">
             <v-card
               v-bind="props"
@@ -21,124 +26,10 @@
               :elevation="isHovering ? 4 : 1"
               :class="isHovering ? 'border-primary' : ''"
               border
-              to="/events/grand_warsaw"
-            >
-              <div class="bg-primary" style="height: 8px; width: 100%"></div>
-              <v-card-text class="pa-6 d-flex flex-column h-100">
-                <div class="d-flex align-start justify-space-between mb-4">
-                  <div
-                    class="px-3 py-1 bg-background rounded text-caption font-weight-bold text-grey-darken-2 text-uppercase"
-                    style="letter-spacing: 0.025em"
-                  >
-                    14.09.2024
-                  </div>
-                  <v-icon
-                    icon="mdi-trophy-variant"
-                    color="accent"
-                    size="24"
-                  ></v-icon>
-                </div>
-                <h3
-                  class="text-h6 font-weight-bold text-text-main mb-2 transition-colors"
-                  :class="isHovering ? 'text-primary' : ''"
-                >
-                  {{ $t('events.grand_warsaw') }}
-                </h3>
-                <div
-                  class="d-flex align-center text-body-2 text-text-muted mb-6"
-                  style="gap: 8px"
-                >
-                  <v-icon icon="mdi-map-marker" size="18"></v-icon>
-                  {{ $t('events.grand_warsaw_loc') }}
-                </div>
-                <div class="mt-auto pt-4" style="border-top: 1px solid #f3f4f6">
-                  <div
-                    class="text-primary font-weight-bold text-body-2 text-decoration-none d-flex align-center main-hover"
-                  >
-                    {{ $t('events.details') }}
-                    <v-icon
-                      icon="mdi-arrow-right"
-                      size="16"
-                      class="ml-1"
-                    ></v-icon>
-                  </div>
-                </div>
-              </v-card-text>
-            </v-card>
-          </v-hover>
-        </v-col>
-
-        <!-- Event 2 -->
-        <v-col cols="12" md="4" class="px-md-4">
-          <v-hover v-slot="{ isHovering, props }">
-            <v-card
-              v-bind="props"
-              class="d-flex flex-column h-100 overflow-hidden transition-swing border-opacity-100"
-              style="border-radius: 12px; border-color: #e5e7eb !important"
-              :elevation="isHovering ? 4 : 1"
-              :class="isHovering ? 'border-primary' : ''"
-              border
-              to="/events/silesian_open"
-            >
-              <div class="bg-accent" style="height: 8px; width: 100%"></div>
-              <v-card-text class="pa-6 d-flex flex-column h-100">
-                <div class="d-flex align-start justify-space-between mb-4">
-                  <div
-                    class="px-3 py-1 bg-background rounded text-caption font-weight-bold text-grey-darken-2 text-uppercase"
-                    style="letter-spacing: 0.025em"
-                  >
-                    28.09.2024
-                  </div>
-                  <v-icon
-                    icon="mdi-sword-cross"
-                    color="grey-darken-1"
-                    size="24"
-                  ></v-icon>
-                </div>
-                <h3
-                  class="text-h6 font-weight-bold text-text-main mb-2 transition-colors"
-                  :class="isHovering ? 'text-primary' : ''"
-                >
-                  {{ $t('events.silesian_open') }}
-                </h3>
-                <div
-                  class="d-flex align-center text-body-2 text-text-muted mb-6"
-                  style="gap: 8px"
-                >
-                  <v-icon icon="mdi-map-marker" size="18"></v-icon>
-                  {{ $t('events.silesian_open_loc') }}
-                </div>
-                <div class="mt-auto pt-4" style="border-top: 1px solid #f3f4f6">
-                  <div
-                    class="text-primary font-weight-bold text-body-2 text-decoration-none d-flex align-center main-hover"
-                  >
-                    {{ $t('events.details') }}
-                    <v-icon
-                      icon="mdi-arrow-right"
-                      size="16"
-                      class="ml-1"
-                    ></v-icon>
-                  </div>
-                </div>
-              </v-card-text>
-            </v-card>
-          </v-hover>
-        </v-col>
-
-        <!-- Event 3 -->
-        <v-col cols="12" md="4" class="px-md-4">
-          <v-hover v-slot="{ isHovering, props }">
-            <v-card
-              v-bind="props"
-              class="d-flex flex-column h-100 overflow-hidden transition-swing border-opacity-100"
-              style="border-radius: 12px; border-color: #e5e7eb !important"
-              :elevation="isHovering ? 4 : 1"
-              :class="isHovering ? 'border-primary' : ''"
-              border
-              to="/events/pomerania_cup"
+              :to="`/events/${event.id}`"
             >
               <div
-                class="bg-grey-darken-3"
+                :class="`bg-${event.theme_color || 'primary'}`"
                 style="height: 8px; width: 100%"
               ></div>
               <v-card-text class="pa-6 d-flex flex-column h-100">
@@ -147,11 +38,11 @@
                     class="px-3 py-1 bg-background rounded text-caption font-weight-bold text-grey-darken-2 text-uppercase"
                     style="letter-spacing: 0.025em"
                   >
-                    12.10.2024
+                    {{ formatDate(event.event_date) }}
                   </div>
                   <v-icon
-                    icon="mdi-flag"
-                    color="grey-darken-1"
+                    :icon="event.icon || 'mdi-calendar'"
+                    :color="event.theme_color || 'primary'"
                     size="24"
                   ></v-icon>
                 </div>
@@ -159,14 +50,14 @@
                   class="text-h6 font-weight-bold text-text-main mb-2 transition-colors"
                   :class="isHovering ? 'text-primary' : ''"
                 >
-                  {{ $t('events.pomerania_cup') }}
+                  {{ event.title }}
                 </h3>
                 <div
                   class="d-flex align-center text-body-2 text-text-muted mb-6"
                   style="gap: 8px"
                 >
                   <v-icon icon="mdi-map-marker" size="18"></v-icon>
-                  {{ $t('events.pomerania_cup_loc') }}
+                  {{ event.location_name }}, {{ event.location_short }}
                 </div>
                 <div class="mt-auto pt-4" style="border-top: 1px solid #f3f4f6">
                   <div
@@ -245,6 +136,34 @@
     </div>
   </v-container>
 </template>
+
+<script setup lang="ts">
+import { computed } from 'vue';
+import { useDataStore } from '../../../stores/useDataStore';
+
+// Nuxt module provides useI18n auto-import natively
+// const { t } = useI18n();
+
+// Podpinanie Pinii
+const dataStore = useDataStore();
+const storedEvents = computed(() => dataStore.events);
+
+// Formatowanie prostej daty Google Sheet "Date(YYYY,MM,DD)"
+const formatDate = (dateStr: string | null) => {
+  if (!dateStr) return '';
+  // match z Regexem: Date(2024,8,14) -> 2024.09.14
+  // (Miesiące w google api często są od zera podawane przy datach gviz)
+  const match = dateStr.match(/Date\((\d+),(\d+),(\d+)\)/);
+  if (match) {
+    const year = match[1];
+    const month = parseInt(match[2], 10) + 1; // poprawka dla miesięcy (0-11)
+    const day = match[3];
+    return `${day.padStart(2, '0')}.${month.toString().padStart(2, '0')}.${year}`;
+  }
+  // Fallback (jeśli już sformatowane lub inny tekst)
+  return dateStr;
+};
+</script>
 
 <style scoped>
 .transition-swing {

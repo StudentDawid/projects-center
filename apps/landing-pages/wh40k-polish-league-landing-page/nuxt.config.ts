@@ -12,7 +12,13 @@ export default defineNuxtConfig({
   typescript: {
     tsConfig: {
       extends: '../../../../tsconfig.base.json',
+      compilerOptions: {
+        baseUrl: '.',
+      },
     },
+  },
+  alias: {
+    '@shared/lib/gddb': '../../../libs/shared/gddb/index.ts',
   },
   imports: {
     autoImport: true,
