@@ -8,7 +8,7 @@
           height="56"
           width="140"
           contain
-        ></v-img>
+        />
       </div>
     </template>
 
@@ -19,6 +19,9 @@
       <v-btn variant="text" color="text-main" class="text-none font-weight-medium text-body-2 hover-link" href="#events" :ripple="false">
         {{ $t('nav.events') }}
       </v-btn>
+      <v-btn variant="text" color="text-main" class="text-none font-weight-medium text-body-2 hover-link" to="/event" :ripple="false">
+        {{ $t('nav.event') }}
+      </v-btn>
       <v-btn variant="text" color="text-main" class="text-none font-weight-medium text-body-2 hover-link" href="#resources" :ripple="false">
         {{ $t('nav.resources') }}
       </v-btn>
@@ -27,7 +30,7 @@
       </v-btn>
     </div>
 
-    <v-spacer class="d-md-none"></v-spacer>
+    <v-spacer class="d-md-none" />
 
     <template #append>
       <div class="d-flex align-center mr-2 mr-sm-4" style="gap: 16px">
@@ -43,7 +46,7 @@
         </v-btn>
         <v-menu location="bottom end">
           <template #activator="{ props }">
-            <v-btn icon="mdi-menu" variant="text" class="d-md-none" color="text-main" v-bind="props"></v-btn>
+            <v-btn icon="mdi-menu" variant="text" class="d-md-none" color="text-main" v-bind="props" />
           </template>
           <v-list class="mt-2" elevation="2" rounded="lg">
             <v-list-item href="#about" class="text-text-main font-weight-medium text-body-2">
@@ -51,6 +54,9 @@
             </v-list-item>
             <v-list-item href="#events" class="text-text-main font-weight-medium text-body-2">
               <v-list-item-title>{{ $t('nav.events') }}</v-list-item-title>
+            </v-list-item>
+            <v-list-item to="/event" class="text-text-main font-weight-medium text-body-2">
+              <v-list-item-title>{{ $t('nav.event') }}</v-list-item-title>
             </v-list-item>
             <v-list-item href="#resources" class="text-text-main font-weight-medium text-body-2">
               <v-list-item-title>{{ $t('nav.resources') }}</v-list-item-title>
@@ -66,8 +72,7 @@
 </template>
 
 <script setup lang="ts">
-import { useI18n } from '#imports'
-import logoImage from '~/assets/ligalogo.png'
+import logoImage from '~/assets/img/ligalogo.png'
 
 const { locale, setLocale } = useI18n()
 
