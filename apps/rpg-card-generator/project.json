@@ -1,0 +1,38 @@
+{
+  "name": "rpg-card-generator",
+  "$schema": "../../node_modules/nx/schemas/project-schema.json",
+  "projectType": "application",
+  "sourceRoot": "apps/rpg-card-generator",
+  "targets": {
+    "build": {
+      "executor": "nx:run-commands",
+      "outputs": ["{workspaceRoot}/dist/apps/rpg-card-generator"],
+      "options": {
+        "command": "nuxt generate && mkdir -p ../../dist/apps/rpg-card-generator && cp -R .output/public/. ../../dist/apps/rpg-card-generator/",
+        "cwd": "apps/rpg-card-generator"
+      }
+    },
+    "dev": {
+      "executor": "nx:run-commands",
+      "options": {
+        "command": "nuxt dev --port 3004 --host 127.0.0.1",
+        "cwd": "apps/rpg-card-generator"
+      }
+    },
+    "preview": {
+      "executor": "nx:run-commands",
+      "options": {
+        "command": "nuxt preview",
+        "cwd": "apps/rpg-card-generator"
+      }
+    },
+    "prepare": {
+      "executor": "nx:run-commands",
+      "options": {
+        "command": "nuxi prepare",
+        "cwd": "apps/rpg-card-generator"
+      }
+    }
+  },
+  "tags": ["type:app", "framework:nuxt"]
+}
