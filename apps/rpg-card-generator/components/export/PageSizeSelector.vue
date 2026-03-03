@@ -16,7 +16,7 @@
         type="number"
         v-model.number="localSettings.marginMm"
         density="compact"
-        @change="emitUpdate"
+        @update:model-value="emitUpdate"
       ></v-text-field>
       
       <v-text-field
@@ -24,7 +24,7 @@
         type="number"
         v-model.number="localSettings.gapMm"
         density="compact"
-        @change="emitUpdate"
+        @update:model-value="emitUpdate"
       ></v-text-field>
     </div>
 
@@ -34,7 +34,7 @@
         color="primary"
         density="compact"
         hide-details
-        @change="emitUpdate"
+        @update:model-value="emitUpdate"
     ></v-switch>
 
     <v-switch
@@ -43,7 +43,7 @@
         color="primary"
         density="compact"
         hide-details
-        @change="emitUpdate"
+        @update:model-value="emitUpdate"
     ></v-switch>
   </v-card>
 </template>

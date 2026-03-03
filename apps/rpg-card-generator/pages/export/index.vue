@@ -8,7 +8,10 @@
 
       <v-row>
         <v-col cols="12" md="3">
-          <PageSizeSelector v-model="settings" />
+          <PageSizeSelector 
+            :model-value="settings" 
+            @update:model-value="updateSettings" 
+          />
           <ExportActions 
             :selectCount="settings.selectedCardIds.length" 
             :totalPages="layout.totalPages" 
@@ -58,7 +61,7 @@ import ExportActions from '~/components/export/ExportActions.vue';
 import PrintLayout from '~/components/export/PrintLayout.vue';
 
 const store = useCardsStore();
-const { settings, print } = useCardExport();
+const { settings, print, updateSettings } = useCardExport();
 
 // By default select all cards
 onMounted(() => {
@@ -85,17 +88,31 @@ const layout = computed(() => {
   .print-only {
     display: block !important;
   }
-  
+}
+</style>
+
+<style>
+@media print {
   @page {
-    /* To override default browser margins. It resets layout properly */
     margin: 0;
+    size: auto;
   }
 
-  body {
-    background-color: transparent !important;
-    background-image: none !important;
+  html, body {
+    margin: 0 !important;
+    padding: 0 !important;
+    width: 100%;
+    height: 100%;
+    overflow: hidden !important;
     -webkit-print-color-adjust: exact !important; 
     print-color-adjust: exact !important; 
+  }
+
+  .print-only {
+    width: 100%;
+    height: 100%;
+    margin: 0;
+    padding: 0;
   }
 }
 </style>

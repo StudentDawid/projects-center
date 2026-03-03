@@ -1,9 +1,30 @@
 <template>
-  <v-card class="card-preview" hover @click="$emit('edit', card.id)">
-    <div class="card-aspect-ratio pa-4" style="display: flex; align-items: center; justify-content: center;">
-      <!-- Właściwy Canvas zostanie zaimplementowany w Fazie 4 -->
-      <div class="placeholder-preview" :style="[cardDimensionsStyle, backgroundStyle]">
-        <h3 class="placeholder-title">{{ card.name }}</h3>
+  <v-card class="card-preview text-black" hover @click="$emit('edit', card.id)">
+    <!-- Header karty z tytułem i akcjami -->
+    <div class="card-header bg-grey-lighten-4 pa-3 d-flex justify-space-between align-center border-b">
+      <div class="d-flex flex-column overflow-hidden mr-2">
+        <span class="text-truncate text-body-1 font-weight-bold">{{ card.name }}</span>
+        <span class="text-caption text-medium-emphasis">{{ card.size.name }}</span>
+      </div>
+      <div class="d-flex flex-shrink-0">
+        <v-btn icon="mdi-content-copy" size="small" variant="text" color="secondary" @click.stop="$emit('duplicate', card.id)" title="Duplikuj"></v-btn>
+        <v-btn icon="mdi-delete" size="small" variant="text" color="error" @click.stop="$emit('delete', card.id)" title="Usuń"></v-btn>
+      </div>
+    </div>
+
+    <!-- Kontener podglądu -->
+    <div class="card-aspect-ratio pa-6 bg-white d-flex align-center justify-center overflow-hidden" ref="containerRef">
+      <!-- Obiekty przeskalowane w dół przez scaleFactor by zmieścić format MM w karcie -->
+      <div 
+        v-if="scaleFactor > 0" 
+        class="canvas-wrapper-scaled"
+        :style="{ transform: `scale(${scaleFactor})`, transformOrigin: 'center center' }"
+      >
+        <CardCanvas 
+          :card="card" 
+          side="front"
+          :selected-element="null"
+        />
       </div>
     </div>
 
@@ -18,26 +39,17 @@
         <v-btn color="primary" prepend-icon="mdi-pencil" @click.stop="$emit('edit', card.id)">
           Edytuj
         </v-btn>
-        <v-btn color="secondary" prepend-icon="mdi-content-copy" @click.stop="$emit('duplicate', card.id)">
-          Duplikuj
-        </v-btn>
-        <v-btn color="error" prepend-icon="mdi-delete" @click.stop="$emit('delete', card.id)">
-          Usuń
-        </v-btn>
       </div>
     </v-overlay>
 
-    <!-- Pasek tytułowy na dole miniaturki -->
-    <div class="card-info bg-card-surface pa-2 d-flex justify-space-between align-center">
-      <span class="text-truncate text-body-2 font-weight-bold">{{ card.name }}</span>
-      <span class="text-caption text-medium-emphasis">{{ card.size.name }}</span>
-    </div>
+    <!-- Dół karty usunięto, header jest teraz na górze -->
   </v-card>
 </template>
 
 <script setup lang="ts">
-import { computed } from 'vue';
+import { ref, watchEffect, onMounted, onBeforeUnmount, nextTick } from 'vue';
 import type { Card } from '~/types/card';
+import CardCanvas from './CardCanvas.vue';
 
 const props = defineProps<{
   card: Card;
@@ -45,23 +57,48 @@ const props = defineProps<{
 
 defineEmits(['edit', 'duplicate', 'delete']);
 
-const cardDimensionsStyle = computed(() => {
+const containerRef = ref<HTMLElement | null>(null);
+const scaleFactor = ref(0);
+
+// Obserwator do dynamicznego dopasowania rozmiaru fizycznego Canvas do div parenta
+let observer: ResizeObserver;
+
+const calculateScale = () => {
+  if (!containerRef.value) return;
   const { widthMm, heightMm } = props.card.size;
-  return {
-    width: `${widthMm}mm`,
-    height: `${heightMm}mm`,
-  };
+  
+  // Pobieramy ramke (wysokosc rzedu 300px min-height dla okienka)
+  const containerWidth = containerRef.value.clientWidth - 48; // pa-6 = 24px * 2 = 48 paddingu
+  const containerHeight = Math.min(300, containerRef.value.clientHeight || 300);
+
+  // Symulacja wymiarow PX wyciagnietych z CSS mm przegladarki
+  const tempDiv = document.createElement('div');
+  tempDiv.style.width = `${widthMm}mm`;
+  tempDiv.style.height = `${heightMm}mm`;
+  tempDiv.style.position = 'absolute';
+  tempDiv.style.visibility = 'hidden';
+  document.body.appendChild(tempDiv);
+  
+  const pxWidth = tempDiv.clientWidth;
+  const pxHeight = tempDiv.clientHeight;
+  document.body.removeChild(tempDiv);
+  
+  const scaleW = containerWidth / pxWidth;
+  const scaleH = containerHeight / pxHeight;
+  
+  scaleFactor.value = Math.min(scaleW, scaleH);
+};
+
+onMounted(() => {
+  nextTick(calculateScale);
+  if (containerRef.value) {
+    observer = new ResizeObserver(calculateScale);
+    observer.observe(containerRef.value);
+  }
 });
 
-const backgroundStyle = computed(() => {
-  const bg = props.card.background;
-  if (!bg) return { background: '#2A2A3E' };
-
-  if (bg.type === 'color') return { background: bg.value };
-  if (bg.type === 'gradient') return { background: bg.value };
-  if (bg.type === 'image') return { backgroundImage: `url(${bg.value})`, backgroundSize: 'cover', backgroundPosition: 'center' };
-  
-  return { background: '#2A2A3E' };
+onBeforeUnmount(() => {
+  if (observer) observer.disconnect();
 });
 </script>
 
@@ -72,7 +109,8 @@ const backgroundStyle = computed(() => {
   flex-direction: column;
   overflow: hidden;
   border-radius: 8px;
-  background-color: #121218;
+  background-color: #ffffff;
+  border: 1px solid #e2e8f0;
 }
 
 .card-aspect-ratio {
@@ -86,29 +124,13 @@ const backgroundStyle = computed(() => {
   padding: 8px; /* Symulacja wewnętrznego odstępu podglądu */
 }
 
-.placeholder-preview {
-  width: 100%;
-  height: 100%;
-  border-radius: 4px; /* Zaokrąglenie rogów by zasygnalizować "kartę" */
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  text-align: center;
-  padding: 16px;
-  box-shadow: 0 4px 8px rgba(0,0,0,0.5);
+.canvas-wrapper-scaled {
+  /* Skalowanie wymaga braku pointer eventów jesli z canvasa da sie cos klikac by buga uniknac w evencie click */
+  pointer-events: none;
 }
 
-.placeholder-title {
-  color: #fff;
-  text-shadow: 1px 1px 2px #000;
-  font-family: inherit;
-  font-size: 1.2rem;
-  word-break: break-word;
-}
-
-.card-info {
-  border-top: 1px solid rgba(255, 255, 255, 0.1);
-  min-height: 48px;
+.border-b {
+  border-bottom: 1px solid #e2e8f0;
 }
 
 .gap-2 {

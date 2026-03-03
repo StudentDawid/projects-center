@@ -55,13 +55,12 @@ const getPageStyle = () => {
   return {
     width: `${widthMm}mm`,
     height: `${heightMm}mm`,
-    minHeight: `${heightMm}mm`,
+    maxHeight: `${heightMm}mm`,
     flexShrink: 0,
     position: 'relative' as const,
     backgroundColor: 'white',
     margin: '0 auto',
-    boxSizing: 'border-box' as const,
-    overflow: 'hidden' as const
+    boxSizing: 'border-box' as const
   };
 };
 
@@ -111,8 +110,21 @@ const getCardStyle = (placement: PrintCardPlacement) => {
 @media print {
   .print-page {
     margin: 0 !important;
+    padding: 0 !important;
+    max-height: 100vh;
+    height: 100vh;
+    overflow: hidden !important;
     box-shadow: none !important;
-    page-break-after: always;
+    page-break-after: always; /* Zmuszamy stronę do przerzucenia tylko po całkowitym wypełnieniu z height: 100vh */
+    page-break-inside: avoid;
+    break-inside: avoid;
+  }
+  .print-page:last-child {
+    page-break-after: auto;
+  }
+  .print-card-placeholder {
+    page-break-inside: avoid;
+    break-inside: avoid;
   }
   .d-print-none {
     display: none !important;

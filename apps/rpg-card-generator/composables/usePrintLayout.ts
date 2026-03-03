@@ -9,8 +9,8 @@ export function calculateLayout(cardsToPrint: Card[], settings: ExportSettings):
   const gap = settings.gapMm;
 
   // Zakładamy, że wszystkie zaznaczone karty mają rozmiar pierwszej karty w partii
-  const cardW = cardsToPrint[0].size.widthMm;
-  const cardH = cardsToPrint[0].size.heightMm;
+  const cardW = cardsToPrint[0]?.size?.widthMm ?? 63;
+  const cardH = cardsToPrint[0]?.size?.heightMm ?? 88;
 
   const availableW = pageW - 2 * margin;
   const availableH = pageH - 2 * margin;
@@ -36,24 +36,34 @@ export function calculateLayout(cardsToPrint: Card[], settings: ExportSettings):
     const frontPlacements: PrintCardPlacement[] = [];
     const backPlacements: PrintCardPlacement[] = [];
 
+    // Zbieramy karty tylko dla BIEŻĄCEJ strony (max cardsPerPage)
+    const cardsOnThisPage = [];
+    for (let currentSlot = 0; currentSlot < cardsPerPage && currentCardIdx < cardsToPrint.length; currentSlot++) {
+      cardsOnThisPage.push(cardsToPrint[currentCardIdx]);
+      currentCardIdx++;
+    }
+
+    // Układamy zebrane karty na siatce (Front i Back jednocześnie)
+    let slotIdx = 0;
     for (let row = 0; row < rows; row++) {
       for (let col = 0; col < cols; col++) {
-        if (currentCardIdx >= cardsToPrint.length) break;
+        if (slotIdx >= cardsOnThisPage.length) break;
         
-        const card = cardsToPrint[currentCardIdx];
+        const card = cardsOnThisPage[slotIdx]!;
         const x = startX + col * (cardW + gap);
         const y = startY + row * (cardH + gap);
         
+        // Front - normalna pozycja kafelka X i Y
         frontPlacements.push({ cardId: card.id, x, y, width: cardW, height: cardH });
 
         if (settings.duplex) {
-          // Lustrzane odbicie kolumny dla tyłu
-          const mirrorCol = cols - 1 - col;
+          // Tył - lustrzana krawędź dla osi X (Z kolumny najdalszej na początkową)
+          const mirrorCol = (cols - 1) - col;
           const backX = startX + mirrorCol * (cardW + gap);
           backPlacements.push({ cardId: card.id, x: backX, y, width: cardW, height: cardH });
         }
 
-        currentCardIdx++;
+        slotIdx++;
       }
     }
 

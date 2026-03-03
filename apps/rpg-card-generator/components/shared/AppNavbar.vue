@@ -1,5 +1,5 @@
 <template>
-  <div class="app-navbar d-flex align-center px-6 border-b bg-white flex-shrink-0" style="height: 70px;">
+  <div class="app-navbar d-print-none d-flex align-center px-6 border-b bg-white flex-shrink-0" style="height: 70px;">
     <!-- LOGO (lewa strona) -->
     <div class="d-flex align-center cursor-pointer" @click="$router.push('/')">
       <v-avatar color="primary" rounded size="36" class="mr-3">
