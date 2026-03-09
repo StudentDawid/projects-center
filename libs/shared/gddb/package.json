@@ -33,5 +33,11 @@
     "*.ts",
     "!*.spec.ts",
     "!*.test.ts"
-  ]
+  ],
+  "dependencies": {
+    "papaparse": "^5.5.3"
+  },
+  "devDependencies": {
+    "@types/papaparse": "^5.5.2"
+  }
 }

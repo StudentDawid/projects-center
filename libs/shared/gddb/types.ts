@@ -1,85 +1,35 @@
-/**
- * Google Sheets Data Types
- */
-
-// Google Visualization API Response Types
-export interface GVizResponse {
-  version: string;
-  reqId: string;
-  status: 'ok' | 'error';
-  sig: string;
-  table: GVizTable;
-  errors?: GVizError[];
+export interface GDDBModel<TFields extends readonly string[] = readonly string[]> {
+  sheetName: string;
+  fields: TFields;
+  // W przyszłości schemat (np. z Zod) do walidacji danych
+  schema?: any;
 }
 
-export interface GVizError {
-  reason: string;
-  message: string;
-  detailed_message: string;
-}
+export type GDDBModels = Record<string, GDDBModel<any>>;
 
-export interface GVizTable {
-  cols: GVizColumn[];
-  rows: GVizRow[];
-  parsedNumHeaders: number;
-}
-
-export interface GVizColumn {
-  id: string;
-  label: string;
-  type: 'string' | 'number' | 'boolean' | 'date' | 'datetime' | 'timeofday';
-  pattern?: string;
-}
-
-export interface GVizRow {
-  c: GVizCell[];
-}
-
-export interface GVizCell {
-  v: any; // Actual value
-  f?: string; // Formatted value
-}
-
-// Library Types
-export interface GddbConfig {
+export interface GDDBConfig<Models extends GDDBModels> {
   sheetId: string;
-  configTabName?: string; // Default: 'config'
-  cache?: boolean; // Default: true
-  cacheTTL?: number; // Default: 5 minutes in ms
+  models: Models;
 }
 
-export interface SheetMetadata {
-  tabName: string;
-  gid?: number;
-  description?: string;
-  schema?: ColumnSchema[];
+export interface GDDBFetchConfig {
+  /** Numer wiersza, od którego zaczynają się dane (domyślnie: 2) */
+  dataRowStart?: number;
+  /** Max numer wiersza który czytamy do danych (domyślnie: 100) */
+  dataRowEnd?: number;
+  /** Kolumna od której zaczynamy pobierać dane (domyślnie: 1) */
+  dataColumnStart?: number;
+  /** Kolumna do której pobieramy dane (domyślnie: 5) */
+  dataColumnEnd?: number;
 }
 
-export interface ColumnSchema {
-  name: string;
-  type: 'string' | 'number' | 'boolean' | 'date' | 'datetime' | 'timeofday';
-  label?: string;
-}
-
-export interface SheetData {
-  columns: GVizColumn[];
-  rows: Record<string, any>[];
-  rawRows: GVizRow[];
-}
-
-export interface QueryOptions {
-  select?: string; // Columns to select (e.g., 'A, B, C' or '*')
-  where?: string; // WHERE clause (e.g., 'B > 100')
-  orderBy?: string; // ORDER BY clause (e.g., 'A ASC, B DESC')
-  limit?: number; // LIMIT clause
-  offset?: number; // OFFSET clause
-  headers?: number; // Number of header rows (default: 1)
-}
-
-export interface GetDataConfig {
-  tabNameOrGid: string | number;
-  orientation?: 'horizontal' | 'vertical'; // Domyślnie 'horizontal'
-  startFrom?: number; // Początkowy wiersz/kolumna z danymi (0-indexed, po pominięciu nagłówków)
-  limit?: number | '*'; // Domyślnie 100, '*' oznacza brak limitu
-  headers?: number; // Liczba wierszy/kolumn nagłówkowych (domyślnie 1)
-}
+/**
+ * Typ pomocniczy pozwalający wywnioskować kształt wiersza 
+ * na podstawie zdefiniowanych pól modelu.
+ * Zakładamy domyślnie, że dane z Google Sheets mogą być 
+ * formatu string, number, boolean lub null.
+ */
+export type InferModelRow<M extends GDDBModel<any>> = Record<
+  M['fields'][number],
+  string | number | boolean | null
+>;

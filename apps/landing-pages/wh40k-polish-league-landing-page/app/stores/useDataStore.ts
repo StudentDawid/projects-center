@@ -3,24 +3,29 @@ import { db } from '../utils/db'; // Import Twojego klienta
 
 export const useDataStore = defineStore('dataStore', {
   state: () => ({
+    translations: [] as Record<string, any>[],
     events: [] as Record<string, any>[],
     eventMaps: [] as Record<string, any>[],
-    translations: [] as Record<string, any>[],
     isLoading: false,
   }),
 
   actions: {
     async fetchAllInitialData() {
-      // Jeśli pobraliśmy już kluczowe dane, nie musimy tego powtarzać (o ile tego nie wymusimy)
-      if (this.events.length > 0) return;
+      if (this.translations.length > 0) return;
 
       this.isLoading = true;
       try {
         const [translationsRes, eventsRes, mapsRes] = await Promise.all([
-          db.getData({ tabNameOrGid: 'translations' }),
-          db.getData({ tabNameOrGid: 'events' }),
-          db.getData({ tabNameOrGid: 'maps' }),
+          db.fetch('translations'),
+          db.fetch('events', {
+            dataColumnEnd: 10
+          }),
+          db.fetch('maps'),
         ]);
+
+        console.log('translationsRes', translationsRes);
+        console.log('eventsRes', eventsRes);
+        console.log('mapsRes', mapsRes);
 
         this.translations = translationsRes;
         this.events = eventsRes;

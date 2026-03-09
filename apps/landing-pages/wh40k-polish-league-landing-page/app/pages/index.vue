@@ -29,9 +29,6 @@ const dataStore = useDataStore();
 
 // Używamy useAsyncData by uniknąć problemów na styku Hydration i SSR
 await useAsyncData('gddb-data', () => dataStore.fetchAllInitialData());
-
-console.log('Translations loaded:', dataStore.translations.length);
-console.log('Events loaded:', dataStore.events.length);
 </script>
 
 <style>
