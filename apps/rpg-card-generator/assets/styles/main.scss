@@ -1,0 +1,36 @@
+// ============================================
+// Main Styles
+// ============================================
+
+// ============================================
+// Material Design Icons Fix
+// ============================================
+.mdi,
+.mdi::before,
+.v-icon.mdi {
+  font-family: 'Material Design Icons' !important;
+}
+
+// ============================================
+// Global Reset & Base Styles
+// ============================================
+* {
+  box-sizing: border-box;
+}
+
+// Podstawowe resety i ustawienia czcionek dla jasnego interfejsu
+html,
+body {
+  margin: 0;
+  padding: 0;
+  font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif;
+  color: #1e293b; /* slate-800 jak na screenie */
+  background-color: #f8fafc;
+  min-height: 100vh;
+  overflow-x: hidden;
+}
+
+/* Globalne użycie kursora dla pointerów */
+.cursor-pointer {
+  cursor: pointer;
+}

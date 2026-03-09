@@ -1,0 +1,111 @@
+import type { CardTemplate } from '~/types/card';
+import { CARD_SIZES } from './sizes';
+import { CARD_BACKGROUNDS, CARD_BACKS } from './backgrounds';
+
+const generateId = () => crypto.randomUUID();
+
+export const CARD_TEMPLATES: CardTemplate[] = [
+  {
+    id: 'tpl-mtg-style',
+    name: 'Styl MTG',
+    description: 'Klasyczna ramka TCG z ilustracją pośrodku',
+    thumbnail: '', // Placeholder
+    size: CARD_SIZES.find(s => s.id === 'mtg')!,
+    background: CARD_BACKGROUNDS[0],
+    backBackground: CARD_BACKS[0],
+    elements: [
+      {
+        id: generateId(),
+        type: 'text',
+        content: 'Nazwa Karty',
+        x: 5,
+        y: 5,
+        width: 90,
+        height: 10,
+        fontSize: 14,
+        fontFamily: 'Roboto',
+        fontWeight: 'bold',
+        fontStyle: 'normal',
+        textAlign: 'left',
+        color: '#ffffff',
+        rotation: 0,
+        zIndex: 1,
+      },
+      {
+        id: generateId(),
+        type: 'image',
+        src: 'https://placehold.co/600x400/3e3e3e/ffffff?text=Ilustracja',
+        x: 5,
+        y: 15,
+        width: 90,
+        height: 45,
+        objectFit: 'cover',
+        rotation: 0,
+        zIndex: 1,
+        opacity: 1,
+      },
+      {
+        id: generateId(),
+        type: 'text',
+        content: 'Twój opisy trafia tutaj.',
+        x: 5,
+        y: 65,
+        width: 90,
+        height: 25,
+        fontSize: 10,
+        fontFamily: 'Roboto',
+        fontWeight: 'normal',
+        fontStyle: 'normal',
+        textAlign: 'left',
+        color: '#dddddd',
+        rotation: 0,
+        zIndex: 1,
+      }
+    ],
+  },
+  {
+    id: 'tpl-dnd-spell',
+    name: 'Zaklęcie RPG',
+    description: 'Karta umiejętności / zaklęcia',
+    thumbnail: '',
+    size: CARD_SIZES.find(s => s.id === 'poker')!,
+    background: CARD_BACKGROUNDS.find(b => b.id === 'bg-color-parchment')!,
+    backBackground: CARD_BACKS[1],
+    elements: [
+      {
+        id: generateId(),
+        type: 'text',
+        content: 'Kula Ognia',
+        x: 0,
+        y: 5,
+        width: 100,
+        height: 12,
+        fontSize: 16,
+        fontFamily: 'MedievalSharp, serif',
+        fontWeight: 'bold',
+        fontStyle: 'normal',
+        textAlign: 'center',
+        color: '#8b0000',
+        rotation: 0,
+        zIndex: 1,
+      },
+      {
+        id: generateId(),
+        type: 'text',
+        content: 'Poziom 3 Wywoływanie\nCzas rzucania: 1 akcja\nZasięg: 150 stóp',
+        x: 5,
+        y: 20,
+        width: 90,
+        height: 30,
+        fontSize: 10,
+        fontFamily: 'Roboto',
+        fontWeight: 'bold',
+        fontStyle: 'normal',
+        textAlign: 'left',
+        color: '#222222',
+        rotation: 0,
+        zIndex: 1,
+      }
+    ],
+  }
+];
