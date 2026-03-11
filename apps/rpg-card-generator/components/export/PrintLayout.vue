@@ -111,11 +111,8 @@ const getCardStyle = (placement: PrintCardPlacement) => {
   .print-page {
     margin: 0 !important;
     padding: 0 !important;
-    max-height: 100vh;
-    height: 100vh;
-    overflow: hidden !important;
     box-shadow: none !important;
-    page-break-after: always; /* Zmuszamy stronę do przerzucenia tylko po całkowitym wypełnieniu z height: 100vh */
+    page-break-after: always;
     page-break-inside: avoid;
     break-inside: avoid;
   }

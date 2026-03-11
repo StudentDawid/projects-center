@@ -42,6 +42,12 @@ export const CARD_BACKGROUNDS: CardBackground[] = [
     name: 'MTG Template',
     type: 'image',
     value: new URL('../assets/img/card-templates/mtg-card-template.jpeg', import.meta.url).href,
+  },
+  {
+    id: 'bg-color-fabula-front',
+    name: 'Fabula Ultima - Front',
+    type: 'color',
+    value: '#f4f9f5', // Minty off-white background
   }
 ];
 
@@ -57,5 +63,11 @@ export const CARD_BACKS: CardBackground[] = [
     name: 'Mystic Back',
     type: 'gradient',
     value: 'linear-gradient(135deg, #4b1248 0%, #f0c27b 100%)',
+  },
+  {
+    id: 'back-gradient-fabula',
+    name: 'Fabula Ultima - Rewers',
+    type: 'gradient',
+    value: 'linear-gradient(135deg, #1f4234 0%, #35624d 100%)', // Dark green gradient
   }
 ];

@@ -102,15 +102,14 @@ const layout = computed(() => {
     margin: 0 !important;
     padding: 0 !important;
     width: 100%;
-    height: 100%;
-    overflow: hidden !important;
+    overflow: visible !important;
     -webkit-print-color-adjust: exact !important; 
     print-color-adjust: exact !important; 
   }
 
   .print-only {
     width: 100%;
-    height: 100%;
+    height: auto;
     margin: 0;
     padding: 0;
   }
