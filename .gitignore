@@ -52,3 +52,4 @@ package-lock.json
 tmp
 
 vitest.config.*.timestamp*
+vite.config.*.timestamp*
