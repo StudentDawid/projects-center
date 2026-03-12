@@ -18,12 +18,12 @@
         <div class="canvas-tools d-flex align-center justify-center mt-6 py-2 px-6 rounded-pill bg-white border mb-auto" style="z-index: 10;">
           <v-tooltip text="Cofnij" location="top">
             <template v-slot:activator="{ props }">
-              <v-btn v-bind="props" icon="mdi-undo" variant="text" size="small" density="comfortable" color="secondary" :disabled="historyIndex <= 0" @click="undo"></v-btn>
+              <v-btn v-bind="props" icon="mdi-undo" variant="text" size="small" density="comfortable" color="secondary" :disabled="historyIndex < 0" @click="undo"></v-btn>
             </template>
           </v-tooltip>
           <v-tooltip text="Ponów" location="top">
             <template v-slot:activator="{ props }">
-              <v-btn v-bind="props" icon="mdi-redo" variant="text" size="small" density="comfortable" color="secondary" :disabled="historyIndex >= history.length - 1" @click="redo"></v-btn>
+              <v-btn v-bind="props" icon="mdi-redo" variant="text" size="small" density="comfortable" color="secondary" :disabled="historyIndex >= historyLength - 1" @click="redo"></v-btn>
             </template>
           </v-tooltip>
           <v-divider vertical class="mx-2"></v-divider>
@@ -163,59 +163,23 @@ import BackgroundPicker from '~/components/editor/BackgroundPicker.vue';
 const route = useRoute();
 const router = useRouter();
 const store = useCardsStore();
-const { currentCard, updateElement } = useCardEditor();
+const { 
+  currentCard, 
+  updateElement, 
+  initEditor, 
+  undo, 
+  redo, 
+  historyIndex, 
+  historyLength,
+  updateName: pushName,
+  updateElementsOrder
+} = useCardEditor();
 
 const cardName = ref('');
 const side = ref<'front' | 'back'>('front');
 const selectedElementId = ref<string | null>(null);
 const showBleed = ref(false);
 const zoomLevel = ref(1.50);
-
-// Undo / Redo logiki
-const history = ref<string[]>([]);
-const historyIndex = ref(-1);
-const isUndoing = ref(false);
-
-watch(() => currentCard.value, (newVal) => {
-  if (!newVal || isUndoing.value) return;
-  const stateStr = JSON.stringify(newVal);
-  // Jeśli to samo co ostatnio, ignoruj po hash'u
-  if (historyIndex.value >= 0 && history.value[historyIndex.value] === stateStr) return;
-  
-  // Jeśli jesteśmy w środku historii i coś zmieniamy, odetnij przyszłość
-  if (historyIndex.value < history.value.length - 1) {
-    history.value = history.value.slice(0, historyIndex.value + 1);
-  }
-  
-  history.value.push(stateStr);
-  
-  // Ograniczenie historii do np. 50 kroków w pamięci
-  if (history.value.length > 50) {
-    history.value.shift();
-  } else {
-    historyIndex.value++;
-  }
-}, { deep: true, immediate: true });
-
-const undo = () => {
-  if (historyIndex.value > 0) {
-    isUndoing.value = true;
-    historyIndex.value--;
-    const previousState = JSON.parse(history.value[historyIndex.value]) as Card;
-    store.updateCard(previousState.id, previousState);
-    setTimeout(() => { isUndoing.value = false; }, 0);
-  }
-};
-
-const redo = () => {
-  if (historyIndex.value < history.value.length - 1) {
-    isUndoing.value = true;
-    historyIndex.value++;
-    const nextState = JSON.parse(history.value[historyIndex.value]) as Card;
-    store.updateCard(nextState.id, nextState);
-    setTimeout(() => { isUndoing.value = false; }, 0);
-  }
-};
 
 const cardElements = computed(() => {
   if (!currentCard.value) return [];
@@ -224,25 +188,14 @@ const cardElements = computed(() => {
 
 onMounted(() => {
   const idParam = route.query.id as string;
-  if (idParam) {
-    store.setCurrentEdit(idParam);
-    if (currentCard.value) cardName.value = currentCard.value.name;
-  } else {
-    const newId = crypto.randomUUID();
-    store.addCard({
-      id: newId,
-      name: 'Nowa Karta',
-      createdAt: Date.now(),
-      updatedAt: Date.now(),
-      size: CARD_SIZES[0]!,
-      background: CARD_BACKGROUNDS[0]!,
-      backBackground: CARD_BACKS[0]!,
-      elements: [],
-      templateId: null
-    });
-    store.setCurrentEdit(newId);
-    cardName.value = 'Nowa Karta';
-    router.replace({ query: { id: newId } });
+  initEditor(idParam || null);
+  
+  if (currentCard.value) {
+    cardName.value = currentCard.value.name;
+    // Pamiętajmy o push query if making new card
+    if (!idParam) {
+      router.replace({ query: { id: currentCard.value.id } });
+    }
   }
 });
 
@@ -251,7 +204,7 @@ watch(() => currentCard.value?.name, (newVal) => {
 });
 
 const updateName = (val: string) => {
-  if (currentCard.value) store.updateCard(currentCard.value.id, { name: val });
+  pushName(val);
 };
 
 const updateElementPosition = (id: string, updates: any) => {
@@ -269,7 +222,7 @@ const moveLayerUp = (index: number) => {
     ...el,
     zIndex: elementsList.length - i
   }));
-  store.updateCard(currentCard.value.id, { elements: newElements });
+  updateElementsOrder(newElements);
 };
 
 const moveLayerDown = (index: number) => {
@@ -283,7 +236,7 @@ const moveLayerDown = (index: number) => {
     ...el,
     zIndex: elementsList.length - i
   }));
-  store.updateCard(currentCard.value.id, { elements: newElements });
+  updateElementsOrder(newElements);
 };
 
 </script>

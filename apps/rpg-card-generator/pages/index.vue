@@ -6,15 +6,29 @@
         <p class="text-medium-emphasis">Zarządzaj swoimi kartami RPG lub stwórz nową.</p>
       </div>
       
-      <div v-if="cards.length > 0">
-        <v-btn color="primary" prepend-icon="mdi-plus" to="/create" class="mr-2">
-          Nowa karta
+      <div v-if="cards.length > 0" class="d-flex gap-2">
+        <v-btn variant="tonal" color="primary" prepend-icon="mdi-upload" @click="triggerFileInput">
+          Importuj
         </v-btn>
-        <v-btn color="secondary" variant="tonal" prepend-icon="mdi-printer" to="/export">
-          Drukuj wszystkie
+        <v-btn variant="outlined" color="primary" prepend-icon="mdi-download" @click="exportAll">
+          Eksportuj wszystko
+        </v-btn>
+      </div>
+      <div v-else>
+         <v-btn variant="tonal" color="primary" prepend-icon="mdi-upload" @click="triggerFileInput">
+          Importuj z pliku
         </v-btn>
       </div>
     </div>
+    
+    <!-- Ukryty input do ladowania pliku JSON -->
+    <input 
+      type="file" 
+      ref="fileInput" 
+      accept=".json" 
+      style="display: none" 
+      @change="handleImport"
+    />
 
     <v-divider class="mb-6"></v-divider>
 
@@ -31,28 +45,47 @@
     </v-card>
 
     <!-- Grid Kart -->
-    <v-row v-else>
-      <v-col v-for="card in cards" :key="card.id" cols="12" sm="6" md="4" lg="3">
-        <CardPreview 
-          :card="card"
-          @edit="handleEdit"
-          @duplicate="handleDuplicate"
-          @delete="handleDelete"
-        />
-      </v-col>
-    </v-row>
+    <draggable 
+      v-else 
+      v-model="draggableCards" 
+      class="v-row mx-0"
+      item-key="id" 
+      animation="200"
+      handle=".drag-handle"
+    >
+      <template #item="{ element: card }">
+        <v-col cols="12" sm="6" md="4" lg="3">
+          <CardPreview 
+            :card="card"
+            class="drag-handle"
+            @edit="handleEdit"
+            @duplicate="handleDuplicate"
+            @delete="handleDelete"
+          />
+        </v-col>
+      </template>
+    </draggable>
   </div>
 </template>
 
 <script setup lang="ts">
-import { computed } from 'vue';
+import { ref, computed } from 'vue';
 import { useRouter } from 'vue-router';
 import { useCardsStore } from '~/stores/cards';
+import draggable from 'vuedraggable';
+import { downloadAsJson, importFromJson } from '~/utils/json-io';
+import type { Card } from '~/types/card';
 
 const store = useCardsStore();
 const router = useRouter();
 
 const cards = computed(() => store.allCards);
+const fileInput = ref<HTMLInputElement | null>(null);
+
+const draggableCards = computed({
+  get: () => store.allCards,
+  set: (val) => store.reorderCards(val),
+});
 
 const handleEdit = (id: string) => {
   store.setCurrentEdit(id);
@@ -68,9 +101,56 @@ const handleDelete = (id: string) => {
     store.deleteCard(id);
   }
 };
+
+const exportAll = () => {
+  if (store.allCards.length === 0) return;
+  downloadAsJson(store.allCards, `wszystkie-karty-${Date.now()}`);
+};
+
+const triggerFileInput = () => {
+  fileInput.value?.click();
+};
+
+const handleImport = async (event: Event) => {
+  const target = event.target as HTMLInputElement;
+  const file = target.files?.[0];
+  if (!file) return;
+
+  try {
+    const importedData = await importFromJson<any>(file);
+    let count = 0;
+    
+    // Walidacja struktury upewniajaca czy importujemy tablice kart czy pojedyncza
+    const itemsToImport = Array.isArray(importedData) ? importedData : [importedData];
+    
+    for (const item of itemsToImport) {
+      if (item && typeof item === 'object' && 'size' in item && 'background' in item) {
+        // Regenerujemy ID i timestamps dla pewnosci unikniecia kolizji
+        const newCard: Card = {
+          ...item,
+          id: crypto.randomUUID(),
+          createdAt: Date.now(),
+          updatedAt: Date.now(),
+        };
+        store.addCard(newCard);
+        count++;
+      }
+    }
+    
+    alert(`Pomyślnie zaimportowano ${count} kart(y).`);
+  } catch (error: any) {
+    alert(error.message);
+  } finally {
+    // Resetuj input po odczycie
+    if (fileInput.value) fileInput.value.value = '';
+  }
+};
 </script>
 
 <style scoped>
+.gap-2 {
+  gap: 8px;
+}
 .home-page {
   padding: 24px 32px;
   height: 100%;
@@ -78,5 +158,11 @@ const handleDelete = (id: string) => {
 }
 .max-w-600 {
   max-width: 600px;
+}
+.drag-handle {
+  cursor: grab;
+}
+.drag-handle:active {
+  cursor: grabbing;
 }
 </style>
