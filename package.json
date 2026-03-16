@@ -5,6 +5,7 @@
   "scripts": {
     "dev": "nx run-many --target=dev --all --parallel=10",
     "dev:main-page": "nx run main-page:dev",
+    "dev:idle-guild": "nx run idle-guild:dev",
     "dev:ateria-idle": "nx run ateria-idle:dev",
     "dev:isekai-idle": "nx run isekai-idle:dev",
     "dev:mtg-generator": "nx run mtg-generator:dev",
@@ -16,6 +17,7 @@
     "build": "nx run-many --target=build --all",
     "build:all": "nx run-many --target=build --all",
     "build:main-page": "nx build main-page",
+    "build:idle-guild": "nx build idle-guild",
     "build:ateria-idle": "nx build ateria-idle",
     "build:isekai-idle": "nx build isekai-idle",
     "build:mtg-generator": "nx build mtg-generator",
